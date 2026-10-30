@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "options": {
+      "type": "array",
+      "view": "views/entity-field/fields/options"
+    },
+    "optionColors": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "translatedOptions": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "conditionalDisableOptions": {
+      "type": "jsonArray",
+      "view": "views/entity-field/fields/conditional-disable-options",
+      "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

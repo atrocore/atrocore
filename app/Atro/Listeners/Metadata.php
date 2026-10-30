@@ -34,6 +34,7 @@ class Metadata extends AbstractMetadataListener
     {
         $data = $event->getArgument('data');
 
+        $this->prepareSubtypeScopes($data);
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
@@ -53,6 +54,8 @@ class Metadata extends AbstractMetadataListener
         $data = $this->addArchive($data);
 
         $data = $this->addActive($data);
+
+        $this->prepareSubtypes($data);
 
         $this->prepareDerivatives($data);
 
@@ -101,8 +104,6 @@ class Metadata extends AbstractMetadataListener
 
         $this->addAssociateToEntity($data);
 
-        $this->prepareMultilingualAttributes($data);
-
         $data = $this->prepareClassificationAttributeMetadata($data);
 
         $this->addClassificationToEntity($data);
@@ -123,10 +124,6 @@ class Metadata extends AbstractMetadataListener
         $data = $event->getArgument('data');
 
         $this->prepareRelationEntities($data);
-
-        if (!empty($data['action']['types'])) {
-            $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
-        }
 
         $this->prepareEntityMethods($data);
 
@@ -166,60 +163,50 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
-    protected function prepareMultilingualAttributes(array &$data): void
-    {
-        // find multilingual attributes
-        $multilingualAttributes = [];
-        foreach ($data['attributes'] as $attribute => $attributeDefs) {
-            if (!empty($attributeDefs['multilingual'])) {
-                $multilingualAttributes[] = $attribute;
-            }
-        }
-
-        $data['entityDefs']['Attribute']['fields']['isMultilang']['conditionalProperties']['visible']['conditionGroup'] = [
-            [
-                "type"      => "in",
-                "attribute" => "type",
-                "value"     => $multilingualAttributes
-            ]
-        ];
-    }
-
+    /**
+     * The custom actions are handlers of the "custom" action type: the classes are the options of its "handler" field,
+     * the bulk handlers search the records to execute the action for.
+     */
     protected function putCustomCodeActions(array &$data): void
     {
-        $dir = CreateAction::DIR;
-        if (!is_dir($dir)) {
-            return;
-        }
+        $handlers = [];
+        $bulkHandlers = [];
 
-        foreach (scandir($dir) as $fileName) {
+        $dir = CreateAction::DIR;
+        foreach (is_dir($dir) ? scandir($dir) : [] as $fileName) {
             if (!preg_match('/\.php$/i', $fileName)) {
                 continue;
             }
 
-            $name     = str_replace('.php', '', $fileName);
-            $typeName = 'custom' . $name;
-
+            $name = str_replace('.php', '', $fileName);
             $className = '\\CustomActions\\' . $name;
 
             if (!class_exists($className) || !is_a($className, AbstractAction::class, true)) {
                 continue;
             }
 
-            if (is_a($className, AbstractBulkAction::class, true)) {
-                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['visible']['conditionGroup'][0]['value'][]  = $typeName;
-                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['readOnly']['conditionGroup'][0]['value'][] = $typeName;
-                $data['entityDefs']['Action']['fields']['applyToPreselectedRecords']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = $typeName;
-
-                $data['action']['filterableTypes'][$typeName] = true;
+            $isBulk = is_a($className, AbstractBulkAction::class, true);
+            if ($isBulk) {
+                $bulkHandlers[] = $name;
             }
 
-            $data['action']['types'][$typeName]     = $className;
-            $data['action']['typesData'][$typeName] = [
+            $handlers[] = $name;
+            $data['action']['customHandlers'][$name] = [
                 'handler'     => $className,
+                'bulk'        => $isBulk,
                 'typeLabel'   => $className::getTypeLabel(),
                 'name'        => $className::getName(),
                 'description' => $className::getDescription(),
+            ];
+        }
+
+        $fields = &$data['entityDefs']['ActionTypeCustom']['fields'];
+        $fields['handler']['options'] = $handlers;
+        foreach (['searchEntity', 'applyToPreselectedRecords'] as $field) {
+            $fields[$field]['conditionalProperties']['visible']['conditionGroup'][] = [
+                'type'      => 'in',
+                'attribute' => 'handler',
+                'value'     => $bulkHandlers,
             ];
         }
     }
@@ -340,6 +327,38 @@ class Metadata extends AbstractMetadataListener
 
         foreach ($systemFields as $field) {
             unset($data['entityDefs']['UserProfile']['fields'][$field]);
+        }
+    }
+
+    /**
+     * All features of a subtype except fields and relations belong to its supertype. They are switched off before
+     * any other preparation, so that nothing (e.g. followers) is generated for the subtype.
+     */
+    protected function prepareSubtypeScopes(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype') {
+                continue;
+            }
+
+            $data['scopes'][$scope] = array_merge($scopeDefs, [
+                'tab'                  => false,
+                'acl'                  => false,
+                'notifications'        => false,
+                'hasOwner'             => false,
+                'hasAssignedUser'      => false,
+                'hasTeam'              => false,
+                'hasActive'            => false,
+                'hasArchive'           => false,
+                'hasAttribute'         => false,
+                'hasClassification'    => false,
+                'hasAssociate'         => false,
+                'containsPersonalData' => false,
+                'streamDisabled'       => true,
+                'followDisabled'       => true,
+                'disableActionHistory' => true,
+                'derivativeEnabled'    => false,
+            ]);
         }
     }
 
@@ -546,13 +565,19 @@ class Metadata extends AbstractMetadataListener
 
         $actions = $dataManager->getCacheData('dynamic_action');
         if ($actions === null) {
-            $connection = $this->getConnection();
+            $connection = $this->getDbal();
             try {
+                // the settings of the action types are stored in the tables of the subtypes
                 $actions = $connection->createQueryBuilder()
-                    ->select('*')
-                    ->from($connection->quoteIdentifier('action'))
-                    ->where('deleted = :false')
-                    ->andWhere('is_active = :true')
+                    ->select('a.*, COALESCE(tc.target_entity, tu.target_entity, tcu.target_entity, td.target_entity) AS target_entity, te.show_email_preview, te.email_template_id')
+                    ->from($connection->quoteIdentifier('action'), 'a')
+                    ->leftJoin('a', 'action_type_create', 'tc', 'tc.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_update', 'tu', 'tu.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_create_or_update', 'tcu', 'tcu.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_delete', 'td', 'td.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_email', 'te', 'te.supertype_id = a.id')
+                    ->where('a.deleted = :false')
+                    ->andWhere('a.is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
@@ -632,10 +657,9 @@ class Metadata extends AbstractMetadataListener
             }
 
             if ($action['type'] === 'email') {
-                $actionData = @json_decode($action['data'], true);
-                $params     = array_merge($params, [
-                    'showEmailPreview' => !empty($actionData['field']['showEmailPreview']),
-                    'emailTemplateId'  => $action['emailTemplateId'] ?? '',
+                $params = array_merge($params, [
+                    'showEmailPreview' => !empty($action['show_email_preview']),
+                    'emailTemplateId'  => $action['email_template_id'] ?? '',
                 ]);
             }
 
@@ -1648,9 +1672,6 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs'][$scope]['fields'] = $newFields;
         }
 
-        // Disable removal of isMultilang in Attribute entity
-        $data['entityDefs']['Attribute']['fields']['isMultilang']['layoutRemoveDisabled'] = true;
-
         return $data;
     }
 
@@ -2514,6 +2535,128 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
+    /**
+     * A subtype extends its supertype with type-specific fields: it is linked one-to-one to the supertype record
+     * and is removed by the database together with it. The supertype gets the "type" field that names the subtype
+     * of each record.
+     */
+    protected function prepareSubtypes(array &$data): void
+    {
+        $subtypes = [];
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype' || empty($scopeDefs['supertypeId'])) {
+                continue;
+            }
+
+            $supertype = $scopeDefs['supertypeId'];
+            if (empty($data['scopes'][$supertype])) {
+                continue;
+            }
+
+            $subtypes[$supertype][] = $scope;
+
+            // on UI a subtype record is shown only via its supertype record
+            $data['clientDefs'][$scope]['controller'] = 'controllers/subtype';
+            $data['clientDefs'][$scope]['model'] = 'models/subtype';
+            $data['clientDefs'][$scope]['views']['detail'] = 'views/subtype/detail';
+            $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
+            // a subtype can define its own record view, it has to extend views/subtype/record/detail
+            $data['clientDefs'][$scope]['recordViews']['detail'] ??= 'views/subtype/record/detail';
+
+            // the link to the supertype record is technical, it is used by the API only
+            $data['entityDefs'][$scope]['fields']['supertype'] = [
+                'type'                 => 'link',
+                'protected'            => true,
+                'customizable'         => false,
+                'duplicateIgnore'      => true,
+                'layoutListDisabled'   => true,
+                'layoutDetailDisabled' => true,
+                'massUpdateDisabled'   => true,
+                'filterDisabled'       => true,
+                'importDisabled'       => true,
+                'exportDisabled'       => true,
+                'emHidden'             => true,
+            ];
+
+            $data['entityDefs'][$scope]['links']['supertype'] = [
+                'type'          => 'belongsTo',
+                'entity'        => $supertype,
+                'relationType'  => 'oneToOne',
+                'cascadeDelete' => true,
+                'noIndex'       => true,
+            ];
+        }
+
+        foreach ($subtypes as $supertype => $scopes) {
+            sort($scopes);
+
+            $prefixLength = strlen($supertype . 'Type');
+
+            $options = [];
+            foreach ($scopes as $scope) {
+                $options[] = lcfirst(substr($scope, $prefixLength));
+            }
+
+            // the supertype can define the view and the conditions of the field, the options are the subtypes
+            $data['entityDefs'][$supertype]['fields']['type'] = array_merge($data['entityDefs'][$supertype]['fields']['type'] ?? [], [
+                'type'               => 'enum',
+                'options'            => $options,
+                'protected'          => true,
+                'customizable'       => false,
+                'massUpdateDisabled' => true,
+                'duplicateIgnore'    => true,
+            ]);
+
+            $data['scopes'][$supertype]['hasSubtypes'] = true;
+
+            foreach ($scopes as $scope) {
+                $this->addSupertypeFieldsToSubtype($data, $supertype, $scope);
+
+                // the relations of the supertype are shown on the record of the subtype
+                $data['clientDefs'][$scope]['relationshipPanels'] = array_merge(
+                    $data['clientDefs'][$supertype]['relationshipPanels'] ?? [],
+                    $data['clientDefs'][$scope]['relationshipPanels'] ?? []
+                );
+            }
+        }
+    }
+
+    /**
+     * A subtype record contains all fields and relations of its supertype record. They are stored in the supertype
+     * table, so they are skipped for the subtype in the ORM: the fields are read through the "supertype" relation and
+     * the relations are served by the supertype record.
+     */
+    protected function addSupertypeFieldsToSubtype(array &$data, string $supertype, string $subtype): void
+    {
+        foreach ($data['entityDefs'][$supertype]['fields'] ?? [] as $field => $fieldDefs) {
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
+
+            if (isset($data['entityDefs'][$subtype]['fields'][$field])) {
+                continue;
+            }
+
+            // the field is managed in the supertype
+            $fieldDefs['supertypeField'] = true;
+            $fieldDefs['skipOrmDefs'] = true;
+            $fieldDefs['customizable'] = false;
+            $fieldDefs['emHidden'] = true;
+            $fieldDefs['unique'] = false;
+
+            $data['entityDefs'][$subtype]['fields'][$field] = $fieldDefs;
+
+            if (!empty($linkDefs = $data['entityDefs'][$supertype]['links'][$field] ?? null)) {
+                // the relations to many records are served by the supertype record
+                if ($fieldDefs['type'] !== 'linkMultiple') {
+                    unset($linkDefs['foreign']);
+                }
+                $linkDefs['skipOrmDefs'] = true;
+                $data['entityDefs'][$subtype]['links'][$field] = $linkDefs;
+            }
+        }
+    }
+
     protected function prepareDerivatives(array &$data): void
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
@@ -2697,7 +2840,6 @@ class Metadata extends AbstractMetadataListener
                 $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
             }
 
-
             $derivativeOverride = [
                 'primaryEntityId' => $primaryEntity,
                 'isCustom'        => true,
@@ -2712,7 +2854,6 @@ class Metadata extends AbstractMetadataListener
                 $derivativeOverride[$field] = $scopeDefs[$field] ?? null;
             }
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], $derivativeOverride);
-
 
             if (array_key_exists('module', $data['scopes'][$scope])) {
                 unset($data['scopes'][$scope]['module']);

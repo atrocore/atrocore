@@ -12,5 +12,8 @@
     "audit",
     "state",
     "personalData"
+  ],
+  "subtype": [
+    "subtype"
   ]
 }

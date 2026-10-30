@@ -20,6 +20,7 @@ use Atro\Core\UserContext;
 use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
@@ -751,7 +752,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
                 $entity->set('id', $this->generateId());
-            } else {
+            } elseif ($entity->getAttributeType('deleted') === 'bool') {
                 // delete deleted record
                 $qb = $this->getConnection()->createQueryBuilder()
                     ->delete($this->getConnection()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())))
@@ -782,6 +783,25 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         return parent::save($entity, $options);
+    }
+
+    /**
+     * Finishes the save that was made with the "skipAfterSave", "keepNew" and "skipUpdateFetchedValues" options, so
+     * that the after-save logic sees the entity as it was changed and runs when the related data is saved too.
+     */
+    public function completeDeferredSave(Entity $entity, array $options = []): void
+    {
+        $this->afterSave($entity, $options);
+
+        if ($entity->isNew()) {
+            $entity->setIsNew(false);
+        } elseif ($entity->isFetched()) {
+            $entity->updateFetchedValues();
+        }
+
+        if ($entity->get('id') !== null) {
+            $this->putToCache($entity->get('id'), $entity);
+        }
     }
 
     public function generateId(): string
@@ -1132,6 +1152,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->executeQuery();
     }
 
+    /**
+     * Restricts the query over the table of the entity, joined with the given alias, to the not deleted records.
+     */
+    protected function whereNotDeleted(QueryBuilder $qb, string $alias): void
+    {
+        $qb->andWhere("$alias.deleted = :false")
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+    }
+
     public function getEntitiesIdsWithNullScriptFields(int $offset = 0, int $limit = 2000): array
     {
         // we build the query to retrieve record with at least one script field null or one null attribute values;
@@ -1139,18 +1168,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $qb    = $this->getConnection()->createQueryBuilder()
             ->select('t.id')
             ->from($this->getConnection()->quoteIdentifier($table), 't')
-            ->where('t.deleted = :false')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->distinct()
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('true', true, ParameterType::BOOLEAN);
 
+        $this->whereNotDeleted($qb, 't');
+
         $conditions = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
+            // the fields a subtype takes from its supertype are calculated by the supertype
+            if (!empty($fieldDefs['supertypeField'])) {
+                continue;
+            }
             if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
-                $conditions[] = $this->getEntityManager()->getMapper()->toDb($field) . ' IS NULL';
+                $conditions[] = 't.' . $this->getEntityManager()->getMapper()->toDb($field) . ' IS NULL';
             }
         }
 
@@ -1159,6 +1193,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $foreignColumn = Util::toUnderScore(lcfirst($this->entityType)) . "_id";
             $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn")
                 ->leftJoin('at', 'attribute', 'a', 'a.id = at.attribute_id AND a.deleted = :false AND a.type = :script AND a.entity_id = :entityId')
+                // the settings of the script attributes are stored in the table of their subtype
+                ->leftJoin('a', 'attribute_type_script', 'ast', 'ast.supertype_id = a.id')
                 ->setParameter('script', 'script')
                 ->setParameter('entityId', $this->entityType);
 
@@ -1172,12 +1208,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     if (!empty($this->getConfig()->get('isMultilangActive'))) {
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
                             $langColumn   = $column . '_' . strtolower($code);
-                            $conditions[] = "(a.output_type = :$outputType AND (at.$langColumn IS NULL) AND a.is_multilang = :true)";
+                            $conditions[] = "(ast.output_type = :$outputType AND (at.$langColumn IS NULL) AND ast.is_multilang = :true)";
                         }
                     }
                 }
 
-                $conditions[] = "(a.output_type = :$outputType AND at.$column IS NULL )";
+                $conditions[] = "(ast.output_type = :$outputType AND at.$column IS NULL )";
                 $qb->setParameter($outputType, $outputType);
             }
         }

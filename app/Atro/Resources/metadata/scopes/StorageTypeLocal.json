@@ -1,0 +1,9 @@
+{
+  "entity": true,
+  "type": "Subtype",
+  "supertypeId": "Storage",
+  "layouts": true,
+  "customizable": false,
+  "importable": false,
+  "emHidden": true
+}

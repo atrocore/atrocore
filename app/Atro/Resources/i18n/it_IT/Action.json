@@ -66,7 +66,8 @@
       "webhook": "Webhook",
       "customCode": "Codice personalizzato",
       "email": "Invii l'e-mail",
-      "createOrUpdate": "Creare o aggiornare"
+      "createOrUpdate": "Creare o aggiornare",
+      "custom": "Codice personalizzato"
     },
     "executeAs": {
       "system": "Sistema",

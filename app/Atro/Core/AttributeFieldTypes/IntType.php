@@ -87,11 +87,11 @@ class IntType extends AbstractFieldType
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
-        if (isset($attributeData['min'])) {
-            $entity->entityDefs['fields'][$name]['min'] = $attributeData['min'];
+        if ($this->getSetting($row, 'min') !== null) {
+            $entity->entityDefs['fields'][$name]['min'] = $this->getSetting($row, 'min');
         }
-        if (isset($attributeData['max'])) {
-            $entity->entityDefs['fields'][$name]['max'] = $attributeData['max'];
+        if ($this->getSetting($row, 'max') !== null) {
+            $entity->entityDefs['fields'][$name]['max'] = $this->getSetting($row, 'max');
         }
 
         if ($this->type === 'float') {

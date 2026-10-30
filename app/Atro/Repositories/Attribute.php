@@ -21,7 +21,6 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -33,6 +32,14 @@ use Espo\ORM\IEntity;
 
 class Attribute extends Base
 {
+    /**
+     * The settings of the attribute types that were stored in "data.field".
+     */
+    public const TYPE_DATA_FIELDS = [
+        'options', 'optionColors', 'min', 'max', 'maxLength', 'countBytesInsteadOfCharacters', 'entityType', 'entityField',
+        'dropdown', 'selectPageSize',
+    ];
+
     protected function init()
     {
         parent::init();
@@ -94,26 +101,29 @@ class Attribute extends Base
     {
         $conn = $this->getDbal();
 
+        $qb = $conn->createQueryBuilder()
+            ->select('a.*')
+            ->from($conn->quoteIdentifier('attribute'), 'a')
+            ->where('a.id IN (:ids)')
+            ->andWhere('a.deleted=:false')
+            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+
         if (class_exists("\\Pim\\Module")) {
-            return $conn->createQueryBuilder()
-                ->select('a.*, c.id as channel_id, c.name as channel_name')
-                ->from($conn->quoteIdentifier('attribute'), 'a')
-                ->where('a.id IN (:ids)')
-                ->andWhere('a.deleted=:false')
-                ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'a.channel_id=c.id AND c.deleted=:false')
-                ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            $qb->addSelect('c.id as channel_id, c.name as channel_name')
+                ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'a.channel_id=c.id AND c.deleted=:false');
         }
 
-        return $conn->createQueryBuilder()
-            ->select('*')
-            ->from($conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
-            ->andWhere('deleted=:false')
-            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
+        // the settings of the attribute types are stored in the tables of the subtypes
+        $converter = $this->getAttributeFieldConverter();
+        $converter->joinSubtypes($qb, 'a');
+
+        return array_map([$converter, 'prepareSubtypeColumns'], $qb->fetchAllAssociative());
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->getInjection('container')->get(AttributeFieldConverter::class);
     }
 
     public function getAttributeIdsByIdOrCode(string $entityName, array $values): array
@@ -297,12 +307,15 @@ class Attribute extends Base
             ->setParameter('attributeId', $attributeId)
             ->setParameter('entityId', $entityId);
 
-        if (!empty($attribute->get('defaultUnit'))) {
+        // the settings of the attribute type are stored in its subtype record
+        $settings = $attribute->getSubtype();
+
+        if (!empty($settings?->get('defaultUnit'))) {
             $qb->setValue('reference_value', ':unitId')
-                ->setParameter('unitId', $attribute->get('defaultUnit'));
+                ->setParameter('unitId', $settings->get('defaultUnit'));
         }
 
-        if ($attribute->get('type') === 'bool' && $attribute->get('notNull')) {
+        if ($attribute->get('type') === 'bool' && $settings?->get('notNull')) {
             $qb->setValue('bool_value', ':false')
                 ->setParameter('false', false, ParameterType::BOOLEAN);
         }
@@ -566,45 +579,11 @@ class Attribute extends Base
         }
     }
 
-    public function getMultilingualAttributeTypes(): array
-    {
-        $attributes = [];
-        foreach ($this->getMetadata()->get(['attributes'], []) as $attribute => $attributeDefs) {
-            if (!empty($attributeDefs['multilingual'])) {
-                $attributes[] = $attribute;
-            }
-        }
-
-        return $attributes;
-    }
-
     public function beforeSave(Entity $entity, array $options = [])
     {
+        // the type of an attribute is the subtype of its record
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            $converterName = $this
-                ->getMetadata()
-                ->get(['attributes', $entity->getFetched('type'), 'convert', $entity->get('type')]);
-
-            if (empty($converterName)) {
-                $message = $this
-                    ->getInjection('language')
-                    ->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
-                throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
-            }
-
-            $this->getInjection('container')->get($converterName)->convert($entity);
-        }
-
-        if ($entity->isNew()) {
-            $this->resetNonApplicableTypeFields($entity);
-        }
-
-        if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
-            if (!RegexUtil::validate($entity->get('pattern'))) {
-                throw new BadRequest(
-                    sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
-                );
-            }
+            throw new BadRequest($this->exception('attributeTypeCannotBeChanged'));
         }
 
         if (!AttributeFieldConverter::isValidSystemName($entity->get('systemName'))) {
@@ -612,10 +591,6 @@ class Attribute extends Base
         }
         if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('systemName')}")) {
             throw new BadRequest("Field with such System Name exists for the {$entity->get('entityId')}.");
-        }
-
-        if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
-            $entity->set('isMultilang', false);
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
@@ -628,43 +603,6 @@ class Attribute extends Base
                 || $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")
             ) {
                 throw new BadRequest($this->exception('entityNotAllowToChoose'));
-            }
-        }
-
-        if (!$entity->isNew() && in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->isAttributeChanged('options')) {
-            $fetchedData = !empty($entity->getFetched('data')) ? json_decode(json_encode($entity->getFetched('data')), true) : [];
-
-            if (!empty($fetchedData)) {
-                $fetchedData = isset($fetchedData['field']) && is_array($fetchedData['field']) ? $fetchedData['field'] : [];
-                $fetchedOptions = isset($fetchedData['options']) && is_array($fetchedData['options']) ? $fetchedData['options'] : [];
-
-                $tableName = Util::toUnderScore($entity->get('entityId')) . '_attribute_value';
-
-                $deletedOptions = array_values(array_diff($fetchedOptions, $entity->get('options') ?? []));
-
-                if (!empty($deletedOptions)) {
-                    $query = $this
-                        ->getDbal()
-                        ->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where('attribute_id=:attributeId')
-                        ->setParameter('attributeId', $entity->get('id'));
-
-                    $conditions = [$query->expr()->in('varchar_value', ':options')];
-                    $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
-
-                    foreach ($deletedOptions as $i => $option) {
-                        $conditions[] = $query->expr()->like('json_value', ":option$i");
-                        $query->setParameter("option$i", "%\"$option\"%");
-                    }
-
-                    $query->andWhere($query->expr()->or(...$conditions));
-
-                    if (!empty($query->fetchOne())) {
-                        throw new BadRequest($this->getLanguage()->translate('listOptionCannotBeDeleted', 'exceptions'));
-                    }
-                }
             }
         }
 
@@ -722,60 +660,28 @@ class Attribute extends Base
             $entity->set('fullWidth', true);
         }
 
-        if ($entity->get('type') === 'bool') {
-            if ($entity->isNew() || $entity->isAttributeChanged('allowNullForBool')) {
-                $entity->set('notNull', empty($entity->get('allowNullForBool')));
-            }
-        }
-
         parent::beforeSave($entity, $options);
-
-        $this->validateMinMax($entity);
     }
 
-    protected function resetNonApplicableTypeFields(Entity $entity): void
+    /**
+     * The data of an attribute together with the settings of its type that were stored in "data.field" before they
+     * became fields of the subtype. The classification attributes still work with this structure.
+     */
+    public function getAttributeData(Entity $attribute): array
     {
-        $typeRelatedFields = [
-            'fileType'                      => ['file'],
-            'pattern'                       => ['varchar'],
-            'options'                       => ['enum', 'multiEnum'],
-            'min'                           => ['int', 'float'],
-            'max'                           => ['int', 'float'],
-            'maxLength'                     => ['varchar', 'text', 'wysiwyg', 'markdown'],
-            'countBytesInsteadOfCharacters' => ['varchar', 'text', 'wysiwyg', 'markdown'],
-            'entityType'                    => ['link', 'linkMultiple'],
-            'entityField'                   => ['link', 'linkMultiple'],
-            'measure'                       => ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'],
-            'prefixEnabled'                 => ['int', 'float', 'varchar'],
-            'defaultDate'                   => ['date', 'datetime'],
-            'amountOfDigitsAfterComma'      => ['float', 'rangeFloat'],
-            'useDisabledTextareaInViewMode' => ['text', 'varchar', 'wysiwyg'],
-            'dropdown'                      => ['link', 'linkMultiple'],
-            'selectPageSize'                => ['link', 'linkMultiple'],
-            'allowNullForBool'              => ['bool'],
-            'notNull'                       => ['varchar', 'text', 'markdown', 'wysiwyg', 'url'],
-            'trim'                          => ['varchar'],
-            'htmlSanitizer'                 => ['wysiwyg'],
-            'conditionalDisableOptions'     => ['enum', 'multiEnum', 'link', 'linkMultiple'],
-        ];
+        $data = !empty($attribute->get('data')) ? json_decode(json_encode($attribute->get('data')), true) : [];
+        if (!is_array($data)) {
+            $data = [];
+        }
 
-        foreach ($typeRelatedFields as $field => $types) {
-            if (in_array($entity->get('type'), $types)) {
-                continue;
-            }
-
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Attribute', 'fields', $field], []);
-            $default = $fieldDefs['default'] ?? null;
-
-            if (!empty($fieldDefs['virtualField'])) {
-                $entity->setVirtualField($field, $default);
-            } elseif (in_array($fieldDefs['type'] ?? null, ['link', 'file'])) {
-                $entity->set("{$field}Id", null);
-                $entity->set("{$field}Name", null);
-            } elseif ($entity->hasAttribute($field)) {
-                $entity->set($field, $default);
+        $settings = $attribute->getSubtype();
+        foreach (self::TYPE_DATA_FIELDS as $field) {
+            if (!empty($settings) && $settings->hasAttribute($field)) {
+                $data['field'][$field] = $settings->get($field);
             }
         }
+
+        return $data;
     }
 
     public function validateMinMax(Entity $entity): void
@@ -839,26 +745,6 @@ class Attribute extends Base
                 ->getAclManager()
                 ->clearAclCache();
         }
-
-        if ($entity->get('type') === 'bool') {
-            if (!$entity->isNew() && $entity->isAttributeChanged('notNull') && $entity->get('notNull')) {
-                $table = Util::toUnderScore(lcfirst($entity->get('entityId')) . '_attribute_value');
-                $this->getDbal()->createQueryBuilder()
-                    ->update($table)
-                    ->set('bool_value', ':false')
-                    ->where('attribute_id = :attributeId')
-                    ->andWhere("bool_value is NULL")
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->setParameter('attributeId', $entity->get('id'))
-                    ->executeStatement();
-            }
-        }
-
-        if (in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->has('translatedOptions')) {
-            $this
-                ->getTranslationRepository()
-                ->setTranslationOptions($entity->get('entityId'), $entity->get('systemName'), (array)$entity->get('translatedOptions'));
-        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
@@ -905,10 +791,5 @@ class Attribute extends Base
     protected function getAclManager(): AclManager
     {
         return $this->getInjection('container')->get('aclManager');
-    }
-
-    protected function getTranslationRepository(): Translation
-    {
-        return $this->getEntityManager()->getRepository('Translation');
     }
 }

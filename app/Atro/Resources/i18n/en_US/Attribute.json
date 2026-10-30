@@ -109,6 +109,7 @@
     "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
     "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
     "attributeIsUsedInClassifications": "Attribute is used in classifications. Please, update classifications first.",
-    "invalidType": "The attribute type '{type}' is invalid"
+    "invalidType": "The attribute type '{type}' is invalid",
+    "attributeTypeCannotBeChanged": "The type of an attribute cannot be changed."
   }
 }

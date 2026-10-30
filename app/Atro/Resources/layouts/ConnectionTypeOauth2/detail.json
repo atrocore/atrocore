@@ -1,0 +1,60 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "oauthUrl"
+        },
+        {
+          "name": "oauthGrantType"
+        }
+      ],
+      [
+        {
+          "name": "oauthClientId"
+        },
+        {
+          "name": "oauthClientSecret"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "password"
+        }
+      ],
+      [
+        {
+          "name": "verifySsl"
+        },
+        false
+      ],
+      [
+        {
+          "name": "httpBasicEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "httpBasicUsername"
+        },
+        {
+          "name": "httpBasicPassword"
+        }
+      ]
+    ]
+  }
+]

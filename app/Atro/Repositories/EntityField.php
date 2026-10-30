@@ -22,6 +22,7 @@ use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
@@ -329,7 +330,7 @@ class EntityField extends ReferenceData
         }
 
         if (!$entity->isNew() && $entity->get('type') === 'bool' && empty($entity->get('allowNullForBool')) && $entity->isAttributeChanged('allowNullForBool')) {
-            $connection = $this->getEntityManager()->getDbal();
+            $connection = $this->getEntityManager()->getConnection();
             $entityName = $entity->get('entityId');
             $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
 
@@ -350,14 +351,17 @@ class EntityField extends ReferenceData
             $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
 
             if (!empty($type) && $type !== 'ReferenceData') {
-                $connection = $this->getEntityManager()->getDbal();
+                $connection = $this->getEntityManager()->getConnection();
                 $tableName  = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $column     = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
 
-                $values = $this->getEntityManager()->getDbal()->createQueryBuilder()
-                    ->select($column, 'deleted')
+                // a subtype has no "deleted" column
+                $groupBy = $type === 'Subtype' ? [$column] : [$column, 'deleted'];
+
+                $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select(...$groupBy)
                     ->from($tableName)
-                    ->groupBy($column, 'deleted')
+                    ->groupBy(...$groupBy)
                     ->having("count($column) > 1")
                     ->fetchFirstColumn();
 
@@ -424,12 +428,7 @@ class EntityField extends ReferenceData
                     }
 
                     if (!$hasDefault) {
-                        $res = $this->getEntityManager()->getDbal()->createQueryBuilder()
-                            ->select('id')
-                            ->from($tableName)
-                            ->where('deleted = :false')
-                            ->setParameter('false', false, ParameterType::BOOLEAN)
-                            ->fetchOne();
+                        $res = $this->createExistingRecordsQuery($entityName)->fetchOne();
 
                         if (!empty($res)) {
                             throw new BadRequest($this->getLanguage()->translate('cannotAddRequiredFieldWithExistingRecords', 'exceptions', 'EntityField'));
@@ -460,12 +459,8 @@ class EntityField extends ReferenceData
                         $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
                     }
 
-                    $qb = $this->getEntityManager()->getDbal()->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where('deleted = :false')
+                    $qb = $this->createExistingRecordsQuery($entityName)
                         ->andWhere(implode(' OR ', $conditions))
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
                         ->setParameter('empty', '');
 
                     if ($entity->get('entityId') == 'User') {
@@ -526,14 +521,7 @@ class EntityField extends ReferenceData
                 $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
                 $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
 
-                $query = $this
-                    ->getEntityManager()
-                    ->getDbal()
-                    ->createQueryBuilder()
-                    ->select('id')
-                    ->from($tableName)
-                    ->where('deleted = :false')
-                    ->setParameter('false', false, ParameterType::BOOLEAN);
+                $query = $this->createExistingRecordsQuery($entity->get('entityId'));
 
                 $conditions = [$query->expr()->in($column, ':options')];
                 $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
@@ -644,7 +632,7 @@ class EntityField extends ReferenceData
                 }
             }
         } else {
-            $connection = $this->getEntityManager()->getDbal();
+            $connection = $this->getEntityManager()->getConnection();
             $tableName  = $this->getEntityManager()->getMapper()->toDb($scope);
             $column     = $this->getEntityManager()->getMapper()->toDb($field);
 
@@ -673,7 +661,10 @@ class EntityField extends ReferenceData
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+        if (
+            $this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false
+            || $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false
+        ) {
             throw new Forbidden();
         }
 
@@ -685,6 +676,35 @@ class EntityField extends ReferenceData
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    /**
+     * The query over the not deleted records of the entity. A subtype has no "deleted" column: its records share the
+     * "deleted" state of the supertype records.
+     */
+    protected function createExistingRecordsQuery(string $entityName): QueryBuilder
+    {
+        $dbal   = $this->getEntityManager()->getDbal();
+        $mapper = $this->getEntityManager()->getMapper();
+        $table  = $dbal->quoteIdentifier($mapper->toDb($entityName));
+
+        $query = $dbal->createQueryBuilder();
+
+        if ($this->getMetadata()->get(['scopes', $entityName, 'type']) === 'Subtype') {
+            $supertype = $this->getMetadata()->get(['scopes', $entityName, 'supertypeId']);
+            $query
+                ->select('t.id')
+                ->from($table, 't')
+                ->innerJoin('t', $dbal->quoteIdentifier($mapper->toDb($supertype)), 's', 's.id = t.supertype_id')
+                ->where('s.deleted = :false');
+        } else {
+            $query
+                ->select('id')
+                ->from($table)
+                ->where('deleted = :false');
+        }
+
+        return $query->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
     protected function validateFieldIsNotUsedInUniqueIndex(string $entityName, string $field): void
@@ -741,6 +761,13 @@ class EntityField extends ReferenceData
             }
         }
 
+        $this->validateSubtypeNames($entity->get('entityId'), $entity->get('code'), $entity->get('type'), !empty($entity->get('isMultilang')));
+
+        if (in_array($entity->get('type'), ['link', 'linkMultiple']) && !empty($entity->get('foreignEntityId'))) {
+            $foreignType = $entity->get('type') === 'link' && $entity->get('relationType') === 'oneToOne' ? 'link' : 'linkMultiple';
+            $this->validateSubtypeNames($entity->get('foreignEntityId'), $entity->get('foreignCode'), $foreignType, false);
+        }
+
         $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
         $entity->set('isCustom', true);
 
@@ -748,6 +775,86 @@ class EntityField extends ReferenceData
         $this->updateField($entity, []);
 
         return true;
+    }
+
+    /**
+     * A subtype record is shown together with its supertype record, so the names of their fields (including the
+     * attributes derived from the fields) must not intersect.
+     */
+    protected function validateSubtypeNames(string $entityName, string $field, string $type, bool $isMultilang): void
+    {
+        /** @var Entity $entityRepository */
+        $entityRepository = $this->getEntityManager()->getRepository('Entity');
+
+        $subtypes = $entityRepository->getSubtypesIds($entityName);
+        $supertype = $this->getMetadata()->get(['scopes', $entityName, 'type']) === 'Subtype'
+            ? $this->getMetadata()->get(['scopes', $entityName, 'supertypeId'])
+            : null;
+
+        if (empty($subtypes) && empty($supertype)) {
+            return;
+        }
+
+        $names = $this->getDerivedNames($field, $type, $isMultilang);
+
+        if (!empty($subtypes)) {
+            foreach (Entity::SUBTYPE_RESERVED_FIELDS as $reserved) {
+                if (in_array($reserved, $names, true)) {
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('subtypeFieldIsReserved', 'exceptions', 'EntityField'), $reserved));
+                }
+            }
+        }
+
+        $related = [];
+        if (!empty($supertype)) {
+            $related[$supertype] = 'fieldNameConflictsWithSupertype';
+        }
+        foreach ($subtypes as $subtype) {
+            $related[$subtype] = 'fieldNameConflictsWithSubtype';
+        }
+
+        foreach ($related as $relatedEntity => $label) {
+            $occupied = [];
+            foreach ($this->getMetadata()->get(['entityDefs', $relatedEntity, 'fields'], []) as $relatedField => $defs) {
+                if (in_array($relatedField, ['id', '_meta', 'supertype'], true)) {
+                    continue;
+                }
+                $occupied = array_merge($occupied, $this->getDerivedNames($relatedField, $defs['type'] ?? '', false));
+            }
+
+            $conflicts = array_values(array_intersect($names, $occupied));
+            if (!empty($conflicts)) {
+                throw new BadRequest(sprintf(
+                    $this->getLanguage()->translate($label, 'exceptions', 'EntityField'),
+                    $conflicts[0],
+                    $this->translate($relatedEntity, 'scopeNames')
+                ));
+            }
+        }
+    }
+
+    /**
+     * The field name together with the names of the attributes the field produces.
+     */
+    protected function getDerivedNames(string $field, string $type, bool $isMultilang): array
+    {
+        $names = [$field];
+
+        if ($type === 'link') {
+            $names[] = $field . 'Id';
+            $names[] = $field . 'Name';
+        } elseif ($type === 'linkMultiple') {
+            $names[] = $field . 'Ids';
+            $names[] = $field . 'Names';
+        }
+
+        if ($isMultilang) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $names[] = $field . ucfirst(Util::toCamelCase(strtolower($locale)));
+            }
+        }
+
+        return $names;
     }
 
     public function updateEntity(OrmEntity $entity): bool

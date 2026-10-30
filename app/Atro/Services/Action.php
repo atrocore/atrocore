@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\ActionTypes\TypeInterface;
-use Atro\Console\CreateAction;
-use Atro\Console\CreateConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
@@ -28,28 +25,11 @@ use Espo\ORM\Entity;
 
 class Action extends Base
 {
-    protected $mandatorySelectAttributeList = ['searchEntity', 'targetEntity', 'data', 'type'];
+    protected $mandatorySelectAttributeList = ['data', 'type'];
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         parent::handleInput($data, $id);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        $fileName = CreateAction::DIR . '/' . str_replace('custom', '', $entity->get('type') ?? '') . '.php';
-        $entity->set('typePhpCode', null);
-        if (file_exists($fileName)) {
-            $entity->set('typePhpCode', file_get_contents($fileName));
-        }
-
-        $fileName = CreateConditionType::DIR . '/' . $entity->get('conditionsType') . '.php';
-        $entity->set('conditionPhpCode', null);
-        if (file_exists($fileName)) {
-            $entity->set('conditionPhpCode', file_get_contents($fileName));
-        }
     }
 
     public function executeNow(string $id, \stdClass $input): array
@@ -145,15 +125,6 @@ class Action extends Base
     protected function getLanguage(): Language
     {
         return $this->getInjection('container')->get('language');
-    }
-
-    protected function getActionType(string $type): TypeInterface
-    {
-        $className = $this->getMetadata()->get(['action', 'types', $type]);
-        if (empty($className)) {
-            throw new Error("No such action type '$type'.");
-        }
-        return $this->getInjection('container')->get($className);
     }
 
     public function getDynamicActions(string $scope, ?string $id, ?string $type, ?string $display)

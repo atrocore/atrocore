@@ -58,7 +58,8 @@
       "email": "E-Mail senden",
       "webhook": "Webhook",
       "customCode": "Benutzerdefinierter Code",
-      "createOrUpdate": "Erstellen oder Aktualisieren"
+      "createOrUpdate": "Erstellen oder Aktualisieren",
+      "custom": "Benutzerdefinierter Code"
     },
     "executeAs": {
       "system": "System",

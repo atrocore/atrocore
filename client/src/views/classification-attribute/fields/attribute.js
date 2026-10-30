@@ -46,7 +46,9 @@ Espo.define('views/classification-attribute/fields/attribute', 'views/fields/lin
             this.model.set('attributeEntityType', null);
 
             if (this.model.get('attributeId')) {
-                this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
+                // the settings of the attribute type are the fields of its subtype record
+                Espo.Ajax.getRequest(`Attribute/${this.model.get('attributeId')}`, null, {metaContext: 'subtype'}).then(data => {
+                    const attribute = (data._meta && data._meta.subtype && data._meta.subtype.data) || data;
                     this.model.set('attributeType', attribute.type);
                     this.model.set('attributeEntityType', attribute.entityType ?? null);
                     this.model.set('attributeMeasureId', attribute.measureId);

@@ -10,8 +10,5 @@
     "notEntity",
     "connectionType",
     "httpConnection"
-  ],
-  "recordViews": {
-    "detail": "views/connection/record/detail"
-  }
+  ]
 }

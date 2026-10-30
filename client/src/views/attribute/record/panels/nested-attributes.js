@@ -13,11 +13,11 @@ Espo.define('views/attribute/record/panels/nested-attributes', 'views/record/pan
 
         boolFilterData: {
             notParentCompositeAttribute: function () {
-                return this.model.id;
+                return this.model.get('supertypeId') || this.model.id;
             },
 
             notLinkedWithCurrent: function () {
-                return this.model.id;
+                return this.model.get('supertypeId') || this.model.id;
             },
 
             onlyForEntity: function () {

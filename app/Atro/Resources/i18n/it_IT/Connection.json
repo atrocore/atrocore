@@ -81,6 +81,22 @@
     "smtpAuthType": {
       "basic": "Basic",
       "oauth": "Oauth"
+    },
+    "type": {
+      "atrocore": "AtroCore",
+      "pdoSql": "PDO SQL",
+      "mysql": "Server MySQL",
+      "psql": "Server PostgreSQL",
+      "msql": "Microsoft SQL Server",
+      "ftp": "FTP",
+      "sftp": "SFTP",
+      "oauth2": "OAuth 2.0",
+      "oauth1": "Oauth 1.0",
+      "otto": "Otto oauth",
+      "cookie": "Sessione di cookie",
+      "smtp": "SMTP",
+      "vertica": "DB Vertica",
+      "tokenAuthApi": "Token Auth API"
     }
   },
   "exceptions": {

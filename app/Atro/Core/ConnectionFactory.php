@@ -27,8 +27,20 @@ class ConnectionFactory
         $this->container = $container;
     }
 
+    /**
+     * The connection types work with the subtype record, it contains the settings of the connection. The connection
+     * record is replaced by its subtype record.
+     */
     public function create(Entity $connectionEntity): ConnectionInterface
     {
+        if ($connectionEntity->getEntityName() === 'Connection') {
+            $subtypeRecord = $connectionEntity->getSubtype();
+            if (empty($subtypeRecord)) {
+                throw new Error("Connection '{$connectionEntity->get('id')}' has no settings of its type.");
+            }
+            $connectionEntity = $subtypeRecord;
+        }
+
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
 

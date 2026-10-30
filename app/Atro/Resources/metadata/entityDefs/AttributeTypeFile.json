@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "fileType": {
+      "type": "link",
+      "required": false,
+      "default": null,
+      "layoutRemoveDisabled": true
+    }
+  },
+  "links": {
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
+    }
+  }
+}

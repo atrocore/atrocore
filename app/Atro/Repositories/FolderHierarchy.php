@@ -97,7 +97,7 @@ class FolderHierarchy extends Relation
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -132,7 +132,7 @@ class FolderHierarchy extends Relation
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -163,7 +163,7 @@ class FolderHierarchy extends Relation
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 

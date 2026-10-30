@@ -16,19 +16,28 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             this.params.groupTranslation = 'Layout.groups.viewType'
 
             Dep.prototype.setup.call(this);
-            if (!this.model.get(this.name) && this.params.options.length) {
-                this.model.set(this.name, this.params.options[0])
-            }
+            this.selectAvailableOption()
 
             this.listenTo(this.model, 'change:entity', () => {
                 this.setupGroups()
                 this.setupTranslation()
+                this.selectAvailableOption()
                 this.reRender()
             })
         },
 
+        // e.g. the list layout is not available for a subtype
+        selectAvailableOption() {
+            const options = this.getAvailableOptions()
+            if (options.length && !options.includes(this.model.get(this.name))) {
+                this.model.set(this.name, options[0])
+            }
+        },
+
         setupGroups() {
             this.params.options = this.getAvailableOptions()
+            // the options depend on the entity, the ones remembered for disabling options must not be restored
+            this.originalOptionList = null
             this.params.groupOptions = [
                 {
                     name: "view",
@@ -36,7 +45,7 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
                 },
                 {
                     name: "viewGroup",
-                    options: ["relationships", "navigation", "insights", "selectionRelations"]
+                    options: ["relationships", "navigation", "insights", "selectionRelations"].filter(o => this.params.options.includes(o))
                 }
             ]
         },
@@ -60,6 +69,26 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
                     optionList.push(layout)
 
                 })
+
+            return this.filterOptionsForSubtypes(optionList)
+        },
+
+        /**
+         * A record of an entity with subtypes is shown with the layouts of its subtype, while a subtype has no list of
+         * its own: each of them gets only the layouts it is shown with.
+         */
+        filterOptionsForSubtypes(optionList) {
+            const recordLayouts = ["detail", "summary", "relationships", "navigation", "insights"]
+            const scopeDefs = this.getMetadata().get(['scopes', this.model.get('entity')]) || {}
+
+            // the list layout of a subtype is used by the relationship panels of the entities related to the subtype
+            if (scopeDefs.type === 'Subtype') {
+                return optionList.filter(o => recordLayouts.includes(o) || o === 'list')
+            }
+
+            if (scopeDefs.hasSubtypes) {
+                return optionList.filter(o => !recordLayouts.includes(o))
+            }
 
             return optionList
         }

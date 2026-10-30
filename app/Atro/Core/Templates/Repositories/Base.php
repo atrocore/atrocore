@@ -272,6 +272,84 @@ class Base extends RDB
         return array_column($rows, 'foreign_id', 'id');
     }
 
+    /**
+     * The record of the subtype the record belongs to. Null when the entity has no subtypes or the record has no
+     * subtype data. It is kept in the memory storage for the request, like the records got by ID.
+     */
+    public function getSubtypeRecord(Entity $entity): ?Entity
+    {
+        if (empty($entity->get('id')) || empty($entity->get('type'))) {
+            return null;
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $this->entityName, 'hasSubtypes']))) {
+            return null;
+        }
+
+        $subtype = $this->entityName . 'Type' . ucfirst((string)$entity->get('type'));
+        if ($this->getMetadata()->get(['scopes', $subtype, 'type']) !== 'Subtype') {
+            return null;
+        }
+
+        $key = self::getSubtypeRecordCacheKey($this->entityName, (string)$entity->get('id'));
+        $memoryStorage = $this->getEntityManager()->getMemoryStorage();
+        if (!$memoryStorage->has($key)) {
+            $memoryStorage->set($key, $this->getEntityManager()->getRepository($subtype)
+                ->where(['supertypeId' => $entity->get('id')])
+                ->findOne());
+        }
+
+        return $memoryStorage->get($key);
+    }
+
+    public static function getSubtypeRecordCacheKey(string $supertype, string $id): string
+    {
+        return "subtype_record_{$supertype}_{$id}";
+    }
+
+    protected function beforeRestore($id)
+    {
+        parent::beforeRestore($id);
+
+        $this->validateSubtypeOfRestoredRecord((string)$id);
+    }
+
+    /**
+     * When the entity has subtypes, each record must belong to one of them. A record without the subtype data
+     * cannot be restored.
+     */
+    protected function validateSubtypeOfRestoredRecord(string $id): void
+    {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityName, 'hasSubtypes']))) {
+            return;
+        }
+
+        $connection = $this->getDbal();
+
+        $type = $connection->createQueryBuilder()
+            ->select('type')
+            ->from($connection->quoteIdentifier($this->getMapper()->toDb($this->entityName)))
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->fetchOne();
+
+        $subtype = empty($type) ? null : $this->entityName . 'Type' . ucfirst((string)$type);
+        if (!empty($subtype) && $this->getMetadata()->get(['scopes', $subtype, 'type']) === 'Subtype') {
+            $subtypeRecordId = $connection->createQueryBuilder()
+                ->select('id')
+                ->from($connection->quoteIdentifier($this->getMapper()->toDb($subtype)))
+                ->where('supertype_id = :id')
+                ->setParameter('id', $id)
+                ->fetchOne();
+
+            if (!empty($subtypeRecordId)) {
+                return;
+            }
+        }
+
+        throw new BadRequest($this->translateException('recordWithoutSubtypeCannotBeRestored'));
+    }
+
     public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {

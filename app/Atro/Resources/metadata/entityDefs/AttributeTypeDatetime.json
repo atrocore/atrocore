@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "defaultDate": {
+      "type": "varchar",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "tooltip": true,
+      "layoutRemoveDisabled": true
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "notNull": {
+      "type": "bool",
+      "default": false,
+      "layoutRemoveDisabled": true
+    },
+    "min": {
+      "type": "float",
+      "filterDisabled": true,
+      "layoutRemoveDisabled": true,
+      "emHidden": true
+    },
+    "max": {
+      "type": "float",
+      "filterDisabled": true,
+      "layoutRemoveDisabled": true,
+      "emHidden": true
+    },
+    "measure": {
+      "type": "link",
+      "layoutRemoveDisabled": true
+    },
+    "defaultUnit": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "layoutRemoveDisabled": true
+    },
+    "prefixEnabled": {
+      "type": "bool",
+      "default": false,
+      "notNull": true,
+      "layoutRemoveDisabled": true
+    },
+    "amountOfDigitsAfterComma": {
+      "type": "int",
+      "min": 0,
+      "layoutRemoveDisabled": true
+    }
+  },
+  "links": {
+    "measure": {
+      "type": "belongsTo",
+      "entity": "Measure"
+    }
+  }
+}

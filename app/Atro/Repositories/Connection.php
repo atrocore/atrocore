@@ -19,23 +19,6 @@ use Espo\ORM\Entity;
 
 class Connection extends Base
 {
-    public function get($id = null)
-    {
-        $entity = parent::get($id);
-        if (!empty($entity)) {
-            $this->setDataFields($entity);
-        }
-
-        return $entity;
-    }
-
-    public function setDataFields(Entity $entity): void
-    {
-        foreach ($entity->getDataFields() as $name => $value) {
-            $entity->set($name, $value);
-        }
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('type') === 'smtp' && $this->getConfig()->get('notificationSmtpConnectionId') === $entity->get('id')) {

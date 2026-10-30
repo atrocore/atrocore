@@ -527,7 +527,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -552,7 +552,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -581,7 +581,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -618,7 +618,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 

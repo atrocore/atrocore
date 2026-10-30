@@ -17,4 +17,11 @@ use Espo\Core\ORM\Entity;
 
 class Base extends Entity
 {
+    /**
+     * The record of the subtype this record belongs to, e.g. $exportFeed->getSubtype()->get('amount').
+     */
+    public function getSubtype(): ?Entity
+    {
+        return $this->entityManager->getRepository($this->getEntityName())->getSubtypeRecord($this);
+    }
 }

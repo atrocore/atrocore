@@ -1,0 +1,130 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "handler"
+        }
+      ],
+      [
+        {
+          "name": "iconClass"
+        },
+        {
+          "name": "hideTextLabel"
+        }
+      ],
+      [
+        {
+          "name": "applyToPreselectedRecords"
+        },
+        false
+      ],
+      [
+        {
+          "name": "executeAs"
+        },
+        {
+          "name": "inBackground"
+        }
+      ],
+      [
+        {
+          "name": "description"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Conditions",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "conditionsType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditions"
+        }
+      ],
+      [
+        {
+          "name": "conditionsExpression"
+        }
+      ],
+      [
+        {
+          "name": "conditionsScript"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Usage",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "usage"
+        },
+        {
+          "name": "sourceEntity"
+        }
+      ],
+      [
+        {
+          "name": "focusField"
+        },
+        false
+      ],
+      [
+        {
+          "name": "changeFields"
+        },
+        false
+      ],
+      [
+        {
+          "name": "displayField"
+        },
+        false
+      ],
+      [
+        {
+          "name": "massAction"
+        },
+        {
+          "name": "display"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Parameters",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "searchEntity"
+        },
+        false
+      ]
+    ]
+  }
+]

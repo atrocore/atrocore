@@ -1,0 +1,6 @@
+{
+  "iconClass": "plug",
+  "recordViews": {
+    "detail": "views/connection/record/detail-smtp"
+  }
+}
