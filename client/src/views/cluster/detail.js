@@ -380,6 +380,14 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             return this.translate('consolidate', 'actions', 'Cluster');
         },
 
+        getViewModeLabel(mode) {
+            return {
+                merge: this.translate('manualConsolidationView', 'labels', 'Cluster'),
+                compare: this.translate('comparisonView', 'labels', 'Cluster'),
+                standard: this.translate('standardView', 'labels', 'Cluster')
+            }[mode];
+        },
+
         canCompare() {
             const models = this.selectionViewMode === 'standard' ? this.collection?.models : this.selectionItemModels;
 
