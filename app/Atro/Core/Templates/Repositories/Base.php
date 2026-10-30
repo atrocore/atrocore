@@ -272,6 +272,30 @@ class Base extends RDB
         return array_column($rows, 'foreign_id', 'id');
     }
 
+    /**
+     * The record of the subtype the record belongs to. Null when the entity has no subtypes or the record has no
+     * subtype data.
+     */
+    public function getSubtypeRecord(Entity $entity): ?Entity
+    {
+        if (empty($entity->get('id')) || empty($entity->get('type'))) {
+            return null;
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $this->entityName, 'hasSubtypes']))) {
+            return null;
+        }
+
+        $subtype = $this->entityName . 'Type' . ucfirst((string)$entity->get('type'));
+        if ($this->getMetadata()->get(['scopes', $subtype, 'type']) !== 'Subtype') {
+            return null;
+        }
+
+        return $this->getEntityManager()->getRepository($subtype)
+            ->where(['supertypeId' => $entity->get('id')])
+            ->findOne();
+    }
+
     protected function beforeRestore($id)
     {
         parent::beforeRestore($id);
@@ -289,7 +313,7 @@ class Base extends RDB
             return;
         }
 
-        $connection = $this->getConnection();
+        $connection = $this->getDbal();
 
         $type = $connection->createQueryBuilder()
             ->select('type')

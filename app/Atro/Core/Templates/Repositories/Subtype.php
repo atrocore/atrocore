@@ -31,7 +31,7 @@ class Subtype extends Base
 {
     public function save(Entity $entity, array $options = [])
     {
-        $connection = $this->getConnection();
+        $connection = $this->getDbal();
 
         $connection->beginTransaction();
         try {

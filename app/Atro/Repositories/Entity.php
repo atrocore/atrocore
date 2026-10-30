@@ -705,7 +705,7 @@ class Entity extends ReferenceData
      */
     protected function subtypeHasRecords(string $code): bool
     {
-        $connection = $this->getEntityManager()->getConnection();
+        $connection = $this->getEntityManager()->getDbal();
 
         $tableName = $this->getEntityManager()->getMapper()->toDb($code);
         if (!$connection->createSchemaManager()->tablesExist([$tableName])) {
