@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\AnonymizationResolvers\AbstractAnonymizationResolver;
 use Atro\Core\Utils\Note as NoteUtil;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
@@ -990,47 +989,15 @@ class Record extends RecordService
         }
         $processed[$entityType][$id] = true;
 
+        /** @var \Atro\Core\ORM\Repositories\RDB $repository */
         $repository = $this->getRepository();
 
         if (empty($entity = $repository->get($id))) {
             throw new NotFound();
         }
 
-        $erasedFields = [];
-        foreach (($repository->getPersonalDataFields($id) ?? []) as $field) {
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
-
-            if (empty($fieldDefs['personalData']) || empty($fieldDefs['erasureMode'])) {
-                continue;
-            }
-
-            $resolver = $this->getAnonymizationResolver($fieldDefs['erasureMode']);
-            if (!$resolver->supports($entity, $field)) {
-                throw new Error("No anonymization resolver supports field '$field' of entity '$entityType' for record '$id'.");
-            }
-
-            if ($resolver->resolve($entity, $field, $processed)) {
-                $erasedFields[] = $field;
-            }
-        }
-
-        if (!empty($erasedFields)) {
-            $entity->set('erasedAt', (new \DateTime())->format('Y-m-d H:i:s'));
-
-            $this->getEntityManager()->saveEntity($entity, ['erasePersonalData' => true]);
-        }
+        $repository->erasePersonalData($entity, $processed);
 
         return true;
-    }
-
-    protected function getAnonymizationResolver(string $mode): AbstractAnonymizationResolver
-    {
-        $className = $this->getMetadata()->get(['app', 'anonymizationResolvers', $mode, 'className']);
-        if (empty($className) || !class_exists($className)) {
-            throw new Error("Anonymization resolver for erasure mode '$mode' is not registered.");
-        }
-
-        /** @var AbstractAnonymizationResolver $resolver */
-        return $this->getEntityManager()->getContainer()->get($className);
     }
 }

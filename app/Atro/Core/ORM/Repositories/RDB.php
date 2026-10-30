@@ -11,8 +11,10 @@
 
 namespace Atro\Core\ORM\Repositories;
 
+use Atro\Core\ErasureResolver\AbstractErasureResolver;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
@@ -1379,6 +1381,32 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->executeStatement();
     }
 
+    public function erasePersonalData(Entity $entity, ?array $processed = []): void
+    {
+        foreach (($this->getPersonalDataFields($entity->id) ?? []) as $field) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
+
+            if (empty($fieldDefs['personalData']) || empty($fieldDefs['erasureMode'])) {
+                continue;
+            }
+
+            $resolver = $this->getErasureResolver($fieldDefs['erasureMode']);
+            if (!$resolver->supports($entity, $field)) {
+                throw new Error("No erasure resolver supports field '$field' of entity '$this->entityType' for record '$entity->id'.");
+            }
+
+            if ($resolver->resolve($entity, $field, $processed)) {
+                $erasedFields[] = $field;
+            }
+        }
+
+        if (!empty($erasedFields)) {
+            $entity->set('erasedAt', (new \DateTime())->format('Y-m-d H:i:s'));
+
+            $this->getEntityManager()->saveEntity($entity, ['erase' => true]);
+        }
+    }
+
     protected function validatePersonalDataRecord(string $id, string $field): void
     {
         if (!$this->hasPersonalDataTable()) {
@@ -1398,5 +1426,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function getPersonalDataTableName(): string
     {
         return $this->getEntityManager()->getMapper()->toDb($this->entityName . 'PersonalData');
+    }
+
+
+    protected function getErasureResolver(string $mode): AbstractErasureResolver
+    {
+        $className = $this->getMetadata()->get(['app', 'erasureResolvers', $mode, 'className']);
+        if (empty($className) || !class_exists($className)) {
+            throw new Error("Erasure resolver for erasure mode '$mode' is not registered.");
+        }
+
+        /** @var AbstractErasureResolver $resolver */
+        return $this->getEntityManager()->getContainer()->get($className);
     }
 }

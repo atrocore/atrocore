@@ -11,29 +11,35 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AnonymizationResolvers;
+namespace Atro\Core\ErasureResolver;
 
 use Espo\ORM\Entity;
 
-class Delete extends AbstractAnonymizationResolver
+class Nullify extends AbstractErasureResolver
 {
     public function supports(Entity $entity, string $field): bool
     {
         $fieldDefs = $this->getFieldDefs($entity, $field);
+        $type = $fieldDefs['type'] ?? null;
 
-        return in_array($fieldDefs['type'] ?? null, self::LINK_TYPES);
+        if (in_array($type, self::LINK_TYPES)) {
+            return false;
+        }
+
+        if ($type === 'bool' && empty($fieldDefs['allowNullForBool'])) {
+            return false;
+        }
+
+        if (!empty($fieldDefs['required'])) {
+            return false;
+        }
+
+        return true;
     }
 
     public function resolve(Entity $entity, string $field, array &$processed = []): bool
     {
-        $linkedEntities = $this->getLinkedEntities($entity, $field);
-
-        $this->unlink($entity, $field, $linkedEntities);
-
-        foreach ($linkedEntities as $foreign) {
-            $this->getEntityManager()->removeEntity($foreign);
-            $this->getEntityManager()->getRepository($foreign->getEntityName())->deleteFromDb($foreign->id);
-        }
+        $this->nullify($entity, $field);
 
         return true;
     }

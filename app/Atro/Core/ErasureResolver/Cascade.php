@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AnonymizationResolvers;
+namespace Atro\Core\ErasureResolver;
 
 use Atro\Core\Exceptions\Error;
 use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
 use Espo\Services\RecordService;
 
-class Cascade extends AbstractAnonymizationResolver
+class Cascade extends AbstractErasureResolver
 {
     public function supports(Entity $entity, string $field): bool
     {

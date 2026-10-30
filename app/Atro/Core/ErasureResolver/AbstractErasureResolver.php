@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AnonymizationResolvers;
+namespace Atro\Core\ErasureResolver;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
-abstract class AbstractAnonymizationResolver
+abstract class AbstractErasureResolver
 {
     public const LINK_TYPES = ['link', 'linkMultiple', 'file'];
 
@@ -54,7 +54,8 @@ abstract class AbstractAnonymizationResolver
             return $fields;
         }
 
-        foreach ($this->getMetadata()->get(['fields', $fieldDefs['type'], 'actualFields'], []) as $suffix) {
+        // the field without actual fields is stored in the attribute with the same name
+        foreach ($this->getMetadata()->get(['fields', $fieldDefs['type'], 'actualFields']) ?? [''] as $suffix) {
             $fields[] = $field . ucfirst($suffix);
         }
 

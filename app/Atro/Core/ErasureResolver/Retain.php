@@ -11,21 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AnonymizationResolvers;
+namespace Atro\Core\ErasureResolver;
 
 use Espo\ORM\Entity;
 
-class Unlink extends AbstractAnonymizationResolver
+class Retain extends AbstractErasureResolver
 {
     public function supports(Entity $entity, string $field): bool
     {
-        return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::LINK_TYPES);
+        return true;
     }
 
     public function resolve(Entity $entity, string $field, array &$processed = []): bool
     {
-        $this->unlink($entity, $field, $this->getLinkedEntities($entity, $field));
-
-        return true;
+        return false;
     }
 }
