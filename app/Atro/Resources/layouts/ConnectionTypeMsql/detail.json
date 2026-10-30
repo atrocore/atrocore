@@ -1,0 +1,44 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "host"
+        },
+        {
+          "name": "port"
+        }
+      ],
+      [
+        {
+          "name": "dbName"
+        },
+        false
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "password"
+        }
+      ],
+      [
+        {
+          "name": "additionalParameters"
+        },
+        false
+      ]
+    ]
+  }
+]

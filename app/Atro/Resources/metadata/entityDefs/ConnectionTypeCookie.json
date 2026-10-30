@@ -1,0 +1,76 @@
+{
+  "fields": {
+    "payload": {
+      "type": "code",
+      "engine": "Twig",
+      "default": "{# { \"Username\": \"{{ username }}\\n Password: {{ password }}\" } #}",
+      "variables": [
+        "username",
+        "password"
+      ]
+    },
+    "loginUrl": {
+      "type": "url"
+    },
+    "user": {
+      "type": "varchar",
+      "trim": true
+    },
+    "password": {
+      "type": "password",
+      "trim": true
+    },
+    "verifySsl": {
+      "type": "bool",
+      "default": true
+    },
+    "httpBasicEnabled": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "httpBasicUsername": {
+      "type": "varchar",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    },
+    "httpBasicPassword": {
+      "type": "password",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

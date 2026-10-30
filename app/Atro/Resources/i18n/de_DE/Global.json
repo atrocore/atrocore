@@ -87,7 +87,22 @@
     "Layout": "Layout",
     "Cluster": "Übereinstimmungs-Cluster",
     "ClusterItem": "Übereinstimmungs-Cluster-Artikel",
-    "Brand": "Marke"
+    "Brand": "Marke",
+    "ConnectionTypeAtrocore": "Verbindung: AtroCore",
+    "ConnectionTypePdoSql": "Verbindung: PDO SQL",
+    "ConnectionTypeMysql": "Verbindung: MySQL-Server",
+    "ConnectionTypePsql": "Verbindung: PostgreSQL-Server",
+    "ConnectionTypeMsql": "Verbindung: Microsoft SQL Server",
+    "ConnectionTypeFtp": "Verbindung: FTP",
+    "ConnectionTypeSftp": "Verbindung: SFTP",
+    "ConnectionTypeOauth2": "Verbindung: OAuth 2.0",
+    "ConnectionTypeOauth1": "Verbindung: Oauth 1.0",
+    "ConnectionTypeOtto": "Verbindung: Otto Authentifizierung",
+    "ConnectionTypeCookie": "Verbindung: Cookie-Sitzung",
+    "ConnectionTypeSmtp": "Verbindung: SMTP",
+    "ConnectionTypeVertica": "Verbindung: Vertica DB",
+    "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
+    "ConnectionTypeApiKey": "Verbindung: API-Schlüssel"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarepakete",
@@ -164,7 +179,22 @@
     "Layout": "Layouts",
     "Cluster": "Übereinstimmungs-Cluster",
     "ClusterItem": "Übereinstimmungs-Cluster-Artikel",
-    "Brand": "Marken"
+    "Brand": "Marken",
+    "ConnectionTypeAtrocore": "Verbindung: AtroCore",
+    "ConnectionTypePdoSql": "Verbindung: PDO SQL",
+    "ConnectionTypeMysql": "Verbindung: MySQL-Server",
+    "ConnectionTypePsql": "Verbindung: PostgreSQL-Server",
+    "ConnectionTypeMsql": "Verbindung: Microsoft SQL Server",
+    "ConnectionTypeFtp": "Verbindung: FTP",
+    "ConnectionTypeSftp": "Verbindung: SFTP",
+    "ConnectionTypeOauth2": "Verbindung: OAuth 2.0",
+    "ConnectionTypeOauth1": "Verbindung: Oauth 1.0",
+    "ConnectionTypeOtto": "Verbindung: Otto Authentifizierung",
+    "ConnectionTypeCookie": "Verbindung: Cookie-Sitzung",
+    "ConnectionTypeSmtp": "Verbindung: SMTP",
+    "ConnectionTypeVertica": "Verbindung: Vertica DB",
+    "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
+    "ConnectionTypeApiKey": "Verbindung: API-Schlüssel"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

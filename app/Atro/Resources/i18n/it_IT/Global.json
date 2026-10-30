@@ -86,7 +86,21 @@
     "Layout": "Layout",
     "Cluster": "Cluster di abbinamento",
     "ClusterItem": "Articolo del cluster di abbinamento",
-    "Brand": "Marchio"
+    "Brand": "Marchio",
+    "ConnectionTypeAtrocore": "Connessione: AtroCore",
+    "ConnectionTypePdoSql": "Connessione: PDO SQL",
+    "ConnectionTypeMysql": "Connessione: Server MySQL",
+    "ConnectionTypePsql": "Connessione: Server PostgreSQL",
+    "ConnectionTypeMsql": "Connessione: Microsoft SQL Server",
+    "ConnectionTypeFtp": "Connessione: FTP",
+    "ConnectionTypeSftp": "Connessione: SFTP",
+    "ConnectionTypeOauth2": "Connessione: OAuth 2.0",
+    "ConnectionTypeOauth1": "Connessione: Oauth 1.0",
+    "ConnectionTypeOtto": "Connessione: Otto oauth",
+    "ConnectionTypeCookie": "Connessione: Sessione di cookie",
+    "ConnectionTypeSmtp": "Connessione: SMTP",
+    "ConnectionTypeVertica": "Connessione: DB Vertica",
+    "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API"
   },
   "labels": {
     "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
@@ -961,7 +975,21 @@
     "Layout": "Layout",
     "Cluster": "Cluster di abbinamento",
     "ClusterItem": "Articoli del cluster di abbinamento",
-    "Brand": "Marche"
+    "Brand": "Marche",
+    "ConnectionTypeAtrocore": "Connessione: AtroCore",
+    "ConnectionTypePdoSql": "Connessione: PDO SQL",
+    "ConnectionTypeMysql": "Connessione: Server MySQL",
+    "ConnectionTypePsql": "Connessione: Server PostgreSQL",
+    "ConnectionTypeMsql": "Connessione: Microsoft SQL Server",
+    "ConnectionTypeFtp": "Connessione: FTP",
+    "ConnectionTypeSftp": "Connessione: SFTP",
+    "ConnectionTypeOauth2": "Connessione: OAuth 2.0",
+    "ConnectionTypeOauth1": "Connessione: Oauth 1.0",
+    "ConnectionTypeOtto": "Connessione: Otto oauth",
+    "ConnectionTypeCookie": "Connessione: Sessione di cookie",
+    "ConnectionTypeSmtp": "Connessione: SMTP",
+    "ConnectionTypeVertica": "Connessione: DB Vertica",
+    "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

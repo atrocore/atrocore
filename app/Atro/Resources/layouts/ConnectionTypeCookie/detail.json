@@ -1,0 +1,52 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "password"
+        }
+      ],
+      [
+        {
+          "name": "loginUrl"
+        },
+        {
+          "name": "verifySsl"
+        }
+      ],
+      [
+        {
+          "name": "httpBasicEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "httpBasicUsername"
+        },
+        {
+          "name": "httpBasicPassword"
+        }
+      ],
+      [
+        {
+          "name": "payload"
+        },
+        false
+      ]
+    ]
+  }
+]

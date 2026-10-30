@@ -2574,7 +2574,8 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs'][$scope]['model'] = 'models/subtype';
             $data['clientDefs'][$scope]['views']['detail'] = 'views/subtype/detail';
             $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
-            $data['clientDefs'][$scope]['recordViews']['detail'] = 'views/subtype/record/detail';
+            // a subtype can define its own record view, it has to extend views/subtype/record/detail
+            $data['clientDefs'][$scope]['recordViews']['detail'] ??= 'views/subtype/record/detail';
 
             // the link to the supertype record is technical, it is used by the API only
             $data['entityDefs'][$scope]['fields']['supertype'] = [

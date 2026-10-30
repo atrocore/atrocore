@@ -1,0 +1,70 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "smtpServer"
+        },
+        {
+          "name": "smtpPort"
+        }
+      ],
+      [
+        {
+          "name": "smtpAuthType"
+        },
+        {
+          "name": "smtpSecurity"
+        }
+      ],
+      [
+        {
+          "name": "smtpUsername"
+        },
+        {
+          "name": "smtpPassword"
+        }
+      ],
+      [
+        {
+          "name": "smtpClientId"
+        },
+        {
+          "name": "smtpClientSecret"
+        }
+      ],
+      [
+        {
+          "name": "smtpOauthScope"
+        },
+        false
+      ],
+      [
+        {
+          "name": "smtpOauthAuthorizeUrl"
+        },
+        {
+          "name": "smtpOauthTokenUrl"
+        }
+      ],
+      [
+        {
+          "name": "outboundEmailFromAddress"
+        },
+        {
+          "name": "outboundEmailFromName"
+        }
+      ]
+    ]
+  }
+]

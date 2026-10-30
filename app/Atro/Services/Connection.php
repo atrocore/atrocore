@@ -26,18 +26,13 @@ use Espo\ORM\IEntity;
 
 class Connection extends Base
 {
-    protected $mandatorySelectAttributeList = ['data'];
-
     public function sendTestEmail(string $id, string $toEmail): bool
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
-        $connectionEntity = $this->getRepository()->get($id);
-        if (empty($connectionEntity)) {
-            throw new NotFound();
-        }
+        $connectionEntity = $this->getSubtypeRecord($id);
 
         $connection = $this->createConnection($connectionEntity);
         if (!($connection instanceof ConnectionSmtp)) {
@@ -53,10 +48,7 @@ class Connection extends Base
             throw new Forbidden();
         }
 
-        $connectionEntity = $this->getRepository()->get($id);
-        if (empty($connectionEntity)) {
-            throw new NotFound();
-        }
+        $connectionEntity = $this->getSubtypeRecord($id);
 
         $connection = $this->createConnection($connectionEntity);
         if ($connection instanceof TestConnectionInterface) {
@@ -68,8 +60,15 @@ class Connection extends Base
         return true;
     }
 
+    /**
+     * The connection types work with the subtype record, it contains the settings of the connection.
+     */
     public function connect(Entity $connectionEntity)
     {
+        if ($connectionEntity->getEntityName() === 'Connection') {
+            $connectionEntity = $connectionEntity->getSubtype();
+        }
+
         return $this->createConnection($connectionEntity)->connect($connectionEntity);
     }
 
@@ -101,24 +100,11 @@ class Connection extends Base
         return parent::findEntities($params);
     }
 
-    public function createEntity(\stdClass $attachment): string
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $this->encryptPasswordFields($attachment);
-
-        return parent::createEntity($attachment);
-    }
-
     public function updateEntity(string $id, \stdClass $data): bool
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
-
-        $this->encryptPasswordFields($data);
 
         return parent::updateEntity($id, $data);
     }
@@ -142,20 +128,6 @@ class Connection extends Base
         return $this->getEncrypter()->decryptPassword($hash);
     }
 
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        $this->getRepository()->setDataFields($entity);
-
-        if ($entity->get('type') === 'oauth1') {
-            $callbackUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')) . '&type=callback';
-            $linkUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')) . '&type=link';
-            $entity->set('callbackUrl', $callbackUrl);
-            $entity->set('linkUrl', $linkUrl);
-        }
-    }
-
     protected function init()
     {
         parent::init();
@@ -164,23 +136,14 @@ class Connection extends Base
         $this->addDependency('container');
     }
 
-    protected function encryptPasswordFields(\stdClass $inputData): void
+    protected function getSubtypeRecord(string $id): Entity
     {
-        foreach ($this->getMetadata()->get(['entityDefs', 'Connection', 'fields'], []) as $field => $fieldData) {
-            if (!empty($fieldData['type']) && $fieldData['type'] === 'password' && property_exists($inputData, $field)) {
-                $inputData->$field = $this->encryptPassword((string)$inputData->$field);
-            }
+        $connectionEntity = $this->getRepository()->get($id);
+        if (empty($connectionEntity) || empty($subtypeRecord = $connectionEntity->getSubtype())) {
+            throw new NotFound();
         }
-    }
 
-    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
-    {
-        return [];
-    }
-
-    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
-    {
-        return true;
+        return $subtypeRecord;
     }
 
     protected function exception(string $name, string $scope = 'Connection'): string

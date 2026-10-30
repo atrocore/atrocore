@@ -87,7 +87,22 @@
     "Selection": "Selection",
     "SelectionItem": "Selection Item",
     "Layout": "Layout",
-    "Brand": "Brand"
+    "Brand": "Brand",
+    "ConnectionTypeAtrocore": "Connection: AtroCore",
+    "ConnectionTypePdoSql": "Connection: PDO SQL",
+    "ConnectionTypeMysql": "Connection: MySQL Server",
+    "ConnectionTypePsql": "Connection: PostgreSQL Server",
+    "ConnectionTypeMsql": "Connection: Microsoft SQL Server",
+    "ConnectionTypeFtp": "Connection: FTP",
+    "ConnectionTypeSftp": "Connection: SFTP",
+    "ConnectionTypeOauth2": "Connection: OAuth 2.0",
+    "ConnectionTypeOauth1": "Connection: Oauth 1.0",
+    "ConnectionTypeOtto": "Connection: Otto oauth",
+    "ConnectionTypeCookie": "Connection: Cookie Session",
+    "ConnectionTypeSmtp": "Connection: SMTP",
+    "ConnectionTypeVertica": "Connection: Vertica DB",
+    "ConnectionTypeTokenAuthApi": "Connection: Token Auth API",
+    "ConnectionTypeApiKey": "Connection: API Key"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Software Packages",
@@ -164,7 +179,22 @@
     "Selection": "Selections",
     "SelectionItem": "Selection Items",
     "Layout": "Layouts",
-    "Brand": "Brands"
+    "Brand": "Brands",
+    "ConnectionTypeAtrocore": "Connection: AtroCore",
+    "ConnectionTypePdoSql": "Connection: PDO SQL",
+    "ConnectionTypeMysql": "Connection: MySQL Server",
+    "ConnectionTypePsql": "Connection: PostgreSQL Server",
+    "ConnectionTypeMsql": "Connection: Microsoft SQL Server",
+    "ConnectionTypeFtp": "Connection: FTP",
+    "ConnectionTypeSftp": "Connection: SFTP",
+    "ConnectionTypeOauth2": "Connection: OAuth 2.0",
+    "ConnectionTypeOauth1": "Connection: Oauth 1.0",
+    "ConnectionTypeOtto": "Connection: Otto oauth",
+    "ConnectionTypeCookie": "Connection: Cookie Session",
+    "ConnectionTypeSmtp": "Connection: SMTP",
+    "ConnectionTypeVertica": "Connection: Vertica DB",
+    "ConnectionTypeTokenAuthApi": "Connection: Token Auth API",
+    "ConnectionTypeApiKey": "Connection: API Key"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"

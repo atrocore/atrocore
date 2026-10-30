@@ -87,7 +87,22 @@
     "Layout": "Макет",
     "Cluster": "Кластер зіставлення",
     "ClusterItem": "Елемент кластера зіставлення",
-    "Brand": "Бренд"
+    "Brand": "Бренд",
+    "ConnectionTypeAtrocore": "З'єднання: AtroCore",
+    "ConnectionTypePdoSql": "З'єднання: PDO SQL",
+    "ConnectionTypeMysql": "З'єднання: Сервер MySQL",
+    "ConnectionTypePsql": "З'єднання: Сервер PostgreSQL",
+    "ConnectionTypeMsql": "З'єднання: Microsoft SQL Server",
+    "ConnectionTypeFtp": "З'єднання: FTP",
+    "ConnectionTypeSftp": "З'єднання: SFTP",
+    "ConnectionTypeOauth2": "З'єднання: OAuth 2.0",
+    "ConnectionTypeOauth1": "З'єднання: OAuth 1.0",
+    "ConnectionTypeOtto": "З'єднання: Otto OAuth",
+    "ConnectionTypeCookie": "З'єднання: Сесія cookie",
+    "ConnectionTypeSmtp": "З'єднання: SMTP",
+    "ConnectionTypeVertica": "З'єднання: Vertica DB",
+    "ConnectionTypeTokenAuthApi": "З'єднання: API автентифікації токенів",
+    "ConnectionTypeApiKey": "З'єднання: Ключ API"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Програмні пакети",
@@ -164,7 +179,22 @@
     "Layout": "Макети",
     "Cluster": "Кластери зіставлення",
     "ClusterItem": "Елементи кластера зіставлення",
-    "Brand": "Бренди"
+    "Brand": "Бренди",
+    "ConnectionTypeAtrocore": "З'єднання: AtroCore",
+    "ConnectionTypePdoSql": "З'єднання: PDO SQL",
+    "ConnectionTypeMysql": "З'єднання: Сервер MySQL",
+    "ConnectionTypePsql": "З'єднання: Сервер PostgreSQL",
+    "ConnectionTypeMsql": "З'єднання: Microsoft SQL Server",
+    "ConnectionTypeFtp": "З'єднання: FTP",
+    "ConnectionTypeSftp": "З'єднання: SFTP",
+    "ConnectionTypeOauth2": "З'єднання: OAuth 2.0",
+    "ConnectionTypeOauth1": "З'єднання: OAuth 1.0",
+    "ConnectionTypeOtto": "З'єднання: Otto OAuth",
+    "ConnectionTypeCookie": "З'єднання: Сесія cookie",
+    "ConnectionTypeSmtp": "З'єднання: SMTP",
+    "ConnectionTypeVertica": "З'єднання: Vertica DB",
+    "ConnectionTypeTokenAuthApi": "З'єднання: API автентифікації токенів",
+    "ConnectionTypeApiKey": "З'єднання: Ключ API"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

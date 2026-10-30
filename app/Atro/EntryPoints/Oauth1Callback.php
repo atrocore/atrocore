@@ -42,6 +42,12 @@ class Oauth1Callback extends AbstractEntryPoint
             throw new BadRequest();
         }
 
+        // the settings and the tokens are stored in the subtype record
+        $connection = $connection->getSubtype();
+        if (empty($connection)) {
+            throw new BadRequest();
+        }
+
         if ($type === 'callback') {
             $this->runCallback($connection);
         } else {

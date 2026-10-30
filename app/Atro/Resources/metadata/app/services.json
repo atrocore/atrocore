@@ -2,5 +2,19 @@
   "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
   "Installer": "\\Atro\\Services\\Installer",
   "MassActions": "\\Atro\\Services\\MassActions",
-  "Avatar": "\\Atro\\Services\\Avatar"
+  "Avatar": "\\Atro\\Services\\Avatar",
+  "ConnectionTypeAtrocore": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypePdoSql": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeMysql": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypePsql": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeMsql": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeFtp": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeSftp": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeOauth2": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeOtto": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeCookie": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeSmtp": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeVertica": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeTokenAuthApi": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeApiKey": "\\Atro\\Services\\ConnectionSubtype"
 }

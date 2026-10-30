@@ -1,0 +1,52 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "oauthUrl"
+        },
+        {
+          "name": "oauthGrantType"
+        }
+      ],
+      [
+        {
+          "name": "oauthClientId"
+        },
+        {
+          "name": "oauthClientSecret"
+        }
+      ],
+      [
+        {
+          "name": "oauthScope"
+        },
+        false
+      ],
+      [
+        {
+          "name": "vendorOauthUrl"
+        },
+        {
+          "name": "vendorOauthScopes"
+        }
+      ],
+      [
+        {
+          "name": "verifySsl"
+        },
+        false
+      ]
+    ]
+  }
+]

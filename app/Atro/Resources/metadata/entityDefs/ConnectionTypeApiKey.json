@@ -1,0 +1,67 @@
+{
+  "fields": {
+    "apiKeyName": {
+      "type": "varchar",
+      "trim": true,
+      "default": "X-API-Key",
+      "required": true
+    },
+    "apiKeyValue": {
+      "type": "password",
+      "required": true,
+      "len": 2048
+    },
+    "verifySsl": {
+      "type": "bool",
+      "default": true
+    },
+    "httpBasicEnabled": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "httpBasicUsername": {
+      "type": "varchar",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    },
+    "httpBasicPassword": {
+      "type": "password",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
