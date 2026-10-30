@@ -66,7 +66,8 @@
       "update": "Aktualizuj",
       "create": "Utwórz",
       "delete": "Usuń",
-      "createOrUpdate": "Tworzenie lub aktualizacja"
+      "createOrUpdate": "Tworzenie lub aktualizacja",
+      "custom": "Kod niestandardowy"
     },
     "executeAs": {
       "sameUser": "Ten sam użytkownik",

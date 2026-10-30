@@ -29,6 +29,7 @@ class V3Dot0Dot0 extends Base
     {
         $this->migrateConnection();
         $this->migrateStorage();
+        $this->migrateAction();
     }
 
     /**
@@ -124,6 +125,137 @@ class V3Dot0Dot0 extends Base
                 $this->insertSubtypeRecord('storage', $type, $record['id'], $columns, $data);
             }
         }
+    }
+
+    /**
+     * Every action type is a subtype of Action now: the settings of the type are moved from the columns of the action
+     * table and from its "data" field to the table of the subtype. A custom action gets the type "custom", its handler
+     * is the former custom type. The types of the modules are migrated by the modules.
+     */
+    protected function migrateAction(): void
+    {
+        $subtypes = [
+            'webhook' => [
+                'webhookUrl' => ['webhook_url', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+            ],
+            'email' => [
+                'targetEntity' => ['target_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'showEmailPreview' => ['show_email_preview', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'mode' => ['mode', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'connectionId' => ['connection_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+                'emailTemplateId' => ['email_template_id', 'type' => 'string', 'length' => 36, 'source' => 'column'],
+                'emailTo' => ['email_to', 'type' => 'jsonArray', 'source' => 'data'],
+                'emailCc' => ['email_cc', 'type' => 'jsonArray', 'source' => 'data'],
+                'emailBcc' => ['email_bcc', 'type' => 'jsonArray', 'source' => 'data'],
+                'emailScript' => ['email_script', 'type' => 'text', 'comment' => 'default={{% set emailTo = [\'email1@somedomain.com\', \'email2@somedomain.com\'] %}
+{% set emailCc = [] %}
+{% set emailBcc = [] %}
+{% set emailTemplateId = \'some-id\' %}}', 'source' => 'data'],
+            ],
+            'create' => [
+                'targetEntity' => ['target_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'updateType' => ['update_type', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'updateFields' => ['update_fields', 'type' => 'jsonObject', 'source' => 'data'],
+                'updateScript' => ['update_script', 'type' => 'text', 'source' => 'data'],
+            ],
+            'update' => [
+                'targetEntity' => ['target_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'applyToPreselectedRecords' => ['apply_to_preselected_records', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'updateType' => ['update_type', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'updateFields' => ['update_fields', 'type' => 'jsonObject', 'source' => 'data'],
+                'updateScript' => ['update_script', 'type' => 'text', 'source' => 'data'],
+            ],
+            'createOrUpdate' => [
+                'targetEntity' => ['target_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'updateType' => ['update_type', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'updateFields' => ['update_fields', 'type' => 'jsonObject', 'source' => 'data'],
+                'updateScript' => ['update_script', 'type' => 'text', 'source' => 'data'],
+            ],
+            'delete' => [
+                'targetEntity' => ['target_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'applyToPreselectedRecords' => ['apply_to_preselected_records', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'deletePermanently' => ['delete_permanently', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+            ],
+            'custom' => [
+                'handler' => ['handler', 'type' => 'string', 'length' => 255, 'source' => 'handler'],
+                'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'applyToPreselectedRecords' => ['apply_to_preselected_records', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+            ],
+        ];
+
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        foreach ($subtypes as $type => $columns) {
+            $this->createSubtypeTable($toSchema, 'action', $type, $columns);
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getDbal()->executeStatement($sql);
+        }
+
+        if (!$fromSchema->hasTable('action')) {
+            return;
+        }
+
+        $records = $this->getDbal()->createQueryBuilder()
+            ->select('*')
+            ->from($this->getDbal()->quoteIdentifier('action'))
+            ->fetchAllAssociative();
+
+        foreach ($records as $record) {
+            $type = (string)$record['type'];
+            $handler = null;
+            if (str_starts_with($type, 'custom') && $type !== 'custom') {
+                $handler = substr($type, strlen('custom'));
+                $type = 'custom';
+
+                $this->getDbal()->createQueryBuilder()
+                    ->update($this->getDbal()->quoteIdentifier('action'))
+                    ->set('type', ':type')
+                    ->where('id = :id')
+                    ->setParameter('type', $type)
+                    ->setParameter('id', $record['id'])
+                    ->executeStatement();
+            }
+
+            if (empty($columns = $subtypes[$type] ?? null)) {
+                continue;
+            }
+
+            $this->insertSubtypeRecord('action', $type, $record['id'], $columns, $this->getActionSettings($record, $columns, $handler));
+        }
+    }
+
+    /**
+     * The settings of an action: a setting was stored in a column of the action table or in the "data" field.
+     */
+    protected function getActionSettings(array $record, array $columns, ?string $handler): array
+    {
+        $data = @json_decode((string)($record['data'] ?? ''), true);
+        $virtualFields = is_array($data['field'] ?? null) ? $data['field'] : [];
+
+        $settings = [];
+        foreach ($columns as $field => $options) {
+            switch ($options['source']) {
+                case 'column':
+                    $settings[$field] = $record[$options[0]] ?? null;
+                    break;
+                case 'data':
+                    $settings[$field] = $virtualFields[$field] ?? null;
+                    break;
+                case 'handler':
+                    $settings[$field] = $handler;
+                    break;
+            }
+        }
+
+        return $settings;
     }
 
     /**
@@ -285,10 +417,14 @@ class V3Dot0Dot0 extends Base
         $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
         $table->addColumn('supertype_id', 'string', ['length' => 36, 'notnull' => false]);
 
+        $indexes = [];
         foreach ($columns as $options) {
             $column = array_shift($options);
             $type = $options['type'];
-            unset($options['type']);
+            if (!empty($options['index'])) {
+                $indexes[] = $column;
+            }
+            unset($options['type'], $options['index'], $options['source']);
             $table->addColumn($column, $type, array_merge(['notnull' => false], $options));
         }
 
@@ -298,6 +434,10 @@ class V3Dot0Dot0 extends Base
         $foreignKeyName = $this->generateForeignKeyName($tableName . '_supertype_id');
         $table->addForeignKeyConstraint($supertypeTable, ['supertype_id'], ['id'], ['onDelete' => 'CASCADE'], $foreignKeyName);
         $table->addIndex(['supertype_id'], $foreignKeyName);
+
+        foreach ($indexes as $column) {
+            $table->addIndex([$column], $this->generateIndexName($tableName . '_' . $column));
+        }
     }
 
     protected function insertSubtypeRecord(string $supertypeTable, string $type, string $supertypeId, array $columns, array $data): void
@@ -360,6 +500,15 @@ class V3Dot0Dot0 extends Base
     protected function getSubtypeTableName(string $supertypeTable, string $type): string
     {
         return $supertypeTable . '_type_' . strtolower(preg_replace('/([A-Z])/', '_$1', $type));
+    }
+
+    protected function generateIndexName(string $name): string
+    {
+        if (strlen($name) > 55) {
+            $name = md5($name);
+        }
+
+        return 'IDX_' . strtoupper($name);
     }
 
     protected function generateForeignKeyName(string $name): string

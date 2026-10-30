@@ -127,10 +127,6 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareRelationEntities($data);
 
-        if (!empty($data['action']['types'])) {
-            $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
-        }
-
         $this->prepareEntityMethods($data);
 
         foreach ($data['scopes'] as $scope => $scopeDefs) {
@@ -188,41 +184,50 @@ class Metadata extends AbstractMetadataListener
         ];
     }
 
+    /**
+     * The custom actions are handlers of the "custom" action type: the classes are the options of its "handler" field,
+     * the bulk handlers search the records to execute the action for.
+     */
     protected function putCustomCodeActions(array &$data): void
     {
-        $dir = CreateAction::DIR;
-        if (!is_dir($dir)) {
-            return;
-        }
+        $handlers = [];
+        $bulkHandlers = [];
 
-        foreach (scandir($dir) as $fileName) {
+        $dir = CreateAction::DIR;
+        foreach (is_dir($dir) ? scandir($dir) : [] as $fileName) {
             if (!preg_match('/\.php$/i', $fileName)) {
                 continue;
             }
 
-            $name     = str_replace('.php', '', $fileName);
-            $typeName = 'custom' . $name;
-
+            $name = str_replace('.php', '', $fileName);
             $className = '\\CustomActions\\' . $name;
 
             if (!class_exists($className) || !is_a($className, AbstractAction::class, true)) {
                 continue;
             }
 
-            if (is_a($className, AbstractBulkAction::class, true)) {
-                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['visible']['conditionGroup'][0]['value'][]  = $typeName;
-                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['readOnly']['conditionGroup'][0]['value'][] = $typeName;
-                $data['entityDefs']['Action']['fields']['applyToPreselectedRecords']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = $typeName;
-
-                $data['action']['filterableTypes'][$typeName] = true;
+            $isBulk = is_a($className, AbstractBulkAction::class, true);
+            if ($isBulk) {
+                $bulkHandlers[] = $name;
             }
 
-            $data['action']['types'][$typeName]     = $className;
-            $data['action']['typesData'][$typeName] = [
+            $handlers[] = $name;
+            $data['action']['customHandlers'][$name] = [
                 'handler'     => $className,
+                'bulk'        => $isBulk,
                 'typeLabel'   => $className::getTypeLabel(),
                 'name'        => $className::getName(),
                 'description' => $className::getDescription(),
+            ];
+        }
+
+        $fields = &$data['entityDefs']['ActionTypeCustom']['fields'];
+        $fields['handler']['options'] = $handlers;
+        foreach (['searchEntity', 'applyToPreselectedRecords'] as $field) {
+            $fields[$field]['conditionalProperties']['visible']['conditionGroup'][] = [
+                'type'      => 'in',
+                'attribute' => 'handler',
+                'value'     => $bulkHandlers,
             ];
         }
     }
@@ -581,13 +586,19 @@ class Metadata extends AbstractMetadataListener
 
         $actions = $dataManager->getCacheData('dynamic_action');
         if ($actions === null) {
-            $connection = $this->getConnection();
+            $connection = $this->getDbal();
             try {
+                // the settings of the action types are stored in the tables of the subtypes
                 $actions = $connection->createQueryBuilder()
-                    ->select('*')
-                    ->from($connection->quoteIdentifier('action'))
-                    ->where('deleted = :false')
-                    ->andWhere('is_active = :true')
+                    ->select('a.*, COALESCE(tc.target_entity, tu.target_entity, tcu.target_entity, td.target_entity) AS target_entity, te.show_email_preview, te.email_template_id')
+                    ->from($connection->quoteIdentifier('action'), 'a')
+                    ->leftJoin('a', 'action_type_create', 'tc', 'tc.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_update', 'tu', 'tu.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_create_or_update', 'tcu', 'tcu.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_delete', 'td', 'td.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_email', 'te', 'te.supertype_id = a.id')
+                    ->where('a.deleted = :false')
+                    ->andWhere('a.is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
@@ -667,10 +678,9 @@ class Metadata extends AbstractMetadataListener
             }
 
             if ($action['type'] === 'email') {
-                $actionData = @json_decode($action['data'], true);
-                $params     = array_merge($params, [
-                    'showEmailPreview' => !empty($actionData['field']['showEmailPreview']),
-                    'emailTemplateId'  => $action['emailTemplateId'] ?? '',
+                $params = array_merge($params, [
+                    'showEmailPreview' => !empty($action['show_email_preview']),
+                    'emailTemplateId'  => $action['email_template_id'] ?? '',
                 ]);
             }
 
@@ -2611,19 +2621,26 @@ class Metadata extends AbstractMetadataListener
                 $options[] = lcfirst(substr($scope, $prefixLength));
             }
 
-            $data['entityDefs'][$supertype]['fields']['type'] = [
+            // the supertype can define the view and the conditions of the field, the options are the subtypes
+            $data['entityDefs'][$supertype]['fields']['type'] = array_merge($data['entityDefs'][$supertype]['fields']['type'] ?? [], [
                 'type'               => 'enum',
                 'options'            => $options,
                 'protected'          => true,
                 'customizable'       => false,
                 'massUpdateDisabled' => true,
                 'duplicateIgnore'    => true,
-            ];
+            ]);
 
             $data['scopes'][$supertype]['hasSubtypes'] = true;
 
             foreach ($scopes as $scope) {
                 $this->addSupertypeFieldsToSubtype($data, $supertype, $scope);
+
+                // the relations of the supertype are shown on the record of the subtype
+                $data['clientDefs'][$scope]['relationshipPanels'] = array_merge(
+                    $data['clientDefs'][$supertype]['relationshipPanels'] ?? [],
+                    $data['clientDefs'][$scope]['relationshipPanels'] ?? []
+                );
             }
         }
     }

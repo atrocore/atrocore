@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "webhookUrl": {
+      "type": "url",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "openApiEnabled": true,
+      "required": true
+    }
+  }
+}

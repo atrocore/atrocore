@@ -101,7 +101,15 @@
     "ConnectionTypeSmtp": "Connessione: SMTP",
     "ConnectionTypeVertica": "Connessione: DB Vertica",
     "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API",
-    "StorageTypeLocal": "Conservazione: Locale (Linux)"
+    "StorageTypeLocal": "Conservazione: Locale (Linux)",
+    "ActionTypeWebhook": "Azione: Webhook",
+    "ActionTypeEmail": "Azione: Invii l'e-mail",
+    "ActionTypeCreate": "Azione: Creare",
+    "ActionTypeUpdate": "Azione: Aggiornamento",
+    "ActionTypeCreateOrUpdate": "Azione: Creare o aggiornare",
+    "ActionTypeDelete": "Azione: Cancellare",
+    "ActionTypeSet": "Azione: Set d'azione",
+    "ActionTypeCustom": "Azione: Codice personalizzato"
   },
   "labels": {
     "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
@@ -991,7 +999,15 @@
     "ConnectionTypeSmtp": "Connessione: SMTP",
     "ConnectionTypeVertica": "Connessione: DB Vertica",
     "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API",
-    "StorageTypeLocal": "Conservazione: Locale (Linux)"
+    "StorageTypeLocal": "Conservazione: Locale (Linux)",
+    "ActionTypeWebhook": "Azione: Webhook",
+    "ActionTypeEmail": "Azione: Invii l'e-mail",
+    "ActionTypeCreate": "Azione: Creare",
+    "ActionTypeUpdate": "Azione: Aggiornamento",
+    "ActionTypeCreateOrUpdate": "Azione: Creare o aggiornare",
+    "ActionTypeDelete": "Azione: Cancellare",
+    "ActionTypeSet": "Azione: Set d'azione",
+    "ActionTypeCustom": "Azione: Codice personalizzato"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

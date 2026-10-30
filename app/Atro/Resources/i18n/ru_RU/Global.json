@@ -101,7 +101,15 @@
     "ConnectionTypeSmtp": "Соединение: SMTP",
     "ConnectionTypeVertica": "Соединение: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Соединение: API Token Auth",
-    "StorageTypeLocal": "Хранилище: Local (Linux)"
+    "StorageTypeLocal": "Хранилище: Local (Linux)",
+    "ActionTypeWebhook": "Действие: Webhook",
+    "ActionTypeEmail": "Действие: Отправить электронную почту",
+    "ActionTypeCreate": "Действие: Создать",
+    "ActionTypeUpdate": "Действие: Обновить",
+    "ActionTypeCreateOrUpdate": "Действие: Создать или обновить",
+    "ActionTypeDelete": "Действие: Удалить",
+    "ActionTypeSet": "Действие: Набор действий",
+    "ActionTypeCustom": "Действие: Пользовательский код"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Программные пакеты",
@@ -192,7 +200,15 @@
     "ConnectionTypeSmtp": "Соединение: SMTP",
     "ConnectionTypeVertica": "Соединение: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Соединение: API Token Auth",
-    "StorageTypeLocal": "Хранилище: Local (Linux)"
+    "StorageTypeLocal": "Хранилище: Local (Linux)",
+    "ActionTypeWebhook": "Действие: Webhook",
+    "ActionTypeEmail": "Действие: Отправить электронную почту",
+    "ActionTypeCreate": "Действие: Создать",
+    "ActionTypeUpdate": "Действие: Обновить",
+    "ActionTypeCreateOrUpdate": "Действие: Создать или обновить",
+    "ActionTypeDelete": "Действие: Удалить",
+    "ActionTypeSet": "Действие: Набор действий",
+    "ActionTypeCustom": "Действие: Пользовательский код"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Фоновая обработка не работает. Скорее всего, crontab настроен неправильно или есть проблема на сервере. Пожалуйста, обратитесь к инструкции по установке.",

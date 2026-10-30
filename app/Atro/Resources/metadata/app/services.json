@@ -17,5 +17,12 @@
   "ConnectionTypeVertica": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeTokenAuthApi": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeApiKey": "\\Atro\\Services\\ConnectionSubtype",
-  "StorageTypeLocal": "\\Atro\\Services\\StorageSubtype"
+  "StorageTypeLocal": "\\Atro\\Services\\StorageSubtype",
+  "ActionTypeWebhook": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeEmail": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeCreate": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeUpdate": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeCreateOrUpdate": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeDelete": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeCustom": "\\Atro\\Services\\ActionSubtype"
 }

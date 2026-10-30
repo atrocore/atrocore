@@ -101,7 +101,15 @@
     "ConnectionTypeSmtp": "Połączenie: SMTP",
     "ConnectionTypeVertica": "Połączenie: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Połączenie: Token Auth API",
-    "StorageTypeLocal": "Przechowywanie plików: Local (Linux)"
+    "StorageTypeLocal": "Przechowywanie plików: Local (Linux)",
+    "ActionTypeWebhook": "Akcja: Webhook",
+    "ActionTypeEmail": "Akcja: Proszę wysłać e-mail",
+    "ActionTypeCreate": "Akcja: Utwórz",
+    "ActionTypeUpdate": "Akcja: Aktualizuj",
+    "ActionTypeCreateOrUpdate": "Akcja: Tworzenie lub aktualizacja",
+    "ActionTypeDelete": "Akcja: Usuń",
+    "ActionTypeSet": "Akcja: Zestaw akcji",
+    "ActionTypeCustom": "Akcja: Kod niestandardowy"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Pakiety oprogramowania",
@@ -192,7 +200,15 @@
     "ConnectionTypeSmtp": "Połączenie: SMTP",
     "ConnectionTypeVertica": "Połączenie: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Połączenie: Token Auth API",
-    "StorageTypeLocal": "Przechowywanie plików: Local (Linux)"
+    "StorageTypeLocal": "Przechowywanie plików: Local (Linux)",
+    "ActionTypeWebhook": "Akcja: Webhook",
+    "ActionTypeEmail": "Akcja: Proszę wysłać e-mail",
+    "ActionTypeCreate": "Akcja: Utwórz",
+    "ActionTypeUpdate": "Akcja: Aktualizuj",
+    "ActionTypeCreateOrUpdate": "Akcja: Tworzenie lub aktualizacja",
+    "ActionTypeDelete": "Akcja: Usuń",
+    "ActionTypeSet": "Akcja: Zestaw akcji",
+    "ActionTypeCustom": "Akcja: Kod niestandardowy"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Przetwarzanie w tle nie działa. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji.",

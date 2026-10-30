@@ -32,7 +32,7 @@ class Create extends AbstractAction
     {
         $action = $execution->get('action');
 
-        if (!empty($searchEntityName = $action->get('searchEntity'))) {
+        if (!empty($searchEntityName = $action->getSubtype()?->get('searchEntity'))) {
             /** @var \Espo\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityName);
 
@@ -68,7 +68,7 @@ class Create extends AbstractAction
 
                     $jobEntity = $this->getEntityManager()->getEntity('Job');
                     $jobEntity->set([
-                        'name'    => "Mass create of '{$action->get('targetEntity')}'",
+                        'name'    => "Mass create of '{$action->getSubtype()?->get('targetEntity')}'",
                         'type'    => 'MassCreate',
                         'status'  => 'Pending',
                         'payload' => [
@@ -112,10 +112,10 @@ class Create extends AbstractAction
     public function createEntity(?Entity $entity, ActionExecution $execution, \stdClass $input): bool
     {
         $action = $execution->get('action');
-        $targetEntityName = $action->get('targetEntity');
+        $targetEntityName = $action->getSubtype()?->get('targetEntity');
         $actionData = $action->get('data');
 
-        if (empty($actionData->field) || empty($actionData->field->updateType)) {
+        if (empty($action->getSubtype()?->get('updateType'))) {
             return false;
         }
 
@@ -126,19 +126,19 @@ class Create extends AbstractAction
         ]);
 
         $inputData = null;
-        switch ($actionData->field->updateType) {
+        switch ($action->getSubtype()->get('updateType')) {
             case 'basic':
                 $inputData = $actionData->fieldData ?? null;
                 break;
             case 'script':
-                if (!empty($actionData->field->updateScript)) {
+                if (!empty($action->getSubtype()->get('updateScript'))) {
                     $templateData = [
                         'entity'              => $entity,
                         'triggeredEntityType' => $input->triggeredEntityType ?? null,
                         'triggeredEntityId'   => $input->triggeredEntityId ?? null,
                     ];
                     $outputJson = $this->container->get('twig')
-                        ->renderTemplate($actionData->field->updateScript, $templateData);
+                        ->renderTemplate($action->getSubtype()->get('updateScript'), $templateData);
                     $input = @json_decode((string)$outputJson);
                     if ($input === null) {
                         $log->set('type', 'error');

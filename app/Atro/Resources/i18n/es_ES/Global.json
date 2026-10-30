@@ -101,7 +101,15 @@
     "ConnectionTypeSmtp": "Conexión: SMTP",
     "ConnectionTypeVertica": "Conexión: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Conexión: API de autenticación por token",
-    "StorageTypeLocal": "Almacenamiento: Local (Linux)"
+    "StorageTypeLocal": "Almacenamiento: Local (Linux)",
+    "ActionTypeWebhook": "Acción: Gancho web",
+    "ActionTypeEmail": "Acción: Enviar correo electrónico",
+    "ActionTypeCreate": "Acción: Crear",
+    "ActionTypeUpdate": "Acción: Guardar",
+    "ActionTypeCreateOrUpdate": "Acción: Crear o actualizar",
+    "ActionTypeDelete": "Acción: Borrar",
+    "ActionTypeSet": "Acción: Conjunto de acciones",
+    "ActionTypeCustom": "Acción: Código personalizado"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Paquetes de software",
@@ -192,7 +200,15 @@
     "ConnectionTypeSmtp": "Conexión: SMTP",
     "ConnectionTypeVertica": "Conexión: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Conexión: API de autenticación por token",
-    "StorageTypeLocal": "Almacenamiento: Local (Linux)"
+    "StorageTypeLocal": "Almacenamiento: Local (Linux)",
+    "ActionTypeWebhook": "Acción: Gancho web",
+    "ActionTypeEmail": "Acción: Enviar correo electrónico",
+    "ActionTypeCreate": "Acción: Crear",
+    "ActionTypeUpdate": "Acción: Guardar",
+    "ActionTypeCreateOrUpdate": "Acción: Crear o actualizar",
+    "ActionTypeDelete": "Acción: Borrar",
+    "ActionTypeSet": "Acción: Conjunto de acciones",
+    "ActionTypeCustom": "Acción: Código personalizado"
   },
   "labels": {
     "backgroundProcessingNotWorking": "El procesamiento en segundo plano no funciona. Lo más probable es que crontab no esté configurado correctamente o que haya un problema en el servidor. Consulte la guía de instalación.",

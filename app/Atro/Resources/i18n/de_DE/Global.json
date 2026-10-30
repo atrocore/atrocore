@@ -103,7 +103,15 @@
     "ConnectionTypeVertica": "Verbindung: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
     "ConnectionTypeApiKey": "Verbindung: API-Schlüssel",
-    "StorageTypeLocal": "Dateiablage: Lokal (Linux)"
+    "StorageTypeLocal": "Dateiablage: Lokal (Linux)",
+    "ActionTypeWebhook": "Aktion: Webhook",
+    "ActionTypeEmail": "Aktion: E-Mail senden",
+    "ActionTypeCreate": "Aktion: Erstellen",
+    "ActionTypeUpdate": "Aktion: Aktualisierung",
+    "ActionTypeCreateOrUpdate": "Aktion: Erstellen oder Aktualisieren",
+    "ActionTypeDelete": "Aktion: Löschen",
+    "ActionTypeSet": "Aktion: Aktionsset",
+    "ActionTypeCustom": "Aktion: Benutzerdefinierter Code"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarepakete",
@@ -196,7 +204,15 @@
     "ConnectionTypeVertica": "Verbindung: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
     "ConnectionTypeApiKey": "Verbindung: API-Schlüssel",
-    "StorageTypeLocal": "Dateiablage: Lokal (Linux)"
+    "StorageTypeLocal": "Dateiablage: Lokal (Linux)",
+    "ActionTypeWebhook": "Aktion: Webhook",
+    "ActionTypeEmail": "Aktion: E-Mail senden",
+    "ActionTypeCreate": "Aktion: Erstellen",
+    "ActionTypeUpdate": "Aktion: Aktualisierung",
+    "ActionTypeCreateOrUpdate": "Aktion: Erstellen oder Aktualisieren",
+    "ActionTypeDelete": "Aktion: Löschen",
+    "ActionTypeSet": "Aktion: Aktionsset",
+    "ActionTypeCustom": "Aktion: Benutzerdefinierter Code"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

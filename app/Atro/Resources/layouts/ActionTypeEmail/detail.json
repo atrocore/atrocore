@@ -33,6 +33,12 @@
       ],
       [
         {
+          "name": "showEmailPreview"
+        },
+        false
+      ],
+      [
+        {
           "name": "executeAs"
         },
         {
@@ -41,32 +47,7 @@
       ],
       [
         {
-          "name": "customAction"
-        },
-        false
-      ],
-      [
-        {
-          "name": "showEmailPreview"
-        },
-        false
-      ],
-      [
-        {
-          "name": "applyToPreselectedRecords"
-        },
-        false
-      ],
-      [
-        {
-          "name": "deletePermanently"
-        },
-        false
-      ],
-      [
-        {
-          "name": "description",
-          "fullWidth": true
+          "name": "description"
         }
       ]
     ]
@@ -77,27 +58,23 @@
     "rows": [
       [
         {
-          "name": "conditionsType",
-          "inlineEditDisabled": true
+          "name": "conditionsType"
         },
         false
       ],
       [
         {
-          "name": "conditions",
-          "fullWidth": true
+          "name": "conditions"
         }
       ],
       [
         {
-          "name": "conditionsExpression",
-          "fullWidth": true
+          "name": "conditionsExpression"
         }
       ],
       [
         {
-          "name": "conditionsScript",
-          "fullWidth": true
+          "name": "conditionsScript"
         }
       ]
     ]
@@ -148,12 +125,6 @@
     "rows": [
       [
         {
-          "name": "webhookUrl"
-        },
-        false
-      ],
-      [
-        {
           "name": "mode"
         },
         false
@@ -186,29 +157,14 @@
       ],
       [
         {
-          "name": "emailScript",
-          "fullWidth": true
+          "name": "emailScript"
         }
       ],
       [
         {
           "name": "searchEntity"
         },
-        {
-          "name": "updateType"
-        }
-      ],
-      [
-        {
-          "name": "updateFields",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "updateScript",
-          "fullWidth": true
-        }
+        false
       ]
     ]
   }

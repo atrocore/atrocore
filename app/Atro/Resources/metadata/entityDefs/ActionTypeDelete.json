@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "targetEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/target-entity",
+      "required": true
+    },
+    "applyToPreselectedRecords": {
+      "type": "bool",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "view": "views/action/fields/apply-to-preselected-records",
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "deletePermanently": {
+      "type": "bool"
+    },
+    "searchEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/search-entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate",
+                "update"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

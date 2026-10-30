@@ -36,7 +36,7 @@ abstract class AbstractBulkAction extends AbstractAction
 
     public function useMassActions(Entity $action, \stdClass $input): bool
     {
-        return !empty($action->get('applyToPreselectedRecords'));
+        return !empty($action->getSubtype()?->get('applyToPreselectedRecords'));
     }
 
     public function execute(ActionExecution $execution, \stdClass $input): bool
@@ -49,8 +49,8 @@ abstract class AbstractBulkAction extends AbstractAction
         $action       = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
 
-        if (empty($action->get('applyToPreselectedRecords'))) {
-            $entityType = $action->get('searchEntity');
+        if (empty($action->getSubtype()?->get('applyToPreselectedRecords'))) {
+            $entityType = $action->getSubtype()?->get('searchEntity');
             $where      = $this->getWhere($action) ?? [];
 
             $selectManager = $this->container->get('selectManagerFactory')->create($entityType);

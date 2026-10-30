@@ -103,7 +103,15 @@
     "ConnectionTypeVertica": "З'єднання: Vertica DB",
     "ConnectionTypeTokenAuthApi": "З'єднання: API автентифікації токенів",
     "ConnectionTypeApiKey": "З'єднання: Ключ API",
-    "StorageTypeLocal": "Сховище: Локальне (Linux)"
+    "StorageTypeLocal": "Сховище: Локальне (Linux)",
+    "ActionTypeWebhook": "Дія: Веб-гачок",
+    "ActionTypeEmail": "Дія: Відправити лист",
+    "ActionTypeCreate": "Дія: Створити",
+    "ActionTypeUpdate": "Дія: Оновити",
+    "ActionTypeCreateOrUpdate": "Дія: Створити або оновити",
+    "ActionTypeDelete": "Дія: Видалити",
+    "ActionTypeSet": "Дія: Набір дій",
+    "ActionTypeCustom": "Дія: Користувацький код"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Програмні пакети",
@@ -196,7 +204,15 @@
     "ConnectionTypeVertica": "З'єднання: Vertica DB",
     "ConnectionTypeTokenAuthApi": "З'єднання: API автентифікації токенів",
     "ConnectionTypeApiKey": "З'єднання: Ключ API",
-    "StorageTypeLocal": "Сховище: Локальне (Linux)"
+    "StorageTypeLocal": "Сховище: Локальне (Linux)",
+    "ActionTypeWebhook": "Дія: Веб-гачок",
+    "ActionTypeEmail": "Дія: Відправити лист",
+    "ActionTypeCreate": "Дія: Створити",
+    "ActionTypeUpdate": "Дія: Оновити",
+    "ActionTypeCreateOrUpdate": "Дія: Створити або оновити",
+    "ActionTypeDelete": "Дія: Видалити",
+    "ActionTypeSet": "Дія: Набір дій",
+    "ActionTypeCustom": "Дія: Користувацький код"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

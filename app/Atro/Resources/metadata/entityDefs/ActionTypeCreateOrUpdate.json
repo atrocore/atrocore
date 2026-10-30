@@ -1,0 +1,94 @@
+{
+  "fields": {
+    "targetEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/target-entity",
+      "required": true
+    },
+    "searchEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/search-entity"
+    },
+    "updateType": {
+      "type": "enum",
+      "options": [
+        "basic",
+        "script"
+      ],
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "openApiEnabled": true,
+      "view": "views/fields/enum",
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "searchEntity"
+            }
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "type": "jsonObject",
+      "view": "views/action/fields/update-fields",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "openApiEnabled": true,
+      "exportDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "updateType",
+              "value": "basic"
+            }
+          ]
+        }
+      }
+    },
+    "updateScript": {
+      "type": "code",
+      "engine": "Twig",
+      "language": "json",
+      "default": "{# { \"name\": \"Entity Name: {{ entity.name }}\" } #}",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "targetEntity"
+        },
+        "addAttributes": {
+          "entityNameField": "targetEntity"
+        }
+      },
+      "variables": [
+        "entity",
+        "triggeredEntityType",
+        "triggeredEntityId",
+        "triggeredEntity",
+        "uiRecord",
+        "uiRecordFromName",
+        "uiRecordFrom"
+      ],
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "updateType",
+              "value": "script"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

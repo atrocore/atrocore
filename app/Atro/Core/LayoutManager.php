@@ -160,6 +160,16 @@ class LayoutManager
         $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
 
+        // a subtype shows the fields and the relations of its supertype, the layout listeners of the supertype apply to it
+        $supertype = $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Subtype'
+            ? $this->getMetadata()->get(['scopes', $scope, 'supertypeId'])
+            : null;
+        if (!empty($supertype)) {
+            $event->setArgument('result', $layout);
+            $layout = $this->getEventManager()->dispatch($supertype . 'Layout', $viewType, $event)
+                ->getArgument('result');
+        }
+
         if (is_array($layout)) {
             foreach ($layout as $k => $item) {
                 if (is_array($item) && isset($item['width'])) {

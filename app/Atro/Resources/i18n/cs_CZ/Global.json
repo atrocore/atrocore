@@ -101,7 +101,15 @@
     "ConnectionTypeSmtp": "Připojení: SMTP",
     "ConnectionTypeVertica": "Připojení: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Připojení: Token Auth API",
-    "StorageTypeLocal": "Úložiště: Místní (Linux)"
+    "StorageTypeLocal": "Úložiště: Místní (Linux)",
+    "ActionTypeWebhook": "Akce: Webhook",
+    "ActionTypeEmail": "Akce: Odeslat e-mail",
+    "ActionTypeCreate": "Akce: Vytvořit",
+    "ActionTypeUpdate": "Akce: Aktualizovat",
+    "ActionTypeCreateOrUpdate": "Akce: Vytvořit nebo aktualizovat",
+    "ActionTypeDelete": "Akce: Odstranit",
+    "ActionTypeSet": "Akce: Akční sada",
+    "ActionTypeCustom": "Akce: Vlastní kód"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarové balíčky",
@@ -192,7 +200,15 @@
     "ConnectionTypeSmtp": "Připojení: SMTP",
     "ConnectionTypeVertica": "Připojení: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Připojení: Token Auth API",
-    "StorageTypeLocal": "Úložiště: Místní (Linux)"
+    "StorageTypeLocal": "Úložiště: Místní (Linux)",
+    "ActionTypeWebhook": "Akce: Webhook",
+    "ActionTypeEmail": "Akce: Odeslat e-mail",
+    "ActionTypeCreate": "Akce: Vytvořit",
+    "ActionTypeUpdate": "Akce: Aktualizovat",
+    "ActionTypeCreateOrUpdate": "Akce: Vytvořit nebo aktualizovat",
+    "ActionTypeDelete": "Akce: Odstranit",
+    "ActionTypeSet": "Akce: Akční sada",
+    "ActionTypeCustom": "Akce: Vlastní kód"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",

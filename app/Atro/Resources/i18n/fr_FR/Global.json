@@ -218,7 +218,15 @@
     "ConnectionTypeVertica": "Connexion: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
     "ConnectionTypeApiKey": "Connexion: Clé d'API",
-    "StorageTypeLocal": "Stockage: Local (Linux)"
+    "StorageTypeLocal": "Stockage: Local (Linux)",
+    "ActionTypeWebhook": "Action: Webhook",
+    "ActionTypeEmail": "Action: Envoyer un e-mail",
+    "ActionTypeCreate": "Action: Création",
+    "ActionTypeUpdate": "Action: Mise à jour",
+    "ActionTypeCreateOrUpdate": "Action: Création ou mise à jour",
+    "ActionTypeDelete": "Action: Suppression",
+    "ActionTypeSet": "Action: Ensemble d'actions",
+    "ActionTypeCustom": "Action: Code personnalisé"
   },
   "labels": {
     "dataLineage": "Traçabilité des données",
@@ -831,7 +839,15 @@
     "ConnectionTypeVertica": "Connexion: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
     "ConnectionTypeApiKey": "Connexion: Clé d'API",
-    "StorageTypeLocal": "Stockage: Local (Linux)"
+    "StorageTypeLocal": "Stockage: Local (Linux)",
+    "ActionTypeWebhook": "Action: Webhook",
+    "ActionTypeEmail": "Action: Envoyer un e-mail",
+    "ActionTypeCreate": "Action: Création",
+    "ActionTypeUpdate": "Action: Mise à jour",
+    "ActionTypeCreateOrUpdate": "Action: Création ou mise à jour",
+    "ActionTypeDelete": "Action: Suppression",
+    "ActionTypeSet": "Action: Ensemble d'actions",
+    "ActionTypeCustom": "Action: Code personnalisé"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

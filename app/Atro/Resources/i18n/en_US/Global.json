@@ -103,7 +103,15 @@
     "ConnectionTypeVertica": "Connection: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Connection: Token Auth API",
     "ConnectionTypeApiKey": "Connection: API Key",
-    "StorageTypeLocal": "Storage: Local (Linux)"
+    "StorageTypeLocal": "Storage: Local (Linux)",
+    "ActionTypeWebhook": "Action: Webhook",
+    "ActionTypeEmail": "Action: Send E-mail",
+    "ActionTypeCreate": "Action: Create",
+    "ActionTypeUpdate": "Action: Update",
+    "ActionTypeCreateOrUpdate": "Action: Create or Update",
+    "ActionTypeDelete": "Action: Delete",
+    "ActionTypeSet": "Action: Action Set",
+    "ActionTypeCustom": "Action: Custom Code"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Software Packages",
@@ -196,7 +204,15 @@
     "ConnectionTypeVertica": "Connection: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Connection: Token Auth API",
     "ConnectionTypeApiKey": "Connection: API Key",
-    "StorageTypeLocal": "Storage: Local (Linux)"
+    "StorageTypeLocal": "Storage: Local (Linux)",
+    "ActionTypeWebhook": "Action: Webhook",
+    "ActionTypeEmail": "Action: Send E-mail",
+    "ActionTypeCreate": "Action: Create",
+    "ActionTypeUpdate": "Action: Update",
+    "ActionTypeCreateOrUpdate": "Action: Create or Update",
+    "ActionTypeDelete": "Action: Delete",
+    "ActionTypeSet": "Action: Action Set",
+    "ActionTypeCustom": "Action: Custom Code"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"

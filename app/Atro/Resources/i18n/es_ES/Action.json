@@ -66,7 +66,8 @@
       "update": "Guardar",
       "create": "Crear",
       "delete": "Borrar",
-      "createOrUpdate": "Crear o actualizar"
+      "createOrUpdate": "Crear o actualizar",
+      "custom": "Código personalizado"
     },
     "executeAs": {
       "system": "Sistema",
