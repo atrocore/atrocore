@@ -46,9 +46,9 @@ Each cluster stores how it was consolidated. Both values are set by the system o
 
 | Value | Description |
 |---|---|
-| **Rule-based** | The Golden Record is built by the [Consolidation Script](#consolidation-script). Set by the **Consolidate** action and by [automatic consolidation](#automatic-consolidation). |
-| **Hybrid** | Reserved for consolidation that combines the Consolidation Script with manual value selection. Not set by the system yet. |
-| **Manual** | The Golden Record values were selected by a user in the [Merge View](#merge-cluster-items). |
+| **Rule-based** | The Golden Record is built by the [Consolidation Script](#consolidation-script). Set by the **Consolidate** action, by [automatic consolidation](#automatic-consolidation) and by the [Manual Consolidation View](#merge-cluster-items) if all values are taken from the Consolidation Script. |
+| **Hybrid** | A user selected the Golden Record values in the [Manual Consolidation View](#merge-cluster-items) and took some of them from the Consolidation Script and some from the cluster items. |
+| **Manual** | A user selected all Golden Record values in the [Manual Consolidation View](#merge-cluster-items) from the cluster items. |
 
 **Execution Mode** describes who executed the consolidation:
 
@@ -57,9 +57,9 @@ Each cluster stores how it was consolidated. Both values are set by the system o
 | **Automatic** | The consolidation was executed by the `Create Clusters` scheduled job. |
 | **Manual** | The consolidation was executed by a user. |
 
-Both fields are empty while the cluster has no Golden Record. Each subsequent consolidation of the cluster overwrites both values, e.g. a manually merged cluster becomes "Rule-based" after a user runs the **Consolidate** action on a new item.
+Both fields are empty while the cluster has no Golden Record. Each subsequent consolidation of the cluster overwrites both values, e.g. a manually merged cluster becomes "Rule-based" after a user takes all values from the Consolidation Script in the [Manual Consolidation View](#merge-cluster-items).
 
-Automatic consolidation never processes clusters with the consolidation method "Manual" or "Hybrid", so the result of a manual merge is not changed by the `Create Clusters` job. If the job joins such a cluster with another one, the resulting cluster keeps the consolidation method "Manual" or "Hybrid", and new items in it stay unconsolidated until a user consolidates them.
+Automatic consolidation never processes clusters with the consolidation method "Manual" or "Hybrid", so the result of a manual merge is not changed by the `Create Clusters` job. If the job joins such a cluster with another one, the resulting cluster keeps the consolidation method "Manual" or "Hybrid", and new items in it stay unconsolidated until a user merges them in the [Manual Consolidation View](#merge-cluster-items).
 
 Confirming and consolidating a cluster item are different steps. Confirmation means the record belongs to the cluster, while consolidation links the record to the Golden Record. Consolidation also confirms the item. If the confirmation was done by the `Create Clusters` job, the item is marked as confirmed automatically.
 
@@ -81,7 +81,7 @@ The Cluster entity supports three view modes, switchable via the buttons in the 
 
 - **Comparison View** – displays a comparison table with the fields and attributes defined in the [Selection Layout](../../09.comparison-and-merge/index.md#configuring-the-comparison-table-layout) of the corresponding entity.
 
-- **Merge View** – displays all cluster items side by side with radio buttons for selecting field values from each record. Used to manually build or update the Golden Record by choosing specific values from contributor records. The view switcher button is labeled **Consolidate**. See [Merge Cluster Items](#merge-cluster-items) for details.
+- **Manual Consolidation View** – displays all cluster items side by side with radio buttons for selecting field values from each record. Used to manually build or update the Golden Record by choosing specific values from contributor records. See [Merge Cluster Items](#merge-cluster-items) for details.
 
 ![Comparison mode](./_assets/compare-mode.png){.large}
 
@@ -130,25 +130,33 @@ The status of each item is visually indicated by a colored horizontal line on th
 
 ## Merge Cluster Items
 
-The Merge View allows you to manually create or update the Golden Record within a cluster by selecting individual field values from contributor records via radio buttons.
+The Manual Consolidation View allows you to manually create or update the Golden Record within a cluster by selecting individual field values from contributor records via radio buttons. Values can also be taken from the [Consolidation Script](#consolidation-script).
 
 ![Merge cluster items](./_assets/merge-cluster-items.png){.large}
 
 To execute the merge, click **Consolidate**. The action is available only for clusters with the status "Review" or "Consolidated".
 
-All cluster items are shown in the merge view by default. To exclude an item from the merge, use the unset icon in the left sidebar. Only items that were removed from the merge interface are considered non-participating – all others are treated as participating in the merge.
+All cluster items are shown in the Manual Consolidation View by default. To exclude an item from the merge, use the unset icon in the left sidebar. Only items that were removed from the merge interface are considered non-participating – all others are treated as participating in the merge.
+
+### Suggested Values
+
+The first column of the Manual Consolidation View is **Suggested Values**. It shows the Golden Record as the [Consolidation Script](#consolidation-script) builds it from the unconsolidated items of the cluster. By default, all field values are taken from this column. Select the radio buttons of the cluster items for the fields whose values should be chosen manually. The radio button in the column header selects the script values for all fields again.
+
+The values in the column cannot be edited. On execution, the script is rendered again, so the Golden Record gets its current result. Relations are not calculated by the script. They are taken from the cluster item selected in the header, or from the first cluster item if the **Suggested Values** column is selected in the header.
+
+If the Consolidation Script is missing, fails or returns no values, an error is shown and the values in the column cannot be selected. The merge with values from this column is not executed in this case.
 
 **Behavior on execution:**
 
 - If no Golden Record exists, it is created; if one already exists, it is updated.
-- Field values are taken from the contributor records based on the radio button selection in the merge view.
-- Participating contributor records are **not** processed through the [Consolidation Script](#consolidation-script) – selected values are applied directly.
+- Field values are taken from the contributor records based on the radio button selection in the Manual Consolidation View.
+- Participating contributor records are **not** processed through the [Consolidation Script](#consolidation-script) – selected values are applied directly, except for the fields taken from the Suggested Values column.
 - Participating cluster items are consolidated after the merge is executed.
 - Contributor records that did not participate in the merge (i.e., removed from the merge interface) remain unchanged.
 - If a field in the Golden Record is locked via a value lock, the lock is ignored – the selected value is applied regardless.
 - The merge is executed on behalf of the current user – the **Execute Consolidation As** setting of the Consolidation is ignored. The user needs the permissions to create and edit the master record.
 - **Update Master Automatically** is not triggered by the merge, so the selected values are not overwritten by the Consolidation Script.
-- The cluster gets the consolidation method "Manual" and the execution mode "Manual".
+- The cluster gets the consolidation method "Rule-based" if all fields are taken from the Suggested Values column, "Manual" if none of them, otherwise "Hybrid". The execution mode is "Manual".
 
 ## Cluster Item Actions
 
@@ -159,13 +167,13 @@ The following actions are available for cluster items in both Standard and Compa
   - If a master record already exists in the cluster, the contributor record is linked to it.
   - If no master record exists yet, a new master record is created based on the selected contributor record and linked to it.
 
-    An already consolidated item cannot be consolidated again. The cluster gets the consolidation method "Rule-based" and the execution mode "Manual". Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster. All selected items are consolidated together into one master record.
+    An already consolidated item cannot be consolidated again. Not available for clusters with the consolidation method "Manual" or "Hybrid" – use the [Manual Consolidation View](#merge-cluster-items) for them. The cluster gets the consolidation method "Rule-based" and the execution mode "Manual". Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster. All selected items are consolidated together into one master record.
 
 - **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a consolidated master record is rejected, all consolidated contributor records in the cluster are automatically deconsolidated and the link between the master and contributor records is removed. If a consolidated contributor record is rejected, that record is deconsolidated. Available as a mass action – can be executed for multiple cluster items at once.
 
 - **Unreject** – Available for items in the `Rejected Cluster Items` panel. Returns the item to the cluster. If the item was previously consolidated, then rejected, and then returned to the cluster, it is not consolidated and must be consolidated again.
 
-- **Deconsolidate** – unlinks the contributor record from the golden record of the cluster. The cluster item stays in the current cluster and can be consolidated again. If **Update Master Automatically** is enabled for the consolidation, the golden record is updated according to the Consolidation Script based on the remaining contributor records. Available only for consolidated contributor records. At least one contributor record must stay consolidated, so the last consolidated item cannot be deconsolidated, and all consolidated items cannot be deconsolidated at once. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
+- **Deconsolidate** – unlinks the contributor record from the golden record of the cluster. The cluster item stays in the current cluster and can be consolidated again. If **Update Master Automatically** is enabled for the consolidation, the golden record is updated according to the Consolidation Script based on the remaining contributor records. For clusters with the consolidation method "Manual" or "Hybrid", the golden record is not updated. Available only for consolidated contributor records. At least one contributor record must stay consolidated, so the last consolidated item cannot be deconsolidated, and all consolidated items cannot be deconsolidated at once. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
 - **Split** – moves the selected cluster items to a new cluster. Consolidated items are deconsolidated first, as described for **Deconsolidate**. Unlike **Reject**, all selected items are guaranteed to end up together in the same new cluster, and no rejection is stored. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
