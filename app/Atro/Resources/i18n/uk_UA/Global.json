@@ -1535,7 +1535,6 @@
       "findEntity": "Знайдіть єдиний об'єкт",
       "findRecord": "Знайти єдиний запис про сутність",
       "findEntities": "Знайти декілька сутностей \n Параметри: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
-      "convertFileToBase64FromUrl": "Конвертувати файл в base64 з URL-адреси",
       "findRecords": "Знайти декілька сутностей \n Параметри: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
       "parseMarkdown": "Розбір вмісту націнки",
       "formatField": "Форматування значення поля",

@@ -299,11 +299,6 @@ class DataPipeline extends Base
             throw new BadRequest(sprintf($this->getInjection('language')->translate('transformationScriptIsNotValid', 'exceptions', 'DataPipeline'), (string)$res));
         }
 
-        /* @deprecated the "targetRecordData" wrapper will be removed in 3.0.0 */
-        if (array_keys($targetRecordData) === ['targetRecordData'] && is_array($targetRecordData['targetRecordData'])) {
-            $targetRecordData = $targetRecordData['targetRecordData'];
-        }
-
         return $targetRecordData;
     }
 

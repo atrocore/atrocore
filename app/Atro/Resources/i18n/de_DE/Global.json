@@ -1545,7 +1545,6 @@
       "findRecord": "Einen einzelnen Entitätsdatensatz finden",
       "findEntities": "Mehrere Entitäten finden\nParameter: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
       "findRecords": "Mehrere Entitäten finden \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
-      "convertFileToBase64FromUrl": "Konvertieren Sie eine Datei in base64 von URL",
       "translate": "Übersetzen Sie eine Zeichenkette",
       "translateOption": "Einen Optionswert übersetzen",
       "convertFileToBase64": "Eine Datei in base64 konvertieren",

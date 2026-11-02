@@ -1399,7 +1399,6 @@
     "functions": {
       "findEntity": "Vyhledání jediného subjektu",
       "findRecord": "Vyhledání záznamu jedné entity",
-      "convertFileToBase64FromUrl": "Převod souboru do base64 z adresy URL",
       "translate": "Přeložit řetězec",
       "translateOption": "Přeložit hodnotu možnosti",
       "convertFileToBase64": "Převod souboru do formátu base64",

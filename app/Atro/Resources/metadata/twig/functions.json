@@ -48,12 +48,6 @@
     "handler": "\\Atro\\TwigFunction\\CountEntities",
     "insertText": "recordsCount(${1:entityName}, $0)"
   },
-  "convertAssetToBase64FromUrl": {
-    "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl"
-  },
-  "convertFileToBase64FromUrl": {
-    "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl"
-  },
   "translate": {
     "handler": "\\Atro\\TwigFunction\\Translate"
   },
