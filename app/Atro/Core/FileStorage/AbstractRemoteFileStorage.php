@@ -180,7 +180,7 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
         }
 
         try {
-            $connectionEntity = $storage->get($this->getConnectionField());
+            $connectionEntity = $storage->getSubtype()->get($this->getConnectionField())->getSubtype();
             $this->isAvailable = $this->container->get('connectionFactory')
                 ->create($connectionEntity)
                 ->testConnection($connectionEntity);
