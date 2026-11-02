@@ -25,7 +25,8 @@ class AttributeTypeBool extends Subtype
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew() || $entity->isAttributeChanged('allowNullForBool')) {
+        // "notNull" is set via "allowNullForBool" only when it is given, otherwise "notNull" is kept as it is
+        if ($entity->get('allowNullForBool') !== null && ($entity->isNew() || $entity->isAttributeChanged('allowNullForBool'))) {
             $entity->set('notNull', empty($entity->get('allowNullForBool')));
         }
 

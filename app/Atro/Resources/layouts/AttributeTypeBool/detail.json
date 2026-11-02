@@ -50,14 +50,8 @@
           "name": "isReadOnly"
         },
         {
-          "name": "notNull"
-        }
-      ],
-      [
-        {
           "name": "allowNullForBool"
-        },
-        false
+        }
       ],
       [
         {

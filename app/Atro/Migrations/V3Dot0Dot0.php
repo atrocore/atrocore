@@ -307,7 +307,7 @@ class V3Dot0Dot0 extends Base
             ],
             'bool' => [
                 'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
-                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => true, 'source' => 'column'],
             ],
             'date' => [
                 'defaultDate' => ['default_date', 'type' => 'string', 'length' => 255, 'source' => 'column'],

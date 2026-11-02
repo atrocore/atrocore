@@ -8,8 +8,9 @@
     },
     "notNull": {
       "type": "bool",
-      "default": false,
-      "layoutRemoveDisabled": true
+      "default": true,
+      "layoutRemoveDisabled": true,
+      "layoutDetailDisabled": true
     },
     "allowNullForBool": {
       "type": "bool",
