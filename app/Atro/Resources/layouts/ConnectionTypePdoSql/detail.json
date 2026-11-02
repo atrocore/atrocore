@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "dsn"
+        },
+        {
+          "name": "server"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "password"
+        }
+      ]
+    ]
+  }
+]

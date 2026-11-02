@@ -33,7 +33,8 @@
       "required": true,
       "options": [
         "Base",
-        "Hierarchy"
+        "Hierarchy",
+        "Subtype"
       ],
       "conditionalProperties": {
         "protected": {
@@ -50,6 +51,39 @@
                   "attribute": "primaryEntityId"
                 }
               ]
+            }
+          ]
+        }
+      }
+    },
+    "supertype": {
+      "type": "link",
+      "view": "views/entity/fields/supertype",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Subtype"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Subtype"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
@@ -72,6 +106,11 @@
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -93,6 +132,11 @@
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -164,7 +208,18 @@
     },
     "quickActions": {
       "type": "multiEnum",
-      "view": "views/admin/entity-manager/fields/quick-actions"
+      "view": "views/admin/entity-manager/fields/quick-actions",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
+            }
+          ]
+        }
+      }
     },
     "deleteWithoutConfirmation": {
       "type": "bool",
@@ -301,6 +356,11 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -327,6 +387,11 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -353,6 +418,11 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -382,6 +452,11 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -752,6 +827,11 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -783,6 +863,11 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -813,6 +898,11 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -902,6 +992,11 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -931,6 +1026,27 @@
         }
       }
     },
+    "subtypes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Base"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
     "deleteValuesAfterUnlinkingClassification": {
       "type": "bool",
       "view": "views/entity/fields/delete-values-after-unlinking-classification"
@@ -951,6 +1067,11 @@
               "value": [
                 "ReferenceData"
               ]
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Subtype"
             }
           ]
         }
@@ -987,6 +1108,16 @@
       "type": "hasMany",
       "entity": "Entity",
       "foreign": "primaryEntity"
+    },
+    "supertype": {
+      "type": "belongsTo",
+      "entity": "Entity",
+      "foreign": "subtypes"
+    },
+    "subtypes": {
+      "type": "hasMany",
+      "entity": "Entity",
+      "foreign": "supertype"
     },
     "createdBy": {
       "type": "belongsTo",

@@ -58,7 +58,8 @@
       "webhook": "Webhook",
       "email": "Envoyer un e-mail",
       "customCode": "Code personnalisé",
-      "createOrUpdate": "Création ou mise à jour"
+      "createOrUpdate": "Création ou mise à jour",
+      "custom": "Code personnalisé"
     },
     "usage": {
       "entity": "Bouton d'action d'entité",

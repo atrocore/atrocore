@@ -21,6 +21,7 @@ use Atro\Entities\Connection;
 use Atro\Entities\File;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Transport;
@@ -52,7 +53,7 @@ class Sender
 
     public function initializeTransport(Connection $connectionEntity): void
     {
-        $this->transport = $this->connexion->connect($connectionEntity);
+        $this->transport = $this->connexion->connect($this->getSmtpRecord($connectionEntity));
     }
 
     public function sendByJob(array $emailData, ?string $connectionId = null, array $params = []): void
@@ -97,12 +98,14 @@ class Sender
             $this->initializeTransport($connectionEntity);
         }
 
+        $smtpRecord = $this->getSmtpRecord($connectionEntity);
+
 
         if (empty($emailData['subject']) || empty($emailData['to'])) {
             throw new Error('Subject and emailTo is required.');
         }
 
-        $fromEmail = $connectionEntity->get('outboundEmailFromAddress');
+        $fromEmail = $smtpRecord->get('outboundEmailFromAddress');
         if (!empty($emailData['from'])) {
             $fromEmail = $emailData['from'];
         }
@@ -113,7 +116,7 @@ class Sender
 
         $email = (new Email())->from($fromEmail);
 
-        $fromName = $connectionEntity->get('outboundEmailFromName');
+        $fromName = $smtpRecord->get('outboundEmailFromName');
         if (empty($fromName)) {
             $fromName = $fromEmail;
         }
@@ -185,6 +188,19 @@ class Sender
                 Util::removeDir($tmpDir);
             }
         }
+    }
+
+    /**
+     * The settings of the connection are stored in its subtype record.
+     */
+    protected function getSmtpRecord(Connection $connectionEntity): Entity
+    {
+        $smtpRecord = $connectionEntity->getSubtype();
+        if (empty($smtpRecord)) {
+            throw new Error("Connection '{$connectionEntity->get('id')}' has no settings of its type.");
+        }
+
+        return $smtpRecord;
     }
 
     public function getAttachmentTmpDirectory(): string

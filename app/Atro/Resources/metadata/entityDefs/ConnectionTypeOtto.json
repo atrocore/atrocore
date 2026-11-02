@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "oauthGrantType": {
+      "type": "enum",
+      "options": [
+        "client_credentials",
+        "password"
+      ],
+      "default": "client_credentials",
+      "required": true
+    },
+    "oauthUrl": {
+      "type": "varchar",
+      "trim": true
+    },
+    "oauthClientId": {
+      "type": "varchar",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials",
+                "password"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "oauthClientSecret": {
+      "type": "password",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials",
+                "password"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "oauthScope": {
+      "type": "varchar",
+      "trim": true,
+      "default": "partnerId installation developer"
+    },
+    "vendorOauthUrl": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "vendorOauthScopes": {
+      "type": "multiEnum",
+      "options": [
+        "orders",
+        "shipments",
+        "quantities",
+        "returns",
+        "products",
+        "receipts",
+        "price-reduction"
+      ],
+      "default": [
+        "orders",
+        "shipments",
+        "quantities",
+        "returns",
+        "products",
+        "receipts",
+        "price-reduction"
+      ]
+    },
+    "verifySsl": {
+      "type": "bool",
+      "default": true
+    }
+  }
+}

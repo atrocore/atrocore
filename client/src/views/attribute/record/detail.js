@@ -9,7 +9,10 @@
  */
 
 
-Espo.define('views/attribute/record/detail', 'views/record/detail',
+/**
+ * The record of an attribute type, the attribute is the supertype record.
+ */
+Espo.define('views/attribute/record/detail', 'views/subtype/record/detail',
     Dep => Dep.extend({
 
         bottomView: 'views/attribute/record/detail-bottom',
@@ -32,14 +35,15 @@ Espo.define('views/attribute/record/detail', 'views/record/detail',
                 return;
             }
 
+            const attributeId = this.model.get('supertypeId');
             const params = {
                 queryBuilder: {
                     condition: 'AND',
                     rules: [
                         {
-                            id: `attr_${this.model.id}`,
-                            field: `attr_${this.model.id}`,
-                            attribute: this.model.id,
+                            id: `attr_${attributeId}`,
+                            field: `attr_${attributeId}`,
+                            attribute: attributeId,
                             operator: 'is_attribute_linked',
                             type: 'string'
                         }
@@ -64,7 +68,7 @@ Espo.define('views/attribute/record/detail', 'views/record/detail',
                 for (let filterField in item.data) {
                     let name = filterField.split('-')[0];
 
-                    if (name === this.model.id) {
+                    if (name === this.model.get('supertypeId')) {
                         delete obj[index].data[filterField]
                     }
                 }

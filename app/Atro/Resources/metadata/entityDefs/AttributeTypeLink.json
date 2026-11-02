@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "entityType": {
+      "type": "varchar",
+      "view": "views/attribute/fields/entity-type",
+      "required": true
+    },
+    "entityField": {
+      "type": "varchar",
+      "view": "views/attribute/fields/entity-field-type",
+      "required": true
+    },
+    "dropdown": {
+      "type": "bool",
+      "filterDisabled": true,
+      "default": false,
+      "emHidden": true,
+      "tooltip": true,
+      "layoutRemoveDisabled": true
+    },
+    "selectPageSize": {
+      "type": "int",
+      "filterDisabled": true,
+      "emHidden": true,
+      "tooltip": true,
+      "layoutRemoveDisabled": true,
+      "min": 1
+    },
+    "conditionalDisableOptions": {
+      "type": "jsonArray",
+      "view": "views/entity-field/fields/conditional-disable-options",
+      "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

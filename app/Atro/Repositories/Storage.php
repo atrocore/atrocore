@@ -14,12 +14,9 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Repositories\Base;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Storage extends Base
@@ -47,22 +44,14 @@ class Storage extends Base
         }
 
         if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('syncFolders')) {
-                throw new Forbidden();
-            }
             if ($entity->isAttributeChanged('type')) {
                 throw new BadRequest($this->translate('storageTypeCannotBeChanged', 'exceptions', 'Storage'));
-            }
-            if ($entity->get('type') === 'local' && $entity->isAttributeChanged('path')) {
-                throw new BadRequest($this->translate('storagePathCannotBeChanged', 'exceptions', 'Storage'));
             }
         } else {
             if (!empty($this->where(['folderId' => $entity->get('folderId') ?? ''])->findOne())) {
                 throw new BadRequest($this->translate('folderUsedByOtherStorage', 'exceptions', 'Storage'));
             }
         }
-
-        $this->validateLocalPath($entity);
 
         if (!$entity->isNew() && $entity->isAttributeChanged('folderId')) {
             $file = $this->getEntityManager()->getRepository('File')
@@ -113,50 +102,6 @@ class Storage extends Base
                 ->setParameter('storageId', $entity->get('id'))
                 ->setParameter('id', $folderId)
                 ->executeQuery();
-        }
-    }
-
-    protected function validateLocalPath(Entity $entity): void
-    {
-        if ($entity->get('type') !== 'local') {
-            return;
-        }
-
-        if (empty($entity->get('path'))) {
-            throw new BadRequest("Path cannot be empty.");
-        }
-
-        $existed = $this
-            ->where([
-                'path' => $entity->get('path'),
-                'id!=' => $entity->get('id')
-            ])
-            ->findOne();
-        if (!empty($existed)) {
-            throw new BadRequest($this->translate('storagePathNotUnique', 'exceptions', 'Storage'));
-        }
-
-        $regexp = Converter::isPgSQL($this->getConnection()) ? '~' : 'REGEXP';
-
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select("f.id, s.name, s.path, CONCAT(s.path, '/', f.path) as file_path")
-            ->from('file', 'f')
-            ->innerJoin('f', 'storage', 's', 's.id=f.storage_id')
-            ->where('f.deleted=:false')
-            ->andWhere('s.deleted=:false')
-            ->andWhere('s.type=:local')
-            ->andWhere('s.id!=:id')
-            ->andWhere("CONCAT(s.path, '/', f.path) $regexp :regExp")
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('local', 'local')
-            ->setParameter('id', $entity->get('id'))
-            ->setParameter('regExp', "^{$entity->get('path')}")
-            ->fetchAllAssociative();
-
-        foreach ($records as $record) {
-            if (strlen($record['path']) < strlen($entity->get('path'))) {
-                throw new BadRequest($this->translate('storagePathContainFilesFromAnotherStorage', 'exceptions', 'Storage'));
-            }
         }
     }
 

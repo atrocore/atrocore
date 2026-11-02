@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "host"
+        },
+        {
+          "name": "port"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "password"
+        }
+      ]
+    ]
+  }
+]

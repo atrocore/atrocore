@@ -30,8 +30,10 @@ class OauthSmtpCallback extends AbstractEntryPoint
             $connectionEntity = $this->getEntityManager()->getRepository('Connection')->get($_GET['state']);
             if (!empty($connectionEntity)) {
                 $redirectUrl = '/#Connection/view/' . $connectionEntity->get('id');
-                if (!empty($_GET['code'])) {
-                    $this->getConnectionSmtp($connectionEntity)->createAccessTokenFromAuthCode($connectionEntity, $_GET['code']);
+                // the access data is stored in the subtype record together with the other settings
+                $smtpRecord = $connectionEntity->getSubtype();
+                if (!empty($_GET['code']) && !empty($smtpRecord)) {
+                    $this->getConnectionSmtp($connectionEntity)->createAccessTokenFromAuthCode($smtpRecord, $_GET['code']);
                 }
             }
         }

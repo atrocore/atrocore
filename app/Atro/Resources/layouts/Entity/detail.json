@@ -12,6 +12,12 @@
       ],
       [
         {
+          "name": "supertype"
+        },
+        false
+      ],
+      [
+        {
           "name": "disabled"
         },
         {

@@ -196,7 +196,7 @@ class QueryConverter
         if (empty($params['skipBelongsToJoins'])) {
             $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted, $params['orderBy']);
         } else {
-            $joinsPart = array();
+            $joinsPart = $this->getAlwaysJoins($entity, $withDeleted);
         }
 
         if (!empty($params['customWhere'])) {
@@ -539,6 +539,7 @@ class QueryConverter
         }
 
         if ($alias) {
+            $withDeleted = $withDeleted || !$this->hasDeletedColumn($r['entity']);
             if (!$withDeleted) {
                 $this->parameters['false'] = false;
             }
@@ -552,6 +553,25 @@ class QueryConverter
         }
 
         return null;
+    }
+
+    /**
+     * The relations the entity cannot be selected without, e.g. the supertype of a subtype that keeps its "deleted"
+     * state.
+     */
+    protected function getAlwaysJoins(IEntity $entity, bool $withDeleted): array
+    {
+        $joins = [];
+        foreach ($entity->relations as $relationName => $r) {
+            if (!empty($r['alwaysJoin']) && $r['type'] === IEntity::BELONGS_TO) {
+                $join = $this->getBelongsToJoin($entity, $relationName, $r, null, $withDeleted);
+                if ($join) {
+                    $joins[] = array_merge($join, ['type' => 'left']);
+                }
+            }
+        }
+
+        return $joins;
     }
 
     protected function getRelationsToJoin(IEntity $entity, array $attributes): array
@@ -603,7 +623,7 @@ class QueryConverter
                     continue;
                 }
 
-                if (!empty($select)) {
+                if (!empty($select) && empty($r['alwaysJoin'])) {
                     if (!in_array($relationName, $relationsToJoin) && !in_array($relationName, $relationsToOrderBy)) {
                         continue;
                     }
@@ -813,6 +833,11 @@ class QueryConverter
 //                    }
 //                    break;
                 case 'foreign':
+                    // the column of the supertype is read as is, without the localization of the value
+                    if (!empty($f['proxyType'])) {
+                        $fieldPath = $this->getRelationAlias($entity, $f['relation']) . '.' . $this->toDb($f['foreign']);
+                        break;
+                    }
                     if (isset($f['relation'])) {
                         $relationName  = $f['relation'];
                         $foreign       = $f['foreign'];
@@ -841,9 +866,20 @@ class QueryConverter
         return false;
     }
 
+    /**
+     * A subtype has no "deleted" column: it shares the "deleted" state of its supertype record.
+     */
+    protected function hasDeletedColumn(string $entityType): bool
+    {
+        $seed = $this->getSeed($entityType);
+
+        return !empty($seed) && ($seed->fields['deleted']['type'] ?? null) === IEntity::BOOL;
+    }
+
     public function getLocalizedFieldPath(IEntity $entity, string $relationName, ?string $foreignEntity, string $field): string
     {
-        $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($field);
+        $alias     = $this->getRelationAlias($entity, $relationName);
+        $fieldPath = $this->getColumnPath($alias, $foreignEntity, $field);
         if (empty($foreignEntity)) {
             return $fieldPath;
         }
@@ -851,11 +887,31 @@ class QueryConverter
         $localizedField = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $field);
 
         if ($localizedField !== $field) {
-            $localizedFieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($localizedField);
+            $localizedFieldPath = $this->getColumnPath($alias, $foreignEntity, $localizedField);
             $fieldPath          = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
         }
 
         return $fieldPath;
+    }
+
+    /**
+     * The path to the column of the joined entity. The fields a subtype takes from its supertype are stored in the
+     * supertype table, so they are read from there via the "supertype" key of the joined subtype record.
+     */
+    protected function getColumnPath(string $alias, ?string $entityType, string $field): string
+    {
+        $defs = empty($entityType) ? null : ($this->getSeed($entityType)->fields[$field] ?? null);
+
+        if (!empty($defs['proxyType']) && !empty($defs['relation'])) {
+            $relation = $this->getSeed($entityType)->relations[$defs['relation']] ?? null;
+            if (!empty($relation['entity']) && !empty($relation['key'])) {
+                $table = $this->quoteIdentifier($this->toDb($relation['entity']));
+
+                return "(SELECT st.{$this->toDb($defs['foreign'])} FROM $table st WHERE st.id = $alias.{$this->toDb($relation['key'])})";
+            }
+        }
+
+        return $alias . '.' . $this->toDb($field);
     }
 
     public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
@@ -1064,7 +1120,7 @@ class QueryConverter
                                     $alias = $this->getRelationAlias($entity, $relationName);
                                     if ($alias) {
                                         if (!is_array($fieldDefs['foreign'])) {
-                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                            $leftPart = $this->getColumnPath($alias, $entity->relations[$relationName]['entity'] ?? null, $fieldDefs['foreign']);
                                         } else {
                                             $leftPart = $this->getFieldPath($entity, $field);
                                         }
@@ -1389,7 +1445,7 @@ class QueryConverter
                     'fromAlias' => self::TABLE_ALIAS,
                     'table'     => $this->quoteIdentifier($distantTable),
                     'alias'     => $alias,
-                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5",
+                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)}" . ($this->hasDeletedColumn($relOpt['entity']) ? " AND {$alias}.deleted = :deleted_mm5" : ""),
                 ];
 
                 $this->parameters['deleted_mm5'] = false;
@@ -1401,7 +1457,7 @@ class QueryConverter
                 $distantTable = $this->toDb($relOpt['entity']);
 
                 $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey);
-                if (!$withDeleted) {
+                if (!$withDeleted && $this->hasDeletedColumn($relOpt['entity'])) {
                     $condition                      .= " AND {$alias}.deleted = :deleted_j1";
                     $this->parameters['deleted_j1'] = false;
                 }

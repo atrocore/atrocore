@@ -72,7 +72,7 @@ class MassUpdate extends AbstractJob implements JobInterface
 
         $collection = $this
             ->getEntityManager()
-            ->getRepository($action->get('searchEntity'))
+            ->getRepository($action->getSubtype()?->get('searchEntity'))
             ->where(['id' => $data['ids']])
             ->find();
 

@@ -28,8 +28,8 @@ class LinkMultipleType extends AbstractFieldType
 
         $data          = @json_decode($row['data'], true);
         $attributeData = $data['field'] ?? null;
-        $entityName    = $attributeData['entityType'] ?? null;
-        $foreignName   = $attributeData['entityField'] ?? 'name';
+        $entityName    = $this->getSetting($row, 'entityType') ?? null;
+        $foreignName   = $this->getSetting($row, 'entityField') ?? 'name';
 
         $entity->fields[$name . 'Ids'] = [
             'type'                     => 'jsonArray',
@@ -62,7 +62,7 @@ class LinkMultipleType extends AbstractFieldType
                 $value = @json_decode((string)$value, true);
             }
 
-            if (!empty($attributeData['dropdown'])) {
+            if (!empty($this->getSetting($row, 'dropdown'))) {
                 $entity->set($name . 'Ids', is_array($value) ? $value : []);
             } else {
                 $entity->set($name . 'Ids', !empty($value) ? $value : null);
@@ -133,7 +133,7 @@ class LinkMultipleType extends AbstractFieldType
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),
             'label'                     => $row[$this->prepareKey('name', $row)],
-            'dropdown'                  => !empty($attributeData['dropdown']),
+            'dropdown'                  => !empty($this->getSetting($row, 'dropdown')),
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'notSortable'               => true,
@@ -141,14 +141,14 @@ class LinkMultipleType extends AbstractFieldType
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
             'duplicateIgnore'           => !empty($row['duplicate_ignore']),
             'where'                     => $data['where'] ?? [],
-            'selectPageSize'            => $attributeData['selectPageSize'] ?? null
+            'selectPageSize'            => $this->getSetting($row, 'selectPageSize') ?? null
         ];
 
         if (!empty($row['disable_field_value_lock'])) {
             $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
         }
 
-        if (!empty($attributeData['dropdown'])) {
+        if (!empty($this->getSetting($row, 'dropdown'))) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/link-multiple-dropdown";
         }
 

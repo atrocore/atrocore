@@ -12,24 +12,90 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
 
     return Dep.extend({
 
+        // the prefix the code of a subtype must start with, e.g. "ExportFeedType"
+        subtypePrefix: '',
+
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.subtypePrefix = this.getSubtypePrefix();
+
             this.listenTo(this.model, 'change:code', () => {
+                this.model.set('code', this.prepareCode(this.model.get('code')));
+
+                const name = this.getNameFromCode();
+                if (!name) {
+                    return;
+                }
                 if (!this.model.get('name')) {
-                    this.model.set('name', this.model.get('code'));
+                    this.model.set('name', this.getLabelPrefix() + name);
                 }
                 if (!this.model.get('namePlural')) {
-                    this.model.set('namePlural', this.model.get('code') + 's');
+                    this.model.set('namePlural', this.getLabelPrefix() + name + 's');
                 }
-                this.model.set('code', this.sanitize(this.model.get('code')));
             });
 
             this.listenTo(this.model, 'change:name', () => {
-                if (!this.model.get('code')) {
-                    this.model.set('code', this.sanitize(this.model.get('name')));
+                const previousName = this.model.previous('name');
+                const name = this.model.get('name') || '';
+                const labelPrefix = this.getLabelPrefix();
+                const shortName = labelPrefix && name.startsWith(labelPrefix) ? name.slice(labelPrefix.length) : name;
+
+                if (!this.getNameFromCode()) {
+                    this.model.set('code', this.prepareCode(this.subtypePrefix + this.sanitize(shortName)));
+                }
+
+                // the name of a subtype is suggested with the name of the supertype once, the user can change it
+                if (labelPrefix && shortName && !previousName && !name.startsWith(labelPrefix)) {
+                    this.model.set('name', labelPrefix + name);
                 }
             });
+
+            this.listenTo(this.model, 'change:type change:supertypeId', () => {
+                if (this.model.id) {
+                    return;
+                }
+
+                const suffix = this.getNameFromCode();
+                this.subtypePrefix = this.getSubtypePrefix();
+                this.model.set('code', this.prepareCode(this.subtypePrefix + suffix));
+            });
+        },
+
+        getSubtypePrefix() {
+            if (this.model.get('type') === 'Subtype' && this.model.get('supertypeId')) {
+                return this.model.get('supertypeId') + 'Type';
+            }
+
+            return '';
+        },
+
+        // the suggested start of the name of a subtype, e.g. "Foo: "
+        getLabelPrefix() {
+            if (this.model.id || !this.subtypePrefix) {
+                return '';
+            }
+
+            return this.translate(this.model.get('supertypeId'), 'scopeNames') + ': ';
+        },
+
+        getNameFromCode() {
+            const code = this.model.get('code') || '';
+
+            return this.subtypePrefix && code.startsWith(this.subtypePrefix) ? code.slice(this.subtypePrefix.length) : code;
+        },
+
+        prepareCode(code) {
+            code = this.sanitize(code || '');
+
+            if (this.model.id || !this.subtypePrefix) {
+                return code;
+            }
+
+            // keep the prefix of the subtype even if the user removes it
+            const suffix = code.startsWith(this.subtypePrefix) ? code.slice(this.subtypePrefix.length) : code;
+
+            return this.subtypePrefix + this.sanitize(suffix);
         },
 
         sanitize(input) {

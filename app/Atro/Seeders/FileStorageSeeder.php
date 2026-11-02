@@ -30,16 +30,30 @@ class FileStorageSeeder extends AbstractSeeder
             ->setValue('name', ':name')
             ->setValue('folder_id', ':empty')
             ->setValue('type', ':type')
-            ->setValue('path', ':path')
             ->setValue('is_active', ':true')
             ->setValue('created_by_id', ':system')
             ->setParameter('id', '019c320a-707f-735f-becb-3aabd0f0c79c')
             ->setParameter('name', 'Base')
             ->setParameter('empty', '')
             ->setParameter('type', 'local')
-            ->setParameter('path', 'upload/files')
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->setParameter('system', $this->getConfig()->get('systemUserId'));
+        try {
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
+        }
+
+        // the path of a local storage is stored in its subtype record
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->insert('storage_type_local')
+            ->setValue('id', ':id')
+            ->setValue('supertype_id', ':supertypeId')
+            ->setValue('path', ':path')
+            ->setValue('sync_folders', ':false')
+            ->setParameter('id', '019c320a-707f-735f-becb-3aabd0f0c79d')
+            ->setParameter('supertypeId', '019c320a-707f-735f-becb-3aabd0f0c79c')
+            ->setParameter('path', 'upload/files')
+            ->setParameter('false', false, ParameterType::BOOLEAN);
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {

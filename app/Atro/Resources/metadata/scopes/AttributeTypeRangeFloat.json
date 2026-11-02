@@ -1,0 +1,10 @@
+{
+  "entity": true,
+  "type": "Subtype",
+  "supertypeId": "Attribute",
+  "module": "Atro",
+  "layouts": true,
+  "customizable": false,
+  "importable": true,
+  "emHidden": true
+}

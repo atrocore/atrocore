@@ -228,6 +228,8 @@ class MassActions extends HasContainer
      */
     public function addRelation(array $ids, array $foreignIds, string $entityType, string $link, ?array $relationData = null): array
     {
+        [$ids, $entityType] = $this->resolveSupertypeLink($ids, $entityType, $link);
+
         if (!empty($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'isMainAssociateRelation']))) {
             return $this->addAssociateRecords($ids, $foreignIds, $entityType, $relationData);
         }
@@ -299,6 +301,8 @@ class MassActions extends HasContainer
      */
     public function removeRelation(array $ids, array $foreignIds, string $entityType, string $link, ?array $relationData = null): array
     {
+        [$ids, $entityType] = $this->resolveSupertypeLink($ids, $entityType, $link);
+
         if (!empty($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'isMainAssociateRelation']))) {
             return $this->removeAssociateRecords($ids, $foreignIds, $entityType, $relationData);
         }
@@ -355,6 +359,33 @@ class MassActions extends HasContainer
         }
 
         return ['message' => $this->createRelationMessage($unRelated, $notUnRelated, $entityType, $foreignEntityType, false)];
+    }
+
+    /**
+     * The relations of the supertype shown by a subtype are served by the supertype records.
+     */
+    protected function resolveSupertypeLink(array $ids, string $entityType, string $link): array
+    {
+        if (
+            $this->getMetadata()->get(['scopes', $entityType, 'type']) !== 'Subtype'
+            || empty($this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link, 'supertypeField']))
+        ) {
+            return [$ids, $entityType];
+        }
+
+        $supertypeIds = [];
+        if (!empty($ids)) {
+            $records = $this->getRepository($entityType)
+                ->select(['id', 'supertypeId'])
+                ->where(['id' => $ids])
+                ->find();
+
+            foreach ($records as $record) {
+                $supertypeIds[] = $record->get('supertypeId');
+            }
+        }
+
+        return [$supertypeIds, $this->getMetadata()->get(['scopes', $entityType, 'supertypeId'])];
     }
 
     public function addRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link, ?array $relationData = null): array

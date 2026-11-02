@@ -1,0 +1,207 @@
+{
+  "fields": {
+    "smtpSecurity": {
+      "type": "enum",
+      "options": [
+        "SSL",
+        "TLS"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpServer": {
+      "type": "varchar",
+      "required": true
+    },
+    "smtpPassword": {
+      "type": "password",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpPort": {
+      "type": "int",
+      "view": "views/connection/fields/smtp-port",
+      "required": true
+    },
+    "smtpUsername": {
+      "type": "varchar"
+    },
+    "outboundEmailFromName": {
+      "type": "varchar",
+      "required": true
+    },
+    "outboundEmailFromAddress": {
+      "type": "varchar",
+      "required": true
+    },
+    "smtpAuthType": {
+      "type": "enum",
+      "default": "basic",
+      "options": [
+        "basic",
+        "oauth"
+      ],
+      "required": true
+    },
+    "smtpClientId": {
+      "type": "varchar",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpClientSecret": {
+      "type": "password",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpOauthScope": {
+      "type": "varchar",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpOauthAuthorizeUrl": {
+      "type": "url",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpOauthTokenUrl": {
+      "type": "url",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "smtpAccessData": {
+      "type": "text"
+    }
+  }
+}

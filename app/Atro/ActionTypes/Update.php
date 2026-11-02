@@ -33,7 +33,7 @@ class Update extends AbstractAction
         $action       = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
 
-        if (empty($action->get('applyToPreselectedRecords')) || (property_exists($input, 'where') && !empty($input->massAction))) {
+        if (empty($action->getSubtype()?->get('applyToPreselectedRecords')) || (property_exists($input, 'where') && !empty($input->massAction))) {
             if (!property_exists($input, 'where')) {
                 $templateData = [
                     'entity' => $sourceEntity
@@ -43,7 +43,7 @@ class Update extends AbstractAction
                 $where = $input->where;
             }
 
-            $searchEntityType = $action->get('searchEntity') ?? $action->get('targetEntity');
+            $searchEntityType = $action->getSubtype()?->get('searchEntity') ?? $action->getSubtype()?->get('targetEntity');
 
             /** @var \Atro\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityType);
@@ -144,7 +144,7 @@ class Update extends AbstractAction
         $action     = $execution->get('action');
         $actionData = $action->get('data');
 
-        if (empty($actionData->field) || empty($actionData->field->updateType)) {
+        if (empty($action->getSubtype()?->get('updateType'))) {
             return false;
         }
 
@@ -156,12 +156,12 @@ class Update extends AbstractAction
         ]);
 
         $inputData = null;
-        switch ($actionData->field->updateType) {
+        switch ($action->getSubtype()->get('updateType')) {
             case 'basic':
                 $inputData = $actionData->fieldData ?? null;
                 break;
             case 'script':
-                if (!empty($actionData->field->updateScript)) {
+                if (!empty($action->getSubtype()->get('updateScript'))) {
                     $templateData = [
                         'entity' => $entity
                     ];
@@ -170,7 +170,7 @@ class Update extends AbstractAction
                         $templateData['triggeredEntityId']   = $triggeredEntity->get('id');
                         $templateData['triggeredEntity']     = $triggeredEntity;
                     }
-                    $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, $templateData);
+                    $outputJson = $this->container->get('twig')->renderTemplate($action->getSubtype()->get('updateScript'), $templateData);
                     $inputData  = @json_decode((string)$outputJson);
                     if (!is_object($inputData) && !is_array($inputData) && !empty(trim($outputJson))) {
                         $log->set('type', 'error');

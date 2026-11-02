@@ -44,6 +44,55 @@ class Service extends AbstractListener
         $entity->setMeta('personalData', 'fields', $repository->getPersonalDataFields($entity->id));
     }
 
+    public function afterGetEntity(Event $event): void
+    {
+        /* @var Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        /* @var AbstractService $service */
+        $service = $event->getArgument('service');
+
+        if (empty($entity) || !$service->isMetaGroupRequested('subtype')) {
+            return;
+        }
+
+        $this->putSubtypeMeta($entity);
+    }
+
+    /**
+     * The frontend shows a record of an entity with subtypes via its subtype, so the subtype record is returned
+     * together with the record.
+     */
+    protected function putSubtypeMeta(Entity $entity): void
+    {
+        $entityName = $entity->getEntityName();
+        if (empty($this->getMetadata()->get(['scopes', $entityName, 'hasSubtypes'])) || empty($entity->get('type'))) {
+            return;
+        }
+
+        $subtype = $entityName . 'Type' . ucfirst((string)$entity->get('type'));
+        if ($this->getMetadata()->get(['scopes', $subtype, 'type']) !== 'Subtype') {
+            return;
+        }
+
+        $subtypeRecord = $this->getEntityManager()->getRepository($subtype)
+            ->select(['id'])
+            ->where(['supertypeId' => $entity->get('id')])
+            ->findOne();
+        if (empty($subtypeRecord)) {
+            return;
+        }
+
+        $data = $this->getService($subtype)->getEntity($subtypeRecord->get('id'));
+        if (empty($data)) {
+            return;
+        }
+
+        $entity->setMeta('subtype', 'entityName', $subtype);
+        $entity->setMeta('subtype', 'id', $data->get('id'));
+        $entity->setMeta('subtype', 'data', $data->toArray());
+    }
+
     public function prepareEntityForOutput(Event $event): void
     {
         $entity = $event->getArgument('entity');

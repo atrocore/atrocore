@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "oauthConsumerKey": {
+      "type": "varchar",
+      "trim": true
+    },
+    "oauthConsumerSecret": {
+      "type": "varchar",
+      "trim": true
+    },
+    "requestTokenUrl": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "accessTokenUrl": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "oauthVerifier": {
+      "type": "varchar",
+      "trim": true,
+      "readOnly": true
+    },
+    "oauthToken": {
+      "type": "varchar",
+      "trim": true,
+      "readOnly": false,
+      "len": 2048
+    },
+    "oauthTokenSecret": {
+      "type": "password",
+      "trim": true,
+      "readOnly": false,
+      "len": 2048
+    },
+    "callbackUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "linkUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "storeUrl": {
+      "type": "varchar",
+      "trim": true,
+      "readOnly": true
+    },
+    "apiTestUrl": {
+      "type": "varchar",
+      "trim": true,
+      "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204",
+      "required": true
+    },
+    "verifySsl": {
+      "type": "bool",
+      "default": true
+    }
+  }
+}

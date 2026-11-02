@@ -1,0 +1,44 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "verifySsl"
+        },
+        false
+      ],
+      [
+        {
+          "name": "atrocoreUrl"
+        },
+        {
+          "name": "atrocoreToken"
+        }
+      ],
+      [
+        {
+          "name": "httpBasicEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "httpBasicUsername"
+        },
+        {
+          "name": "httpBasicPassword"
+        }
+      ]
+    ]
+  }
+]

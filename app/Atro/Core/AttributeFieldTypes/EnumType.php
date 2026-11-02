@@ -72,8 +72,8 @@ class EnumType extends AbstractFieldType
             'conditionalProperties'     => $conditionals,
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
             'duplicateIgnore'           => !empty($row['duplicate_ignore']),
-            'options'                   => $attributeData['options'] ?? [],
-            'optionColors'              => $attributeData['optionColors'] ?? [],
+            'options'                   => $this->getSetting($row, 'options') ?? [],
+            'optionColors'              => $this->getSetting($row, 'optionColors') ?? [],
         ];
 
         if (!empty($row['disable_field_value_lock'])) {

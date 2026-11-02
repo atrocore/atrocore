@@ -211,7 +211,9 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
         },
 
         fetchAttributeData() {
-            this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
+            // the settings of the attribute type are the fields of its subtype record
+            Espo.Ajax.getRequest(`Attribute/${this.model.get('attributeId')}`, null, {metaContext: 'subtype'}).then(data => {
+                const attr = (data._meta && data._meta.subtype && data._meta.subtype.data) || data;
                 this.model.set('attributeType', attr.type);
                 this.model.set('attributeEntityType', attr.entityType);
                 this.model.set('attributeEntityField', attr.entityField);

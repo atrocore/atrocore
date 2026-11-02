@@ -73,6 +73,30 @@ class Record extends RecordService
         return null;
     }
 
+    public function createEntity(\stdClass $attachment): string
+    {
+        // each record of an entity with subtypes belongs to one of them, so it is created via the subtype
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasSubtypes']))) {
+            throw new BadRequest($this->getInjection('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
+        }
+
+        return parent::createEntity($attachment);
+    }
+
+    protected function filterInput($data, ?Entity $entity = null)
+    {
+        parent::filterInput($data, $entity);
+
+        if (!is_object($data)) {
+            return;
+        }
+
+        // the subtype of a record is set by the subtype on creation and cannot be changed
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasSubtypes']))) {
+            unset($data->type);
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

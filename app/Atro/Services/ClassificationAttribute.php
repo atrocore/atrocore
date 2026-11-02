@@ -41,13 +41,16 @@ class ClassificationAttribute extends Base
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($attribute)) {
-            $entity->set('attributeData', $attribute->get('data'));
+            // the settings of the attribute type are stored in its subtype record
+            $settings = $attribute->getSubtype();
+
+            $entity->set('attributeData', $this->getEntityManager()->getRepository('Attribute')->getAttributeData($attribute));
             $entity->set('attributeEntityId', $attribute->get('entityId'));
             $entity->set('attributeType', $attribute->get('type'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-            $entity->set('attributeNotNull', $attribute->get('notNull'));
-            $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
+            $entity->set('attributeNotNull', $settings?->get('notNull'));
+            $entity->set('attributeIsMultilang', $settings?->get('isMultilang'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));
 
             if (!empty($this->getConfig()->get('isMultilangActive'))) {
@@ -57,31 +60,31 @@ class ClassificationAttribute extends Base
                 }
             }
 
-            if (!empty($attribute->get('measureId'))) {
-                $entity->set('attributeMeasureId', $attribute->get('measureId'));
+            if (!empty($settings?->get('measureId'))) {
+                $entity->set('attributeMeasureId', $settings?->get('measureId'));
                 $this->prepareUnitFieldValue($entity, 'value', [
-                    'measureId' => $attribute->get('measureId'),
+                    'measureId' => $settings?->get('measureId'),
                     'type'      => $attribute->get('type'),
                     'mainField' => 'value'
                 ]);
             }
 
-            if ($attribute->get('type') === 'link' && !empty($attribute->get('entityType'))) {
-                $entity->set('attributeEntityType', $attribute->get('entityType'));
-                $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
+            if ($attribute->get('type') === 'link' && !empty($settings?->get('entityType'))) {
+                $entity->set('attributeEntityType', $settings?->get('entityType'));
+                $foreign = $this->getEntityManager()->getEntity($settings?->get('entityType'), $entity->get('valueId'));
                 if (!empty($foreign)) {
-                    $entity->set('valueName', $foreign->get($attribute->get('entityField') ?? 'name'));
+                    $entity->set('valueName', $foreign->get($settings?->get('entityField') ?? 'name'));
                 }
-                if (!empty($attribute->get('entityField'))) {
-                    $entity->set('attributeEntityField', $attribute->get('entityField'));
+                if (!empty($settings?->get('entityField'))) {
+                    $entity->set('attributeEntityField', $settings?->get('entityField'));
                 }
             }
 
-            if ($attribute->get('type') === 'linkMultiple' && !empty($attribute->get('entityType'))) {
-                $entity->set('attributeEntityType', $attribute->get('entityType'));
+            if ($attribute->get('type') === 'linkMultiple' && !empty($settings?->get('entityType'))) {
+                $entity->set('attributeEntityType', $settings?->get('entityType'));
 
                 if (!empty($entity->get('valueIds'))) {
-                    $values = $this->getEntityManager()->getRepository($attribute->get('entityType'))
+                    $values = $this->getEntityManager()->getRepository($settings?->get('entityType'))
                         ->where(['id' => $entity->get('valueIds')])
                         ->find();
 
@@ -97,8 +100,8 @@ class ClassificationAttribute extends Base
                     $entity->set("valueName", $file->get('name'));
                     $entity->set("valuePathsData", $file->getPathsData());
                 }
-                if (!empty($attribute->get('fileTypeId'))) {
-                    $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
+                if (!empty($settings?->get('fileTypeId'))) {
+                    $entity->set('attributeFileTypeId', $settings?->get('fileTypeId'));
                 }
             }
         }
@@ -185,15 +188,12 @@ class ClassificationAttribute extends Base
             return;
         }
 
+        // the settings of the attribute type are stored in its subtype record
+        $settings = $attribute->getSubtype();
         foreach (['maxLength', 'isRequired', 'countBytesInsteadOfCharacters', 'min', 'max'] as $field) {
             if (!property_exists($data, $field)) {
-                $data->$field = $attribute->get($field);
+                $data->$field = $field === 'isRequired' ? $attribute->get($field) : $settings?->get($field);
             }
-        }
-
-        if (!property_exists($data, 'maxLength')) {
-            $data->maxLength = $attribute->get('maxLength');
-            $data->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
         }
     }
 

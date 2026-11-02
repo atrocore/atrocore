@@ -215,6 +215,54 @@ class Note
             $result['attributeData'] = $attributeData;
         }
 
+        if (!empty($entity->subtypeName)) {
+            $result['subtype'] = $entity->subtypeName;
+        }
+
+        if (!empty($updatedFieldList)) {
+            $result['fieldDefs'] = $this->getFieldDefsSnapshot($entity, $updatedFieldList);
+        }
+
+        return $result;
+    }
+
+    /**
+     * The definitions of the changed fields as they are now, labeled in the main language. They are used to show
+     * the change when the field does not exist anymore.
+     */
+    protected function getFieldDefsSnapshot(OrmEntity $entity, array $fieldList): array
+    {
+        $language = $this->getContainer()->get('defaultLanguage');
+        $scope    = $entity->subtypeName ?? $entity->getEntityName();
+
+        $result = [];
+        foreach ($fieldList as $field) {
+            $fieldDefs = $entity->entityDefs['fields'][$field]
+                ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields', $field], []);
+
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
+
+            $snapshot = ['type' => $fieldDefs['type']];
+            foreach (['view', 'entity', 'options', 'optionColors', 'measureId', 'isMultilang'] as $param) {
+                if (isset($fieldDefs[$param])) {
+                    $snapshot[$param] = $fieldDefs[$param];
+                }
+            }
+
+            $snapshot['label'] = $fieldDefs['label'] ?? $language->translate($field, 'fields', $scope);
+
+            if (!empty($fieldDefs['options']) && is_array($fieldDefs['options'])) {
+                $snapshot['translatedOptions'] = [];
+                foreach ($fieldDefs['options'] as $option) {
+                    $snapshot['translatedOptions'][$option] = $language->translateOption((string)$option, $field, $scope);
+                }
+            }
+
+            $result[$field] = $snapshot;
+        }
+
         return $result;
     }
 
@@ -246,7 +294,10 @@ class Note
     {
         $entityType = $entity->getEntityName();
 
-        if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
+        // the record of an entity with subtypes carries the fields of its subtype, which differ from subtype to subtype
+        $cacheKey = $entityType . (empty($entity->subtypeName) ? '' : '|' . $entity->subtypeName);
+
+        if (!array_key_exists($cacheKey, $this->auditedFieldsCache)) {
             $auditableTypes = [];
             foreach ($this->getMetadata()->get('fields') as $type => $typeData) {
                 if (!empty($typeData['auditable'])) {
@@ -273,10 +324,10 @@ class Note
                 }
             }
 
-            $this->auditedFieldsCache[$entityType] = $auditedFields;
+            $this->auditedFieldsCache[$cacheKey] = $auditedFields;
         }
 
-        return $this->auditedFieldsCache[$entityType];
+        return $this->auditedFieldsCache[$cacheKey];
     }
 
     protected function handleAudited(OrmEntity $entity): void

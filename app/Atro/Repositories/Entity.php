@@ -93,6 +93,16 @@ class Entity extends ReferenceData
         'common'
     ];
 
+    /**
+     * Fields reserved in a supertype for the generated "supertype" link of its subtypes.
+     */
+    public const SUBTYPE_RESERVED_FIELDS = ['supertype', 'supertypeId', 'supertypeName'];
+
+    /**
+     * Parameters of a subtype that can be changed after creation. All other features belong to the supertype.
+     */
+    public const SUBTYPE_EDITABLE_FIELDS = ['name', 'namePlural', 'iconClass', 'description'];
+
     protected ?array $boolFields = null;
     protected function getEntityById($id)
     {
@@ -126,7 +136,7 @@ class Entity extends ReferenceData
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
-        if (in_array($relationName, ['fields', 'uniqueIndexes'], true)) {
+        if (in_array($relationName, ['fields', 'uniqueIndexes', 'subtypes'], true)) {
             $params['offset'] = 0;
             $params['limit']  = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
@@ -187,12 +197,14 @@ class Entity extends ReferenceData
         $canHasComponents         = false;
         $canHasAssociates         = false;
         $primaryEntityId          = null;
+        $supertypeId              = null;
         $onlyForDerivativeEnabled = false;
 
         $notContributorOrChangeRequestDerivative = false;
         $onlyBaseAndHierarchyTypes               = false;
         $notPrimaryOfContributorDerivative       = false;
         $onlyConsolidation       = false;
+        $canBeSupertype          = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -230,10 +242,20 @@ class Entity extends ReferenceData
                 $notPrimaryOfContributorDerivative = true;
             }
 
+            if (!empty($item['canBeSupertype'])) {
+                $canBeSupertype = true;
+            }
+
             if (!empty($item['primaryEntityId='])) {
                 $primaryEntityId = $item['primaryEntityId='];
             } elseif (!empty($item['primaryEntityId'])) {
                 $primaryEntityId = $item['primaryEntityId'];
+            }
+
+            if (!empty($item['supertypeId='])) {
+                $supertypeId = $item['supertypeId='];
+            } elseif (!empty($item['supertypeId'])) {
+                $supertypeId = $item['supertypeId'];
             }
         }
 
@@ -272,7 +294,15 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if ($onlyForDerivativeEnabled && ((empty($row['isCustom']) && empty($row['derivativeEnabled'])) || !empty($row['primaryEntityId']))) {
+            if (!empty($supertypeId) && (($row['type'] ?? null) !== 'Subtype' || ($row['supertypeId'] ?? null) !== $supertypeId)) {
+                continue;
+            }
+
+            if ($onlyForDerivativeEnabled && ((empty($row['isCustom']) && empty($row['derivativeEnabled'])) || !empty($row['primaryEntityId']) || ($row['type'] ?? null) === 'Subtype')) {
+                continue;
+            }
+
+            if ($canBeSupertype && (($row['type'] ?? null) !== 'Base' || !empty($row['primaryEntityId']))) {
                 continue;
             }
 
@@ -394,6 +424,11 @@ class Entity extends ReferenceData
         // update metadata
         $this->updateScope($entity, [], true);
 
+        // a subtype is available on UI only via its supertype
+        if ($entity->get('type') === 'Subtype') {
+            return true;
+        }
+
         // update config
         foreach (['quickCreateList', 'tabList'] as $key) {
             $list = $this->getConfig()->get($key, []);
@@ -434,7 +469,7 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code'])) {
+            if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code', 'supertypeName'])) {
                 continue;
             }
 
@@ -541,7 +576,12 @@ class Entity extends ReferenceData
             if (!empty($primaryEntity) && !empty($primaryEntity->get('primaryEntityId'))) {
                 throw new BadRequest($this->getLanguage()->translate('derivativeFromDerivativeNotSupporting', 'exceptions', 'Entity'));
             }
+            if (!empty($primaryEntity) && $primaryEntity->get('type') === 'Subtype') {
+                throw new BadRequest($this->getLanguage()->translate('derivativeFromSubtypeNotSupporting', 'exceptions', 'Entity'));
+            }
         }
+
+        $this->validateSubtype($entity);
 
         if ($entity->isAttributeChanged('containsPersonalData') && !$entity->get('containsPersonalData')) {
             $entity->set('isPerson', false);
@@ -556,7 +596,141 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
+        if (!empty($this->getSubtypesIds($entity->get('code')))) {
+            throw new BadRequest($this->getLanguage()->translate('entityHasSubtypes', 'exceptions', 'Entity'));
+        }
+
+        if ($entity->get('type') === 'Subtype' && $this->subtypeHasRecords($entity->get('code'))) {
+            throw new BadRequest($this->getLanguage()->translate('subtypeHasRecords', 'exceptions', 'Entity'));
+        }
+
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function validateSubtype(OrmEntity $entity): void
+    {
+        if ($entity->get('type') !== 'Subtype') {
+            if (!empty($entity->get('supertypeId'))) {
+                throw new BadRequest($this->getLanguage()->translate('supertypeIsAllowedOnlyForSubtype', 'exceptions', 'Entity'));
+            }
+            return;
+        }
+
+        if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('supertypeId')) {
+                throw new BadRequest($this->getLanguage()->translate('supertypeCannotBeChanged', 'exceptions', 'Entity'));
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
+                if (
+                    in_array($field, self::SUBTYPE_EDITABLE_FIELDS, true)
+                    || !empty($defs['notStorable'])
+                    || !empty($defs['readOnly'])
+                    || in_array($defs['type'] ?? null, ['link', 'linkMultiple'], true)
+                ) {
+                    continue;
+                }
+
+                if (!$entity->isAttributeChanged($field)) {
+                    continue;
+                }
+
+                // the form sends empty values (e.g. [] instead of null) for parameters that are not used
+                if (empty($entity->get($field)) && empty($entity->getFetched($field))) {
+                    continue;
+                }
+
+                throw new BadRequest(sprintf(
+                    $this->getLanguage()->translate('subtypeParamCannotBeChanged', 'exceptions', 'Entity'),
+                    $this->getLanguage()->translate($field, 'fields', 'Entity')
+                ));
+            }
+
+            return;
+        }
+
+        if (!empty($entity->get('primaryEntityId'))) {
+            throw new BadRequest($this->getLanguage()->translate('derivativeFromSubtypeNotSupporting', 'exceptions', 'Entity'));
+        }
+
+        $supertype = $entity->get('supertypeId');
+        if (empty($supertype)) {
+            throw new BadRequest($this->getLanguage()->translate('supertypeIsRequired', 'exceptions', 'Entity'));
+        }
+
+        $supertypeDefs = $this->getMetadata()->get(['scopes', $supertype]);
+        if (empty($supertypeDefs) || !empty($supertypeDefs['emHidden'])) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('supertypeIsNotFound', 'exceptions', 'Entity'), $supertype));
+        }
+
+        if (($supertypeDefs['type'] ?? null) !== 'Base' || !empty($supertypeDefs['primaryEntityId'])) {
+            throw new BadRequest($this->getLanguage()->translate('supertypeMustBeBase', 'exceptions', 'Entity'));
+        }
+
+        $prefix = $supertype . 'Type';
+        if (!preg_match('/^' . preg_quote($prefix, '/') . '[A-Z][A-Za-z0-9]*$/', (string)$entity->get('code'))) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('subtypeCodeMustStartWithPrefix', 'exceptions', 'Entity'), $prefix));
+        }
+
+        $supertypeFields = $this->getMetadata()->get(['entityDefs', $supertype, 'fields'], []);
+
+        // the "type" field is generated for the supertype together with its first subtype
+        if (empty($this->getSubtypesIds($supertype)) && isset($supertypeFields['type'])) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('supertypeHasFieldType', 'exceptions', 'Entity'), $supertype));
+        }
+
+        foreach (self::SUBTYPE_RESERVED_FIELDS as $field) {
+            if (isset($supertypeFields[$field])) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('supertypeHasReservedField', 'exceptions', 'Entity'), $supertype, $field));
+            }
+        }
+
+        // the records that already belong to other subtypes stay as they are, only the records without a subtype prevent it
+        $recordsRepository = $this->getEntityManager()->getRepository($supertype);
+        if (!empty($this->getSubtypesIds($supertype))) {
+            $recordsRepository->where(['type' => null]);
+        }
+
+        if ($recordsRepository->count() > 0) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('supertypeHasRecords', 'exceptions', 'Entity'), $supertype));
+        }
+
+        if (empty($entity->get('iconClass'))) {
+            $entity->set('iconClass', $this->getMetadata()->get(['clientDefs', $supertype, 'iconClass']));
+        }
+    }
+
+    /**
+     * The subtype table has no "deleted" column, so any row is an existing record.
+     */
+    protected function subtypeHasRecords(string $code): bool
+    {
+        $connection = $this->getEntityManager()->getDbal();
+
+        $tableName = $this->getEntityManager()->getMapper()->toDb($code);
+        if (!$connection->createSchemaManager()->tablesExist([$tableName])) {
+            return false;
+        }
+
+        $id = $connection->createQueryBuilder()
+            ->select('id')
+            ->from($connection->quoteIdentifier($tableName))
+            ->setMaxResults(1)
+            ->fetchOne();
+
+        return $id !== false;
+    }
+
+    public function getSubtypesIds(string $code): array
+    {
+        $res = [];
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) === 'Subtype' && ($scopeDefs['supertypeId'] ?? null) === $code) {
+                $res[] = $scopeName;
+            }
+        }
+
+        return $res;
     }
 
     public function deleteEntity(OrmEntity $entity): bool

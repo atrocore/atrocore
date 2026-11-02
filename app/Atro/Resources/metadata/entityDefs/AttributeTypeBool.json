@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "isMultilang": {
+      "type": "bool",
+      "hideMultilang": true,
+      "layoutDetailDisabled": true,
+      "layoutRemoveDisabled": true
+    },
+    "notNull": {
+      "type": "bool",
+      "default": true,
+      "layoutRemoveDisabled": true,
+      "layoutDetailDisabled": true
+    },
+    "allowNullForBool": {
+      "type": "bool",
+      "notStorable": true
+    }
+  }
+}

@@ -43,7 +43,7 @@ class ActionManager
 
     public function canExecute(Entity $action, \stdClass $input): bool
     {
-        return $this->getActionType($action->get('type'))->canExecute($action, $input);
+        return $this->getActionHandler($action)->canExecute($action, $input);
     }
 
     /**
@@ -61,7 +61,7 @@ class ActionManager
      */
     public function execute(Entity $action, \stdClass $input): ActionResultDTO
     {
-        $actionType = $this->getActionType($action->get('type'));
+        $actionType = $this->getActionHandler($action);
 
         if (property_exists($input, 'where') && $actionType->useMassActions($action, $input)) {
             $data = [
@@ -276,11 +276,24 @@ class ActionManager
         return $this->container->get('config');
     }
 
-    protected function getActionType(string $type): TypeInterface
+    /**
+     * The handler of the action: the class of its type, or the class chosen in the "handler" field for a custom
+     * action.
+     */
+    public function getActionHandler(Entity $action): TypeInterface
     {
-        $className = $this->getMetadata()->get(['action', 'types', $type]);
-        if (empty($className)) {
-            throw new Error("No such action type '$type'.");
+        $type = (string)$action->get('type');
+        if ($type === 'custom') {
+            $handler = (string)$action->getSubtype()?->get('handler');
+            $className = $this->getMetadata()->get(['action', 'customHandlers', $handler, 'handler']);
+            if (empty($className)) {
+                throw new Error("No such custom action handler '$handler'.");
+            }
+        } else {
+            $className = $this->getMetadata()->get(['action', 'types', $type]);
+            if (empty($className)) {
+                throw new Error("No such action type '$type'.");
+            }
         }
 
         return $this->container->get($className);
