@@ -484,7 +484,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }))
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
-                        if (actionDefs.exit) {
+                        if (actionDefs.redirect && response && response.link) {
+                            this.getRouter().navigate(response.link, {trigger: true});
+                        } else if (actionDefs.exit) {
                             this.exit('delete');
                         } else if (actionDefs.refresh) {
                             this.model.fetch();
