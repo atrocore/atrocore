@@ -2558,7 +2558,8 @@ class Metadata extends AbstractMetadataListener
             // on UI a subtype record is shown only via its supertype record
             $data['clientDefs'][$scope]['controller'] = 'controllers/subtype';
             $data['clientDefs'][$scope]['model'] = 'models/subtype';
-            $data['clientDefs'][$scope]['views']['detail'] = 'views/subtype/detail';
+            // a subtype can define its own detail view, it has to extend views/subtype/detail
+            $data['clientDefs'][$scope]['views']['detail'] ??= 'views/subtype/detail';
             $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
             // a subtype can define its own record view, it has to extend views/subtype/record/detail
             $data['clientDefs'][$scope]['recordViews']['detail'] ??= 'views/subtype/record/detail';
