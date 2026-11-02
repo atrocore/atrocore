@@ -1493,7 +1493,6 @@
       "findRecord": "Proszę znaleźć rekord pojedynczej jednostki",
       "findEntities": "Znajdowanie wielu podmiotów \n Parametry: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
       "findRecords": "Znajdowanie wielu podmiotów \n Parametry: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
-      "convertFileToBase64FromUrl": "Konwersja pliku do base64 z adresu URL",
       "translate": "Tłumaczenie ciągu znaków",
       "translateOption": "Tłumaczenie wartości opcji",
       "convertFileToBase64": "Konwersja pliku do base64",

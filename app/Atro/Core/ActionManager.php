@@ -48,7 +48,6 @@ class ActionManager
 
     /**
      * @deprecated Use execute() that reports what happened. Kept for backward compatibility.
-     * @todo 3.0.0: remove.
      */
     public function executeNow(Entity $action, \stdClass $input): bool
     {

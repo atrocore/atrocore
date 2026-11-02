@@ -1474,7 +1474,6 @@
       "convertMeasureUnit": "Преобразуйте значение из одной единицы измерения в другую \n Параметры: float|int value, string measureId, string fromUnitId, string? toUnitId = null \n Если toUnitId пуст, результатом будет массив с преобразованными значениями для всех единиц измерения. \n Пример: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}",
       "findEntities": "Поиск нескольких сущностей \n Параметры: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
       "findRecords": "Поиск нескольких сущностей \n Параметры: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
-      "convertFileToBase64FromUrl": "Преобразование файла в base64 из URL",
       "translate": "Переведите строку",
       "translateOption": "Переведите стоимость опциона",
       "convertFileToBase64": "Преобразуйте файл в base64",

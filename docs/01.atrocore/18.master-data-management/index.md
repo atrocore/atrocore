@@ -84,8 +84,6 @@ The transformation script is a Twig template that must return a JSON object with
 }
 ```
 
-!! Wrapping the field values in the `targetRecordData` key is deprecated and will no longer be supported in AtroCore 3.0.0.
-
 > The default value of the field is wrapped in a Twig comment (`{# ... #}`) and serves only as an example of the expected format – a script wrapped in comment markers produces no output and is ignored. Remove the comment markers and adjust the script to activate the pipeline.
 
 Two variables are available in the script:

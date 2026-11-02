@@ -1495,7 +1495,6 @@
       "findRecord": "Buscar un registro de entidad única",
       "findEntities": "Buscar múltiples entidades \n Parámetros: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
       "findRecords": "Buscar múltiples entidades \n Parámetros: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
-      "convertFileToBase64FromUrl": "Convertir un archivo a base64 desde URL",
       "translate": "Traducir una cadena",
       "translateOption": "Traducir un valor de opción",
       "convertFileToBase64": "Convertir un archivo a base64",
