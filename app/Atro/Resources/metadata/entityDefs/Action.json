@@ -9,19 +9,7 @@
       "type": "text"
     },
     "type": {
-      "type": "enum",
-      "view": "views/action/fields/type",
-      "required": true,
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "view": "views/action/fields/type"
     },
     "typePhpCode": {
       "type": "wysiwyg",
