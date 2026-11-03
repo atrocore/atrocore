@@ -8,6 +8,7 @@
     "thumbnailsPath": "Ścieżka miniatur",
     "preview": "Podgląd",
     "hash": "Hash",
+    "generated": "Wygenerowany",
     "fileSize": "Rozmiar pliku (bajty)",
     "fileMtime": "Data modyfikacji pliku",
     "url": "URL AtroCore",
