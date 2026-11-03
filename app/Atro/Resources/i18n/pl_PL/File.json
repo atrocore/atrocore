@@ -16,7 +16,15 @@
     "height": "Wysokość",
     "size": "Rozmiar",
     "colorSpace": "Przestrzeń kolorów",
-    "brands": "Marki"
+    "brands": "Marki",
+    "replacementReason": "Powód zastąpienia"
+  },
+  "options": {
+    "replacementReason": {
+      "wrongFileAttached": "Załączono niewłaściwy plik",
+      "poorQuality": "Niska jakość",
+      "corruptUpload": "Uszkodzone przesyłanie"
+    }
   },
   "labels": {
     "Preview": "Podgląd",
@@ -47,7 +55,8 @@
     "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'.",
     "notAllowToFileWithEntity": "Nie mogą Państwo połączyć pliku typu '%s' z plikiem '%s'. Jedynymi dozwolonymi typami są '%s'",
     "fileFolderCannotBeChanged": "Folder plików nie może zostać zmieniony.",
-    "fileMoveFailed": "Przenoszenie pliku nie powiodło się."
+    "fileMoveFailed": "Przenoszenie pliku nie powiodło się.",
+    "replacementReasonCanBeSetOnReuploadOnly": "Powód zastąpienia można ustawić tylko podczas ponownego przesyłania pliku."
   },
   "insightsPanels": {
     "sharing": "Udostępnianie"

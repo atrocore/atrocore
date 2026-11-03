@@ -16,7 +16,15 @@
     "height": "Výška",
     "size": "Velikost",
     "colorSpace": "Barevný prostor",
-    "brands": "Značky"
+    "brands": "Značky",
+    "replacementReason": "Důvod nahrazení"
+  },
+  "options": {
+    "replacementReason": {
+      "wrongFileAttached": "Připojen nesprávný soubor",
+      "poorQuality": "Nízká kvalita",
+      "corruptUpload": "Poškozené nahrání"
+    }
   },
   "labels": {
     "Preview": "Náhled",
@@ -47,7 +55,8 @@
     "fileRenameFailed": "Přejmenování souboru se nezdařilo.",
     "fileDeleteFailed": "Odstranění souboru se nezdařilo.",
     "fileNameNotValidByUserRegex": "Název souboru není platný. Měl by odpovídat regexu '%s'.",
-    "notAllowToFileWithEntity": "Soubor typu '%s' nelze propojit se souborem '%s'. Jediné povolené typy jsou '%s'"
+    "notAllowToFileWithEntity": "Soubor typu '%s' nelze propojit se souborem '%s'. Jediné povolené typy jsou '%s'",
+    "replacementReasonCanBeSetOnReuploadOnly": "Důvod nahrazení lze nastavit pouze při opětovném nahrání souboru."
   },
   "insightsPanels": {
     "sharing": "Sdílení"
