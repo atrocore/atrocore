@@ -40,15 +40,6 @@ class V3Dot0Dot1 extends Base
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);
         }
-
-        // files created by the system user were produced by the system itself
-        $this->getDbal()->createQueryBuilder()
-            ->update('file')
-            ->set($this->getDbal()->quoteIdentifier('generated'), ':true')
-            ->where('created_by_id = :system')
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('system', 'system')
-            ->executeStatement();
     }
 
     private function exec(string $sql): void
