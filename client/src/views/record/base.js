@@ -652,6 +652,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this[method](url, attrs).success(function (res) {
                 // set to model
                 model.set(res);
+                model.unset('_lockedFields', {silent: true});
 
                 this.attributes = model.getClonedAttributes();
                 model._updatedById = self.getUser().id;
