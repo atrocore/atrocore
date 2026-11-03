@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
@@ -599,10 +600,16 @@ class EntityField extends ReferenceData
         $this->clearEntityScriptFields($entity);
     }
 
-    public function updateOptionCode(string $scope, string $field, string $oldValue, string $newValue): bool
+    public function updateOptionCode(string $id, string $oldValue, string $newValue): bool
     {
-        $type        = $this->getMetadata()->get("scopes.{$scope}.type");
-        $fieldEntity = $this->get($scope . '_' . $field);
+        $fieldEntity = $this->get($id);
+        if (empty($fieldEntity)) {
+            throw new NotFound();
+        }
+
+        $scope = $fieldEntity->get('entityId');
+        $field = $fieldEntity->get('code');
+        $type  = $this->getMetadata()->get("scopes.{$scope}.type");
 
         if (!in_array($oldValue, $fieldEntity->get('options'))) {
             throw new BadRequest('Such option old option code does not exist.');

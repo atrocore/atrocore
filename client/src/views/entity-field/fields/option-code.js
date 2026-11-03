@@ -19,6 +19,11 @@ Espo.define('views/entity-field/fields/option-code', 'views/fields/varchar', Dep
         },
 
         initInlineLabelEdit() {
+            // the codes of the options are changed for the entity fields only
+            if (this.getMetadata().get(['scopes', this.options.fieldModel.name, 'supertypeId']) !== 'EntityField') {
+                return;
+            }
+
             let $cell = this.getCellElement();
 
             this.getInlineActionsContainer().find('.ph-pencil-simple-line').parent().remove();
@@ -47,11 +52,9 @@ Espo.define('views/entity-field/fields/option-code', 'views/fields/varchar', Dep
                         this.notify(this.translate('Loading...', 'messages'), 'warning')
 
                         $.ajax({
-                            url: 'EntityField/action/updateOptionCode',
+                            url: `${this.options.fieldModel.name}/${this.options.fieldModel.id}/updateOptionCode`,
                             type: 'POST',
                             data: JSON.stringify({
-                                scope: this.options.fieldModel.get('entityId'),
-                                field: this.options.fieldModel.get('code'),
                                 oldValue: this.model.get('code'),
                                 newValue: data.code
                             }),

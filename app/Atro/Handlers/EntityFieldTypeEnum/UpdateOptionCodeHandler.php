@@ -11,9 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\EntityField;
+namespace Atro\Handlers\EntityFieldTypeEnum;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -23,13 +22,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/EntityField/action/updateOptionCode',
+    path: '/EntityFieldTypeEnum/{id}/updateOptionCode',
     methods: [
         'POST',
     ],
-    summary: 'Update the code of an option from static list',
-    description: 'Update the code of an option from static list and static multi list, replacing the value in the database. Accessible by administrators only.',
-    tag: 'EntityField',
+    summary: 'Update the code of an option of a list',
+    description: 'Changes the code of an option of a list field and replaces the value in the existing records and the translation of the option. Accessible by administrators only.',
+    tag: 'EntityFieldTypeEnum',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the field, e.g. "Product_productStatus"',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -37,20 +47,10 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
-                        'scope',
-                        'field',
                         'oldValue',
                         'newValue',
                     ],
                     'properties' => [
-                        'scope'    => [
-                            'type'    => 'string',
-                            'example' => 'Product',
-                        ],
-                        'field'    => [
-                            'type'    => 'string',
-                            'example' => 'productStatus',
-                        ],
                         'oldValue' => [
                             'type'    => 'string',
                             'example' => 'draft',
@@ -75,6 +75,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden — only administrators can change the codes of the options',
+        ],
+        404 => [
+            'description' => 'Not found — no list field with the given ID exists',
+        ],
     ],
 )]
 class UpdateOptionCodeHandler extends AbstractHandler
@@ -87,17 +93,17 @@ class UpdateOptionCodeHandler extends AbstractHandler
 
         $data = $this->getRequestBody($request);
 
-        if (
-            !property_exists($data, 'scope')
-            || !property_exists($data, 'field')
-            || !property_exists($data, 'oldValue')
-            || !property_exists($data, 'newValue')
-        ) {
-            throw new BadRequest();
-        }
-
-        $this->getRecordService('EntityField')->updateOptionCode($data->scope, $data->field, $data->oldValue, $data->newValue);
+        $this->getRecordService($this->getFieldEntityName())
+            ->updateOptionCode((string)$request->getAttribute('id'), (string)$data->oldValue, (string)$data->newValue);
 
         return new BoolResponse(true);
+    }
+
+    /**
+     * The subtype of the entity field the options belong to.
+     */
+    protected function getFieldEntityName(): string
+    {
+        return 'EntityFieldTypeEnum';
     }
 }

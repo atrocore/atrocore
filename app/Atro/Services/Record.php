@@ -73,6 +73,29 @@ class Record extends RecordService
         return null;
     }
 
+    /**
+     * Renders the script on the first record of the entity, e.g. to show the preview of a script field.
+     */
+    public function previewScript(string $script, string $outputType = 'text'): array
+    {
+        $entity = $this->getRepository()->order('id', 'ASC')->findOne();
+        if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']))) {
+            $this->getInjection(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($entity);
+        }
+
+        $preview = $this->getInjection('twig')->renderTemplate($script, ['entity' => $entity], $outputType);
+        if (is_string($preview) && $outputType !== 'wysiwyg') {
+            $outputType = 'text';
+        }
+
+        return [
+            'preview'    => $preview,
+            'entityName' => $this->entityType,
+            'entity'     => empty($entity) ? null : $entity->toArray(),
+            'outputType' => $outputType,
+        ];
+    }
+
     public function putMeta(Entity $entity): void
     {
         parent::putMeta($entity);

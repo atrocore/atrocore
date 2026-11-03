@@ -455,7 +455,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             if (res && JSON.stringify(res).includes('{{')) {
                 const entityFieldId = this.model.name + '_' + this.name;
                 const recordId = this.model.id || '';
-                const url = 'EntityField/' + entityFieldId + '/prepareFieldWhere' + (recordId ? '?recordId=' + recordId : '');
+                const url = 'EntityFieldTypeLink/' + entityFieldId + '/where' + (recordId ? '?recordId=' + recordId : '');
                 this.ajaxGetRequest(url, null, {async: false}).success(response => {
                     res = response?.where || res;
                 });

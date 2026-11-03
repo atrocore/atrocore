@@ -11,30 +11,24 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\EntityField;
+namespace Atro\Handlers\EntityFieldTypeLinkMultiple;
 
-use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Handlers\AbstractHandler;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Handlers\EntityFieldTypeLink\WhereHandler as LinkWhereHandler;
 
 #[Route(
-    path: '/EntityField/{id}/prepareFieldWhere',
+    path: '/EntityFieldTypeLinkMultiple/{id}/where',
     methods: [
         'GET',
     ],
-    summary: 'Prepare rendered where-filter for a link field',
-    description: 'Returns the `where` filter array configured for a link/linkMultiple EntityField,
-with Twig expressions resolved against the specified record.
+    summary: 'Get the where-filter of a multiple link field',
+    description: 'Returns the `where` filter configured for a multiple link field, with Twig expressions resolved against the specified record.
 
 Use this endpoint before opening a link-field picker or autocomplete to obtain a concrete,
 fully-resolved filter that can be forwarded as the `where` parameter to collection requests.
 
 **Preconditions:**
-- The EntityField must be of type `link` or `linkMultiple`.
-- The caller must have read access to the parent entity scope and the field must not be
+- The caller must have read access to the entity of the field and the field must not be
   forbidden by field-level ACL.
 - When `recordId` is supplied the caller must also have read access to that record;
   otherwise 403 is returned.
@@ -43,20 +37,24 @@ fully-resolved filter that can be forwarded as the `where` parameter to collecti
 as-is, without Twig rendering. Twig variables will be absent from the result, which may
 produce an incomplete filter — the frontend should decide whether to apply it or skip
 filtering for new records.',
-    tag: 'EntityField',
+    tag: 'EntityFieldTypeLinkMultiple',
     parameters: [
         [
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'schema'      => ['type' => 'string'],
-            'description' => 'EntityField record ID.',
+            'schema'      => [
+                'type' => 'string',
+            ],
+            'description' => 'ID of the field, e.g. "Product_brand".',
         ],
         [
             'name'        => 'recordId',
             'in'          => 'query',
             'required'    => false,
-            'schema'      => ['type' => 'string'],
+            'schema'      => [
+                'type' => 'string',
+            ],
             'description' => 'ID of the record currently being edited. Used as `entity` in Twig rendering.',
         ],
     ],
@@ -67,7 +65,9 @@ filtering for new records.',
                 'application/json' => [
                     'schema'  => [
                         'type'       => 'object',
-                        'required'   => ['where'],
+                        'required'   => [
+                            'where',
+                        ],
                         'properties' => [
                             'where' => [
                                 'type'  => 'array',
@@ -87,7 +87,9 @@ filtering for new records.',
                                         'field'    => 'extensibleEnums',
                                         'type'     => 'string',
                                         'operator' => 'linked_with',
-                                        'value'    => ['u65264ae346eef30c'],
+                                        'value'    => [
+                                            'u65264ae346eef30c',
+                                        ],
                                     ],
                                 ],
                                 'valid'     => true,
@@ -97,26 +99,18 @@ filtering for new records.',
                 ],
             ],
         ],
-        400 => [
-            'description' => 'The specified EntityField does not support a where-filter (field type is not link or linkMultiple).',
-        ],
         403 => [
-            'description' => 'Access denied: the caller lacks read permission for the parent entity scope, the field is forbidden by field-level ACL, or the caller cannot read the specified record.',
+            'description' => 'Access denied: the caller lacks read permission for the entity of the field, the field is forbidden by field-level ACL, or the caller cannot read the specified record.',
         ],
         404 => [
-            'description' => 'EntityField or the specified record not found.',
+            'description' => 'Not found — no multiple link field with the given ID or no record with the given ID exists.',
         ],
     ],
 )]
-class PrepareFieldWhereHandler extends AbstractHandler
+class WhereHandler extends LinkWhereHandler
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    protected function getFieldEntityName(): string
     {
-        $entityFieldId = (string)$request->getAttribute('id');
-        $recordId      = (string)($request->getQueryParams()['recordId'] ?? '');
-
-        return new JsonResponse([
-            'where' => $this->getRecordService('EntityField')->prepareFieldWhere($entityFieldId, $recordId)
-        ]);
+        return 'EntityFieldTypeLinkMultiple';
     }
 }

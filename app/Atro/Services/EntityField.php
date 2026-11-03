@@ -13,10 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\AttributeFieldConverter;
-use Atro\Core\EventManager\Event;
-use Atro\Core\EventManager\Manager;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
@@ -40,50 +36,31 @@ class EntityField extends ReferenceData
     }
 
     /**
-     * Returns the `where` filter for the given EntityField record with Twig expressions
-     * resolved against the specified context record.
+     * Returns the `where` filter of a link field with Twig expressions resolved against the specified record. The
+     * type of the field is the type of the subtype of the service, e.g. "link" for "EntityFieldTypeLink".
      *
-     * @throws NotFound   When the EntityField or context record does not exist.
-     * @throws BadRequest When the field type does not support a where-filter.
-     * @throws Forbidden  When the caller lacks read access to the entity scope, the field,
-     *                    or the context record.
+     * @throws NotFound   When the field of this type or the record does not exist.
+     * @throws Forbidden  When the caller lacks read access to the entity scope, the field, or the record.
      */
-    public function prepareFieldWhere(string $entityFieldId, string $recordId): array
+    public function prepareFieldWhere(string $id, string $recordId): array
     {
-        $entityField = $this->getEntityManager()->getRepository('EntityField')->get($entityFieldId);
-
-        if ($entityField !== null) {
-            $fieldType = (string)$entityField->get('type');
-            if (!in_array($fieldType, ['link', 'linkMultiple'], true)) {
-                throw new BadRequest(sprintf("Field type '%s' does not support a where-filter.", $fieldType));
-            }
-
-            return $this->prepareFieldWhereByEntityAndField(
-                (string)$entityField->get('entityId'),
-                (string)$entityField->get('code'),
-                $recordId
-            );
+        $field = $this->getRepository()->get($id);
+        if (!empty($field)) {
+            return $this->prepareFieldWhereByEntityAndField((string)$field->get('entityId'), (string)$field->get('code'), $recordId);
         }
 
-        // Built-in fields have no EntityField DB record; derive entity name and field code from the ID.
-        $underscorePos = strpos($entityFieldId, '_');
-        if ($underscorePos === false) {
-            throw new NotFound();
-        }
-        $entityName = substr($entityFieldId, 0, $underscorePos);
-        $fieldCode  = substr($entityFieldId, $underscorePos + 1);
-
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldCode]);
-        if (empty($fieldDefs)) {
+        // the fields hidden from the Entity Manager have no record, the entity and the field are taken from the ID
+        $parts = explode('_', $id, 2);
+        if (count($parts) !== 2) {
             throw new NotFound();
         }
 
-        $fieldType = $fieldDefs['type'] ?? '';
-        if (!in_array($fieldType, ['link', 'linkMultiple'], true)) {
-            throw new BadRequest(sprintf("Field type '%s' does not support a where-filter.", $fieldType));
+        $type = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'type', 'default']);
+        if (empty($type) || $this->getMetadata()->get(['entityDefs', $parts[0], 'fields', $parts[1], 'type']) !== $type) {
+            throw new NotFound();
         }
 
-        return $this->prepareFieldWhereByEntityAndField($entityName, $fieldCode, $recordId);
+        return $this->prepareFieldWhereByEntityAndField($parts[0], $parts[1], $recordId);
     }
 
     public function prepareFieldWhereByEntityAndField(string $entityName, string $fieldCode, string $recordId): array
@@ -120,9 +97,9 @@ class EntityField extends ReferenceData
         return is_array($renderedWhere) ? $renderedWhere : $where;
     }
 
-    public function updateOptionCode(string $scope, string $field, string $oldValue, string $newValue): bool
+    public function updateOptionCode(string $id, string $oldValue, string $newValue): bool
     {
-        return $this->getRepository()->updateOptionCode($scope, $field, $oldValue, $newValue);
+        return $this->getRepository()->updateOptionCode($id, $oldValue, $newValue);
     }
 
     public function resetToDefault(string $id): bool
@@ -139,37 +116,6 @@ class EntityField extends ReferenceData
         $this->getEntityManager()->removeEntity($entity);
 
         return true;
-    }
-
-    public function renderScriptPreview(\stdClass $data): array
-    {
-        if (!property_exists($data, 'scope') || !property_exists($data, 'script') || !property_exists($data, 'field')) {
-            throw new BadRequest();
-        }
-
-        $event = new Event(['data' => $data, 'result' => null]);
-        $event = $this->getEventManager()->dispatch('FieldManagerController', 'renderScriptPreview', $event);
-        if (!empty($event->getArgument('result'))) {
-            return $event->getArgument('result');
-        }
-
-        $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
-        $entity     = $this->getEntityManager()->getRepository($data->scope)->order('id', 'ASC')->findOne();
-        if ($this->getMetadata()->get("scopes.{$data->scope}.hasAttribute")) {
-            $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
-        }
-
-        $preview = $this->twig()->renderTemplate($data->script, ['entity' => $entity], $outputType);
-        if (is_string($preview) && $outputType !== 'wysiwyg') {
-            $outputType = 'text';
-        }
-
-        return [
-            'preview'    => $preview,
-            'entityType' => $entity->getEntityType(),
-            'entity'     => $entity->toArray(),
-            'outputType' => $outputType
-        ];
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
@@ -320,24 +266,12 @@ class EntityField extends ReferenceData
     {
         parent::init();
 
-        $this->addDependency('eventManager');
         $this->addDependency('twig');
         $this->addDependency('dataManager');
-        $this->addDependency(AttributeFieldConverter::class);
-    }
-
-    protected function getEventManager(): Manager
-    {
-        return $this->getInjection('eventManager');
     }
 
     protected function twig(): Twig
     {
         return $this->getInjection('twig');
-    }
-
-    protected function getAttributeFieldConverter(): AttributeFieldConverter
-    {
-        return $this->getInjection(AttributeFieldConverter::class);
     }
 }
