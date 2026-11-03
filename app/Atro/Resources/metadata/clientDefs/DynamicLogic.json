@@ -160,10 +160,6 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals",  "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals", "isToday", "inFuture", "inPast"]
         },
-        "datetimeOptional": {
-            "view": "views/admin/dynamic-logic/conditions/field-types/date",
-            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
-        },
         "enum": {
             "view": "views/admin/dynamic-logic/conditions/field-types/enum",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "in", "notIn"]

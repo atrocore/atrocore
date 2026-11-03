@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
-use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Services\Record;
 use Espo\ORM\Entity;
@@ -125,16 +124,6 @@ class Subtype extends Record
         parent::prepareEntityForOutput($entity);
 
         $this->loadSupertypeLinkNames($entity);
-    }
-
-    /**
-     * A subtype record is the supertype record, the listeners of the supertype service apply to it as well.
-     */
-    protected function dispatchEvent(string $action, Event $event): Event
-    {
-        $event = parent::dispatchEvent($action, $event);
-
-        return $this->getInjection('eventManager')->dispatch($this->getSupertypeName() . 'Service', $action, $event);
     }
 
     protected function isSupertypeLink(string $link): bool

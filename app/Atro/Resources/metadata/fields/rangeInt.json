@@ -1,54 +1,5 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "measure",
-      "type": "link",
-      "entity": "Measure"
-    },
-    {
-      "name": "default",
-      "type": "rangeInt"
-    },
-    {
-      "name": "defaultUnit",
-      "type": "varchar"
-    },
-    {
-      "name": "defaultFrom",
-      "type": "int"
-    },
-    {
-      "name": "defaultTo",
-      "type": "int"
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "index",
-      "type": "bool"
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "defaultValue": true,
   "actualFields": [
     "from",
     "to"

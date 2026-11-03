@@ -102,5 +102,12 @@
     "defaultDate": "Modificatore del valore dell'attributo (ad esempio +5 giorni, -3 mesi)",
     "dropdown": "Non utilizzi il menu a tendina se l'elenco contiene più di 300 opzioni.",
     "selectPageSize": "Numero di record per pagina nella finestra di selezione. Evitare valori troppo alti, poiché potrebbero rallentare o bloccare il browser dell'utente."
+  },
+  "subtypeGroups": {
+    "character": "Carattere",
+    "numeric": "Numerico",
+    "date": "Data / Ora",
+    "reference": "Riferimento",
+    "other": "Altro"
   }
 }

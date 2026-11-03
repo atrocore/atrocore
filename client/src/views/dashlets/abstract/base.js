@@ -48,7 +48,8 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
                 "required": true
             },
             "autorefreshInterval": {
-                "type": "enumFloat",
+                "type": "float",
+                "view": "views/fields/number-option",
                 "options": [0, 0.5, 1, 2, 5, 10]
             }
         },

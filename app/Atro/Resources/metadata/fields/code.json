@@ -1,16 +1,5 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "isMultilang",
-      "type": "bool",
-      "default": false
-    }
-  ],
+  "multilingual": true,
   "fieldDefs": {
     "type": "text"
   },

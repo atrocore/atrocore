@@ -67,9 +67,6 @@
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung."
   },
   "fieldParts": {
-    "datetimeOptional": {
-      "date": "Datum"
-    },
     "unit": {
       "unit": "(Maßeinheit)"
     }

@@ -73,7 +73,7 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData', 'Subtype'], excludeEntities: ['UserProfile', 'MatchedRecord', 'AuthToken', 'Store', 'ActionExecution', 'Job', 'Bookmark', 'File', 'SoftwarePackage'], requiresAbsent: ['hasSubtypes', 'referenceDataSubtypes'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData', 'Subtype'], excludeEntities: ['UserProfile', 'MatchedRecord', 'AuthToken', 'Store', 'ActionExecution', 'Job', 'Bookmark', 'File', 'SoftwarePackage'], requiresAbsent: ['hasSubtypes'])]
 class CreateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

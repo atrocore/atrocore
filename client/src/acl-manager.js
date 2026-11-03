@@ -108,6 +108,11 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
         },
 
         checkScope: function (scope, action, precise) {
+            // the records of the entity cannot be created by anybody
+            if (action === 'create' && this.metadata.get(['scopes', scope, 'createDisabled'])) {
+                return false;
+            }
+
             let checkScope = (scope, action) => {
                 var data = (this.data.table || {})[scope];
                 if (typeof data === 'undefined') {

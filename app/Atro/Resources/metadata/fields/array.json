@@ -1,44 +1,5 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "translation",
-      "type": "varchar",
-      "hidden": true
-    },
-    {
-      "name": "noEmptyString",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "isMultilang",
-      "type": "bool",
-      "tooltip": true
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "multilingual": true,
   "filter": true,
   "auditable": true,
   "notCreatable": false,

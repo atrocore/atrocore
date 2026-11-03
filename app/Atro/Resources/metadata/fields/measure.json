@@ -1,44 +1,5 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "dropdown",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "measure",
-      "required": true,
-      "entity": "Measure",
-      "type": "link"
-    },
-    {
-      "name": "default",
-      "type": "varchar"
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "defaultValue": true,
   "filter": true,
   "auditable": true,
   "fieldDefs": {

@@ -546,6 +546,8 @@ class Metadata
             $entityName = $primaryEntityId;
         }
 
+        $entityName = $this->getReferenceDataSupertype($entityName) ?? $entityName;
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
@@ -578,6 +580,8 @@ class Metadata
             $entityName = $entityId;
         }
 
+        $entityName = $this->getReferenceDataSupertype($entityName) ?? $entityName;
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
@@ -591,7 +595,7 @@ class Metadata
         }
 
         if (!class_exists($path)) {
-            $type = $this->getTemplateType($entityName);
+            $type = $this->get("scopes.$entityName.type");
             $path = "\\Atro\\Core\\Templates\\Repositories\\$type";
         }
 
@@ -599,17 +603,28 @@ class Metadata
     }
 
     /**
-     * The template of the repository of the entity. A subtype of a reference data entity has its own template, its
-     * records are stored by the supertype.
+     * The records of a subtype of a reference data entity are the records of the supertype, they are served by the
+     * classes of the supertype.
      */
-    public function getTemplateType(string $entityName): ?string
+    public function getReferenceDataSupertype(string $entityName): ?string
     {
-        $type = $this->get("scopes.$entityName.type");
-        if ($type === 'ReferenceData' && !empty($this->get("scopes.$entityName.supertypeId"))) {
-            return 'ReferenceDataSubtype';
+        if ($this->get("scopes.$entityName.type") !== 'ReferenceData') {
+            return null;
         }
 
-        return $type;
+        return $this->get("scopes.$entityName.supertypeId");
+    }
+
+    /**
+     * The subtype of the supertype for the value of the "type" field of a supertype record.
+     */
+    public function getSubtypeScope(string $supertype, ?string $type): ?string
+    {
+        if ($type === null || $type === '') {
+            return null;
+        }
+
+        return $this->get(['scopes', $supertype, 'subtypeScopes', $type]);
     }
 
     public function getScopeModuleName(string $scopeName): ?string

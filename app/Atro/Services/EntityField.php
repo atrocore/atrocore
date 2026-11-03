@@ -125,16 +125,18 @@ class EntityField extends ReferenceData
         return $this->getRepository()->updateOptionCode($scope, $field, $oldValue, $newValue);
     }
 
-    public function resetToDefault(string $scope, string $field): bool
+    public function resetToDefault(string $id): bool
     {
-        if ($this->getMetadata()->get("entityDefs.$scope.fields.$field.isCustom")) {
-            throw new Error("Can't reset to defaults custom entity field '$field'.");
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            throw new NotFound();
         }
 
-        $entity = $this->getEntity("{$scope}_{$field}");
-        if (!empty($entity)) {
-            $this->getEntityManager()->removeEntity($entity);
+        if (!empty($entity->get('isCustom'))) {
+            throw new Error("Can't reset to defaults custom entity field '{$entity->get('code')}'.");
         }
+
+        $this->getEntityManager()->removeEntity($entity);
 
         return true;
     }
@@ -217,16 +219,38 @@ class EntityField extends ReferenceData
         }
     }
 
+    /**
+     * The fields of the system and of the modules cannot be deleted, their configuration can be reset to default
+     * unless the entity is custom. The ID field is managed by the system.
+     */
+    public function putAclMeta(OrmEntity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        $isCustom = !empty($entity->get('isCustom'));
+        $isCustomEntity = !empty($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'isCustom']));
+
+        $entity->setAvailableAction('resetToDefault', !$isCustom && !$isCustomEntity);
+        if (!$isCustom) {
+            $entity->setAvailableAction('delete', false);
+        }
+
+        if ($entity->get('code') === 'id') {
+            $entity->setAvailableAction('edit', false);
+            $entity->setAvailableAction('resetToDefault', false);
+        }
+    }
+
     public function putAclMetaForLink(OrmEntity $entityFrom, string $link, OrmEntity $entity): void
     {
-        if ($entityFrom->getEntityName() !== 'Entity' || $link !== 'fields') {
+        $entityName = $entityFrom->getEntityName();
+        $isEntity = $entityName === 'Entity' || $this->getMetadata()->get(['scopes', $entityName, 'supertypeId']) === 'Entity';
+        if (!$isEntity || $link !== 'fields') {
             parent::putAclMetaForLink($entityFrom, $link, $entity);
             return;
         }
 
         $this->putAclMeta($entity);
-
-        $entity->setAvailableAction('delete', $entity->get('code') !== 'id' && $entity->get('isCustom'));
     }
 
 

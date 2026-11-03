@@ -1,0 +1,71 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "isCustom"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "namePlural"
+        }
+      ],
+      [
+        {
+          "name": "iconClass"
+        },
+        {
+          "name": "quickActions"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "sortBy"
+        },
+        {
+          "name": "sortDirection"
+        }
+      ],
+      [
+        {
+          "name": "textFilterFields"
+        },
+        false
+      ],
+      [
+        {
+          "name": "autoDeleteAfterDays"
+        },
+        false
+      ],
+      [
+        {
+          "name": "containsPersonalData"
+        },
+        {
+          "name": "isPerson"
+        }
+      ]
+    ]
+  }
+]

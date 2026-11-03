@@ -1,0 +1,77 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "isCustom"
+        },
+        false
+      ],
+      [
+        {
+          "name": "disableActionHistory"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "namePlural"
+        }
+      ],
+      [
+        {
+          "name": "iconClass"
+        },
+        {
+          "name": "quickActions"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "sortBy"
+        },
+        {
+          "name": "sortDirection"
+        }
+      ],
+      [
+        {
+          "name": "nonDuplicatableFields"
+        },
+        false
+      ],
+      [
+        {
+          "name": "textFilterFields"
+        },
+        false
+      ],
+      [
+        {
+          "name": "auditedDisabledFields"
+        },
+        {
+          "name": "auditedEnabledRelations"
+        }
+      ]
+    ]
+  }
+]

@@ -102,5 +102,12 @@
       "link": "Ссылка",
       "linkMultiple": "Множественная ссылка"
     }
+  },
+  "subtypeGroups": {
+    "character": "Персонаж",
+    "numeric": "Числовой",
+    "date": "Дата / Время",
+    "reference": "Ссылка",
+    "other": "Другие"
   }
 }

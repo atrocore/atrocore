@@ -175,6 +175,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             }
         },
 
+        setMetaReadOnlyFields: function () {
+            (this.model.get('_meta')?.readOnlyFields || []).forEach(field => {
+                this.setFieldReadOnly(field, true);
+            });
+        },
+
         setFieldReadOnly: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'readOnly', true);
             if (locked) {
@@ -427,6 +433,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             readOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);
+
+            // the fields that cannot be changed in this record
+            this.setMetaReadOnlyFields();
+            this.listenTo(this.model, 'sync', () => this.setMetaReadOnlyFields());
 
             this.listenTo(this, 'after:render', () => {
                 let linkFieldList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {},

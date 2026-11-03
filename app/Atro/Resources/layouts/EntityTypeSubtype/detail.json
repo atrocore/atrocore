@@ -1,0 +1,47 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "supertypeEntity"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isCustom"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "namePlural"
+        }
+      ],
+      [
+        {
+          "name": "iconClass"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

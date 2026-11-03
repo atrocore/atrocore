@@ -107,5 +107,12 @@
       "link": "Посилання",
       "linkMultiple": "Кілька посилань"
     }
+  },
+  "subtypeGroups": {
+    "character": "Символьний",
+    "numeric": "Числовий",
+    "date": "Дата / Час",
+    "reference": "Довідник",
+    "other": "Інше"
   }
 }

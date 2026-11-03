@@ -1,6 +1,5 @@
 {
-   "params":[],
-   "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "bool"],
+   "fieldTypeList": ["varchar", "enum", "int", "float", "website", "date", "datetime", "text", "bool"],
    "filter": true,
    "notCreatable": true,
    "fieldDefs": {

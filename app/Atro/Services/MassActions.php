@@ -367,7 +367,7 @@ class MassActions extends HasContainer
     protected function resolveSupertypeLink(array $ids, string $entityType, string $link): array
     {
         if (
-            $this->getMetadata()->get(['scopes', $entityType, 'type']) !== 'Subtype'
+            empty($this->getMetadata()->get(['scopes', $entityType, 'supertypeId']))
             || empty($this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link, 'supertypeField']))
         ) {
             return [$ids, $entityType];

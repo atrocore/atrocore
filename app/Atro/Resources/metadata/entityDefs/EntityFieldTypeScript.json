@@ -1,0 +1,158 @@
+{
+  "fields": {
+    "isMultilang": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "outputType",
+              "value": "text"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "multilangField"
+            }
+          ]
+        }
+      }
+    },
+    "script": {
+      "type": "code",
+      "engine": "Twig",
+      "view": "views/entity-field/fields/script"
+    },
+    "outputType": {
+      "type": "enum",
+      "default": "text",
+      "options": [
+        "text",
+        "int",
+        "float",
+        "bool",
+        "date",
+        "datetime"
+      ],
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "required": true
+    },
+    "preview": {
+      "type": "text",
+      "view": "views/admin/field-manager/fields/script-preview",
+      "readOnly": true
+    },
+    "isNonComparable": {
+      "type": "bool"
+    },
+    "auditableDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "conditionalRequired": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "relevantForAccessRequest": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

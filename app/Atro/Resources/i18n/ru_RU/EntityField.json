@@ -99,6 +99,37 @@
     "selectPageSize": "Количество записей, отображаемых на странице в диалоге выбора. Избегайте слишком больших значений — это может замедлить или заморозить браузер пользователя."
   },
   "options": {
+    "type": {
+      "array": "Массив",
+      "autoincrement": "Автоинкремент",
+      "bool": "Логичесное значение",
+      "code": "code",
+      "color": "Цвет",
+      "date": "Дата",
+      "datetime": "Дата-время",
+      "email": "Эл. почта",
+      "enum": "Список",
+      "file": "Файл",
+      "float": "Поплавок",
+      "foreign": "Зарубежные",
+      "int": "Целое число",
+      "jsonArray": "Массив JSON",
+      "jsonObject": "Объект JSON",
+      "link": "Ссылка",
+      "linkMultiple": "Множественная ссылка",
+      "linkParent": "Родительская ссылка",
+      "markdown": "Уценка",
+      "measure": "Мера",
+      "multiEnum": "Многозначный список",
+      "password": "Пароль",
+      "rangeFloat": "Диапазон поплавков",
+      "rangeInt": "Целочисленный диапазон",
+      "script": "Скрипт",
+      "text": "Текст",
+      "url": "Url",
+      "varchar": "Строка",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Текст",
       "int": "Целое число",
@@ -114,20 +145,14 @@
       "manyToOne": "Многие-к-одному"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Персонаж",
-      "numeric": "Числовой",
-      "date": "Дата / Время",
-      "reference": "Ссылка",
-      "other": "Другие"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
+  "subtypeGroups": {
+    "character": "Персонаж",
+    "numeric": "Числовой",
+    "date": "Дата / Время",
+    "reference": "Ссылка",
+    "other": "Другие"
   },
   "labels": {
-    "resetToDefault": "Восстановить настройки по умолчанию",
     "relationManagement": "Управление отношениями",
     "conditionalProperties": "Условные свойства"
   },
@@ -138,5 +163,11 @@
     "relationAlreadyUsed": "Middle Table Name %s уже используется, выберите другое.",
     "optionCodeUsedInDisabledOptionsRules": "Опция '%s' используется в правилах отключённых опций и не может быть изменена.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "Опция '%s' используется в правилах отключённых опций и не может быть удалена."
+  },
+  "actions": {
+    "resetToDefault": "Восстановить настройки по умолчанию"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
   }
 }

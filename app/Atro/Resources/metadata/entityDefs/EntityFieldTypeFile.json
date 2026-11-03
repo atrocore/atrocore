@@ -1,0 +1,200 @@
+{
+  "fields": {
+    "duplicateIgnore": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "required": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "readOnly": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "protected"
+            }
+          ]
+        }
+      }
+    },
+    "protected": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "default": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/value-container",
+      "tooltip": true
+    },
+    "defaultName": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "fileType": {
+      "type": "link",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "previewSize": {
+      "type": "enum",
+      "required": false,
+      "default": "small",
+      "view": "views/entity-field/fields/preview-size"
+    },
+    "isNonComparable": {
+      "type": "bool"
+    },
+    "inheritanceDisabled": {
+      "view": "views/admin/field-manager/fields/inheritance-disabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    "auditableDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "conditionalRequired": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "relevantForAccessRequest": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    },
+    "erasureMode": {
+      "options": [
+        "delete",
+        "retain",
+        "cascade",
+        "unlink"
+      ]
+    }
+  },
+  "links": {
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
+    }
+  }
+}

@@ -27,7 +27,52 @@ use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
 {
+    /**
+     * The fields of the entity field that are not stored as the parameters of the field definition, they are
+     * processed separately.
+     */
+    public const NOT_PARAM_FIELDS = [
+        'name',
+        'code',
+        'entity',
+        'customizable',
+        'tooltipText',
+        'data',
+        '_meta',
+        'supertype',
+        'relationType',
+        'foreignEntity',
+        'foreignCode',
+        'relationName',
+        'linkMultipleField',
+        'isNonComparable',
+        'isDuplicatableRelation',
+        'modifiedExtendedEnabled',
+        'conditionalRequired',
+        'conditionalReadOnly',
+        'conditionalProtected',
+        'conditionalVisible',
+        'conditionalDisableOptions',
+    ];
+
     protected ?array $boolFields = null;
+
+    /**
+     * The fields of the subtype that are the parameters of the field definition of its type.
+     */
+    public function getParamFields(?string $subtype): array
+    {
+        $result = [];
+        foreach ($this->getMetadata()->get(['entityDefs', (string)$subtype, 'fields'], []) as $field => $defs) {
+            if (empty($defs['type']) || !empty($defs['notStorable']) || in_array($field, self::NOT_PARAM_FIELDS, true)) {
+                continue;
+            }
+            $result[] = $field;
+        }
+
+        return $result;
+    }
+
     protected function getEntityById($id)
     {
         $parts = explode("_", $id, 2);
@@ -36,7 +81,7 @@ class EntityField extends ReferenceData
         }
 
         $item = $this->prepareItem($parts[0], $parts[1]);
-        if (!empty($item)) {
+        if (!empty($item) && $this->isItemOfSubtype($item)) {
             $entity = $this->entityFactory->create($this->entityName);
             $entity->set($item);
             $this->prepareVirtualBoolFields($entity);
@@ -76,7 +121,7 @@ class EntityField extends ReferenceData
 
         if ($this->boolFields === null) {
             $this->boolFields = [];
-            foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $defs) {
                 if ($defs['type'] === 'bool') {
                     $this->boolFields[] = $field;
                 }
@@ -95,7 +140,7 @@ class EntityField extends ReferenceData
                 $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
             }
             if ($fieldDefs['type'] === 'link') {
-                $fieldDefs['relationType'] = $linkDefs['type'] === 'hasOne'
+                $fieldDefs['relationType'] = ($linkDefs['type'] ?? null) === 'hasOne'
                     ? 'oneToOne'
                     : $linkDefs['relationType'] ?? 'manyToOne';
             }
@@ -103,8 +148,7 @@ class EntityField extends ReferenceData
                 $fieldDefs['foreignEntityId']   = $linkDefs['entity'];
                 $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
             } else {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName], []);
-
+                // a link to a reference data entity has no relation, the entity is defined by the field
                 if (!empty($fieldDefs['entity'])) {
                     $foreignScope = $this->getMetadata()->get(['scopes', $fieldDefs['entity']], []);
 
@@ -122,6 +166,11 @@ class EntityField extends ReferenceData
             $label = $this->translate('combined' . ucfirst($fieldName), 'fields', $entityName);
         }
 
+        // the options of some lists are defined on UI, they are not a part of the definition
+        if (in_array($fieldDefs['type'], ['enum', 'multiEnum']) && !isset($fieldDefs['options'])) {
+            $fieldDefs['options'] = [];
+        }
+
         $translatedOptions = null;
         if (in_array($fieldDefs['type'], ['enum', 'multiEnum']) && !empty($fieldDefs['options'])) {
             foreach ($fieldDefs['options'] as $option) {
@@ -134,6 +183,8 @@ class EntityField extends ReferenceData
 
         $result = array_merge($fieldDefs, [
             'id'                        => "{$entityName}_{$fieldName}",
+            // the record of a subtype is the record of the supertype "EntityField" with the same ID
+            'supertypeId'               => "{$entityName}_{$fieldName}",
             'code'                      => $fieldName,
             'name'                      => $label,
             'entityId'                  => $entityName,
@@ -216,8 +267,9 @@ class EntityField extends ReferenceData
         foreach ($entities as $entityName) {
             if (!$filterIsMultilang) {
                 $items[] = [
-                    'id'         => "{$entityName}_id",
-                    'code'       => 'id',
+                    'id'          => "{$entityName}_id",
+                    'supertypeId' => "{$entityName}_id",
+                    'code'        => 'id',
                     'name'       => 'ID',
                     'type'       => 'varchar',
                     'required'   => false,
@@ -1024,40 +1076,17 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isAuditableRelation', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where', 'personalData', 'notInEveryRecord', 'category', 'specialCategory', 'specialPersonDataCategory', 'erasureMode', 'relevantForAccessRequest'];
+        $subtype    = $this->getMetadata()->getSubtypeScope('EntityField', (string)$entity->get('type'));
+        $defsScope  = $subtype ?? $this->entityName;
+        $typeFields = $this->getParamFields($subtype);
 
-        $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
-
-        if (in_array('script', $typeFields) && !empty($entity->get('isMultilang'))) {
-            $languages = [];
-
-            if (!empty($this->getConfig()->get('isMultilangActive'))) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
-                    $languages[$code] = $code;
-                    foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
-                        if ($code === $v['code']) {
-                            $languages[$code] = $v['name'];
-                            break;
-                        }
-                    }
-                }
-            }
-
-            foreach ($languages as $language => $languageName) {
-                $typeFields[] = 'script' . ucfirst(Util::toCamelCase(strtolower($language)));
-            }
-        }
-
-        if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            $typeFields[] = 'optionColors';
-        }
-
-        foreach (array_merge($commonFields, $typeFields) as $field) {
-            if ($this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.notStorable")) {
+        // the "where" filter of a link is stored as a parameter, it is sent as a part of "data"
+        foreach (array_merge(['where'], $typeFields) as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $defsScope, 'fields', $field, 'notStorable'])) {
                 continue;
             }
 
-            $fieldType = $this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.type");
+            $fieldType = $this->getMetadata()->get(['entityDefs', $defsScope, 'fields', $field, 'type']);
 
             if ($fieldType === 'link') {
                 $field .= 'Id';

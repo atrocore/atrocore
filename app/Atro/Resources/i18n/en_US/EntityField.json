@@ -109,6 +109,37 @@
     "selectPageSize": "Number of records shown per page in the selection dialog. Avoid setting this value too high, as it may slow down or freeze the user's browser."
   },
   "options": {
+    "type": {
+      "array": "Array",
+      "autoincrement": "Auto-increment",
+      "bool": "Boolean",
+      "code": "code",
+      "color": "Color",
+      "date": "Date",
+      "datetime": "Date-time",
+      "email": "Email",
+      "enum": "List",
+      "file": "File",
+      "float": "Float",
+      "foreign": "Foreign",
+      "int": "Integer",
+      "jsonArray": "JSON array",
+      "jsonObject": "JSON object",
+      "link": "Link",
+      "linkMultiple": "Multiple link",
+      "linkParent": "Parent link",
+      "markdown": "Markdown",
+      "measure": "Measure",
+      "multiEnum": "Multi-value list",
+      "password": "Password",
+      "rangeFloat": "Float Range",
+      "rangeInt": "Integer Range",
+      "script": "Script",
+      "text": "Text",
+      "url": "Url",
+      "varchar": "String",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Text",
       "int": "Integer",
@@ -154,20 +185,14 @@
       "unlink": "Unlink"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Character",
-      "numeric": "Numeric",
-      "date": "Date / Time",
-      "reference": "Reference",
-      "other": "Other"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Are you sure you want to reset configuration to default?"
+  "subtypeGroups": {
+    "character": "Character",
+    "numeric": "Numeric",
+    "date": "Date / Time",
+    "reference": "Reference",
+    "other": "Other"
   },
   "labels": {
-    "resetToDefault": "Reset to default",
     "relationManagement": "Relation Management",
     "conditionalProperties": "Conditional Properties",
     "personalData": "Personal Data"
@@ -186,5 +211,11 @@
     "fieldNameConflictsWithSupertype": "The name \"%s\" is already used in the supertype \"%s\".",
     "fieldNameConflictsWithSubtype": "The name \"%s\" is already used in the subtype \"%s\".",
     "subtypeFieldIsReserved": "The name \"%s\" is reserved for subtypes."
+  },
+  "actions": {
+    "resetToDefault": "Reset to default"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
   }
 }

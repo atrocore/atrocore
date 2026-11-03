@@ -163,7 +163,7 @@ class Subtype extends Base
      */
     public function getTypeOption(): string
     {
-        return lcfirst(substr($this->entityType, strlen($this->getSupertypeName() . 'Type')));
+        return (string)$this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'type', 'default']);
     }
 
     /**

@@ -19,7 +19,6 @@ use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
-use Atro\Core\ReferenceDataSubtypes;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Entities\File;
 use Atro\Repositories\NotificationRule;
@@ -97,8 +96,6 @@ class Metadata extends AbstractMetadataListener
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
 
-        $this->prepareEntityFields($data);
-
         $this->preparePersonalDataTables($data);
 
         $this->putCustomCodeActions($data);
@@ -129,8 +126,6 @@ class Metadata extends AbstractMetadataListener
         $this->prepareRelationEntities($data);
 
         $this->prepareEntityMethods($data);
-
-        (new ReferenceDataSubtypes())->prepare($data);
 
         foreach ($data['scopes'] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type'])
@@ -342,7 +337,7 @@ class Metadata extends AbstractMetadataListener
     protected function prepareSubtypeScopes(array &$data): void
     {
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (($scopeDefs['type'] ?? null) !== 'Subtype') {
+            if (empty($scopeDefs['supertypeId'])) {
                 continue;
             }
 
@@ -416,64 +411,6 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
-    protected function prepareEntityFields(array &$data): void
-    {
-        $visible  = [];
-        $required = [];
-        $readOnly = [];
-
-        foreach ($data['fields'] ?? [] as $type => $defs) {
-            if (empty($defs['params'])) {
-                continue;
-            }
-
-            foreach ($defs['params'] as $item) {
-                if (empty($item['name']) || !empty($item['hidden'])) {
-                    continue;
-                }
-
-                $visible[$item['name']][] = $type;
-
-                if (!empty($item['required'])) {
-                    $required[$item['name']][] = $type;
-                }
-
-                if (!empty($item['readOnly'])) {
-                    $readOnly[$item['name']][] = $type;
-                }
-            }
-        }
-
-        foreach ($visible as $field => $types) {
-            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['visible']['conditionGroup'][] = [
-                'type'      => 'in',
-                'attribute' => 'type',
-                'value'     => $types,
-            ];
-        }
-
-        foreach ($required as $field => $types) {
-            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['required']['conditionGroup'][] = [
-                'type'      => 'in',
-                'attribute' => 'type',
-                'value'     => $types,
-            ];
-        }
-
-        foreach ($readOnly as $field => $types) {
-            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['readOnly']['conditionGroup'][] = [
-                'type'      => 'in',
-                'attribute' => 'type',
-                'value'     => $types,
-            ];
-        }
-
-        $data['entityDefs']['EntityField']['fields']['isMultilang']['conditionalProperties']['visible']['conditionGroup'][] = [
-            "type"      => "isEmpty",
-            "attribute" => "multilangField"
-        ];
-    }
-
     protected function preparePersonalDataTables(array &$data): void
     {
         foreach (array_keys($data['entityDefs']) as $scope) {
@@ -527,6 +464,14 @@ class Metadata extends AbstractMetadataListener
                     'all',
                     'no'
                 ];
+            }
+
+            // the records of the entity cannot be created, so there is no access right to create them
+            if (!empty($scopeDefs['createDisabled'])) {
+                $data['scopes'][$scope]['aclActionList'] = array_values(array_diff(
+                    $scopeDefs['aclActionList'] ?? \Atro\Repositories\Role::ACTIONS,
+                    ['create']
+                ));
             }
         }
     }
@@ -726,42 +671,42 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
+    /**
+     * A script field can have its own script for each input language.
+     */
     protected function prepareEntityFieldScriptLocales(array &$data): void
     {
         if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
             return;
         }
 
-        if (empty($scriptFieldDefs = $data['entityDefs']['EntityField']['fields']['script'] ?? null)
-            || empty($previewFieldDefs = $data['entityDefs']['EntityField']['fields']['preview'] ?? null)) {
+        $fieldsDefs = &$data['entityDefs']['EntityFieldTypeScript']['fields'];
+        if (empty($scriptFieldDefs = $fieldsDefs['script'] ?? null) || empty($previewFieldDefs = $fieldsDefs['preview'] ?? null)) {
             return;
         }
 
         foreach ($locales as $locale) {
             $field = 'script' . ucfirst(Util::toCamelCase(strtolower($locale)));
-            $data['entityDefs']['EntityField']['fields'][$field] = array_merge($scriptFieldDefs, [
+            $fieldsDefs[$field] = array_merge($scriptFieldDefs, [
                 'isMultilang' => false,
                 'required'    => false,
             ]);
-            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['visible']['conditionGroup'][] = [
+            $fieldsDefs[$field]['conditionalProperties']['visible']['conditionGroup'][] = [
                 'type'      => 'isTrue',
                 'attribute' => 'isMultilang',
             ];
 
+            // the preview is calculated, it is not a parameter of the field
             $previewField = 'preview' . ucfirst(Util::toCamelCase(strtolower($locale)));
-            $data['entityDefs']['EntityField']['fields'][$previewField] = array_merge($previewFieldDefs, [
+            $fieldsDefs[$previewField] = array_merge($previewFieldDefs, [
                 'readOnly'    => true,
+                'notStorable' => true,
                 'isMultilang' => false,
                 'required'    => false,
             ]);
-            $data['entityDefs']['EntityField']['fields'][$previewField]['conditionalProperties']['visible']['conditionGroup'][] = [
+            $fieldsDefs[$previewField]['conditionalProperties']['visible']['conditionGroup'][] = [
                 'type'      => 'isTrue',
                 'attribute' => 'isMultilang',
-            ];
-            $data['entityDefs']['EntityField']['fields'][$previewField]['conditionalProperties']['visible']['conditionGroup'][] = [
-                'type'      => 'equals',
-                'attribute' => 'type',
-                'value'     => 'script',
             ];
         }
     }
@@ -1623,8 +1568,7 @@ class Metadata extends AbstractMetadataListener
                     continue;
                 }
 
-                $fieldParams  = $data['fields'][$params['type']]['params'] ?? [];
-                $multilingual = in_array('isMultilang', array_column($fieldParams, 'name'));
+                $multilingual = !empty($data['fields'][$params['type']]['multilingual']);
 
                 if ($multilingual && !empty($params['isMultilang'])) {
                     $newFields[$field]['lingualFields'] = [];
@@ -2566,7 +2510,7 @@ class Metadata extends AbstractMetadataListener
     {
         $subtypes = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (($scopeDefs['type'] ?? null) !== 'Subtype' || empty($scopeDefs['supertypeId'])) {
+            if (empty($scopeDefs['supertypeId']) || !in_array($scopeDefs['type'] ?? null, ['Subtype', 'ReferenceData'], true)) {
                 continue;
             }
 
@@ -2608,22 +2552,25 @@ class Metadata extends AbstractMetadataListener
                 'cascadeDelete' => true,
                 'noIndex'       => true,
             ];
+
+            // a subtype of a reference data entity is served by the classes of the supertype
+            if (($scopeDefs['type'] ?? null) === 'ReferenceData') {
+                $data['app']['services'][$scope] ??= $this->getServiceClass($data, $supertype);
+            }
         }
 
         foreach ($subtypes as $supertype => $scopes) {
             sort($scopes);
 
-            $prefixLength = strlen($supertype . 'Type');
-
             $options = [];
             foreach ($scopes as $scope) {
-                $options[] = lcfirst(substr($scope, $prefixLength));
+                $options[$scope] = $this->getSubtypeTypeOption($data, $supertype, $scope);
             }
 
             // the supertype can define the view and the conditions of the field, the options are the subtypes
             $data['entityDefs'][$supertype]['fields']['type'] = array_merge($data['entityDefs'][$supertype]['fields']['type'] ?? [], [
                 'type'               => 'enum',
-                'options'            => $options,
+                'options'            => array_values($options),
                 'protected'          => true,
                 'customizable'       => false,
                 'massUpdateDisabled' => true,
@@ -2631,41 +2578,84 @@ class Metadata extends AbstractMetadataListener
             ]);
 
             $data['scopes'][$supertype]['hasSubtypes'] = true;
+            $data['scopes'][$supertype]['subtypeScopes'] = array_flip($options);
 
             foreach ($scopes as $scope) {
                 $this->addSupertypeFieldsToSubtype($data, $supertype, $scope);
 
-                // the relations of the supertype are shown on the record of the subtype
-                $data['clientDefs'][$scope]['relationshipPanels'] = array_merge(
-                    $data['clientDefs'][$supertype]['relationshipPanels'] ?? [],
-                    $data['clientDefs'][$scope]['relationshipPanels'] ?? []
-                );
+                // the type of a record of the subtype is defined by the subtype
+                $data['entityDefs'][$scope]['fields']['type']['default'] = $options[$scope];
+
+                // the relations and the actions of the supertype are shown on the record of the subtype
+                foreach (['relationshipPanels', 'detailActions', 'listActions'] as $key) {
+                    $value = array_merge($data['clientDefs'][$supertype][$key] ?? [], $data['clientDefs'][$scope][$key] ?? []);
+                    if (!empty($value)) {
+                        $data['clientDefs'][$scope][$key] = $value;
+                    }
+                }
             }
         }
     }
 
     /**
+     * The value of the "type" field of the supertype records of the subtype: "typeOption" of the subtype or the name
+     * of the subtype without the prefix, e.g. "simple" for "ExportFeedTypeSimple".
+     */
+    protected function getSubtypeTypeOption(array $data, string $supertype, string $subtype): string
+    {
+        return (string)($data['scopes'][$subtype]['typeOption'] ?? lcfirst(substr($subtype, strlen($supertype . 'Type'))));
+    }
+
+    protected function getServiceClass(array $data, string $scope): string
+    {
+        if (!empty($data['app']['services'][$scope])) {
+            return $data['app']['services'][$scope];
+        }
+
+        $module = $data['scopes'][$scope]['module'] ?? 'Atro';
+        foreach (["\\$module\\Services\\$scope", "\\Atro\\Services\\$scope", "\\Espo\\Services\\$scope"] as $className) {
+            if (class_exists($className)) {
+                return $className;
+            }
+        }
+
+        return "\\Atro\\Core\\Templates\\Services\\" . $data['scopes'][$scope]['type'];
+    }
+
+    /**
      * A subtype record contains all fields and relations of its supertype record. They are stored in the supertype
      * table, so they are skipped for the subtype in the ORM: the fields are read through the "supertype" relation and
-     * the relations are served by the supertype record.
+     * the relations are served by the supertype record. The records of a reference data entity are stored together
+     * with all their fields, so the fields of its subtypes are the usual fields.
      */
     protected function addSupertypeFieldsToSubtype(array &$data, string $supertype, string $subtype): void
     {
+        $skipOrmDefs = ($data['scopes'][$supertype]['type'] ?? null) !== 'ReferenceData';
+
         foreach ($data['entityDefs'][$supertype]['fields'] ?? [] as $field => $fieldDefs) {
             if (empty($fieldDefs['type'])) {
                 continue;
             }
 
-            if (isset($data['entityDefs'][$subtype]['fields'][$field])) {
+            // the subtype has its own field with the same name
+            $subtypeFieldDefs = $data['entityDefs'][$subtype]['fields'][$field] ?? null;
+            if (!empty($subtypeFieldDefs['type'])) {
                 continue;
+            }
+
+            // the subtype can refine the field of the supertype, e.g. limit its options
+            if (is_array($subtypeFieldDefs)) {
+                $fieldDefs = array_merge($fieldDefs, $subtypeFieldDefs);
             }
 
             // the field is managed in the supertype
             $fieldDefs['supertypeField'] = true;
-            $fieldDefs['skipOrmDefs'] = true;
             $fieldDefs['customizable'] = false;
             $fieldDefs['emHidden'] = true;
             $fieldDefs['unique'] = false;
+            if ($skipOrmDefs) {
+                $fieldDefs['skipOrmDefs'] = true;
+            }
 
             $data['entityDefs'][$subtype]['fields'][$field] = $fieldDefs;
 
@@ -2674,7 +2664,9 @@ class Metadata extends AbstractMetadataListener
                 if ($fieldDefs['type'] !== 'linkMultiple') {
                     unset($linkDefs['foreign']);
                 }
-                $linkDefs['skipOrmDefs'] = true;
+                if ($skipOrmDefs) {
+                    $linkDefs['skipOrmDefs'] = true;
+                }
                 $data['entityDefs'][$subtype]['links'][$field] = $linkDefs;
             }
         }

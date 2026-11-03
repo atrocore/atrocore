@@ -107,6 +107,37 @@
     "selectPageSize": "Número de registros mostrados por página en el diálogo de selección. Evite valores demasiado altos, ya que pueden ralentizar o bloquear el navegador del usuario."
   },
   "options": {
+    "type": {
+      "array": "Lista ordenable",
+      "autoincrement": "Incremental",
+      "bool": "SI / NO",
+      "code": "code",
+      "color": "Color",
+      "date": "Fecha",
+      "datetime": "Date-Time",
+      "email": "Correo electrónico",
+      "enum": "Lista",
+      "file": "Archivo",
+      "float": "Decimal",
+      "foreign": "Clave foránea",
+      "int": "Entero",
+      "jsonArray": "Json Array",
+      "jsonObject": "Json Object",
+      "link": "Enlace",
+      "linkMultiple": "Enlace múltiple",
+      "linkParent": "Enlace Padre",
+      "markdown": "Markdown",
+      "measure": "Medida",
+      "multiEnum": "Lista múltiple",
+      "password": "Contraseña",
+      "rangeFloat": "Rango de decimales",
+      "rangeInt": "Rango de enteros",
+      "script": "Guión",
+      "text": "Área de texto simple",
+      "url": "Url",
+      "varchar": "Texto",
+      "wysiwyg": "Área de texto con editor"
+    },
     "outputType": {
       "text": "Área de texto simple",
       "int": "Entero",
@@ -152,20 +183,14 @@
       "unlink": "Desvincular"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Carácter",
-      "numeric": "Numérico",
-      "date": "Fecha / Hora",
-      "reference": "Referencia",
-      "other": "Otros"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
+  "subtypeGroups": {
+    "character": "Carácter",
+    "numeric": "Numérico",
+    "date": "Fecha / Hora",
+    "reference": "Referencia",
+    "other": "Otros"
   },
   "labels": {
-    "resetToDefault": "Restablecer a (por defecto)",
     "relationManagement": "Gestión de relaciones",
     "conditionalProperties": "Propiedades condicionales",
     "personalData": "Datos personales"
@@ -176,5 +201,11 @@
     "cannotAddRequiredFieldWithExistingRecords": "No se puede añadir un campo obligatorio con registros existentes sin valor por defecto",
     "relationAlreadyUsed": "El Middle Table Name %s ya está en uso, elija otro.",
     "optionCodeShouldBeUnique": "El código de la opción debe ser único."
+  },
+  "actions": {
+    "resetToDefault": "Restablecer a (por defecto)"
+  },
+  "actionConfirms": {
+    "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
   }
 }

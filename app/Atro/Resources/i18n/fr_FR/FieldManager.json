@@ -72,9 +72,6 @@
   "fieldParts": {
     "unit": {
       "unit": "(Unité)"
-    },
-    "datetimeOptional": {
-      "date": "Date"
     }
   },
   "exceptions": {

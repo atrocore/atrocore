@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "supertypeEntity": {
+      "type": "link",
+      "view": "views/entity/fields/supertype",
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "links": {
+    "supertypeEntity": {
+      "type": "belongsTo",
+      "entity": "EntityTypeBase",
+      "foreign": "subtypes"
+    }
+  }
+}

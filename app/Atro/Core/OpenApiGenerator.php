@@ -422,7 +422,6 @@ class OpenApiGenerator
                 break;
             case "array":
             case "multiEnum":
-            case "multiLanguage":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
                     'type'  => 'array',
                     'items' => ['type' => 'string']

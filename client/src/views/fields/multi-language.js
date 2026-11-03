@@ -30,6 +30,9 @@
  * and "AtroCore" word.
  */
 
+/**
+ * A list of the languages of the system, a field of type "multiEnum" with this view.
+ */
 Espo.define('views/fields/multi-language', 'views/fields/multi-enum', Dep => {
 
     return Dep.extend({

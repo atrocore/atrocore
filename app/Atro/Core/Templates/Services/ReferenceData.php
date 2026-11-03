@@ -21,31 +21,6 @@ use Espo\ORM\EntityCollection;
 
 class ReferenceData extends Record
 {
-    protected bool $creatingViaSubtype = false;
-
-    public function createEntity(\stdClass $attachment): string
-    {
-        // each record of an entity with subtypes belongs to one of them, so it is created via the subtype
-        if (!$this->creatingViaSubtype && !empty($this->getMetadata()->get(['scopes', $this->entityType, 'referenceDataSubtypes']))) {
-            throw new BadRequest($this->getInjection('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
-        }
-
-        return parent::createEntity($attachment);
-    }
-
-    /**
-     * Creates the record of a subtype: the subtype defines the type of the record and the fields it can have.
-     */
-    public function createEntityViaSubtype(\stdClass $data): string
-    {
-        $this->creatingViaSubtype = true;
-        try {
-            return $this->createEntity($data);
-        } finally {
-            $this->creatingViaSubtype = false;
-        }
-    }
-
     public function linkEntity($id, $link, $foreignId)
     {
         $defs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link]);

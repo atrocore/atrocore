@@ -1,0 +1,85 @@
+{
+  "fields": {
+    "sortBy": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/sort-by",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "sortDirection": {
+      "type": "enum",
+      "options": [
+        "asc",
+        "desc"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "quickActions": {
+      "type": "multiEnum",
+      "view": "views/admin/entity-manager/fields/quick-actions"
+    },
+    "autoDeleteAfterDays": {
+      "type": "int",
+      "tooltip": true
+    },
+    "textFilterFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/text-filter-fields",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "containsPersonalData": {
+      "type": "bool"
+    },
+    "isPerson": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "containsPersonalData"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

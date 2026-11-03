@@ -106,6 +106,37 @@
     "selectPageSize": "Кількість записів, що відображаються на сторінці у діалозі вибору. Уникайте занадто великих значень, оскільки це може сповільнити або заморозити браузер користувача."
   },
   "options": {
+    "type": {
+      "array": "Масив",
+      "autoincrement": "Автоматичне збільшення",
+      "bool": "Булеве значення",
+      "code": "code",
+      "color": "Колір",
+      "date": "Дата",
+      "datetime": "Дата і час",
+      "email": "Електронна пошта",
+      "enum": "Список",
+      "file": "Файл",
+      "float": "Дійсне число",
+      "foreign": "Іноземні",
+      "int": "Ціле число",
+      "jsonArray": "Масив JSON",
+      "jsonObject": "Об'єкт JSON",
+      "link": "Посилання",
+      "linkMultiple": "Кілька посилань",
+      "linkParent": "Батьківське посилання",
+      "markdown": "Уцінка",
+      "measure": "Міра",
+      "multiEnum": "Багатозначний список",
+      "password": "Пароль",
+      "rangeFloat": "Діапазон плаваючих значень",
+      "rangeInt": "Цілочисельний діапазон",
+      "script": "Скрипт",
+      "text": "Текст",
+      "url": "URL",
+      "varchar": "Рядок",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Текст",
       "int": "Ціле число",
@@ -151,20 +182,14 @@
       "unlink": "Розв'язати"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Символьний",
-      "numeric": "Числовий",
-      "date": "Дата / Час",
-      "reference": "Довідник",
-      "other": "Інше"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до значень за замовчуванням?"
+  "subtypeGroups": {
+    "character": "Символьний",
+    "numeric": "Числовий",
+    "date": "Дата / Час",
+    "reference": "Довідник",
+    "other": "Інше"
   },
   "labels": {
-    "resetToDefault": "Скинути до значень за замовчуванням",
     "relationManagement": "Керування зв'язками",
     "conditionalProperties": "Умовні властивості",
     "personalData": "Персональні дані"
@@ -177,5 +202,11 @@
     "optionCodeShouldBeUnique": "Код опції повинен бути унікальним.",
     "optionCodeUsedInDisabledOptionsRules": "Опція '%s' використовується в правилах вимкнених опцій і не може бути змінена.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "Опція '%s' використовується в правилах вимкнених опцій і не може бути видалена."
+  },
+  "actions": {
+    "resetToDefault": "Скинути до значень за замовчуванням"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до значень за замовчуванням?"
   }
 }

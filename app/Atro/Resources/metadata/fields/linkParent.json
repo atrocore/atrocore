@@ -1,15 +1,4 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
    "actualFields":[
       "id",
       "type"

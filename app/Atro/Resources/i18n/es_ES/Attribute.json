@@ -102,5 +102,12 @@
     "attributeIsUsedInClassifications": "El atributo se utiliza en las clasificaciones. Por favor, actualice primero las clasificaciones.",
     "invalidType": "El tipo de atributo '{type}' no es válido",
     "entityNotAllowToChoose": "La entidad no puede ser elegida."
+  },
+  "subtypeGroups": {
+    "character": "Carácter",
+    "numeric": "Numérico",
+    "date": "Fecha / Hora",
+    "reference": "Referencia",
+    "other": "Otros"
   }
 }

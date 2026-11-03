@@ -1,48 +1,5 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "fileType",
-      "type": "link",
-      "entity": "FileType"
-    },
-    {
-      "name": "previewSize",
-      "type": "enum",
-      "default": "small",
-      "options": [
-        "small",
-        "medium",
-        "large"
-      ]
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "default",
-      "type": "varchar"
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "defaultValue": true,
   "actualFields": [
     "id"
   ],
