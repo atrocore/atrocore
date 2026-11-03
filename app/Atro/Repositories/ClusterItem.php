@@ -468,6 +468,15 @@ class ClusterItem extends Base
             foreach ($affectedClusterIds as $clusterId) {
                 $this->createClusterActivityNote($clusterId, 'recordDeleted', $entityName, $entityId);
             }
+
+            $clusters = $this->getEntityManager()->getRepository('Cluster')
+                ->where(['masterEntity' => $entityName, 'goldenRecordId' => $entityId])
+                ->find();
+
+            foreach ($clusters as $cluster) {
+                $cluster->set('goldenRecordId', null);
+                $this->getEntityManager()->saveEntity($cluster);
+            }
         }
     }
 
