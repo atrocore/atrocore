@@ -17,7 +17,15 @@
     "height": "Height",
     "size": "Size",
     "colorSpace": "Color Space",
-    "brands": "Brands"
+    "brands": "Brands",
+    "replacementReason": "Replacement reason"
+  },
+  "options": {
+    "replacementReason": {
+      "wrongFileAttached": "Wrong file attached",
+      "poorQuality": "Poor quality",
+      "corruptUpload": "Corrupt upload"
+    }
   },
   "labels": {
     "Preview": "Preview",
@@ -52,6 +60,7 @@
     "fileDeleteFailed": "File deleting failed.",
     "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'.",
     "fileNameNotValid": "Filename is not valid. It cannot be empty or contain path separators.",
-    "notAllowToFileWithEntity": "Your are not allow to link a file of type '%s' with  '%s'. The only types allowed are '%s'"
+    "notAllowToFileWithEntity": "Your are not allow to link a file of type '%s' with  '%s'. The only types allowed are '%s'",
+    "replacementReasonCanBeSetOnReuploadOnly": "The replacement reason can be set only when a file is reuploaded."
   }
 }

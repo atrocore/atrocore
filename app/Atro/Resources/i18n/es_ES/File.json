@@ -17,7 +17,15 @@
     "height": "Altura",
     "size": "Talla",
     "colorSpace": "Espacio de color",
-    "brands": "Marcas"
+    "brands": "Marcas",
+    "replacementReason": "Motivo de sustitución"
+  },
+  "options": {
+    "replacementReason": {
+      "wrongFileAttached": "Archivo adjunto incorrecto",
+      "poorQuality": "Calidad deficiente",
+      "corruptUpload": "Carga dañada"
+    }
   },
   "labels": {
     "Preview": "Vista previa",
@@ -48,7 +56,8 @@
     "fileRenameFailed": "Ha fallado el cambio de nombre del archivo.",
     "fileDeleteFailed": "El borrado de archivos ha fallado.",
     "fileNameNotValidByUserRegex": "El nombre del archivo no es válido. Debe coincidir con la expresión regular '%s'.",
-    "notAllowToFileWithEntity": "No se le permite enlazar un archivo del tipo '%s' con '%s'. Los únicos tipos permitidos son '%s'."
+    "notAllowToFileWithEntity": "No se le permite enlazar un archivo del tipo '%s' con '%s'. Los únicos tipos permitidos son '%s'.",
+    "replacementReasonCanBeSetOnReuploadOnly": "El motivo de sustitución solo se puede establecer al volver a cargar un archivo."
   },
   "insightsPanels": {
     "sharing": "Compartir"

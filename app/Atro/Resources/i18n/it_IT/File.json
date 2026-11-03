@@ -17,7 +17,15 @@
     "height": "Altezza",
     "size": "Dimensioni",
     "colorSpace": "Spazio colore",
-    "brands": "Marche"
+    "brands": "Marche",
+    "replacementReason": "Motivo della sostituzione"
+  },
+  "options": {
+    "replacementReason": {
+      "wrongFileAttached": "File allegato errato",
+      "poorQuality": "Qualità scarsa",
+      "corruptUpload": "Caricamento danneggiato"
+    }
   },
   "labels": {
     "Preview": "Anteprima",
@@ -51,6 +59,7 @@
     "fileRenameFailed": "La rinominazione dei file non è riuscita.",
     "fileDeleteFailed": "L'eliminazione del file non è riuscita.",
     "fileNameNotValidByUserRegex": "Il nome del file non è valido. Dovrebbe corrispondere alla regex '%s'.",
-    "notAllowToFileWithEntity": "Non è consentito collegare un file di tipo '%s' con '%s'. Gli unici tipi consentiti sono '%s'"
+    "notAllowToFileWithEntity": "Non è consentito collegare un file di tipo '%s' con '%s'. Gli unici tipi consentiti sono '%s'",
+    "replacementReasonCanBeSetOnReuploadOnly": "Il motivo della sostituzione può essere impostato solo quando un file viene ricaricato."
   }
 }

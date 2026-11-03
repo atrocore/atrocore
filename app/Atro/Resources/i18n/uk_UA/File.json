@@ -17,7 +17,15 @@
     "colorSpace": "Колірний простір",
     "url": "URL",
     "uploadUrl": "URL",
-    "brands": "Бренди"
+    "brands": "Бренди",
+    "replacementReason": "Причина заміни"
+  },
+  "options": {
+    "replacementReason": {
+      "wrongFileAttached": "Прикріплено неправильний файл",
+      "poorQuality": "Низька якість",
+      "corruptUpload": "Пошкоджене завантаження"
+    }
   },
   "labels": {
     "Preview": "Попередній перегляд",
@@ -52,6 +60,7 @@
     "fileNameNotValidByUserRegex": "Ім'я файлу недійсне. Воно має відповідати регулярному виразу '%s'.",
     "fileNameNotValid": "Ім'я файлу недійсне. Воно не може бути порожнім або містити роздільники шляху.",
     "notAllowToFileWithEntity": "Вам не дозволено зв'язувати файл типу '%s' з '%s'. Єдині дозволені типи - це '%s'",
-    "fileMoveFailed": "Переміщення файлу не вдалося."
+    "fileMoveFailed": "Переміщення файлу не вдалося.",
+    "replacementReasonCanBeSetOnReuploadOnly": "Причину заміни можна встановити лише під час повторного завантаження файлу."
   }
 }

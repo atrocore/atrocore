@@ -327,6 +327,33 @@
     "brands": {
       "type": "linkMultiple",
       "noLoad": true
+    },
+    "replacementReason": {
+      "type": "enum",
+      "options": [
+        "wrongFileAttached",
+        "poorQuality",
+        "corruptUpload"
+      ],
+      "duplicateIgnore": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     }
   },
   "links": {
