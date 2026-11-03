@@ -8,6 +8,7 @@
     "thumbnailsPath": "Cesta k miniaturám",
     "preview": "Náhled",
     "hash": "Hash",
+    "generated": "Vygenerováno",
     "fileSize": "Velikost souboru (bajty)",
     "fileMtime": "Datum úpravy souboru",
     "url": "URL",

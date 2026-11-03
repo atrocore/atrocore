@@ -32,7 +32,7 @@ class File extends Base
      * file content, which a request has no business choosing. Stripped at the HTTP boundary
      * so a payload cannot pass itself off as an internal call.
      */
-    public const INTERNAL_INPUT_KEYS = ['localFileName', 'allChunks'];
+    public const INTERNAL_INPUT_KEYS = ['localFileName', 'allChunks', '_generated'];
 
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
 

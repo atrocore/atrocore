@@ -43,6 +43,10 @@ class File extends Base
     {
         parent::beforeSave($entity, $options);
 
+        if ($entity->isNew() && !empty($entity->_input->_generated)) {
+            $entity->set('generated', true);
+        }
+
         $this->prepareThumbnailsPath($entity);
 
         try {
