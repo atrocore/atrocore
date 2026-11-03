@@ -250,6 +250,13 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 mode: 'edit'
             }, view => {
                 this.fieldList.push(name);
+
+                if (view.hasLockedControls() && !view.readOnly && !view.isLocked()) {
+                    const lockedField = view.getLockedFieldName();
+                    this.model.set('_lockedFields', [...(this.model.get('_lockedFields') || []), lockedField]);
+                    view.setLockedMeta(lockedField, true);
+                }
+
                 view.render(() => {
                     this.initRemoveField(view);
                     this.enableButton('update');
@@ -350,10 +357,15 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         prepareData() {
             const attributes = {};
             const attributeIds = []
+            const lockedFields = [];
 
             this.fieldList.forEach(function (field) {
                 var view = this.getView(field);
                 _.extend(attributes, view.fetch());
+
+                if (view.hasLockedControls() && view.isLocked() && !lockedFields.includes(view.getLockedFieldName())) {
+                    lockedFields.push(view.getLockedFieldName());
+                }
 
                 const attributeId = this.model.defs.fields[field]?.attributeId
                 if (attributeId && !attributeIds.includes(attributeId)) {
@@ -365,6 +377,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             if (attributeIds.length) {
                 attributes.__attributes = attributeIds
             }
+
+            if (lockedFields.length) {
+                attributes._lockedFields = lockedFields;
+            }
+
             return attributes;
         },
 
