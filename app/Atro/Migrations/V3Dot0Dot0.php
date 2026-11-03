@@ -183,6 +183,8 @@ class V3Dot0Dot0 extends Base
                 'deletePermanently' => ['delete_permanently', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
                 'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],
             ],
+            'set' => [
+            ],
             'custom' => [
                 'handler' => ['handler', 'type' => 'string', 'length' => 255, 'source' => 'handler'],
                 'searchEntity' => ['search_entity', 'type' => 'string', 'length' => 255, 'source' => 'column'],

@@ -21,6 +21,7 @@
   "ActionTypeWebhook": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeEmail": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeCreate": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeSet": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeUpdate": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeCreateOrUpdate": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeDelete": "\\Atro\\Services\\ActionSubtype",
