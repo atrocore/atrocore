@@ -32,7 +32,7 @@ class File extends Base
      * file content, which a request has no business choosing. Stripped at the HTTP boundary
      * so a payload cannot pass itself off as an internal call.
      */
-    public const INTERNAL_INPUT_KEYS = ['localFileName', 'allChunks'];
+    public const INTERNAL_INPUT_KEYS = ['localFileName', 'allChunks', '_generated'];
 
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
 
@@ -245,6 +245,8 @@ class File extends Base
     public function createFileViaContents(\stdClass $attachment, string $contents): string
     {
         $attachment->fileContents = "data:application/unknown;base64," . base64_encode($contents);
+        // function used for file generation by system, so it's must set generated as default
+        $attachment->_generated = true;
 
         return $this->createEntity($attachment);
     }
@@ -272,6 +274,8 @@ class File extends Base
     public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName): string
     {
         $attachment->localFileName = $fileName;
+        // function used for file generation by system, so it's must set generated as default
+        $attachment->_generated = true;
 
         return $this->createEntity($attachment);
     }
