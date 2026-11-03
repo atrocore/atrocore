@@ -37,14 +37,6 @@
       "translation": "FieldManager.options.dateTimeDefault"
     },
     {
-      "name": "after",
-      "type": "varchar"
-    },
-    {
-      "name": "before",
-      "type": "varchar"
-    },
-    {
       "type": "bool",
       "name": "useNumericFormat"
     },

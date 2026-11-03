@@ -1,16 +1,5 @@
 {
-   "params":[
-      {
-         "name":"link",
-         "type":"varchar",
-         "required": true
-      },
-      {
-         "name":"field",
-         "type":"varchar",
-         "required": true
-      }
-   ],
+   "params":[],
    "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "bool"],
    "filter": true,
    "notCreatable": true,

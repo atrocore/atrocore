@@ -19,6 +19,7 @@ use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
+use Atro\Core\ReferenceDataSubtypes;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Entities\File;
 use Atro\Repositories\NotificationRule;
@@ -126,6 +127,8 @@ class Metadata extends AbstractMetadataListener
         $this->prepareRelationEntities($data);
 
         $this->prepareEntityMethods($data);
+
+        (new ReferenceDataSubtypes())->prepare($data);
 
         foreach ($data['scopes'] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type'])
@@ -752,6 +755,11 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs']['EntityField']['fields'][$previewField]['conditionalProperties']['visible']['conditionGroup'][] = [
                 'type'      => 'isTrue',
                 'attribute' => 'isMultilang',
+            ];
+            $data['entityDefs']['EntityField']['fields'][$previewField]['conditionalProperties']['visible']['conditionGroup'][] = [
+                'type'      => 'equals',
+                'attribute' => 'type',
+                'value'     => 'script',
             ];
         }
     }

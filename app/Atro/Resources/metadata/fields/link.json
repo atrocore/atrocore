@@ -24,10 +24,6 @@
       "type": "bool"
     },
     {
-      "name": "currentUserAsDefault",
-      "type": "bool"
-    },
-    {
       "name": "default",
       "type": "varchar"
     },

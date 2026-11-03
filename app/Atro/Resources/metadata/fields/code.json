@@ -6,22 +6,6 @@
       "default": false
     },
     {
-      "name": "language",
-      "type": "varchar"
-    },
-    {
-      "name": "engine",
-      "type": "varchar"
-    },
-    {
-      "name": "variables",
-      "type": "array"
-    },
-    {
-      "name": "editorActions",
-      "type": "jsonObject"
-    },
-    {
       "name": "isMultilang",
       "type": "bool",
       "default": false

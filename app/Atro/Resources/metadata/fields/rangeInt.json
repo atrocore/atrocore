@@ -27,22 +27,6 @@
       "type": "int"
     },
     {
-      "name": "minFrom",
-      "type": "int"
-    },
-    {
-      "name": "maxFrom",
-      "type": "int"
-    },
-    {
-      "name": "minTo",
-      "type": "int"
-    },
-    {
-      "name": "maxTo",
-      "type": "int"
-    },
-    {
       "name": "readOnly",
       "type": "bool"
     },

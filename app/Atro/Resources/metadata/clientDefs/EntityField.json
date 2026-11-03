@@ -1,5 +1,6 @@
 {
   "controller": "controllers/entity-field",
+  "model": "models/reference-data-supertype",
   "iconClass": "database",
   "limit": 500,
   "navigationTreeContextField": "entityId",

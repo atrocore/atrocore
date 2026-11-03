@@ -10,14 +10,6 @@
       "type": "varchar"
     },
     {
-      "name": "after",
-      "type": "varchar"
-    },
-    {
-      "name": "before",
-      "type": "varchar"
-    },
-    {
       "type": "bool",
       "name": "useNumericFormat"
     },

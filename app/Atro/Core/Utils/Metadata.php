@@ -591,11 +591,25 @@ class Metadata
         }
 
         if (!class_exists($path)) {
-            $type = $this->get("scopes.$entityName.type");
+            $type = $this->getTemplateType($entityName);
             $path = "\\Atro\\Core\\Templates\\Repositories\\$type";
         }
 
         return $path;
+    }
+
+    /**
+     * The template of the repository of the entity. A subtype of a reference data entity has its own template, its
+     * records are stored by the supertype.
+     */
+    public function getTemplateType(string $entityName): ?string
+    {
+        $type = $this->get("scopes.$entityName.type");
+        if ($type === 'ReferenceData' && !empty($this->get("scopes.$entityName.supertypeId"))) {
+            return 'ReferenceDataSubtype';
+        }
+
+        return $type;
     }
 
     public function getScopeModuleName(string $scopeName): ?string
