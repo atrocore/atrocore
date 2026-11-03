@@ -89,6 +89,11 @@
       "layoutMassUpdateDisabled": true,
       "importDisabled": true
     },
+    "generated": {
+      "type": "bool",
+      "default": false,
+      "protected": true
+    },
     "storage": {
       "type": "link",
       "readOnly": true,

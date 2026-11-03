@@ -8,6 +8,7 @@
     "thumbnailsPath": "Percorso delle miniature",
     "preview": "Anteprima",
     "hash": "Hash",
+    "generated": "Generato",
     "fileSize": "Dimensione del file (byte)",
     "fileMtime": "Data di modifica del file",
     "url": "URL",

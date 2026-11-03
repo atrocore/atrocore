@@ -8,6 +8,7 @@
     "thumbnailsPath": "Thumbnails Pfad",
     "preview": "Vorschau",
     "hash": "Hash",
+    "generated": "Generiert",
     "fileSize": "Dateigröße (Bytes)",
     "fileMtime": "Datei-Änderungsdatum",
     "width": "Breite",

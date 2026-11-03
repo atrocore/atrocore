@@ -8,6 +8,7 @@
     "thumbnailsPath": "Chemin d'accès aux vignettes",
     "preview": "Aperçu",
     "hash": "Hash",
+    "generated": "Généré",
     "fileSize": "Taille du fichier (octets)",
     "fileMtime": "Date de modification du dossier",
     "url": "URL",
