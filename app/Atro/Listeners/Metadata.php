@@ -118,6 +118,8 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareEntityFieldScriptLocales($data);
 
+        $this->prepareTextFilterFields($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -790,6 +792,25 @@ class Metadata extends AbstractMetadataListener
                             $data['entityDefs'][$entityType]['fields'][$field]['view']                          = "views/fields/text";
                             $data['entityDefs'][$entityType]['fields'][$field]['useDisabledTextareaInViewMode'] = true;
                     }
+                }
+            }
+        }
+    }
+
+    protected function prepareTextFilterFields(array &$data): void
+    {
+        foreach ($data['scopes'] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['textFilterFields'])) {
+                continue;
+            }
+
+            $data['scopes'][$scope]['textFilterFields'] = ['id'];
+
+            $fieldDefs = $data['entityDefs'][$scope]['fields'];
+
+            foreach (['name', 'description'] as $field) {
+                if (isset($fieldDefs[$field]) && empty($fieldDefs[$field]['notStorable']) && empty($fieldDefs[$field]['filterDisabled'])) {
+                    $data['scopes'][$scope]['textFilterFields'][] = $field;
                 }
             }
         }
