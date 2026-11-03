@@ -55,6 +55,8 @@ class Metadata extends AbstractMetadataListener
 
         $data = $this->addActive($data);
 
+        $this->prepareActionSet($data);
+
         $this->prepareSubtypes($data);
 
         $this->prepareDerivatives($data);
@@ -2533,6 +2535,18 @@ class Metadata extends AbstractMetadataListener
                 $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
             }
         }
+    }
+
+    /**
+     * The action set is available when a module enables its type in "action.types".
+     */
+    protected function prepareActionSet(array &$data): void
+    {
+        if (!empty($data['action']['types']['set'])) {
+            return;
+        }
+
+        unset($data['scopes']['ActionTypeSet'], $data['entityDefs']['ActionTypeSet'], $data['clientDefs']['ActionTypeSet']);
     }
 
     /**
