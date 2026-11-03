@@ -68,7 +68,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'properties'  => [
                                 'input'            => [
                                     'type'        => 'object',
-                                    'description' => 'Field values of the golden record. The optional `_lockedFields` object, keyed by field name, locks (`true`) or unlocks (`false`) the field values against system updates.',
+                                    'description' => 'Field values of the golden record.',
                                 ],
                                 'relationshipData' => [
                                     'type'        => 'object',
