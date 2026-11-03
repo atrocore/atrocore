@@ -253,7 +253,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
                 if (view.hasLockedControls() && !view.readOnly && !view.isLocked()) {
                     const lockedField = view.getLockedFieldName();
-                    this.model.set('_lockedFields', [...(this.model.get('_lockedFields') || []), lockedField]);
+                    this.model.set('_lockedFields', {...(this.model.get('_lockedFields') || {}), [lockedField]: true});
                     view.setLockedMeta(lockedField, true);
                 }
 
@@ -357,14 +357,14 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         prepareData() {
             const attributes = {};
             const attributeIds = []
-            const lockedFields = [];
+            const lockedFields = {};
 
             this.fieldList.forEach(function (field) {
                 var view = this.getView(field);
                 _.extend(attributes, view.fetch());
 
-                if (view.hasLockedControls() && view.isLocked() && !lockedFields.includes(view.getLockedFieldName())) {
-                    lockedFields.push(view.getLockedFieldName());
+                if (view.hasLockedControls() && view.isLocked()) {
+                    lockedFields[view.getLockedFieldName()] = true;
                 }
 
                 const attributeId = this.model.defs.fields[field]?.attributeId
@@ -378,7 +378,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 attributes.__attributes = attributeIds
             }
 
-            if (lockedFields.length) {
+            if (Object.keys(lockedFields).length) {
                 attributes._lockedFields = lockedFields;
             }
 

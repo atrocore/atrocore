@@ -357,10 +357,6 @@ class Cluster extends Base
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        if (!empty($attributes->input->_lockedFields)) {
-            $attributes->input->_skipIsEntityUpdated = true;
-        }
-
         try {
             $attributes->input->_skipCheckForConflicts = true;
             $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);

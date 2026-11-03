@@ -564,7 +564,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .map((i, el) => el.name)
                 .get();
             if (lockedFields.length) {
-                data.attributes.input._lockedFields = lockedFields;
+                data.attributes.input._lockedFields = Object.fromEntries(lockedFields.map(field => [field, true]));
             }
             return data;
         },
