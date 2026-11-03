@@ -426,41 +426,6 @@ Only one level of link resolution is allowed.
 
 ------------------------------------------------------------------------
 
-### Locking Field Values
-
-For the entities with field value locking enabled (available with the module "Advanced Data Management"), a request can lock and unlock fields. Pass the `_lockedFields` object in the request body, keyed by field name: `true` locks the field, `false` unlocks it:
-
-``` http
-PATCH /api/Product/some-id
-```
-
-``` json
-{
-  "name": "Iphone",
-  "_lockedFields": {
-    "name": true,
-    "description": false
-  }
-}
-```
-
-The locks are saved together with the record. They protect the field values from the later changes made by the system, the changes made in the same request are applied. Changes made through the API without `_lockedFields` do not lock any field. A request that changes only the locks, without changing any field value, is also saved.
-
-`_lockedFields` is accepted by:
-
-| Operation | Endpoint |
-|---|---|
-| Create a record | `POST /api/{Entity}` |
-| Update a record | `PATCH /api/{Entity}/{id}` |
-| Mass update | `PATCH /api/entityMassUpdate`, in the `values` object |
-| Manual consolidation of a cluster | `POST /api/Cluster/{id}/consolidateManually`, in the `attributes.input` object |
-
-Locking the fields that cannot be locked, such as read-only fields or fields with the option **Disable Value Lock**, is ignored.
-
-To lock or unlock a single field of an existing record without changing its value, use `POST /api/lockEntityField` or `POST /api/unlockEntityField` with `entityName`, `entityId` and `field` in the request body. `lockEntityField` returns `400` for a field that cannot be locked. To remove all locks of a record, use `POST /api/clearEntityValueLocks` with `scope` and `id`. The locks of a record are returned in `_meta.locked`, see [The `With-Meta` Header](#the-with-meta-header).
-
-------------------------------------------------------------------------
-
 
 ###  File Upload
 
@@ -1165,7 +1130,7 @@ When present, it provides the real actor and delegator for `createdBy` and/or `m
 
 ### `_meta.locked`
 
-Populated for the entities with field value locking enabled. `loaded` tells that the locks of the record are loaded, `fields` lists the locked fields, keyed by field name. `fields` is always an object, an empty one when no field is locked. See [Locking Field Values](#locking-field-values) for how to set the locks.
+Populated for the entities with field value locking enabled. `loaded` tells that the locks of the record are loaded, `fields` lists the locked fields, keyed by field name. `fields` is always an object, an empty one when no field is locked.
 
 ```json
 {
