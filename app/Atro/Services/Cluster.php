@@ -265,7 +265,7 @@ class Cluster extends Base
             }
         }
 
-        $manualAttributes = array_filter(array_keys(get_object_vars($attributes->input)), fn($attribute) => !str_starts_with($attribute, '__'));
+        $manualAttributes = array_filter(array_keys(get_object_vars($attributes->input)), fn($attribute) => !str_starts_with($attribute, '_'));
 
         if (!empty($suggestedFields)) {
             $preview = $this->buildMasterRecordPreview($clusterId);
@@ -357,9 +357,12 @@ class Cluster extends Base
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
+        if (!empty($attributes->input->_lockedFields)) {
+            $attributes->input->_skipIsEntityUpdated = true;
+        }
+
         try {
             $attributes->input->_skipCheckForConflicts = true;
-            $goldenRecord->_avoidLocking               = true;
             $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
         } catch (NotModified $e) {
 
