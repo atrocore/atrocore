@@ -69,7 +69,6 @@ class MassDownload extends AbstractJob implements JobInterface
         $input->name = $name;
         $input->hidden = true;
         $input->folderId = $this->getZipFolderEntity()->get('id');
-        $input->_generated = true;
 
         $this->getMemoryStorage()->set('disableFileTransactions', true);
         $fileId = $service->moveLocalFileToFileEntity($input, $fileName);

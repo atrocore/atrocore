@@ -245,6 +245,8 @@ class File extends Base
     public function createFileViaContents(\stdClass $attachment, string $contents): string
     {
         $attachment->fileContents = "data:application/unknown;base64," . base64_encode($contents);
+        // function used for file generation by system, so it's must set generated as default
+        $attachment->_generated = true;
 
         return $this->createEntity($attachment);
     }
@@ -272,6 +274,8 @@ class File extends Base
     public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName): string
     {
         $attachment->localFileName = $fileName;
+        // function used for file generation by system, so it's must set generated as default
+        $attachment->_generated = true;
 
         return $this->createEntity($attachment);
     }
