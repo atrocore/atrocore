@@ -2128,13 +2128,30 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                 Espo.Ui.success('Success');
             } else {
-                this.ajaxPostRequest((this.isLocked() ? 'unlockEntityField' : 'lockEntityField'), {
+                const locked = this.isLocked();
+
+                this.ajaxPostRequest((locked ? 'unlockEntityField' : 'lockEntityField'), {
                     entityName: this.model.urlRoot,
                     entityId: this.model.id,
-                    field: this.getLockedFieldName(),
+                    field: field,
                 }).then(() => {
                     Espo.Ui.success('Success');
-                    this.model.fetch();
+
+                    if (this.mode !== 'edit') {
+                        this.model.fetch();
+                        return;
+                    }
+
+                    this.setLockedMeta(field, !locked);
+                    this.setLockedControls();
+
+                    const recordView = this.getRecordView();
+                    if (recordView && recordView.attributes) {
+                        const meta = Espo.Utils.cloneDeep(recordView.attributes._meta || {});
+                        meta.locked = meta.locked || {};
+                        meta.locked.fields = {...(meta.locked.fields || {}), [field]: !locked};
+                        recordView.setInitalAttributeValue('_meta', meta);
+                    }
                 });
             }
         },
@@ -2148,7 +2165,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         setLockedMeta(field, value) {
-            const meta = this.model.get('_meta') || {};
+            const meta = Espo.Utils.cloneDeep(this.model.get('_meta') || {});
             meta.locked = meta.locked || {};
             meta.locked.fields = {...(meta.locked.fields || {}), [field]: value};
             this.model.set('_meta', meta);
