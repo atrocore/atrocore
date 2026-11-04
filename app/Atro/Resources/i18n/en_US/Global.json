@@ -1488,8 +1488,6 @@
     "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s.",
     "noAccessToScope": "You don't have access to %s.",
     "recordCanBeCreatedViaSubtypeOnly": "The entity has subtypes, so a record can be created only via one of the subtypes.",
-    "noPredecessorSuccessor": "The entity has no predecessor-successor relationship.",
-    "alreadyHasSuccessor": "The record has a successor already.",
     "recordCannotBeCreated": "Records of this entity cannot be created.",
     "subtypeCanBeDeletedViaSupertypeOnly": "A subtype record can be deleted only together with its supertype record.",
     "supertypeRecordIsNotFound": "The supertype record is not found.",

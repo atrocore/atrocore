@@ -286,8 +286,24 @@ class RouteCompiler
     private function collectEntityTypeHandlerEntries(): array
     {
         $entries = [];
+        $dir     = CORE_PATH . '/Atro/Core/EntityTypeHandlers/';
 
-        foreach ($this->getEntityTypeHandlerClasses() as $className) {
+        if (!is_dir($dir)) {
+            return $entries;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $relative  = substr($file->getPathname(), strlen(CORE_PATH) + 1, -4);
+            $className = str_replace('/', '\\', $relative);
+
             if (!class_exists($className)) {
                 continue;
             }
@@ -321,35 +337,6 @@ class RouteCompiler
         }
 
         return $entries;
-    }
-
-    /**
-     * The entity-type handler classes of core and of the modules.
-     *
-     * @return string[]
-     */
-    private function getEntityTypeHandlerClasses(): array
-    {
-        $classes = [];
-        $dir     = CORE_PATH . '/Atro/Core/EntityTypeHandlers/';
-
-        if (is_dir($dir)) {
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
-            );
-
-            foreach ($iterator as $file) {
-                if ($file->getExtension() === 'php') {
-                    $classes[] = str_replace('/', '\\', substr($file->getPathname(), strlen(CORE_PATH) + 1, -4));
-                }
-            }
-        }
-
-        foreach ($this->moduleManager->getModules() as $module) {
-            $module->registerEntityTypeHandlerClasses($classes);
-        }
-
-        return $classes;
     }
 
     /**

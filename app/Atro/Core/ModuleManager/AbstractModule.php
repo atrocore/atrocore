@@ -366,34 +366,6 @@ abstract class AbstractModule
     }
 
     /**
-     * Registers this module's entity-type handler classes from `app/Core/EntityTypeHandlers`, as in core: the PSR-15
-     * handlers that carry #[EntityType] and are expanded for every entity that they apply to.
-     *
-     * @param string[] $classes Accumulated entity-type handler FQCN list, passed by reference.
-     */
-    public function registerEntityTypeHandlerClasses(array &$classes): void
-    {
-        $dir = $this->getAppPath() . 'Core/EntityTypeHandlers';
-
-        if (!is_dir($dir)) {
-            return;
-        }
-
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-
-        foreach ($iterator as $file) {
-            if ($file->getExtension() !== 'php') {
-                continue;
-            }
-
-            $relative  = substr($file->getPathname(), strlen($dir) + 1, -4);
-            $classes[] = $this->id . '\\Core\\EntityTypeHandlers\\' . str_replace('/', '\\', $relative);
-        }
-    }
-
-    /**
      * On module load
      */
     public function onLoad()
