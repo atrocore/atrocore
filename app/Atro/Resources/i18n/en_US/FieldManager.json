@@ -69,9 +69,6 @@
   "fieldParts": {
     "unit": {
       "unit": "(Unit)"
-    },
-    "datetimeOptional": {
-      "date": "Date"
     }
   },
   "messages": {

@@ -1,0 +1,13 @@
+{
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "entityFilterResult",
+        "label": "entityFilterResult",
+        "view": "views/record/panels/entity-filter-result",
+        "entityField": "foreignEntityId",
+        "canClose": false
+      }
+    ]
+  }
+}

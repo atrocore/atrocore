@@ -107,7 +107,7 @@ class Entity extends ReferenceData
     protected function getEntityById($id)
     {
         $item = $this->prepareItem($id);
-        if (!empty($item)) {
+        if (!empty($item) && $this->isItemOfSubtype($item)) {
             $entity = $this->entityFactory->create($this->entityName);
             $entity->set($item);
             $this->prepareVirtualFields($entity);
@@ -151,13 +151,14 @@ class Entity extends ReferenceData
             $row = $this->getMetadata()->get("scopes.$code");
         }
 
-        if (empty($row) || !empty($row['emHidden'])) {
+        // a scope without a type is not an entity
+        if (empty($row['type']) || !empty($row['emHidden'])) {
             return null;
         }
 
         if ($this->boolFields === null) {
             $this->boolFields = [];
-            foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $defs) {
                 if ($defs['type'] === 'bool') {
                     $this->boolFields[] = $field;
                 }
@@ -171,6 +172,9 @@ class Entity extends ReferenceData
         $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
+            // the record of a subtype is the record of the supertype "Entity" with the same ID
+            'supertypeId'           => $code,
+            'supertypeEntityId'     => $row['supertypeId'] ?? null,
             'name'                  => $this->translate($code, 'scopeNames'),
             'namePlural'            => $this->translate($code, 'scopeNamesPlural'),
             'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
@@ -252,10 +256,10 @@ class Entity extends ReferenceData
                 $primaryEntityId = $item['primaryEntityId'];
             }
 
-            if (!empty($item['supertypeId='])) {
-                $supertypeId = $item['supertypeId='];
-            } elseif (!empty($item['supertypeId'])) {
-                $supertypeId = $item['supertypeId'];
+            if (!empty($item['supertypeEntityId='])) {
+                $supertypeId = $item['supertypeEntityId='];
+            } elseif (!empty($item['supertypeEntityId'])) {
+                $supertypeId = $item['supertypeEntityId'];
             }
         }
 
@@ -465,11 +469,18 @@ class Entity extends ReferenceData
         $saveMetadata = $isCustom;
 
         foreach ($entity->toArray() as $field => $value) {
-            if ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields', $field, 'notStorable'])) {
+            if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', $field, 'notStorable'])) {
                 continue;
             }
 
-            if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code', 'supertypeName'])) {
+            // the link to the supertype record is technical, the supertype of a subtype entity is stored as "supertypeId"
+            if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code', 'supertypeId', 'supertypeName', 'supertypeEntityName'])) {
+                continue;
+            }
+
+            if ($field === 'supertypeEntityId') {
+                $this->getMetadata()->set('scopes', $entity->get('code'), ['supertypeId' => $value]);
+                $saveMetadata = true;
                 continue;
             }
 
@@ -610,18 +621,18 @@ class Entity extends ReferenceData
     protected function validateSubtype(OrmEntity $entity): void
     {
         if ($entity->get('type') !== 'Subtype') {
-            if (!empty($entity->get('supertypeId'))) {
+            if (!empty($entity->get('supertypeEntityId'))) {
                 throw new BadRequest($this->getLanguage()->translate('supertypeIsAllowedOnlyForSubtype', 'exceptions', 'Entity'));
             }
             return;
         }
 
         if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('supertypeId')) {
+            if ($entity->isAttributeChanged('supertypeEntityId')) {
                 throw new BadRequest($this->getLanguage()->translate('supertypeCannotBeChanged', 'exceptions', 'Entity'));
             }
 
-            foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $defs) {
                 if (
                     in_array($field, self::SUBTYPE_EDITABLE_FIELDS, true)
                     || !empty($defs['notStorable'])
@@ -653,7 +664,7 @@ class Entity extends ReferenceData
             throw new BadRequest($this->getLanguage()->translate('derivativeFromSubtypeNotSupporting', 'exceptions', 'Entity'));
         }
 
-        $supertype = $entity->get('supertypeId');
+        $supertype = $entity->get('supertypeEntityId');
         if (empty($supertype)) {
             throw new BadRequest($this->getLanguage()->translate('supertypeIsRequired', 'exceptions', 'Entity'));
         }

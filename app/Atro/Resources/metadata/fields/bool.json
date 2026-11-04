@@ -1,41 +1,6 @@
 {
-  "params": [
-    {
-      "name": "allowNullForBool",
-      "type": "bool"
-    },
-    {
-      "name": "required",
-      "type": "bool"
-    },
-    {
-      "name": "default",
-      "type": "bool"
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "isMultilang",
-      "type": "bool",
-      "tooltip": true
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "multilingual": true,
+  "defaultValue": true,
   "filter": true,
   "auditable": true,
   "qbFilterType": "boolean",

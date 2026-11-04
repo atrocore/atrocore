@@ -103,5 +103,12 @@
     "compositeAttributeNotFound": "L'attribut composite est introuvable.",
     "compositeAttributeCannotBeChild": "Un attribut composite ne peut pas être un enfant.",
     "entityNotAllowToChoose": "L'entité ne peut pas être choisie."
+  },
+  "subtypeGroups": {
+    "character": "Caractère",
+    "numeric": "Numérique",
+    "date": "Date / Heure",
+    "reference": "Référence",
+    "other": "Autre"
   }
 }

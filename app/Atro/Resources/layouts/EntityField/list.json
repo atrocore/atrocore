@@ -10,18 +10,6 @@
     "name": "type"
   },
   {
-    "name": "required"
-  },
-  {
-    "name": "readOnly"
-  },
-  {
-    "name": "protected"
-  },
-  {
-    "name": "isMultilang"
-  },
-  {
     "name": "tooltip"
   },
   {

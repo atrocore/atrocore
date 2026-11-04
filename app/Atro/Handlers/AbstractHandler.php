@@ -209,7 +209,7 @@ abstract class AbstractHandler implements MiddlewareInterface
      */
     protected function resolveSubtypeForStream(string $entityName, \stdClass $data): string
     {
-        if ($this->getMetadata()->get(['scopes', $entityName, 'type']) !== 'Subtype') {
+        if (empty($this->getMetadata()->get(['scopes', $entityName, 'supertypeId']))) {
             return $entityName;
         }
 

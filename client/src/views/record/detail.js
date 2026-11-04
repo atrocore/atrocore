@@ -2462,6 +2462,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         manageAccess: function () {
             this.manageAccessEdit();
             this.manageAccessDelete();
+            this.manageAccessDuplicate();
+        },
+
+        manageAccessDuplicate: function () {
+            if (this.isNew || !this.duplicateAction) return;
+
+            if (this.model.get('_meta')?.availableActions?.duplicate === false) {
+                this.hideActionItem('duplicate');
+            }
         },
 
         addButton: function (o) {

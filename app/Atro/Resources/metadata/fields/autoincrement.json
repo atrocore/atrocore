@@ -1,11 +1,4 @@
 {
-  "params": [
-    {
-      "name": "isSlug",
-      "type": "bool",
-      "tooltip": true
-    }
-  ],
   "filter": true,
   "fieldDefs": {
     "type": "int",

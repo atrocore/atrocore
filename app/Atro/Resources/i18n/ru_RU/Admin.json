@@ -185,19 +185,15 @@
   },
   "fieldTypes": {
     "enum": "Список",
-    "enumInt": "Список интергеров",
-    "enumFloat": "Список поплавков",
     "float": "Поплавок",
     "markdown": "Уценка",
     "int": "Целое число",
     "color": "Цвет",
     "array": "Массив",
     "foreign": "Зарубежные",
-    "duration": "Продолжительность",
     "autoincrement": "Автоинкремент",
     "bool": "Логичесное значение",
     "datetime": "Дата-время",
-    "datetimeOptional": "Дата/время",
     "script": "Скрипт",
     "linkMultiple": "Множественная ссылка",
     "linkParent": "Родительская ссылка",
@@ -209,11 +205,7 @@
     "rangeInt": "Целочисленный диапазон",
     "rangeFloat": "Диапазон поплавков",
     "wysiwyg": "HTML",
-    "colorpicker": "Выбор цвета",
-    "jsonArray": "Массив JSON",
     "jsonObject": "Объект JSON",
-    "language": "Код языка",
-    "multiLanguage": "Языковые коды",
     "measure": "Мера",
     "unit": "Единица измерения",
     "password": "Пароль",
@@ -222,7 +214,6 @@
     "link": "Ссылка",
     "phone": "Телефон",
     "text": "Текст",
-    "file": "Файл",
-    "map": "Карта"
+    "file": "Файл"
   }
 }

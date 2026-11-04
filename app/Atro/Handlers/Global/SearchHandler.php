@@ -92,8 +92,6 @@ class SearchHandler extends AbstractHandler
 
         $result = $this->getServiceFactory()->create('GlobalSearch')->find(
             (string) ($qp['q'] ?? ''),
-            (int)    ($qp['offset'] ?? 0),
-            (int)    ($qp['maxSize'] ?? 0),
         );
 
         return new JsonResponse($result);

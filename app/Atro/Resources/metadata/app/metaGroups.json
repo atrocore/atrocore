@@ -11,7 +11,8 @@
     "linkOptions",
     "audit",
     "state",
-    "personalData"
+    "personalData",
+    "readOnlyFields"
   ],
   "subtype": [
     "subtype"

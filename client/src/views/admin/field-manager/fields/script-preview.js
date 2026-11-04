@@ -44,12 +44,9 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
                 return;
             }
 
-            this.ajaxPostRequest('EntityField/action/renderScriptPreview', {
-                scope: this.model.get('entityId'),
-                field: this.model.get('code'),
+            this.ajaxPostRequest(`EntityFieldTypeScript/${this.model.id}/scriptPreview`, {
                 script: this.model.get(this.relatedScriptFieldName) || '',
-                outputType: this.model.get('outputType'),
-                id: `${this.model.get('entityId')}_${this.model.get('code')}`
+                outputType: this.model.get('outputType')
             }).then(res => {
                 this.previewData = res;
                 this.model.set(this.name, res.preview);
@@ -84,9 +81,9 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
                 });
             }
 
-            if (this.previewData.entity && this.previewData.entityType) {
+            if (this.previewData.entity && this.previewData.entityName) {
                 let name = this.previewData.entity.name || this.previewData.entity.id;
-                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.previewData.entityType}/view/${this.previewData.entity.id}" target="_blank">${name}</a>`);
+                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.previewData.entityName}/view/${this.previewData.entity.id}" target="_blank">${name}</a>`);
             }
 
             this.controlViewVisibility()

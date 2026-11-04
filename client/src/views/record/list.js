@@ -4258,6 +4258,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             this._markRowFieldsInvalid(rowView, result.message);
                         } else {
                             model.set(changedAttrs);
+                            model.unset('_lockedFields', {silent: true});
                             if (model !== mainModel) {
                                 const meta = mainModel.get('_meta') || {};
                                 mainModel.set('_meta', {...meta, relationRecord: Object.assign({}, meta.relationRecord || {}, changedAttrs)});
@@ -4322,6 +4323,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         hasChanges = true;
                     }
                 });
+
+                if (!useRelationModel && !_.isEmpty(model.get('_lockedFields'))) {
+                    changedAttrs._lockedFields = model.get('_lockedFields');
+                    hasChanges = true;
+                }
 
                 if (hasChanges) {
                     changedRows.push({ rowView, model, mainModel, initialAttrs, changedAttrs });

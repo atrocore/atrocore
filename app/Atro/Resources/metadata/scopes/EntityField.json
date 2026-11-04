@@ -16,7 +16,13 @@
   "hasTeam": false,
   "bookmarkDisabled": true,
   "emHidden": true,
-  "openApiHidden": true,
   "hideFieldTypeFilters": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "subtypeGroups": [
+    "numeric",
+    "character",
+    "date",
+    "reference",
+    "other"
+  ]
 }

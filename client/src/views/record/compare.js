@@ -808,7 +808,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                 return result
             }
 
-            if (fieldDef['type'] === 'jsonArray' || this.getMetadata().get(['fields', fieldDef['type'], 'fieldDefs', 'type']) === 'jsonArray') {
+            if (this.getMetadata().get(['fields', fieldDef['type'], 'fieldDefs', 'type']) === 'jsonArray') {
                 current.get(field)?.sort();
                 others.forEach(o => o.get(field)?.sort());
             }

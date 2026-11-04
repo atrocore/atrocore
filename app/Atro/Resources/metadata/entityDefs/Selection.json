@@ -69,7 +69,7 @@
       }
     },
     "entityTypes": {
-      "type": "jsonArray",
+      "type": "array",
       "readOnly": true,
       "notStorable": true,
       "filterDisabled": true

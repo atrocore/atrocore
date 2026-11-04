@@ -82,7 +82,7 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             const scopeDefs = this.getMetadata().get(['scopes', this.model.get('entity')]) || {}
 
             // the list layout of a subtype is used by the relationship panels of the entities related to the subtype
-            if (scopeDefs.type === 'Subtype') {
+            if (scopeDefs.supertypeId) {
                 return optionList.filter(o => recordLayouts.includes(o) || o === 'list')
             }
 

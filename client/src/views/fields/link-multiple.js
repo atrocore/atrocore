@@ -288,6 +288,16 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
+            // the entity of the records can be the value of another field of the record
+            const entityNameField = this.model.getFieldParam(this.name, 'entityNameField');
+            if (entityNameField) {
+                this.foreignScope = this.model.get(entityNameField);
+                this.listenTo(this.model, 'change:' + entityNameField, () => {
+                    this.foreignScope = this.model.get(entityNameField);
+                    this.reRender();
+                });
+            }
+
             // prepare default value
             let foreignIds = this.model.get(this.idsName);
             if (this.mode === 'edit' && !this.model.get('id') && Array.isArray(foreignIds) && foreignIds.length && this.foreignScope && !this.model.has(this.nameHashName)) {
@@ -501,13 +511,34 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             if (res && JSON.stringify(res).includes('{{')) {
                 const entityFieldId = this.model.name + '_' + this.name;
                 const recordId = this.model.id || '';
-                const url = 'EntityField/' + entityFieldId + '/prepareFieldWhere' + (recordId ? '?recordId=' + recordId : '');
+                const url = 'EntityFieldTypeLinkMultiple/' + entityFieldId + '/where' + (recordId ? '?recordId=' + recordId : '');
                 this.ajaxGetRequest(url, null, { async: false }).success(response => {
                     res = response?.where || res;
                 });
             }
 
+            res = this.addForeignFilterFieldsWhere(res);
+
             return res || undefined
+        },
+
+        /**
+         * The records are filtered by the fields of the record: "foreignFilterFields" maps the attributes of the
+         * foreign records to the attributes of the record.
+         */
+        addForeignFilterFieldsWhere(where) {
+            const filterFields = this.model.getFieldParam(this.name, 'foreignFilterFields') || {};
+
+            Object.keys(filterFields).forEach(foreignAttribute => {
+                const value = this.model.get(filterFields[foreignAttribute]);
+                if (value === null || value === undefined || value === '') {
+                    return;
+                }
+
+                where = (where || []).concat([{type: 'equals', attribute: foreignAttribute, value: value}]);
+            });
+
+            return where;
         },
 
         uploadLink: function () {

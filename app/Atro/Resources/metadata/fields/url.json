@@ -1,67 +1,6 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "notNull",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "default",
-      "type": "varchar"
-    },
-    {
-      "name": "maxLength",
-      "type": "int"
-    },
-    {
-      "name": "countBytesInsteadOfCharacters",
-      "type": "bool"
-    },
-    {
-      "name": "strip",
-      "type": "bool"
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "unique",
-      "type": "bool"
-    },
-    {
-      "name": "index",
-      "type": "bool"
-    },
-    {
-      "name": "isMultilang",
-      "type": "bool",
-      "tooltip": true
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "urlLabel",
-      "type": "enum"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "multilingual": true,
+  "defaultValue": true,
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",

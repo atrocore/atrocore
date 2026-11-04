@@ -286,8 +286,8 @@ class Base extends RDB
             return null;
         }
 
-        $subtype = $this->entityName . 'Type' . ucfirst((string)$entity->get('type'));
-        if ($this->getMetadata()->get(['scopes', $subtype, 'type']) !== 'Subtype') {
+        $subtype = $this->getMetadata()->getSubtypeScope($this->entityName, (string)$entity->get('type'));
+        if (empty($subtype)) {
             return null;
         }
 
@@ -333,8 +333,8 @@ class Base extends RDB
             ->setParameter('id', $id)
             ->fetchOne();
 
-        $subtype = empty($type) ? null : $this->entityName . 'Type' . ucfirst((string)$type);
-        if (!empty($subtype) && $this->getMetadata()->get(['scopes', $subtype, 'type']) === 'Subtype') {
+        $subtype = $this->getMetadata()->getSubtypeScope($this->entityName, empty($type) ? null : (string)$type);
+        if (!empty($subtype)) {
             $subtypeRecordId = $connection->createQueryBuilder()
                 ->select('id')
                 ->from($connection->quoteIdentifier($this->getMapper()->toDb($subtype)))

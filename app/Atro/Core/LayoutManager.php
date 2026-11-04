@@ -161,9 +161,7 @@ class LayoutManager
             ->getArgument('result');
 
         // a subtype shows the fields and the relations of its supertype, the layout listeners of the supertype apply to it
-        $supertype = $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Subtype'
-            ? $this->getMetadata()->get(['scopes', $scope, 'supertypeId'])
-            : null;
+        $supertype = $this->getMetadata()->get(['scopes', $scope, 'supertypeId']);
         if (!empty($supertype)) {
             $event->setArgument('result', $layout);
             $layout = $this->getEventManager()->dispatch($supertype . 'Layout', $viewType, $event)

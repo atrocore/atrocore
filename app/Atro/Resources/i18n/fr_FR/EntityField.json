@@ -107,6 +107,36 @@
     "selectPageSize": "Nombre d'enregistrements affichés par page dans la boîte de dialogue de sélection. Évitez une valeur trop élevée, car cela peut ralentir ou bloquer le navigateur de l'utilisateur."
   },
   "options": {
+    "type": {
+      "array": "Tableau",
+      "autoincrement": "Auto-incrément",
+      "bool": "Booléen",
+      "code": "code",
+      "color": "Couleur",
+      "date": "Date",
+      "datetime": "Date et heure",
+      "email": "E-mail",
+      "enum": "Liste",
+      "file": "Fichier",
+      "float": "Flottant",
+      "foreign": "Étranger",
+      "int": "Entier",
+      "jsonObject": "Objet JSON",
+      "link": "Lien",
+      "linkMultiple": "Lien multiple",
+      "linkParent": "Lien parent",
+      "markdown": "Markdown",
+      "measure": "Mesure",
+      "multiEnum": "Liste multi-valeurs",
+      "password": "Mot de passe",
+      "rangeFloat": "Plage de flottant",
+      "rangeInt": "Plage d’entiers",
+      "script": "Script",
+      "text": "Texte",
+      "url": "Url",
+      "varchar": "Chaîne de caractères",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Texte",
       "int": "Entier",
@@ -152,20 +182,14 @@
       "unlink": "Dissocier"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Caractère",
-      "numeric": "Numérique",
-      "date": "Date / Heure",
-      "reference": "Référence",
-      "other": "Autre"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
+  "subtypeGroups": {
+    "character": "Caractère",
+    "numeric": "Numérique",
+    "date": "Date / Heure",
+    "reference": "Référence",
+    "other": "Autre"
   },
   "labels": {
-    "resetToDefault": "Réinitialiser par défaut",
     "relationManagement": "Gestion des relations",
     "conditionalProperties": "Propriétés conditionnelles",
     "personalData": "Données personnelles"
@@ -178,5 +202,11 @@
     "optionCodeShouldBeUnique": "Le code de l'option doit être unique.",
     "optionCodeUsedInDisabledOptionsRules": "L'option '%s' est utilisée dans les règles d'options désactivées et ne peut pas être modifiée.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "L'option '%s' est utilisée dans les règles d'options désactivées et ne peut pas être supprimée."
+  },
+  "actions": {
+    "resetToDefault": "Réinitialiser par défaut"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   }
 }

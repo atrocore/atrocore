@@ -1,0 +1,29 @@
+{
+  "relationshipPanels": {
+    "derivativeEntities": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    },
+    "uniqueIndexes": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    }
+  },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "attributes",
+        "label": "attributes",
+        "view": "views/admin/field-manager/record/panels/attributes"
+      }
+    ]
+  }
+}

@@ -10,15 +10,6 @@
     "name": "type"
   },
   {
-    "name": "containsPersonalData"
-  },
-  {
-    "name": "hasActive"
-  },
-  {
-    "name": "hasArchive"
-  },
-  {
     "name": "isCustom"
   }
 ]

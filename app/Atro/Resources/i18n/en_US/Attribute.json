@@ -111,5 +111,12 @@
     "attributeIsUsedInClassifications": "Attribute is used in classifications. Please, update classifications first.",
     "invalidType": "The attribute type '{type}' is invalid",
     "attributeTypeCannotBeChanged": "The type of an attribute cannot be changed."
+  },
+  "subtypeGroups": {
+    "character": "Character",
+    "numeric": "Numeric",
+    "date": "Date / Time",
+    "reference": "Reference",
+    "other": "Other"
   }
 }

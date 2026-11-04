@@ -49,7 +49,6 @@
     "isPerson": "È una persona"
   },
   "labels": {
-    "resetToDefault": "Ripristino delle impostazioni predefinite",
     "attributes": "Attributi",
     "accessManagement": "Gestione degli accessi",
     "hierarchyManagement": "Gestione della gerarchia",
@@ -70,9 +69,6 @@
     "role": {
       "contributor": "Contributore"
     }
-  },
-  "confirmations": {
-    "resetToDefault": "È sicuro di voler ripristinare la configurazione predefinita?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "I record di questa entità vengono cancellati definitivamente XX giorni dopo la data di cancellazione.",
@@ -101,5 +97,11 @@
     "derivativeWithSuchRoleExists": "Esiste già un'entità derivata con questo ruolo.",
     "derivativeFromDerivativeNotSupporting": "Un'entità derivata non può essere creata da un'altra entità derivata.",
     "cannotRemoveDerivativeDirectly": "Le entità derivate non possono essere eliminate direttamente."
+  },
+  "actions": {
+    "resetToDefault": "Ripristino delle impostazioni predefinite"
+  },
+  "actionConfirms": {
+    "resetToDefault": "È sicuro di voler ripristinare la configurazione predefinita?"
   }
 }

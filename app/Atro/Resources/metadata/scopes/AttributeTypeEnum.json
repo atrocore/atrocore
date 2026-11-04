@@ -2,6 +2,7 @@
   "entity": true,
   "type": "Subtype",
   "supertypeId": "Attribute",
+  "subtypeGroup": "other",
   "module": "Atro",
   "layouts": true,
   "customizable": false,

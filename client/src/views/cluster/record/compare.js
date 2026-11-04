@@ -560,6 +560,12 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             data.suggestedFields = this.$el.find(`input.field-radio[data-id="${this.PREVIEW_COLUMN_ID}"]:checked`)
                 .map((i, el) => el.name)
                 .get();
+            const lockedFields = this.$el.find('input.field-radio:checked')
+                .map((i, el) => el.name)
+                .get();
+            if (lockedFields.length) {
+                data.attributes.input._lockedFields = Object.fromEntries(lockedFields.map(field => [field, true]));
+            }
             return data;
         },
     })

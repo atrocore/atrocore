@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\EntityField;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -23,32 +22,21 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/EntityField/action/resetToDefault',
+    path: '/EntityField/{id}/resetToDefault',
     methods: [
         'POST',
     ],
     summary: 'Reset entity field to default',
-    description: 'Resets an entity field configuration to its default values. Accessible by administrators only.',
+    description: 'Resets the configuration of an entity field to its default values. Accessible by administrators only.',
     tag: 'EntityField',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'scope',
-                        'field',
-                    ],
-                    'properties' => [
-                        'scope' => [
-                            'type' => 'string',
-                        ],
-                        'field' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the entity field, e.g. "Product_name"',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
@@ -63,23 +51,23 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden — only administrators can reset the configuration',
+        ],
+        404 => [
+            'description' => 'Not found — no entity field with the given ID exists',
+        ],
     ],
 )]
 class ResetToDefaultHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'scope') || !property_exists($data, 'field')) {
-            throw new BadRequest();
-        }
-
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
-        $this->getRecordService('EntityField')->resetToDefault($data->scope, $data->field);
+        $this->getRecordService('EntityField')->resetToDefault((string)$request->getAttribute('id'));
 
         return new BoolResponse(true);
     }

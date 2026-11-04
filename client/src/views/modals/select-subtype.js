@@ -45,7 +45,7 @@ Espo.define('views/modals/select-subtype', 'views/modals/array-field-add', Dep =
         const scopes = this.getMetadata().get('scopes') || {};
 
         return Object.keys(scopes)
-            .filter(scope => scopes[scope].type === 'Subtype' && scopes[scope].supertypeId === this.options.scope)
+            .filter(scope => scopes[scope].supertypeId === this.options.scope)
             .filter(scope => this.getAcl().check(scope, 'create'))
             .sort((a, b) => this.translate(a, 'scopeNames').localeCompare(this.translate(b, 'scopeNames')));
     },
