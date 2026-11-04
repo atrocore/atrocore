@@ -100,21 +100,6 @@ class QueryConverter
             'VARCHAR',
         ];
 
-    /**
-     * @deprecated MATCH_* full-text expressions will be removed in 3.0.0
-     */
-    protected array $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
-
-    /**
-     * @deprecated MATCH_* full-text expressions will be removed in 3.0.0
-     */
-    protected array $matchFunctionMap
-        = [
-            'MATCH_BOOLEAN'          => 'IN BOOLEAN MODE',
-            'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
-            'MATCH_QUERY_EXPANSION'  => 'WITH QUERY EXPANSION',
-        ];
-
     protected EntityFactory $entityFactory;
     protected Connection $connection;
 
@@ -196,7 +181,7 @@ class QueryConverter
         if (empty($params['skipBelongsToJoins'])) {
             $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted, $params['orderBy']);
         } else {
-            $joinsPart = array();
+            $joinsPart = $this->getAlwaysJoins($entity, $withDeleted);
         }
 
         if (!empty($params['customWhere'])) {
@@ -326,51 +311,6 @@ class QueryConverter
         return $function . '(' . $part . ')';
     }
 
-    /**
-     * @deprecated MATCH_* full-text expressions will be removed in 3.0.0
-     */
-    protected function convertMatchExpression($entity, $expression)
-    {
-        $delimiterPosition = strpos($expression, ':');
-        if ($delimiterPosition === false) {
-            throw new \Exception("Bad MATCH usage.");
-        }
-
-        $function = substr($expression, 0, $delimiterPosition);
-        $rest     = substr($expression, $delimiterPosition + 1);
-
-        if (empty($rest)) {
-            throw new \Exception("Empty MATCH parameters.");
-        }
-
-        $delimiterPosition = strpos($rest, ':');
-        if ($delimiterPosition === false) {
-            throw new \Exception("Bad MATCH usage.");
-        }
-
-        $columns = substr($rest, 0, $delimiterPosition);
-        $query   = mb_substr($rest, $delimiterPosition + 1);
-
-        $columnList = explode(',', $columns);
-
-        $tableName = $this->toDb($entity->getEntityType());
-
-        foreach ($columnList as $i => $column) {
-            $columnList[$i] = $tableName . '.' . $this->sanitize($column);
-        }
-
-        $query = $this->quote($query);
-
-        if (!in_array($function, $this->matchFunctionList)) {
-            return;
-        }
-        $modePart = ' ' . $this->matchFunctionMap[$function];
-
-        $result = "MATCH (" . implode(',', $columnList) . ") AGAINST (" . $query . "" . $modePart . ")";
-
-        return $result;
-    }
-
     protected function convertComplexExpression($entity, $field, $distinct = false)
     {
         $function = null;
@@ -381,13 +321,7 @@ class QueryConverter
         if (strpos($field, ':')) {
             $dilimeterPosition = strpos($field, ':');
             $function          = substr($field, 0, $dilimeterPosition);
-
-            // @deprecated MATCH_* full-text expressions will be removed in 3.0.0
-            if (in_array($function, $this->matchFunctionList)) {
-                return $this->convertMatchExpression($entity, $field);
-            }
-
-            $field = substr($field, $dilimeterPosition + 1);
+            $field             = substr($field, $dilimeterPosition + 1);
         }
         if (!empty($function)) {
             $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
@@ -447,27 +381,17 @@ class QueryConverter
             }
 
             if (is_array($attribute) && count($attribute) == 2) {
-                // @deprecated VALUE: select expressions will be removed in 3.0.0
-                if (stripos($attribute[0], 'VALUE:') === 0) {
-                    $part = substr($attribute[0], 6);
-                    if ($part !== false) {
-                        $part = $this->quote($part);
-                    } else {
-                        $part = $this->quote('');
-                    }
+                if (!array_key_exists($attribute[0], $entity->fields)) {
+                    $part = $this->convertComplexExpression($entity, $attribute[0], $distinct);
                 } else {
-                    if (!array_key_exists($attribute[0], $entity->fields)) {
-                        $part = $this->convertComplexExpression($entity, $attribute[0], $distinct);
+                    $fieldDefs = $entity->fields[$attribute[0]];
+                    if (!empty($fieldDefs['select'])) {
+                        $part = $fieldDefs['select'];
                     } else {
-                        $fieldDefs = $entity->fields[$attribute[0]];
-                        if (!empty($fieldDefs['select'])) {
-                            $part = $fieldDefs['select'];
-                        } else {
-                            if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
-                                continue;
-                            }
-                            $part = $this->getFieldPath($entity, $attribute[0]);
+                        if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
+                            continue;
                         }
+                        $part = $this->getFieldPath($entity, $attribute[0]);
                     }
                 }
 
@@ -539,6 +463,7 @@ class QueryConverter
         }
 
         if ($alias) {
+            $withDeleted = $withDeleted || !$this->hasDeletedColumn($r['entity']);
             if (!$withDeleted) {
                 $this->parameters['false'] = false;
             }
@@ -552,6 +477,25 @@ class QueryConverter
         }
 
         return null;
+    }
+
+    /**
+     * The relations the entity cannot be selected without, e.g. the supertype of a subtype that keeps its "deleted"
+     * state.
+     */
+    protected function getAlwaysJoins(IEntity $entity, bool $withDeleted): array
+    {
+        $joins = [];
+        foreach ($entity->relations as $relationName => $r) {
+            if (!empty($r['alwaysJoin']) && $r['type'] === IEntity::BELONGS_TO) {
+                $join = $this->getBelongsToJoin($entity, $relationName, $r, null, $withDeleted);
+                if ($join) {
+                    $joins[] = array_merge($join, ['type' => 'left']);
+                }
+            }
+        }
+
+        return $joins;
     }
 
     protected function getRelationsToJoin(IEntity $entity, array $attributes): array
@@ -603,7 +547,7 @@ class QueryConverter
                     continue;
                 }
 
-                if (!empty($select)) {
+                if (!empty($select) && empty($r['alwaysJoin'])) {
                     if (!in_array($relationName, $relationsToJoin) && !in_array($relationName, $relationsToOrderBy)) {
                         continue;
                     }
@@ -706,22 +650,6 @@ class QueryConverter
         return $selectPart;
     }
 
-    /**
-     * @deprecated used only by deprecated MATCH_*, VALUE: and custom SQL where-template features, will be removed in 3.0.0
-     */
-    public function quote($value)
-    {
-        if (is_null($value)) {
-            return 'NULL';
-        } else {
-            if (is_bool($value)) {
-                return $value ? '1' : '0';
-            } else {
-                return $this->connection->quote((string)$value);
-            }
-        }
-    }
-
     public function toDb(string $field): string
     {
         $field = lcfirst($field);
@@ -813,6 +741,11 @@ class QueryConverter
 //                    }
 //                    break;
                 case 'foreign':
+                    // the column of the supertype is read as is, without the localization of the value
+                    if (!empty($f['proxyType'])) {
+                        $fieldPath = $this->getRelationAlias($entity, $f['relation']) . '.' . $this->toDb($f['foreign']);
+                        break;
+                    }
                     if (isset($f['relation'])) {
                         $relationName  = $f['relation'];
                         $foreign       = $f['foreign'];
@@ -841,9 +774,20 @@ class QueryConverter
         return false;
     }
 
+    /**
+     * A subtype has no "deleted" column: it shares the "deleted" state of its supertype record.
+     */
+    protected function hasDeletedColumn(string $entityType): bool
+    {
+        $seed = $this->getSeed($entityType);
+
+        return !empty($seed) && ($seed->fields['deleted']['type'] ?? null) === IEntity::BOOL;
+    }
+
     public function getLocalizedFieldPath(IEntity $entity, string $relationName, ?string $foreignEntity, string $field): string
     {
-        $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($field);
+        $alias     = $this->getRelationAlias($entity, $relationName);
+        $fieldPath = $this->getColumnPath($alias, $foreignEntity, $field);
         if (empty($foreignEntity)) {
             return $fieldPath;
         }
@@ -851,11 +795,31 @@ class QueryConverter
         $localizedField = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $field);
 
         if ($localizedField !== $field) {
-            $localizedFieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($localizedField);
+            $localizedFieldPath = $this->getColumnPath($alias, $foreignEntity, $localizedField);
             $fieldPath          = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
         }
 
         return $fieldPath;
+    }
+
+    /**
+     * The path to the column of the joined entity. The fields a subtype takes from its supertype are stored in the
+     * supertype table, so they are read from there via the "supertype" key of the joined subtype record.
+     */
+    protected function getColumnPath(string $alias, ?string $entityType, string $field): string
+    {
+        $defs = empty($entityType) ? null : ($this->getSeed($entityType)->fields[$field] ?? null);
+
+        if (!empty($defs['proxyType']) && !empty($defs['relation'])) {
+            $relation = $this->getSeed($entityType)->relations[$defs['relation']] ?? null;
+            if (!empty($relation['entity']) && !empty($relation['key'])) {
+                $table = $this->quoteIdentifier($this->toDb($relation['entity']));
+
+                return "(SELECT st.{$this->toDb($defs['foreign'])} FROM $table st WHERE st.id = $alias.{$this->toDb($relation['key'])})";
+            }
+        }
+
+        return $alias . '.' . $this->toDb($field);
     }
 
     public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
@@ -869,14 +833,6 @@ class QueryConverter
         foreach ($whereClause as $field => $value) {
 
             if (is_int($field)) {
-                // @deprecated MATCH_* full-text expressions will be removed in 3.0.0
-                if (is_string($value)) {
-                    if (strpos($value, 'MATCH_') === 0) {
-                        $rightPart    = $this->convertMatchExpression($entity, $value);
-                        $whereParts[] = $rightPart;
-                        continue;
-                    }
-                }
                 $field = 'AND';
             }
 
@@ -1013,67 +969,24 @@ class QueryConverter
                         continue;
                     }
 
-                    // @deprecated custom SQL where-templates (entityDefs.<Entity>.fields.<field>.where.<operator>) will be removed in 3.0.0
-                    if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
-                        $whereSqlPart = '';
-                        if (is_string($fieldDefs['where'][$operatorModified])) {
-                            $whereSqlPart = $fieldDefs['where'][$operatorModified];
-                        } else {
-                            if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
-                                $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
-                            }
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
-                            foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
-                                $jAlias = $this->obtainJoinAlias($j);
-                                foreach ($params['leftJoins'] as $jE) {
-                                    $jEAlias = $this->obtainJoinAlias($jE);
-                                    if ($jEAlias === $jAlias) {
-                                        continue 2;
-                                    }
-                                }
-                                $params['leftJoins'][] = $j;
-                            }
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
-                            foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
-                                $jAlias = $this->obtainJoinAlias($j);
-                                foreach ($params['joins'] as $jE) {
-                                    $jEAlias = $this->obtainJoinAlias($jE);
-                                    if ($jEAlias === $jAlias) {
-                                        continue 2;
-                                    }
-                                }
-                                $params['joins'][] = $j;
-                            }
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
-                            throw new \Error('CustomJoin (2) does not supporting. Use callbacks instead.');
-                        }
-                        if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
-                            $params['distinct'] = true;
-                        }
-                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
-                    } else {
-                        if ($fieldDefs['type'] == IEntity::FOREIGN) {
-                            $leftPart = '';
-                            if (isset($fieldDefs['relation'])) {
-                                $relationName = $fieldDefs['relation'];
-                                if (isset($entity->relations[$relationName])) {
+                    if ($fieldDefs['type'] == IEntity::FOREIGN) {
+                        $leftPart = '';
+                        if (isset($fieldDefs['relation'])) {
+                            $relationName = $fieldDefs['relation'];
+                            if (isset($entity->relations[$relationName])) {
 
-                                    $alias = $this->getRelationAlias($entity, $relationName);
-                                    if ($alias) {
-                                        if (!is_array($fieldDefs['foreign'])) {
-                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
-                                        } else {
-                                            $leftPart = $this->getFieldPath($entity, $field);
-                                        }
+                                $alias = $this->getRelationAlias($entity, $relationName);
+                                if ($alias) {
+                                    if (!is_array($fieldDefs['foreign'])) {
+                                        $leftPart = $this->getColumnPath($alias, $entity->relations[$relationName]['entity'] ?? null, $fieldDefs['foreign']);
+                                    } else {
+                                        $leftPart = $this->getFieldPath($entity, $field);
                                     }
                                 }
                             }
-                        } else {
-                            $leftPart = self::TABLE_ALIAS . '.' . $this->toDb($this->sanitize($field));
                         }
+                    } else {
+                        $leftPart = self::TABLE_ALIAS . '.' . $this->toDb($this->sanitize($field));
                     }
                 }
                 if (!empty($leftPart)) {
@@ -1138,37 +1051,6 @@ class QueryConverter
             }
         }
         return implode(" " . $sqlOp . " ", $whereParts);
-    }
-
-    public function obtainJoinAlias($j)
-    {
-        if (is_array($j)) {
-            if (count($j)) {
-                $joinAlias = $j[1];
-            } else {
-                $joinAlias = $j[0];
-            }
-        } else {
-            $joinAlias = $j;
-        }
-        return $joinAlias;
-    }
-
-    /**
-     * @deprecated custom SQL where-templates (entityDefs.<Entity>.fields.<field>.where.<operator>) will be removed in 3.0.0
-     */
-    public function stringifyValue($value)
-    {
-        if (is_array($value)) {
-            $arr = [];
-            foreach ($value as $v) {
-                $arr[] = $this->quote($v);
-            }
-            $stringValue = '(' . implode(', ', $arr) . ')';
-        } else {
-            $stringValue = $this->quote($value);
-        }
-        return $stringValue;
     }
 
     public function sanitize($string)
@@ -1389,7 +1271,7 @@ class QueryConverter
                     'fromAlias' => self::TABLE_ALIAS,
                     'table'     => $this->quoteIdentifier($distantTable),
                     'alias'     => $alias,
-                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5",
+                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)}" . ($this->hasDeletedColumn($relOpt['entity']) ? " AND {$alias}.deleted = :deleted_mm5" : ""),
                 ];
 
                 $this->parameters['deleted_mm5'] = false;
@@ -1401,7 +1283,7 @@ class QueryConverter
                 $distantTable = $this->toDb($relOpt['entity']);
 
                 $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey);
-                if (!$withDeleted) {
+                if (!$withDeleted && $this->hasDeletedColumn($relOpt['entity'])) {
                     $condition                      .= " AND {$alias}.deleted = :deleted_j1";
                     $this->parameters['deleted_j1'] = false;
                 }

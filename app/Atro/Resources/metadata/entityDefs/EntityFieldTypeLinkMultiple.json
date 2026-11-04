@@ -1,0 +1,306 @@
+{
+  "fields": {
+    "foreignCode": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/foreign-code",
+      "trim": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "relationType": {
+      "type": "enum",
+      "options": [
+        "oneToMany",
+        "manyToMany"
+      ],
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "required": true
+    },
+    "foreignEntity": {
+      "type": "link",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-entity",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "readOnly": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "protected"
+            }
+          ]
+        }
+      }
+    },
+    "protected": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "default": {
+      "type": "linkMultiple",
+      "entityNameField": "foreignEntityId",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "foreignEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "dropdown": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "foreignName": {
+      "type": "varchar",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-name"
+    },
+    "relationName": {
+      "type": "varchar",
+      "trim": true,
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/relation-name",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "linkMultipleField": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "fileTypes": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/file-types"
+    },
+    "fileTypesNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "isDuplicatableRelation": {
+      "view": "views/admin/field-manager/fields/is-duplicatable-relation",
+      "type": "bool"
+    },
+    "isNonComparable": {
+      "type": "bool"
+    },
+    "inheritanceDisabled": {
+      "view": "views/admin/field-manager/fields/inheritance-disabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    "modifiedExtendedEnabled": {
+      "view": "views/admin/field-manager/fields/modified-extended-enabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    "isAuditableRelation": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "recordRelatedChangesInStream": {
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/record-related-changes-in-stream"
+    },
+    "selectPageSize": {
+      "type": "int",
+      "min": 10
+    },
+    "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalDisableOptions": {
+      "type": "jsonObject",
+      "view": "views/entity-field/fields/conditional-disable-options",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "erasureMode": {
+      "options": [
+        "delete",
+        "retain",
+        "cascade",
+        "unlink"
+      ]
+    }
+  },
+  "links": {
+    "foreignEntity": {
+      "type": "belongsTo",
+      "entity": "Entity"
+    }
+  }
+}

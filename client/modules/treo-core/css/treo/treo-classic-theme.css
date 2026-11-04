@@ -8039,7 +8039,8 @@ button.close {
 
 .note-popover .popover-content .btn-group .note-table, .panel-heading.note-toolbar .btn-group .note-table {
     min-width: 0;
-    padding: 5px
+    padding: 5px;
+    overflow: visible
 }
 
 .note-popover .popover-content .btn-group .note-table .note-dimension-picker, .panel-heading.note-toolbar .btn-group .note-table .note-dimension-picker {
@@ -19021,7 +19022,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: var(--label-color);
 }
 
-.compare-panel table .matched-score-row th i.autoconsolidated {
+.compare-panel table .matched-score-row th i.auto-confirmed {
     position: absolute;
     top: 0.25em;
     right: 0.5em;

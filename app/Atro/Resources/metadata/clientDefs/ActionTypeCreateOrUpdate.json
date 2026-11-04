@@ -1,0 +1,6 @@
+{
+  "iconClass": "person-simple-run",
+  "recordViews": {
+    "detail": "views/action/record/detail"
+  }
+}

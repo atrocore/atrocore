@@ -26,8 +26,8 @@ class MultiEnumType extends ArrayType
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
-        $entity->entityDefs['fields'][$name]['options'] = $attributeData['options'] ?? [];
-        $entity->entityDefs['fields'][$name]['optionColors'] = $attributeData['optionColors'] ?? [];
+        $entity->entityDefs['fields'][$name]['options'] = $this->getSetting($row, 'options') ?? [];
+        $entity->entityDefs['fields'][$name]['optionColors'] = $this->getSetting($row, 'optionColors') ?? [];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }

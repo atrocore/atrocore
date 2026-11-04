@@ -30,7 +30,7 @@
       }
     },
     "entity": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "notStorable": true,
       "filterDisabled": true
     },
@@ -47,7 +47,7 @@
       "type": "int",
       "protected": true
     },
-    "consolidatedAutomatically": {
+    "confirmedAutomatically": {
       "type": "bool",
       "protected": true
     },

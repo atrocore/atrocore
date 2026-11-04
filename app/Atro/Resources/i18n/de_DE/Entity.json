@@ -6,6 +6,7 @@
     "code": "Systemname",
     "disabled": "Deaktiviert",
     "hasArchive": "Archivierbar",
+    "isCustom": "Benutzerdefiniert",
     "hasActive": "Aktivierbar",
     "hideFieldTypeFilters": "Feldtypfilter ausblenden",
     "streamDisabled": "Aktivitäten deaktivieren",
@@ -69,12 +70,8 @@
     "accessManagement": "Zugriffsverwaltung",
     "hierarchyManagement": "Hierarchieverwaltung",
     "other": "Sonstige",
-    "resetToDefault": "Auf Standardwert zurücksetzen",
     "attributes": "Attribute",
     "derivation": "Ableitung"
-  },
-  "confirmations": {
-    "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardeinstellungen zurücksetzen möchten?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Datensätze für diese Entität werden XX Tage nach dem Löschungsdatum endgültig gelöscht.",
@@ -103,5 +100,11 @@
     "derivativeWithSuchRoleExists": "Es gibt bereits eine abgeleitete Entität mit dieser Rolle.",
     "derivativeFromDerivativeNotSupporting": "Eine abgeleitete Entität kann nicht aus einer anderen abgeleiteten Entität erstellt werden.",
     "cannotRemoveDerivativeDirectly": "Abgeleitete Entitäten können nicht direkt gelöscht werden."
+  },
+  "actions": {
+    "resetToDefault": "Auf Standardwert zurücksetzen"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardeinstellungen zurücksetzen möchten?"
   }
 }

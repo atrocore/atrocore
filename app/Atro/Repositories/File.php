@@ -43,6 +43,10 @@ class File extends Base
     {
         parent::beforeSave($entity, $options);
 
+        if ($entity->isNew() && !empty($entity->_input->_generated)) {
+            $entity->set('generated', true);
+        }
+
         $this->prepareThumbnailsPath($entity);
 
         try {
@@ -64,6 +68,14 @@ class File extends Base
 
         // validate file name
         $this->validateItemName($entity);
+
+        $replacementReasonChanged = $entity->isNew()
+            ? !empty($entity->get('replacementReason'))
+            : $entity->isAttributeChanged('replacementReason');
+
+        if ($replacementReasonChanged && empty($entity->_input?->reupload)) {
+            throw new BadRequest($this->getInjection('language')->translate('replacementReasonCanBeSetOnReuploadOnly', 'exceptions', 'File'));
+        }
 
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
@@ -527,7 +539,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -552,7 +564,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -581,7 +593,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -618,7 +630,7 @@ class File extends Base
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 

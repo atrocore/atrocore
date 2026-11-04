@@ -2,6 +2,7 @@
   "fields": {
     "type": "Tipo",
     "entity": "Entità",
+    "isCustom": "Personalizzato",
     "isMultilang": "Multilingue",
     "required": "Richiesto",
     "notNull": "Disabilita il valore nullo",
@@ -105,6 +106,36 @@
     "selectPageSize": "Numero di record visualizzati per pagina nella finestra di selezione. Evitare valori troppo alti, poiché potrebbero rallentare o bloccare il browser dell'utente."
   },
   "options": {
+    "type": {
+      "array": "Array",
+      "autoincrement": "Incremento automatico",
+      "bool": "Booleano",
+      "code": "code",
+      "color": "Colore",
+      "date": "Data",
+      "datetime": "Data e ora",
+      "email": "Email",
+      "enum": "Elenco",
+      "file": "File",
+      "float": "Galleggiante",
+      "foreign": "Estero",
+      "int": "Integro",
+      "jsonObject": "Oggetto JSON",
+      "link": "Link",
+      "linkMultiple": "Collegamento multiplo",
+      "linkParent": "Link per i genitori",
+      "markdown": "Markdown",
+      "measure": "Misura",
+      "multiEnum": "Elenco a più valori",
+      "password": "Password",
+      "rangeFloat": "Intervallo del galleggiante",
+      "rangeInt": "Intervallo di numeri interi",
+      "script": "Scrittura",
+      "text": "Testo",
+      "url": "Url",
+      "varchar": "Stringa",
+      "wysiwyg": "HTML"
+    },
     "relationType": {
       "oneToMany": "Uno-a-molti",
       "manyToMany": "Molti-a-molti",
@@ -150,20 +181,14 @@
       "unlink": "Scollega"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Carattere",
-      "numeric": "Numerico",
-      "date": "Data / Ora",
-      "reference": "Riferimento",
-      "other": "Altro"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "È sicuro di voler ripristinare la configurazione predefinita?"
+  "subtypeGroups": {
+    "character": "Carattere",
+    "numeric": "Numerico",
+    "date": "Data / Ora",
+    "reference": "Riferimento",
+    "other": "Altro"
   },
   "labels": {
-    "resetToDefault": "Ripristino delle impostazioni predefinite",
     "relationManagement": "Gestione delle relazioni",
     "conditionalProperties": "Proprietà condizionali",
     "personalData": "Dati personali"
@@ -176,5 +201,11 @@
     "optionCodeShouldBeUnique": "Il codice dell'opzione deve essere univoco.",
     "optionCodeUsedInDisabledOptionsRules": "L'opzione '%s' è utilizzata nelle regole delle opzioni disabilitate e non può essere modificata.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "L'opzione '%s' è utilizzata nelle regole delle opzioni disabilitate e non può essere eliminata."
+  },
+  "actions": {
+    "resetToDefault": "Ripristino delle impostazioni predefinite"
+  },
+  "actionConfirms": {
+    "resetToDefault": "È sicuro di voler ripristinare la configurazione predefinita?"
   }
 }

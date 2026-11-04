@@ -20,6 +20,7 @@
   "exceptions": {
     "consolidationScriptIsMissing": "Le script de consolidation n'est pas disponible pour l'entité maître",
     "consolidationScriptIsNotValid": "Le script de consolidation renvoie une charge utile invalide : %s",
+    "consolidationScriptReturnedNoValues": "Le script de consolidation n'a renvoyé aucune valeur",
     "entityTypeInvalid": "Le type d'entité \"%s\" ne peut pas être utilisé pour la consolidation",
     "consolidationAlreadyExists": "La consolidation pour \"%s\" existe déjà",
     "skipConditionFailed": "Échec de la condition d'omission : %s",

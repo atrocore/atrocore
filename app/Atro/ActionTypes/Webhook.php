@@ -19,8 +19,8 @@ class Webhook extends AbstractAction
 {
     public function executeNow(Entity $action, \stdClass $input): bool
     {
-        if (!empty($action->get('webhookUrl'))){
-            $res = @file_get_contents($action->get('webhookUrl'));
+        if (!empty($action->getSubtype()?->get('webhookUrl'))){
+            $res = @file_get_contents($action->getSubtype()?->get('webhookUrl'));
         }
 
         return true;

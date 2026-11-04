@@ -165,7 +165,7 @@ class UniqueIndexDescriber
     protected function getSingleFieldIndexes(string $entityType): array
     {
         $entityDefs = $this->entityManager->getOrmMetadata()->get($entityType) ?? [];
-        $hasDeleted = isset($entityDefs['fields']['deleted']);
+        $hasDeleted = Converter::hasDeletedColumn($entityDefs);
 
         $result = [];
         foreach ($entityDefs['fields'] ?? [] as $fieldName => $fieldDefs) {

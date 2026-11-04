@@ -57,7 +57,7 @@ class SendEmail extends AbstractAction
         }
 
         if (!empty($data['to'])) {
-            $this->container->get(Sender::class)->send($data, $action->get('connection'));
+            $this->container->get(Sender::class)->send($data, $action->getSubtype()?->get('connection'));
             if (!empty($entity)) {
                 $this->createNote($entity, $emailData);
             }
@@ -74,7 +74,7 @@ class SendEmail extends AbstractAction
             'actionUser' => $data['actionUser'] ?? $this->container->get('user')
         ];
 
-        $targetEntity = $action->get('targetEntity');
+        $targetEntity = $action->getSubtype()?->get('targetEntity');
         if (!empty($targetEntity)) {
             $where = [];
             if (!empty($this->getWhere($action))) {
@@ -83,7 +83,7 @@ class SendEmail extends AbstractAction
                 $where = @json_decode($whereJson, true);
             }
 
-            $searchEntity = $action->get('searchEntity') ?? $targetEntity;
+            $searchEntity = $action->getSubtype()?->get('searchEntity') ?? $targetEntity;
 
             /** @var \Espo\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntity);
@@ -100,13 +100,13 @@ class SendEmail extends AbstractAction
         /** @var Twig $twig */
         $twig = $this->container->get('twig');
 
-        $emailTemplateId = $action->get('emailTemplateId');
-        $emailTo = $action->get('emailTo');
-        $emailCc = $action->get('emailCc') ?? [];
-        $emailBcc = $action->get('emailBcc') ?? [];
-        if ($action->get('mode') === 'script') {
+        $emailTemplateId = $action->getSubtype()?->get('emailTemplateId');
+        $emailTo = $action->getSubtype()?->get('emailTo');
+        $emailCc = $action->getSubtype()?->get('emailCc') ?? [];
+        $emailBcc = $action->getSubtype()?->get('emailBcc') ?? [];
+        if ($action->getSubtype()?->get('mode') === 'script') {
             $script = "{% set emailTo=[] %}{% set emailCc=[] %}{% set emailBcc=[] %}{% set emailTemplateId=null %}";
-            $script .= $action->get('emailScript');
+            $script .= $action->getSubtype()?->get('emailScript');
             $script .= " {% set data = {'emailTemplateId': emailTemplateId, 'emailTo': emailTo, 'emailCc': emailCc, 'emailBcc': emailBcc} %} PREPARED_SCRIPT_START=`{{data|json_encode|raw}}`PREPARED_SCRIPT_END";
 
             $res = $twig->renderTemplate($script, $templateData);

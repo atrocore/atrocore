@@ -1,7 +1,9 @@
 {
   "fields": {
+    "defaultScript": "Default Value Script",
     "type": "Type",
     "entity": "Entity",
+    "isCustom": "Custom",
     "isMultilang": "Multilingual",
     "required": "Required",
     "notNull": "Disable null value",
@@ -81,6 +83,7 @@
     "relevantForAccessRequest": "Relevant for Access Request"
   },
   "tooltips": {
+    "defaultScript": "The script that calculates the default value of the field.",
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
     "foreignEntity": "This is the related entity which records are referenced in the current field.",
     "relationName": "This code is used to set the system name for the entity of type \"Relation\" that is automatically created.",
@@ -108,6 +111,36 @@
     "selectPageSize": "Number of records shown per page in the selection dialog. Avoid setting this value too high, as it may slow down or freeze the user's browser."
   },
   "options": {
+    "type": {
+      "array": "Array",
+      "autoincrement": "Auto-increment",
+      "bool": "Boolean",
+      "code": "code",
+      "color": "Color",
+      "date": "Date",
+      "datetime": "Date-time",
+      "email": "Email",
+      "enum": "List",
+      "file": "File",
+      "float": "Float",
+      "foreign": "Foreign",
+      "int": "Integer",
+      "jsonObject": "JSON object",
+      "link": "Link",
+      "linkMultiple": "Multiple link",
+      "linkParent": "Parent link",
+      "markdown": "Markdown",
+      "measure": "Measure",
+      "multiEnum": "Multi-value list",
+      "password": "Password",
+      "rangeFloat": "Float Range",
+      "rangeInt": "Integer Range",
+      "script": "Script",
+      "text": "Text",
+      "url": "Url",
+      "varchar": "String",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Text",
       "int": "Integer",
@@ -153,25 +186,22 @@
       "unlink": "Unlink"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Character",
-      "numeric": "Numeric",
-      "date": "Date / Time",
-      "reference": "Reference",
-      "other": "Other"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Are you sure you want to reset configuration to default?"
+  "subtypeGroups": {
+    "character": "Character",
+    "numeric": "Numeric",
+    "date": "Date / Time",
+    "reference": "Reference",
+    "other": "Other"
   },
   "labels": {
-    "resetToDefault": "Reset to default",
     "relationManagement": "Relation Management",
     "conditionalProperties": "Conditional Properties",
     "personalData": "Personal Data"
   },
   "exceptions": {
+    "defaultEnumValueCannotBeEmpty": "The default value has to be selected for a required list field.",
+    "defaultValueIsNotOption": "The default value \"%s\" is not an option of the field.",
+    "defaultUnitIsNotOfMeasure": "The default unit \"%s\" is not a unit of the measure of the field.",
     "nullValuesExist": "Some records have null values",
     "fieldIsUsedInUniqueIndex": "The field '%s' is used in the unique index(es) '%s' and cannot be deleted.",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
@@ -181,6 +211,15 @@
     "optionCodeUsedInDisabledOptionsRulesDelete": "Option '%s' is used in Disabled Options rules and cannot be deleted.",
     "onlyOneSlugFieldAllowed": "Only one field can be marked as slug for this entity. Field '%s' is already marked as slug.",
     "slugFieldMustBeUnique": "Field must be unique to be used as slug.",
-    "invalidSlugFieldType": "Only varchar, int or autoincrement fields can be marked as slug."
+    "invalidSlugFieldType": "Only varchar, int or autoincrement fields can be marked as slug.",
+    "fieldNameConflictsWithSupertype": "The name \"%s\" is already used in the supertype \"%s\".",
+    "fieldNameConflictsWithSubtype": "The name \"%s\" is already used in the subtype \"%s\".",
+    "subtypeFieldIsReserved": "The name \"%s\" is reserved for subtypes."
+  },
+  "actions": {
+    "resetToDefault": "Reset to default"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
   }
 }

@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "user": {
+      "type": "varchar",
+      "trim": true
+    },
+    "password": {
+      "type": "password",
+      "trim": true
+    },
+    "dsn": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "server": {
+      "type": "enum",
+      "options": [
+        "mysql",
+        "psql",
+        "msql"
+      ],
+      "required": true
+    }
+  }
+}

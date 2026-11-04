@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "isSlug": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "relevantForAccessRequest": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

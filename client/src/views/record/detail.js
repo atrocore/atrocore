@@ -497,7 +497,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }))
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
-                        if (actionDefs.exit) {
+                        if (actionDefs.redirect && response && response.link) {
+                            this.getRouter().navigate(response.link, {trigger: true});
+                        } else if (actionDefs.exit) {
                             this.exit('delete');
                         } else if (actionDefs.refresh) {
                             this.model.fetch();
@@ -974,7 +976,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         preparedActionItemList.push(actionItems[actionName]);
                     } else {
                         let actionData = this.getMetadata().get(['clientDefs', this.scope, 'detailActions', actionName]);
-                        if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                        if (actionData && this.model.get('_meta')?.availableActions?.[actionName]) {
                             let row = {
                                 name: actionName,
                                 action: actionData.action || 'universalAction',
@@ -2485,6 +2487,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         manageAccess: function () {
             this.manageAccessEdit();
             this.manageAccessDelete();
+            this.manageAccessDuplicate();
+        },
+
+        manageAccessDuplicate: function () {
+            if (this.isNew || !this.duplicateAction) return;
+
+            if (this.model.get('_meta')?.availableActions?.duplicate === false) {
+                this.hideActionItem('duplicate');
+            }
         },
 
         addButton: function (o) {

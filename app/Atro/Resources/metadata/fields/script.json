@@ -1,23 +1,5 @@
 {
-  "params": [
-    {
-      "name": "script",
-      "type": "text"
-    },
-    {
-      "name": "outputType",
-      "type": "varchar"
-    },
-    {
-      "name": "preview",
-      "readOnly": true
-    },
-    {
-      "name": "isMultilang",
-      "type": "bool",
-      "tooltip": true
-    }
-  ],
+  "multilingual": true,
   "fieldDefs": {
     "type": "text"
   },

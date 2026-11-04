@@ -1,0 +1,66 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "requestTokenUrl"
+        },
+        {
+          "name": "accessTokenUrl"
+        }
+      ],
+      [
+        {
+          "name": "callbackUrl"
+        },
+        {
+          "name": "linkUrl"
+        }
+      ],
+      [
+        {
+          "name": "oauthConsumerKey"
+        },
+        {
+          "name": "oauthConsumerSecret"
+        }
+      ],
+      [
+        {
+          "name": "oauthToken"
+        },
+        {
+          "name": "oauthTokenSecret"
+        }
+      ],
+      [
+        {
+          "name": "apiTestUrl"
+        },
+        false
+      ],
+      [
+        {
+          "name": "verifySsl"
+        },
+        false
+      ],
+      [
+        {
+          "name": "oauthVerifier"
+        },
+        false
+      ]
+    ]
+  }
+]

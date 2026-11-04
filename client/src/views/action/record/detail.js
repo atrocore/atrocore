@@ -8,7 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/panels/entity-filter-result'],
+/**
+ * The record of an action type, the action is executed as the action record, it is the supertype record.
+ */
+Espo.define('views/action/record/detail', ['views/subtype/record/detail', 'views/record/panels/entity-filter-result'],
     (Dep, EntityFilter) => Dep.extend({
 
         setupActionItems() {
@@ -36,10 +39,11 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
 
             this.confirm(this.translate('executeNow', 'messages', 'Action'), () => {
                 this.notify('Please wait...');
-                const type = this.model.get('type');
+                // a custom action is executed by the route of its handler
+                const type = this.model.get('type') === 'custom' ? `custom${this.model.get('handler')}` : this.model.get('type');
                 const inBackground = this.model.get('inBackground');
                 const urlSuffix = inBackground ? `${type}Async` : type;
-                this.ajaxPostRequest(`Action/${this.model.get('id')}/${urlSuffix}`, {}).success(response => {
+                this.ajaxPostRequest(`Action/${this.model.get('supertypeId')}/${urlSuffix}`, {}).success(response => {
                     if (response.jobId) {
                         this.notify(this.translate('jobAdded', 'messages'), 'success');
                     } else {
@@ -62,8 +66,13 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
 
         buttonVisible() {
             return this.model.get('targetEntity')
-                && this.getAllowedActionTypes().includes(this.model.get('type'))
+                && (this.getAllowedActionTypes().includes(this.model.get('type')) || this.isBulkCustomAction())
                 && !this.model.get('applyToPreselectedRecords');
+        },
+
+        isBulkCustomAction() {
+            return this.model.get('type') === 'custom'
+                && !!this.getMetadata().get(['action', 'customHandlers', this.model.get('handler'), 'bulk']);
         },
 
         getAllowedActionTypes() {

@@ -42,10 +42,10 @@ class ActionHandler extends AbstractJob implements JobInterface
         // one ActionExecution/its logs instead of creating a fresh execution per id
         if (!empty($data['actionExecutionId'])) {
             $execution = $this->getEntityManager()->getRepository('ActionExecution')->get($data['actionExecutionId']);
-            $actionType = $this->getActionType($action->get('type'));
+            $actionType = $this->getActionManager()->getActionHandler($action);
 
             if (!empty($execution) && $actionType instanceof AbstractBulkAction) {
-                $repository = $this->getEntityManager()->getRepository($data['entityType'] ?? $action->get('searchEntity'));
+                $repository = $this->getEntityManager()->getRepository($data['entityType'] ?? $action->getSubtype()?->get('searchEntity'));
 
                 foreach ($data['ids'] as $id) {
                     $entity = $repository->get($id);
@@ -78,13 +78,6 @@ class ActionHandler extends AbstractJob implements JobInterface
                 $GLOBALS['log']->error("Mass $typeName Action failed: " . $e->getMessage());
             }
         }
-    }
-
-    protected function getActionType(string $type)
-    {
-        $className = $this->getMetadata()->get(['action', 'types', $type]);
-
-        return empty($className) ? null : $this->getContainer()->get($className);
     }
 
     protected function getActionManager(): ActionManager

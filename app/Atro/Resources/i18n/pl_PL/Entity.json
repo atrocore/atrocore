@@ -7,6 +7,7 @@
     "disabled": "Wyłączony",
     "customizable": "Możliwość dostosowania",
     "hasArchive": "Archiwalny",
+    "isCustom": "Niestandardowy",
     "hasActive": "Aktywowalny",
     "hideFieldTypeFilters": "Ukryj filtry typu pola",
     "streamDisabled": "Wyłączanie działań",
@@ -68,12 +69,8 @@
     "accessManagement": "Zarządzanie dostępem",
     "hierarchyManagement": "Zarządzanie hierarchią",
     "other": "Inne",
-    "resetToDefault": "Resetuj do domyślnego",
     "attributes": "Atrybuty",
     "derivation": "Derywacja"
-  },
-  "confirmations": {
-    "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Rekordy dla tego podmiotu są trwale usuwane XX dni po dacie usunięcia.",
@@ -102,5 +99,11 @@
     "derivativeWithSuchRoleExists": "Istnieje już podmiot pochodny pełniący tę rolę.",
     "derivativeFromDerivativeNotSupporting": "Jednostka pochodna nie może być utworzona na podstawie innej jednostki pochodnej.",
     "cannotRemoveDerivativeDirectly": "Podmioty pochodne nie mogą być usuwane bezpośrednio."
+  },
+  "actions": {
+    "resetToDefault": "Resetuj do domyślnego"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
   }
 }

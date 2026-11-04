@@ -10,18 +10,6 @@
     "name": "type"
   },
   {
-    "name": "required"
-  },
-  {
-    "name": "readOnly"
-  },
-  {
-    "name": "protected"
-  },
-  {
-    "name": "isMultilang"
-  },
-  {
     "name": "tooltip"
   },
   {
@@ -30,5 +18,8 @@
   {
     "name": "conditionalProperties",
     "widthPx": 250
+  },
+  {
+    "name": "isCustom"
   }
 ]

@@ -2948,9 +2948,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 };
 
                 let getRelationModel = (callback) => {
-                    if (model.get('__relationEntity')) {
+                    if (model.getMeta('relationRecord')) {
                         this.getModelFactory().create(this.relationScope, relModel => {
-                            relModel.set(model.get('__relationEntity'));
+                            relModel.set(model.getMeta('relationRecord'));
                             model.relationModel = relModel
                             callback(relModel)
                         })
@@ -3626,6 +3626,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         }, this);
 
                         this.listenToOnce(view, 'after:edit-cancel', function () {
+                            // the record of an entity with subtypes is shown via its subtype record
+                            if (view.model.name !== scope) {
+                                this.actionQuickView(data);
+                                return;
+                            }
                             this.actionQuickView({ id: view.model.id, scope: view.model.name });
                         }, this);
 
@@ -4282,8 +4287,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             this._markRowFieldsInvalid(rowView, result.message);
                         } else {
                             model.set(changedAttrs);
+                            model.unset('_lockedFields', {silent: true});
                             if (model !== mainModel) {
-                                mainModel.set('__relationEntity', Object.assign({}, mainModel.get('__relationEntity') || {}, changedAttrs));
+                                const meta = mainModel.get('_meta') || {};
+                                mainModel.set('_meta', {...meta, relationRecord: Object.assign({}, meta.relationRecord || {}, changedAttrs)});
                             }
                             if (!closedRows.includes(mainModel.id)) {
                                 if (this._inlineEditRowAttrs) {
@@ -4323,7 +4330,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 const mainModel = rowView.model,
                     model = useRelationModel && mainModel.relationModel ? mainModel.relationModel : mainModel,
                     attrs = (this._inlineEditRowAttrs || {})[mainModel.id] || {},
-                    initialAttrs = useRelationModel ? (attrs['__relationEntity'] || {}) : attrs;
+                    initialAttrs = useRelationModel ? (attrs['_meta']?.relationRecord || {}) : attrs;
 
                 if (!model) return;
 
@@ -4345,6 +4352,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         hasChanges = true;
                     }
                 });
+
+                if (!useRelationModel && !_.isEmpty(model.get('_lockedFields'))) {
+                    changedAttrs._lockedFields = model.get('_lockedFields');
+                    hasChanges = true;
+                }
 
                 if (hasChanges) {
                     changedRows.push({ rowView, model, mainModel, initialAttrs, changedAttrs });
@@ -4422,6 +4434,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         initListenToInlineMode(view) {
             let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+            let relationScopeEditable = !!this.relationScope && this.getAcl().check(this.relationScope, 'edit');
+            let relationReadOnlyFieldList = this.relationScope ? this.getAcl().getScopeForbiddenFieldList(this.relationScope, 'edit') : [];
 
             this.listenTo(view.model, 'change', () => {
                 if (this.inlineEditModeIsOn) {
@@ -4440,6 +4454,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                     if (!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
                         fieldView.setReadOnly(true);
+                    }
+
+                    if (!fieldView.readOnly && fieldView.options?.useRelationModel) {
+                        if (!relationScopeEditable || !this.getAcl().checkModel(fieldView.model, 'edit', true) || relationReadOnlyFieldList.includes(fieldView.name)) {
+                            fieldView.setReadOnly(true);
+                        }
                     }
 
                     this.listenTo(fieldView, 'edit', function (view) {

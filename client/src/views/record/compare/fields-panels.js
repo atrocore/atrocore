@@ -90,7 +90,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                     fieldData.fieldValueRows.forEach((row, index) => {
                         let model = this.models[index];
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
-                        let mode = (this.merging && model.id === defaultModelId && !fieldData.disabled) ? 'edit' : 'detail';
+                        let mode = (this.merging && model.id === defaultModelId && !fieldData.disabled && !this.options.isModelDisabled?.(model)) ? 'edit' : 'detail';
                         let modelForView = model;
                         if (this.merging) {
                             modelForView = model.clone();
@@ -201,7 +201,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         });
                     });
                 } else {
-                    $('input[data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
+                    $('input[type="radio"][data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
                 }
             }
         },
@@ -249,7 +249,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
                         const mode = view.mode;
 
-                        if (selectedIndex === index) {
+                        if (selectedIndex === index && !this.options.isModelDisabled?.(this.models[index])) {
                             view.setMode('edit');
                         } else {
                             view.setMode('detail');

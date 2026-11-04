@@ -18,6 +18,16 @@ use Espo\ORM\Entity;
 
 class Cluster extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if (empty($entity->get('goldenRecordId'))) {
+            $entity->set('consolidationMethod', null);
+            $entity->set('executionMode', null);
+        }
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);

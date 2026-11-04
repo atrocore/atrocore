@@ -336,7 +336,7 @@ SQL;
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -361,7 +361,7 @@ SQL;
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -396,7 +396,7 @@ SQL;
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
@@ -418,7 +418,7 @@ SQL;
             return;
         }
 
-        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+        if ($storage->get('type') === 'local' && empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 

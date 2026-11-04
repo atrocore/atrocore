@@ -7,6 +7,7 @@
     "disabled": "Отключено",
     "customizable": "Настраиваемый",
     "hasArchive": "Архивируемый",
+    "isCustom": "Пользовательский",
     "hasActive": "Активируемый",
     "hideFieldTypeFilters": "Скрыть фильтры типов полей",
     "streamDisabled": "Отключить деятельность",
@@ -64,12 +65,8 @@
     "accessManagement": "Управление доступом",
     "hierarchyManagement": "Управление иерархией",
     "other": "Другие",
-    "resetToDefault": "Восстановить по умолчанию",
     "attributes": "Атрибуты",
     "derivation": "Производность"
-  },
-  "confirmations": {
-    "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Записи для этой организации удаляются навсегда через XX дней после даты удаления.",
@@ -98,5 +95,11 @@
     "derivativeWithSuchRoleExists": "Производная организация с такой ролью уже существует.",
     "derivativeFromDerivativeNotSupporting": "Производная сущность не может быть создана из другой производной сущности.",
     "cannotRemoveDerivativeDirectly": "Производные сущности не могут быть удалены напрямую."
+  },
+  "actions": {
+    "resetToDefault": "Восстановить по умолчанию"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
   }
 }

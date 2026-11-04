@@ -267,7 +267,7 @@
       ]
     },
     "disabledLanguages": {
-      "type": "jsonArray",
+      "type": "array",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -281,7 +281,7 @@
       "view": "views/user-profile/fields/style"
     },
     "dashboardLayout": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -330,7 +330,7 @@
       "view": "views/user-profile/fields/notification-profile"
     },
     "lpNavigation": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,

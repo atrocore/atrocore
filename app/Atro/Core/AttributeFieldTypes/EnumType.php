@@ -72,8 +72,8 @@ class EnumType extends AbstractFieldType
             'conditionalProperties'     => $conditionals,
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
             'duplicateIgnore'           => !empty($row['duplicate_ignore']),
-            'options'                   => $attributeData['options'] ?? [],
-            'optionColors'              => $attributeData['optionColors'] ?? [],
+            'options'                   => $this->getSetting($row, 'options') ?? [],
+            'optionColors'              => $this->getSetting($row, 'optionColors') ?? [],
         ];
 
         if (!empty($row['disable_field_value_lock'])) {
@@ -94,5 +94,12 @@ class EnumType extends AbstractFieldType
         if ($name === $params['orderBy']) {
             $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
         }
+    }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        $item['attribute'] = 'varcharValue';
+
+        return $item;
     }
 }

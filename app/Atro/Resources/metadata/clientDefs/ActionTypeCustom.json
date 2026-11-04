@@ -1,0 +1,17 @@
+{
+  "iconClass": "person-simple-run",
+  "recordViews": {
+    "detail": "views/action/record/detail"
+  },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "entityFilterResult",
+        "label": "entityFilterResult",
+        "view": "views/record/panels/entity-filter-result",
+        "entityField": "searchEntity",
+        "canClose": false
+      }
+    ]
+  }
+}

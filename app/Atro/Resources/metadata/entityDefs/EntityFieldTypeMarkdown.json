@@ -1,0 +1,281 @@
+{
+  "fields": {
+    "isMultilang": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "multilangField"
+            }
+          ]
+        }
+      }
+    },
+    "duplicateIgnore": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "required": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "notNull": {
+      "type": "bool"
+    },
+    "readOnly": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "protected"
+            }
+          ]
+        }
+      }
+    },
+    "protected": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "default": {
+      "type": "markdown",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "defaultValueType",
+              "value": "script"
+            }
+          ]
+        }
+      }
+    },
+    "defaultScript": {
+      "type": "code",
+      "engine": "Twig",
+      "view": "views/entity-field/fields/script",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "defaultValueType",
+              "value": "script"
+            }
+          ]
+        }
+      }
+    },
+    "defaultValueType": {
+      "type": "enum",
+      "required": false,
+      "default": "basic",
+      "options": [
+        "basic",
+        "script"
+      ]
+    },
+    "seeMoreDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "minHeight": {
+      "type": "int",
+      "default": 250,
+      "min": 100
+    },
+    "maxHeight": {
+      "type": "int",
+      "default": 400,
+      "min": 100
+    },
+    "lengthOfCut": {
+      "type": "int",
+      "default": 400,
+      "min": 1,
+      "tooltip": true
+    },
+    "isNonComparable": {
+      "type": "bool"
+    },
+    "inheritanceDisabled": {
+      "view": "views/admin/field-manager/fields/inheritance-disabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    "auditableDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "conditionalRequired": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "relevantForAccessRequest": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    },
+    "erasureMode": {
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        },
+        "disableOptions": [
+          {
+            "options": [
+              "nullify"
+            ],
+            "conditionGroup": [
+              {
+                "type": "isTrue",
+                "attribute": "required"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

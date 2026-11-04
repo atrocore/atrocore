@@ -266,6 +266,20 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         setupOptions: function () {
+            // the options can be the value of another field of the record, e.g. the default value of a list field
+            const optionsField = this.model.getFieldParam(this.name, 'optionsField');
+            if (optionsField) {
+                this.params.options = Espo.Utils.clone(this.model.get(optionsField) || []);
+
+                if (!this.optionsFieldListened) {
+                    this.optionsFieldListened = true;
+                    this.listenTo(this.model, 'change:' + optionsField, () => {
+                        this.setupOptions();
+                        this.reRender();
+                    });
+                }
+            }
+
             if (this.params.options) {
                 let options = [];
                 this.params.options.forEach(option => {
@@ -777,9 +791,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                                 }
                             },
                         }, view => {
-                            view.params.options = this.params.options ?? this.model.getFieldParam(this.name, 'options')
-                            view.params.optionColors = this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
-                            view.translatedOptions = this.translatedOptions;
+                            view.params.options = this.params.attribute?.options ?? this.params.options ?? this.model.getFieldParam(this.name, 'options')
+                            view.params.optionColors = this.params.attribute?.optionColors ?? this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
+                            view.translatedOptions = this.params.attribute?.translatedOptions ?? this.translatedOptions;
 
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');

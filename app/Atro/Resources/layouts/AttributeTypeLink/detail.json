@@ -1,0 +1,157 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "systemName"
+        },
+        false
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
+          "name": "attributePanel"
+        },
+        {
+          "name": "attributeGroup"
+        }
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        {
+          "name": "isProtected"
+        }
+      ],
+      [
+        {
+          "name": "isReadOnly"
+        },
+        false
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        {
+          "name": "attributeGroupSortOrder"
+        }
+      ],
+      [
+        {
+          "name": "tooltip"
+        },
+        false
+      ],
+      [
+        {
+          "name": "fullWidth"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entityType"
+        },
+        {
+          "name": "entityField"
+        }
+      ],
+      [
+        {
+          "name": "dropdown"
+        },
+        false
+      ],
+      [
+        {
+          "name": "selectPageSize"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "compositeAttribute"
+        },
+        false
+      ],
+      [
+        {
+          "name": "modifiedExtendedDisabled"
+        },
+        {
+          "name": "duplicateIgnore"
+        }
+      ],
+      [
+        {
+          "name": "conditionalDisableOptions"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "conditionalVisible"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalProtected"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalReadOnly"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalDisableOptions"
+        },
+        false
+      ]
+    ]
+  }
+]

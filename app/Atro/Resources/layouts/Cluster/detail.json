@@ -16,7 +16,15 @@
           "name": "goldenRecord"
         },
         {
-          "name": "state"
+          "name": "status"
+        }
+      ],
+      [
+        {
+          "name": "consolidationMethod"
+        },
+        {
+          "name": "executionMode"
         }
       ],
       [

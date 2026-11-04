@@ -1,0 +1,135 @@
+{
+  "fields": {
+    "user": {
+      "type": "varchar",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "oauthGrantType",
+              "value": "password"
+            }
+          ]
+        }
+      }
+    },
+    "password": {
+      "type": "password",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "oauthGrantType",
+              "value": "password"
+            }
+          ]
+        }
+      }
+    },
+    "oauthGrantType": {
+      "type": "enum",
+      "options": [
+        "client_credentials",
+        "password"
+      ],
+      "default": "client_credentials",
+      "required": true
+    },
+    "oauthUrl": {
+      "type": "varchar",
+      "trim": true
+    },
+    "oauthClientId": {
+      "type": "varchar",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials",
+                "password"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "oauthClientSecret": {
+      "type": "password",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials",
+                "password"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "verifySsl": {
+      "type": "bool",
+      "default": true
+    },
+    "httpBasicEnabled": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "httpBasicUsername": {
+      "type": "varchar",
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    },
+    "httpBasicPassword": {
+      "type": "password",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

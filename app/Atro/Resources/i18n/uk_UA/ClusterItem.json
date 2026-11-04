@@ -5,7 +5,7 @@
     "record": "Запис",
     "cluster": "Кластер",
     "matchedRecord": "Зіставлений запис",
-    "consolidatedAutomatically": "Консолідовано автоматично",
+    "confirmedAutomatically": "Підтверджено автоматично",
     "matchedScore": "Оцінка збігу"
   },
   "exceptions": {

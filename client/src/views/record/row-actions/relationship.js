@@ -109,7 +109,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         });
                     }
                 } else if (actionName === 'reupload') {
-                    if (this.model.name === 'File' && this.model.get('_meta')?.permissions?.edit) {
+                    if (this.model.name === 'File' && this.model.get('_meta')?.availableActions?.edit) {
                         list.push({
                             action: 'reupload',
                             label: 'Reupload',
@@ -118,7 +118,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         });
                     }
                 } else if (actionName === 'quickEdit') {
-                    if (this.model.get('_meta')?.permissions?.edit) {
+                    if (this.model.get('_meta')?.availableActions?.edit) {
                         list.push({
                             action: 'quickEdit',
                             label: 'Edit',
@@ -128,7 +128,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         });
                     }
                 } else if (actionName === 'inheritRelated') {
-                    if (this.model.has('isInherited') && !this.model.get('isInherited') && this.model.get('_meta')?.permissions?.edit) {
+                    if (this.model.has('isInherited') && !this.model.get('isInherited') && this.model.get('_meta')?.availableActions?.edit) {
                         list.push({
                             action: 'inheritRelated',
                             label: 'inherit',
@@ -137,7 +137,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         });
                     }
                 } else if (actionName === 'unlinkRelated') {
-                    if (!this.model.get('_meta')?.permissions?.unlink) {
+                    if (!this.model.get('_meta')?.availableActions?.unlink) {
                         return;
                     }
 
@@ -161,7 +161,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         });
                     }
                 } else if (actionName === 'removeRelated') {
-                    if (this.model.get('_meta')?.permissions?.delete) {
+                    if (this.model.get('_meta')?.availableActions?.delete) {
                         list.push({
                             action: 'removeRelated',
                             iconClass: 'ph ph-trash-simple',
@@ -174,7 +174,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     }
                 } else {
                     let actionData = this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'actions', actionName]);
-                    if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                    if (actionData && this.model.get('_meta')?.availableActions?.[actionName]) {
                         list.push({
                             action: actionName,
                             dataAction: actionData.action || 'universalAction',

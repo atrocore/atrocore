@@ -102,11 +102,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
         }
 
-        $otherStorages = $this->getEntityManager()->getRepository('Storage')
+        // the paths of the local storages are stored in their subtype records
+        $otherStorages = $this->getEntityManager()->getRepository('StorageTypeLocal')
             ->where([
-                'id!='     => $storage->get('id'),
-                'type'     => 'local',
-                'isActive' => true
+                'supertypeId!=' => $storage->get('id'),
+                'isActive'      => true
             ])
             ->find();
 
@@ -118,7 +118,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         // only generate a path on first creation - a reupload calls createFile() again with the
         // same File entity, and its real on-disk location needs to stay stable across reuploads
-        if (!$file->getStorage()->get('syncFolders') && empty($file->get('path'))) {
+        if (!$file->getStorage()->getSubtype()->get('syncFolders') && empty($file->get('path'))) {
             $file->set('path', FolderPathGenerator::generate($this->getConfig()->get('uploadRootPath') ?? '', true));
             $file->set('thumbnailsPath', $file->get('path'));
         }
@@ -146,7 +146,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function createFolder(Folder $folder): bool
     {
-        if (!$folder->getStorage()->get('syncFolders')) {
+        if (!$folder->getStorage()->getSubtype()->get('syncFolders')) {
             return true;
         }
 
@@ -199,7 +199,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function moveFile(File $file): bool
     {
-        if (!$file->getStorage()->get('syncFolders')) {
+        if (!$file->getStorage()->getSubtype()->get('syncFolders')) {
             return true;
         }
 
@@ -210,7 +210,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         $storage = $folder->getStorage();
 
-        if (!$storage->get('syncFolders')) {
+        if (!$storage->getSubtype()->get('syncFolders')) {
             return true;
         }
 
@@ -235,7 +235,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
         $folder = $folderRepo->get($entityId);
 
-        if (!$folder->getStorage()->get('syncFolders')) {
+        if (!$folder->getStorage()->getSubtype()->get('syncFolders')) {
             return true;
         }
 
@@ -311,7 +311,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function getFileTrashPath(File $file): string
     {
-        $storagePath = $file->getStorage()->get('path');
+        $storagePath = $file->getStorage()->getSubtype()->get('path');
         $trashDir    = $storagePath . DIRECTORY_SEPARATOR . self::TRASH_DIR;
 
         $this->getFileManager()->mkdir($trashDir, 0777, true);
@@ -321,7 +321,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function deleteFolder(Folder $folder): bool
     {
-        if (!$folder->getStorage()->get('syncFolders')) {
+        if (!$folder->getStorage()->getSubtype()->get('syncFolders')) {
             return true;
         }
 
@@ -385,12 +385,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     protected function getFileVersionDir(File $file, string $versionId): string
     {
-        $storagePath = trim($file->getStorage()->get('path'), DIRECTORY_SEPARATOR);
+        $storagePath = trim($file->getStorage()->getSubtype()->get('path'), DIRECTORY_SEPARATOR);
 
         // syncFolders: group by file id, matching getLocalPath(). Otherwise group by the file's
         // live path, not $file's own (it can be a stale version snapshot) - every version of a
         // file lives under the same, current path.
-        $fileSegment = $file->getStorage()->get('syncFolders')
+        $fileSegment = $file->getStorage()->getSubtype()->get('syncFolders')
             ? $file->get('id')
             : trim($this->getLiveFilePath($file), DIRECTORY_SEPARATOR);
 
@@ -408,7 +408,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         $method = $fetched ? 'getFetched' : 'get';
 
-        if ($file->getStorage()->get('syncFolders')) {
+        if ($file->getStorage()->getSubtype()->get('syncFolders')) {
             $folderId = $file->$method('folderId');
             if (!empty($folderId)) {
                 $folder = $this->getEntityManager()->getRepository('Folder')->get($folderId);
@@ -465,7 +465,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     protected static function buildFullPath(Storage $storage, ?string $path): string
     {
-        $res = trim($storage->get('path'), DIRECTORY_SEPARATOR);
+        $res = trim($storage->getSubtype()->get('path'), DIRECTORY_SEPARATOR);
         if (!empty($path)) {
             $res .= DIRECTORY_SEPARATOR . $path;
         }
@@ -499,24 +499,24 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function getChunksDir(Storage $storage): string
     {
-        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
+        return trim($storage->getSubtype()->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
     }
 
     protected function getPdfImagesDir(Storage $storage): string
     {
-        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::PDF_IMAGE_DIR;
+        return trim($storage->getSubtype()->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::PDF_IMAGE_DIR;
     }
 
     protected function scanFolders(Storage $storage, EntityCollection $otherStorages, Xattr $xattr): void
     {
-        if (empty($storage->get('syncFolders'))) {
+        if (empty($storage->getSubtype()->get('syncFolders'))) {
             return;
         }
 
         // scan real folders
-        $dirs = $this->getStorageDirs(trim($storage->get('path'), DIRECTORY_SEPARATOR));
+        $dirs = $this->getStorageDirs(trim($storage->getSubtype()->get('path'), DIRECTORY_SEPARATOR));
         foreach ($otherStorages as $otherStorage) {
-            if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
+            if (strlen($otherStorage->get('path')) > strlen($storage->getSubtype()->get('path'))) {
                 foreach ($dirs as $k => $dir) {
                     if (strpos($dir, $otherStorage->get('path')) === 0) {
                         unset($dirs[$k]);
@@ -543,7 +543,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             $foldersData[] = $entityData;
         }
 
-        $prefixToRemove = $storage->get('path') . DIRECTORY_SEPARATOR;
+        $prefixToRemove = $storage->getSubtype()->get('path') . DIRECTORY_SEPARATOR;
 
         // prepare parents
         foreach ($foldersData as $k => $row) {
@@ -643,11 +643,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             }
         }
 
-        $files = $this->getStorageFiles(trim($storage->get('path'), '/'));
+        $files = $this->getStorageFiles(trim($storage->getSubtype()->get('path'), '/'));
 
         // remove files from other storages
         foreach ($otherStorages as $otherStorage) {
-            if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
+            if (strlen($otherStorage->get('path')) > strlen($storage->getSubtype()->get('path'))) {
                 foreach ($files as $k => $file) {
                     if (strpos($file, $otherStorage->get('path')) === 0) {
                         unset($files[$k]);
@@ -678,10 +678,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                     '_fileName' => $fileName
                 ];
 
-                if (!empty($storage->get('syncFolders'))) {
+                if (!empty($storage->getSubtype()->get('syncFolders'))) {
                     $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId') ?? $storage->get('folderId');
                 } else {
-                    $prefix  = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                    $prefix  = trim($storage->getSubtype()->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
                     $dirname = $fileInfo['dirname'];
 
                     $entityData['path']     = str_starts_with($dirname, $prefix) ? substr($dirname, strlen($prefix)) : $dirname;

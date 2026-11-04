@@ -19,5 +19,12 @@
     "classificationAttributes"
   ],
   "attributesDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "subtypeGroups": [
+    "numeric",
+    "character",
+    "date",
+    "reference",
+    "other"
+  ]
 }

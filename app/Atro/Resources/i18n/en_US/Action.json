@@ -29,7 +29,8 @@
     "updateFields": "Update Fields",
     "updateScript": "Script",
     "executions": "Executions",
-    "deletePermanently": "Delete Permanently"
+    "deletePermanently": "Delete Permanently",
+    "handler": "Handler"
   },
   "labels": {
     "execute": "Execute",
@@ -66,7 +67,8 @@
       "set": "Action Set",
       "webhook": "Webhook",
       "customCode": "Custom Code",
-      "email": "Send E-mail"
+      "email": "Send E-mail",
+      "custom": "Custom Code"
     },
     "updateType": {
       "basic": "Basic",

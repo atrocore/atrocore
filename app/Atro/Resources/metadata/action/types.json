@@ -4,6 +4,5 @@
   "create": "\\Atro\\ActionTypes\\Create",
   "update": "\\Atro\\ActionTypes\\Update",
   "createOrUpdate": "\\Atro\\ActionTypes\\Create",
-  "delete": "\\Atro\\ActionTypes\\Delete",
-  "set": "\\Atro\\ActionTypes\\Set"
+  "delete": "\\Atro\\ActionTypes\\Delete"
 }

@@ -5,20 +5,17 @@
     "masterEntity": "Podmiot główny",
     "rejectedClusterItems": "Odrzucone elementy klastra",
     "stagingItemCount": "Liczba rekordów współtwórców",
-    "masterItemCount": "Główna liczba pozycji",
-    "state": "State"
+    "masterItemCount": "Główna liczba pozycji"
   },
   "actions": {
     "reject": "Proszę odrzucić",
     "unreject": "Odrzucić"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Puste",
       "review": "Recenzja",
-      "invalid": "Nieprawidłowy",
-      "consolidatedAutomatically": "Połączone automatycznie",
-      "consolidated": "Połączone ręcznie"
+      "invalid": "Nieprawidłowy"
     }
   },
   "exceptions": {

@@ -2,6 +2,7 @@
   "fields": {
     "type": "Typ",
     "entity": "Entita",
+    "isCustom": "Vlastní",
     "isMultilang": "Vícejazyčný",
     "required": "Požadované",
     "notNull": "Zakázat nulovou hodnotu",
@@ -106,6 +107,36 @@
     "selectPageSize": "Počet záznamů zobrazených na stránce v dialogu výběru. Vyhněte se příliš vysokým hodnotám, protože by to mohlo zpomalit nebo zmrazit prohlížeč uživatele."
   },
   "options": {
+    "type": {
+      "array": "Pole",
+      "autoincrement": "Automatické zvyšování",
+      "bool": "Boolean",
+      "code": "code",
+      "color": "Barva",
+      "date": "Datum",
+      "datetime": "Datum a čas",
+      "email": "E-mail",
+      "enum": "Seznam",
+      "file": "Soubor",
+      "float": "Float",
+      "foreign": "Zahraniční",
+      "int": "Celé číslo",
+      "jsonObject": "Objekt JSON",
+      "link": "Odkaz",
+      "linkMultiple": "Více odkazů",
+      "linkParent": "Odkaz pro rodiče",
+      "markdown": "Markdown",
+      "measure": "Míra",
+      "multiEnum": "Seznam s více hodnotami",
+      "password": "Heslo",
+      "rangeFloat": "Rozsah plováku",
+      "rangeInt": "Rozsah celých čísel",
+      "script": "Skript",
+      "text": "Text",
+      "url": "Url",
+      "varchar": "Řetězec",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Typ výstupu",
       "int": "Celé číslo",
@@ -151,20 +182,14 @@
       "unlink": "Odpojit"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Postava",
-      "numeric": "Číselné",
-      "date": "Datum / čas",
-      "reference": "Odkaz",
-      "other": "Další"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"
+  "subtypeGroups": {
+    "character": "Postava",
+    "numeric": "Číselné",
+    "date": "Datum / čas",
+    "reference": "Odkaz",
+    "other": "Další"
   },
   "labels": {
-    "resetToDefault": "Obnovení výchozího nastavení",
     "relationManagement": "Řízení vztahů",
     "conditionalProperties": "Podmíněné vlastnosti",
     "personalData": "Osobní údaje"
@@ -177,5 +202,11 @@
     "optionCodeShouldBeUnique": "Kód možnosti musí být jedinečný.",
     "optionCodeUsedInDisabledOptionsRules": "Možnost '%s' je použita v pravidlech zakázaných možností a nelze ji změnit.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "Možnost '%s' je použita v pravidlech zakázaných možností a nelze ji odstranit."
+  },
+  "actions": {
+    "resetToDefault": "Obnovení výchozího nastavení"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"
   }
 }

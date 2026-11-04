@@ -68,7 +68,7 @@ class Unit extends Base
 
         $this->putAclMeta($entity);
 
-        $entity->setMetaPermission('setDefault',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'edit'));
+        $entity->setAvailableAction('setDefault',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'edit'));
     }
 
     protected function init()

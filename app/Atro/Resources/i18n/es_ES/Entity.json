@@ -7,6 +7,7 @@
     "disabled": "Discapacitados",
     "customizable": "Personalizable",
     "hasArchive": "Archivable",
+    "isCustom": "Personalizado",
     "hasActive": "Activable",
     "hideFieldTypeFilters": "Ocultar filtros de tipo de campo",
     "streamDisabled": "Desactivar actividades",
@@ -68,12 +69,8 @@
     "accessManagement": "Access Management",
     "hierarchyManagement": "Gestión jerárquica",
     "other": "Otros",
-    "resetToDefault": "Restablecer a (por defecto)",
     "attributes": "Atributos",
     "derivation": "Derivación"
-  },
-  "confirmations": {
-    "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Los registros de esta entidad se borran permanentemente XX días después de la fecha de borrado.",
@@ -102,5 +99,11 @@
     "derivativeWithSuchRoleExists": "Ya existe una entidad derivada con esta función.",
     "derivativeFromDerivativeNotSupporting": "Una entidad derivada no puede crearse a partir de otra entidad derivada.",
     "cannotRemoveDerivativeDirectly": "Las entidades derivadas no pueden eliminarse directamente."
+  },
+  "actions": {
+    "resetToDefault": "Restablecer a (por defecto)"
+  },
+  "actionConfirms": {
+    "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
   }
 }

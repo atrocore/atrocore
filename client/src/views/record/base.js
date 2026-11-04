@@ -175,6 +175,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             }
         },
 
+        setMetaReadOnlyFields: function () {
+            (this.model.get('_meta')?.readOnlyFields || []).forEach(field => {
+                this.setFieldReadOnly(field, true);
+            });
+        },
+
         setFieldReadOnly: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'readOnly', true);
             if (locked) {
@@ -428,6 +434,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 this.setFieldReadOnly(field, true);
             }, this);
 
+            // the fields that cannot be changed in this record
+            this.setMetaReadOnlyFields();
+            this.listenTo(this.model, 'sync', () => this.setMetaReadOnlyFields());
+
             this.listenTo(this, 'after:render', () => {
                 let linkFieldList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {},
                     fieldsList = this.getFieldList() || [];
@@ -520,7 +530,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             let model = this.model;
 
             $.each(model.getClonedAttributes(), (name, value) => {
-                // _meta (permissions, options) is data of the loaded record for the UI, never a value to save
+                // _meta (availableActions, linkOptions) is data of the loaded record for the UI, never a value to save
                 if (name !== '_meta' && !(name in data) && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
                     data[name] = value;
                 }
@@ -652,6 +662,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this[method](url, attrs).success(function (res) {
                 // set to model
                 model.set(res);
+                model.unset('_lockedFields', {silent: true});
 
                 this.attributes = model.getClonedAttributes();
                 model._updatedById = self.getUser().id;

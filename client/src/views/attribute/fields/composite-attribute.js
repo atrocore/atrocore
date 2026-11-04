@@ -15,11 +15,11 @@ Espo.define('views/attribute/fields/composite-attribute', 'views/fields/link',
 
         boolFilterData: {
             notChildCompositeAttribute: function () {
-                return this.model.id;
+                return this.model.get('supertypeId') || this.model.id;
             },
 
             onlyCompositeAttributes: function() {
-                return this.model.id;
+                return this.model.get('supertypeId') || this.model.id;
             }
         },
 

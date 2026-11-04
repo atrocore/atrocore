@@ -8,6 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+/**
+ * A language of the system, a field of type "enum" with this view.
+ */
 Espo.define('views/fields/language', 'views/fields/enum', Dep => {
 
     return Dep.extend({

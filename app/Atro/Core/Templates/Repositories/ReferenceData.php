@@ -313,7 +313,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = $this->getAllItems();
         foreach ($items as $item) {
-            if ($item['id'] === $id) {
+            if ($item['id'] === $id && $this->isItemOfSubtype($item)) {
                 $entity = $this->entityFactory->create($this->entityName);
                 $entity->set($item);
                 $entity->setAsFetched();
@@ -325,6 +325,28 @@ class ReferenceData extends Repository implements Injectable
         }
 
         return null;
+    }
+
+    /**
+     * The value of the "type" field of the records of the subtype, null when the entity is not a subtype.
+     */
+    protected function getSubtypeTypeOption(): ?string
+    {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityName, 'supertypeId']))) {
+            return null;
+        }
+
+        return (string)$this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', 'type', 'default']);
+    }
+
+    /**
+     * The records of a subtype are the records of the supertype with the type of the subtype.
+     */
+    public function isItemOfSubtype(array $item): bool
+    {
+        $typeOption = $this->getSubtypeTypeOption();
+
+        return $typeOption === null || (string)($item['type'] ?? '') === $typeOption;
     }
 
     protected function afterEntityPopulated(Entity $entity): void
@@ -360,8 +382,7 @@ class ReferenceData extends Repository implements Injectable
             $params['whereClause'][] = $this->whereClause;
         }
 
-        $items = $this->getAllItems($params);
-        $items = array_values($items);
+        $items = array_values(array_filter($this->getAllItems($params), [$this, 'isItemOfSubtype']));
 
         foreach ($params['whereClause'] ?? [] as $row) {
             if (!empty($row['AND'])) {
@@ -644,6 +665,12 @@ class ReferenceData extends Repository implements Injectable
 
         // dispatch an event
         $this->getEventManager()->dispatch('Entity', $action, $event);
+
+        // a subtype record is the supertype record, the listeners of the supertype apply to it as well
+        $supertype = $this->getMetadata()->get(['scopes', $this->entityName, 'supertypeId']);
+        if (!empty($supertype)) {
+            $this->getEventManager()->dispatch($supertype . 'Entity', $action, $event);
+        }
     }
 
     protected function getConfig(): Config

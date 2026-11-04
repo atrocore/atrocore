@@ -68,9 +68,9 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                         type: "isTrue"
                     },
                     {
-                        attribute: "data",
-                        type: "like",
-                        value: `%"entity":"${this.scope}"%`
+                        attribute: "entity",
+                        type: "equals",
+                        value: this.scope
                     }
                 ]
             }, { async: false }).then(function (data) {

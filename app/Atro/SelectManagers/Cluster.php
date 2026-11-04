@@ -49,8 +49,8 @@ class Cluster extends Base
                 $result[$callbackParam][] = [$this, 'masterItemCountCallback'];
             }
 
-            if (in_array('state', $this->selectParameters['select'])) {
-                $result['subQueryCallbacks'][] = [$this, 'stateCallback'];
+            if (in_array('status', $this->selectParameters['select'])) {
+                $result['subQueryCallbacks'][] = [$this, 'statusCallback'];
             }
         }
     }
@@ -226,23 +226,23 @@ class Cluster extends Base
         ];
     }
 
-    public function stateCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    public function statusCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
         if (!empty($params['aggregation'])) {
             return;
         }
 
-        $column = $mapper->getQueryConverter()->fieldToAlias('state');
-        $stateQueryData = $this->getStateQueryData($mapper, true);
+        $column = $mapper->getQueryConverter()->fieldToAlias('status');
+        $statusQueryData = $this->getStatusQueryData($mapper, true);
 
-        $qb->addSelect("({$stateQueryData['sql']})  AS $column");
+        $qb->addSelect("({$statusQueryData['sql']})  AS $column");
 
-        foreach ($stateQueryData['parameters'] as $pName => $pValue) {
+        foreach ($statusQueryData['parameters'] as $pName => $pValue) {
             $qb->setParameter($pName, $pValue, $mapper::getParameterType($pValue));
         }
     }
 
-    private function getStateQueryData(Mapper $mapper, bool $inSubQueryCallback = false): array
+    private function getStatusQueryData(Mapper $mapper, bool $inSubQueryCallback = false): array
     {
         $mtAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
@@ -258,7 +258,7 @@ class Cluster extends Base
         $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([]);
         $sp['skipBelongsToJoins'] = true;
 
-        $stateQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp);
+        $statusQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp);
         $goldenRecordCaseParts = [];
 
         foreach ($entities as $k => $entityName) {
@@ -275,7 +275,7 @@ class Cluster extends Base
                 );
             }
 
-            $stateQb->setParameter("entityName{$k}", $entityName);
+            $statusQb->setParameter("entityName{$k}", $entityName);
         }
 
         if (empty($goldenRecordCaseParts)) {
@@ -291,47 +291,37 @@ class Cluster extends Base
             $goldenRecordColumn = 'atro_golden_record_id';
         }
 
-        $lastConsolidatedAuto = "(SELECT ci.consolidated_automatically " .
-            "FROM cluster_item ci " .
-            "WHERE ci.cluster_id = mt_alias.id " .
-            "AND ci.entity_name <> mt_alias.$masterEntityColumn " .
-            "ORDER BY ci.modified_at DESC " .
-            "LIMIT 1)";
-
-        $stateQb->select("CASE " .
-            // Empty state
+        $statusQb->select("CASE " .
+            // Empty status
             "WHEN COUNT($mtAlias.id) = 0 THEN 'empty' " .
 
-            // Invalid state
+            // Invalid status
             "WHEN COUNT($mtAlias.id) > 0 AND (COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) = 0 OR " .
             "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) > 1) THEN 'invalid' " .
 
-            // Merged state
+            // Consolidated status
             "WHEN mt_alias.$goldenRecordColumn IS NOT NULL AND " .
             "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) = 1 AND " .
             "MAX(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN $mtAlias.entity_id END) = mt_alias.$goldenRecordColumn AND " .
             "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) > 0 AND " .
-            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN " .
-            "(CASE WHEN $lastConsolidatedAuto = :true THEN 'consolidatedAutomatically' ELSE 'consolidated' END) " .
+            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN 'consolidated' " .
 
-
-            // Review state (default for everything else)
+            // Review status (default for everything else)
             "ELSE 'review' END")
             ->andWhere("$mtAlias.cluster_id = mt_alias.id")
-            ->setParameter('true', true, ParameterType::BOOLEAN)
             ->resetQueryPart('orderBy')
             ->setFirstResult(0)
             ->setMaxResults(null);
 
         return [
-            'sql'        => str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $stateQb->getSQL()),
-            'parameters' => $stateQb->getParameters(),
+            'sql'        => str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $statusQb->getSQL()),
+            'parameters' => $statusQb->getParameters(),
         ];
     }
 
-    public function getWherePartForState(array $item, array $result): array
+    public function getWherePartForStatus(array $item, array $result): array
     {
-        $stateQueryData = $this->getStateQueryData($this->getEntityManager()->getRepository('ClusterItem')->getMapper());
+        $statusQueryData = $this->getStatusQueryData($this->getEntityManager()->getRepository('ClusterItem')->getMapper());
 
         if ($item['type'] == 'isNull') {
             return [
@@ -341,9 +331,9 @@ class Cluster extends Base
             return [];
         }
 
-        $sql = $stateQueryData['sql'];
-        $paramName = 'state_' . IdGenerator::unsortableId();
-        $stateQueryData['parameters'][$paramName] = $item['value'];
+        $sql = $statusQueryData['sql'];
+        $paramName = 'status_' . IdGenerator::unsortableId();
+        $statusQueryData['parameters'][$paramName] = $item['value'];
 
 
         if ($item['type'] == 'in') {
@@ -351,13 +341,13 @@ class Cluster extends Base
         } else if ($item['type'] == 'notIn') {
             $innerSql = "({$sql}) NOT IN (:$paramName)";
         } else {
-            throw new \Exception("Invalid filter type '${item['type']}' for field 'state'");
+            throw new \Exception("Invalid filter type '${item['type']}' for field 'status'");
         }
 
         return [
             'innerSql' => [
                 'sql'        => $innerSql,
-                'parameters' => $stateQueryData['parameters'],
+                'parameters' => $statusQueryData['parameters'],
             ]
         ];
     }

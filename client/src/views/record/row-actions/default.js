@@ -151,7 +151,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             sortedActionKeys.forEach(actionName => {
                 if (actionName === 'quickRestore') {
                     if (filters && filters?.bool?.onlyDeleted === true) {
-                        if (this.model.get('_meta')?.permissions?.delete) {
+                        if (this.model.get('_meta')?.availableActions?.delete) {
                             list.push({
                                 action: 'quickRestore',
                                 label: 'Restore',
@@ -162,7 +162,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     }
                 } else if (actionName === 'deletePermanently') {
                     if (filters && filters?.bool?.onlyDeleted === true) {
-                        if (this.model.get('_meta')?.permissions?.delete) {
+                        if (this.model.get('_meta')?.availableActions?.delete) {
                             list.push({
                                 action: 'deletePermanently',
                                 label: 'deletePermanently',
@@ -180,7 +180,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         link: '#' + this.model.name + '/view/' + this.model.id
                     });
                 } else if (actionName === 'quickEdit') {
-                    if (this.model.get('_meta')?.permissions?.edit) {
+                    if (this.model.get('_meta')?.availableActions?.edit) {
                         list.push({
                             action: 'quickEdit',
                             label: 'Edit',
@@ -212,7 +212,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         }
                     }
                 } else if (actionName === 'quickRemove') {
-                    if (this.model.get('_meta')?.permissions?.delete) {
+                    if (this.model.get('_meta')?.availableActions?.delete) {
                         list.push({
                             action: 'quickRemove',
                             label: 'Remove',
@@ -222,7 +222,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     }
                 } else {
                     let actionData = this.getMetadata().get(['clientDefs', scope, 'listActions', actionName]);
-                    if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                    if (actionData && this.model.get('_meta')?.availableActions?.[actionName]) {
                         list.push({
                             action: actionName,
                             dataAction: actionData.action || 'universalAction',

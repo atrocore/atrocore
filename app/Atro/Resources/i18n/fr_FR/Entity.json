@@ -7,6 +7,7 @@
     "disabled": "Désactivée",
     "customizable": "Personnalisable",
     "hasArchive": "Archivable",
+    "isCustom": "Personnalisé",
     "hasActive": "Activable",
     "hideFieldTypeFilters": "Masquer les filtres de type de champ",
     "streamDisabled": "Désactiver le panel des activités",
@@ -67,12 +68,8 @@
     "accessManagement": "Gestion des accès",
     "hierarchyManagement": "Gestion de la hiérarchie",
     "other": "Autre",
-    "resetToDefault": "Réinitialiser par défaut",
     "attributes": "Attributs",
     "derivation": "Dérivation"
-  },
-  "confirmations": {
-    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Les enregistrements de cette entité sont définitivement supprimés XX jours après la date de suppression.",
@@ -101,5 +98,11 @@
     "derivativeWithSuchRoleExists": "Il existe déjà une entité dérivée qui remplit cette fonction.",
     "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d'une autre entité dérivée.",
     "cannotRemoveDerivativeDirectly": "Les entités dérivées ne peuvent pas être supprimées directement."
+  },
+  "actions": {
+    "resetToDefault": "Réinitialiser par défaut"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   }
 }

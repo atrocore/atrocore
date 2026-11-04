@@ -291,7 +291,7 @@
       "emHidden": true
     },
     "valueOptionData": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -317,7 +317,7 @@
       "emHidden": true
     },
     "valueIds": {
-      "type": "jsonArray",
+      "type": "array",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -343,7 +343,7 @@
       "emHidden": true
     },
     "valueOptionsData": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -685,7 +685,7 @@
       }
     },
     "conditionalDisableOptions": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "view": "views/classification-attribute/fields/conditional-disable-options",
       "conditionalProperties": {
         "visible": {

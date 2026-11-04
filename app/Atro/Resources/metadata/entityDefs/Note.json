@@ -76,7 +76,7 @@
             "field": "gender"
         },
         "notifiedUserIdList": {
-            "type": "jsonArray",
+            "type": "array",
             "notStorable": true,
             "disabled": true
         },

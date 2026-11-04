@@ -39,8 +39,8 @@ class LinkType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row);
         $data = @json_decode($row['data'], true);
         $attributeData = $data['field'] ?? null;
-        $entityName = $attributeData['entityType'] ?? null;
-        $foreignName = $attributeData['entityField'] ?? 'name';
+        $entityName = $this->getSetting($row, 'entityType') ?? null;
+        $foreignName = $this->getSetting($row, 'entityField') ?? 'name';
 
         $entity->fields[$name . 'Id'] = [
             'type'                     => 'varchar',
@@ -90,7 +90,7 @@ class LinkType extends AbstractFieldType
                 'type'                      => 'link',
                 'entity'                    => $entityName,
                 'foreignName'               => $foreignName,
-                'dropdown'                  => $attributeData['dropdown'] ?? null,
+                'dropdown'                  => $this->getSetting($row, 'dropdown') ?? null,
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
                 'protected'                 => !empty($row['is_protected']),
@@ -102,10 +102,10 @@ class LinkType extends AbstractFieldType
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
                 'duplicateIgnore'           => !empty($row['duplicate_ignore']),
                 'where'                     => $data['where'] ?? [],
-                'selectPageSize'            => $attributeData['selectPageSize'] ?? null
+                'selectPageSize'            => $this->getSetting($row, 'selectPageSize') ?? null
             ];
 
-            if (!empty($attributeData['dropdown'])) {
+            if (!empty($this->getSetting($row, 'dropdown'))) {
                 $entity->entityDefs['fields'][$name]['view'] = 'views/fields/link-dropdown';
             }
 
@@ -146,9 +146,9 @@ class LinkType extends AbstractFieldType
     {
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
-        if (!empty($attributeData['entityType'])) {
-            $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
-            $foreignName = $attributeData['entityField'] ?? 'name';
+        if (!empty($this->getSetting($row, 'entityType'))) {
+            $referenceTable = Util::toUnderScore(lcfirst($this->getSetting($row, 'entityType')));
+            $foreignName = $this->getSetting($row, 'entityField') ?? 'name';
 
             $name = AttributeFieldConverter::prepareFieldName($row);
 
@@ -156,7 +156,7 @@ class LinkType extends AbstractFieldType
             $qb->leftJoin($alias, $this->conn->quoteIdentifier($referenceTable), $referenceAlias, "{$referenceAlias}.id={$alias}.reference_value AND {$referenceAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
 
             $fieldPath = "{$referenceAlias}." . $mapper->toDb($foreignName);
-            $localizedField = Language::getLocalizedFieldName($this->em->getContainer(), $attributeData['entityType'], $foreignName);
+            $localizedField = Language::getLocalizedFieldName($this->em->getContainer(), $this->getSetting($row, 'entityType'), $foreignName);
 
             if ($localizedField !== $foreignName) {
                 $localizedFieldPath = "{$referenceAlias}." . $mapper->toDb($localizedField);
@@ -175,9 +175,8 @@ class LinkType extends AbstractFieldType
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if (!empty($item['subQuery'])) {
-            $attributeData = @json_decode($attribute['data'], true)['field'] ?? null;
-            if (!empty($attributeData['entityType'])) {
-                $this->convertSubquery($entity, $attributeData['entityType'], $item);
+            if (!empty($this->getSetting($attribute, 'entityType'))) {
+                $this->convertSubquery($entity, $this->getSetting($attribute, 'entityType'), $item);
             }
         }
 

@@ -1,41 +1,5 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "default",
-      "type": "varchar"
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "unique",
-      "type": "bool"
-    },
-    {
-      "name": "index",
-      "type": "bool"
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    }
-  ],
+  "defaultValue": true,
   "filter": true,
   "auditable": true,
   "fieldDefs": {

@@ -26,7 +26,7 @@ use Espo\ORM\IEntity;
 
 class Attribute extends Base
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'attributeGroupSortOrder', 'data', 'measureId', 'defaultUnit', 'entityId', 'outputType', 'systemName'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'attributeGroupSortOrder', 'data', 'entityId', 'systemName'];
 
     public function getAttributesDefs(string $entityName, array $attributesIds): array
     {
@@ -214,28 +214,13 @@ class Attribute extends Base
     public function getEntity(string $id, ?string $withRelationships = null): ?IEntity
     {
         $id = $this
-            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         $entity = $this->getRepository()->get($id);
 
-        if (!empty($entity) && $this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
-                if (!empty($ownerUserId = $entity->get("ownerUser{$camelCaseLocale}Id"))) {
-                    $ownerUser = $this->getEntityManager()->getEntity('User', $ownerUserId);
-                    $entity->set("ownerUser{$camelCaseLocale}Name", $ownerUser->get('name'));
-                } else {
-                    $entity->set("ownerUser{$camelCaseLocale}Name", null);
-                }
-
-                if (!empty($assignedUserId = $entity->get("assignedUser{$camelCaseLocale}Id"))) {
-                    $assignedUser = $this->getEntityManager()->getEntity('User', $assignedUserId);
-                    $entity->set("assignedUser{$camelCaseLocale}Name", $assignedUser->get('name'));
-                } else {
-                    $entity->set("assignedUser{$camelCaseLocale}Name", null);
-                }
-            }
+        if (!empty($entity)) {
+            $this->loadLocaleUserNames($entity, (bool)$entity->getSubtype()?->get('isMultilang'));
         }
 
         if (!empty($entity) && !empty($id)) {
@@ -250,47 +235,26 @@ class Attribute extends Base
         }
 
         return $this
-            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity, 'service' => $this]))
             ->getArgument('entity');
     }
 
-    public function prepareEntityForOutput(Entity $entity)
+    /**
+     * The names of the owners and of the assigned users of a multilingual attribute in each input language.
+     */
+    public function loadLocaleUserNames(Entity $entity, bool $isMultilang): void
     {
-        parent::prepareEntityForOutput($entity);
-
-        $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
-        if (in_array($entity->get('type'), array_keys($dropdownTypes)) && $entity->get('dropdown') === null) {
-            $entity->set('dropdown', false);
+        if (!$isMultilang || !$this->getConfig()->get('isMultilangActive', false)) {
+            return;
         }
 
-        if (!empty($entity->get('htmlSanitizerId'))) {
-            $htmlSanitizer = $this->getEntityManager()->getRepository('HtmlSanitizer')->get($entity->get('htmlSanitizerId'));
-            if (!empty($htmlSanitizer)) {
-                $entity->set('htmlSanitizerName', $htmlSanitizer->get('name'));
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+            foreach (['ownerUser', 'assignedUser'] as $field) {
+                $userId = $entity->get("{$field}{$camelCaseLocale}Id");
+                $user = !empty($userId) ? $this->getEntityManager()->getEntity('User', $userId) : null;
+                $entity->set("{$field}{$camelCaseLocale}Name", $user?->get('name'));
             }
-        }
-
-        if ($entity->get('fullWidth') === null) {
-            $entity->set('fullWidth', in_array($entity->get('type'), ['wysiwyg', 'markdown', 'text', 'composite']));
-        }
-
-        if ($entity->get('type') === 'bool') {
-            $entity->set('allowNullForBool', empty($entity->get('notNull')));
-        }
-
-        if ($entity->get('type') === 'bool') {
-            $entity->set('allowNullForBool', empty($entity->get('notNull')));
-        }
-
-        if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            $translatedOptions = null;
-            foreach ($entity->get('options') ?? [] as $option) {
-                if (empty($translatedOptions)) {
-                    $translatedOptions = new \stdClass();
-                }
-                $translatedOptions->$option = $this->getLanguage()->translateOption($option, $entity->get('systemName'), $entity->get('entityId'));
-            }
-            $entity->set('translatedOptions', $translatedOptions);
         }
     }
 

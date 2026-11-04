@@ -3,7 +3,7 @@
     "rows": [
       [
         {
-          "name": "state",
+          "name": "status",
           "fullWidth": true
         }
       ],

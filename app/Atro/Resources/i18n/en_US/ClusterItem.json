@@ -1,6 +1,6 @@
 {
   "labels": {
-    "consolidatedAutomatically": "Consolidated Automatically",
+    "confirmedAutomatically": "Confirmed Automatically",
     "selectTargetCluster": "Select Target Cluster",
     "moveToCluster": "Move to Cluster"
   },
@@ -10,7 +10,7 @@
     "record": "Record",
     "cluster": "Cluster",
     "matchedRecord": "Matched Record",
-    "consolidatedAutomatically": "Consolidated Automatically",
+    "confirmedAutomatically": "Confirmed Automatically",
     "matchedScore": "Matched Score"
   },
   "actions": {

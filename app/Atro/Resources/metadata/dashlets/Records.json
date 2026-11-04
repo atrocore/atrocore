@@ -6,7 +6,8 @@
         "required": true
       },
       "autorefreshInterval": {
-        "type": "enumFloat",
+        "type": "float",
+        "view": "views/fields/number-option",
         "required": true,
         "options": [
           0,
@@ -18,7 +19,8 @@
         ]
       },
       "displayRecords": {
-        "type": "enumInt",
+        "type": "int",
+        "view": "views/fields/number-option",
         "required": true,
         "options": [
           3,

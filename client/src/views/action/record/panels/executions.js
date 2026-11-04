@@ -46,6 +46,10 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
             ];
 
             const filterableTypes = Object.keys(this.getMetadata().get('action.filterableTypes') ?? {});
+            // a custom action is filterable when its handler is a bulk one
+            if (this.model.get('type') === 'custom' && this.getMetadata().get(['action', 'customHandlers', this.model.get('handler'), 'bulk'])) {
+                filterableTypes.push('custom');
+            }
 
             if (['create', 'createOrUpdate', 'createRendition'].includes(this.model.get('type'))) {
                 layout.push({

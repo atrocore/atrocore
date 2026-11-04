@@ -37,6 +37,7 @@ class AttributeFieldConverter
     protected Manager $eventManager;
     private Container $container;
     private array $attributes = [];
+    private ?array $subtypeColumns = null;
 
     public function __construct(Container $container)
     {
@@ -45,6 +46,97 @@ class AttributeFieldConverter
         $this->conn         = $container->get('connection');
         $this->eventManager = $container->get('eventManager');
         $this->container    = $container;
+    }
+
+    /**
+     * The settings of each attribute type: the table of its subtype, the alias of the table in the queries of the
+     * attributes and the columns of the fields of the subtype.
+     */
+    public function getSubtypeColumns(): array
+    {
+        if ($this->subtypeColumns !== null) {
+            return $this->subtypeColumns;
+        }
+
+        $this->subtypeColumns = [];
+        foreach ($this->metadata->get('scopes', []) as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype' || ($scopeDefs['supertypeId'] ?? null) !== 'Attribute') {
+                continue;
+            }
+
+            $columns = [];
+            foreach ($this->metadata->get(['entityDefs', $scope, 'fields'], []) as $field => $defs) {
+                if ($field === 'supertype' || !empty($defs['supertypeField']) || !empty($defs['notStorable'])
+                    || ($defs['type'] ?? null) === 'linkMultiple') {
+                    continue;
+                }
+                $columns[] = Util::toUnderScore($field) . (($defs['type'] ?? null) === 'link' ? '_id' : '');
+            }
+
+            $this->subtypeColumns[lcfirst(substr($scope, strlen('AttributeType')))] = [
+                'table'   => Util::toUnderScore(lcfirst($scope)),
+                'alias'   => 'st' . count($this->subtypeColumns),
+                'columns' => $columns,
+            ];
+        }
+
+        return $this->subtypeColumns;
+    }
+
+    /**
+     * The settings of the attribute types are stored in the tables of the subtypes, they are joined to the query of
+     * the attributes.
+     */
+    public function joinSubtypes(QueryBuilder $qb, string $alias): void
+    {
+        foreach ($this->getSubtypeColumns() as $subtype) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier($subtype['table']), $subtype['alias'], "{$subtype['alias']}.supertype_id = $alias.id");
+            foreach ($subtype['columns'] as $column) {
+                $qb->addSelect("{$subtype['alias']}." . $this->conn->quoteIdentifier($column) . " AS {$subtype['alias']}__$column");
+            }
+        }
+    }
+
+    /**
+     * The value of a setting of the attribute types in a query with the joined subtypes: the column of the subtype that
+     * has it. Null when no attribute type has such a setting.
+     */
+    public function getSubtypeColumnExpression(string $column): ?string
+    {
+        $parts = [];
+        foreach ($this->getSubtypeColumns() as $subtype) {
+            if (in_array($column, $subtype['columns'])) {
+                $parts[] = "{$subtype['alias']}." . $this->conn->quoteIdentifier($column);
+            }
+        }
+
+        if (empty($parts)) {
+            return null;
+        }
+
+        return count($parts) === 1 ? $parts[0] : 'COALESCE(' . implode(', ', $parts) . ')';
+    }
+
+    /**
+     * Puts the settings of the type of the attribute into its row under the names of their columns.
+     */
+    public function prepareSubtypeColumns(array $row): array
+    {
+        $own = $this->getSubtypeColumns()[$row['type'] ?? ''] ?? null;
+
+        foreach ($this->getSubtypeColumns() as $subtype) {
+            foreach ($subtype['columns'] as $column) {
+                $key = "{$subtype['alias']}__$column";
+                if ($own === $subtype) {
+                    $row[$column] = $row[$key] ?? null;
+                } elseif (!in_array($column, $own['columns'] ?? [])) {
+                    unset($row[$column]);
+                }
+                unset($row[$key]);
+            }
+        }
+
+        return $row;
     }
 
     public static function isValidSystemName(string $name): bool
@@ -89,17 +181,17 @@ class AttributeFieldConverter
                 $attributeIds[] = self::getAttributeIdFromFieldName($attributeId);
             }
 
-            $attributes = $this->conn->createQueryBuilder()
-                ->select('*')
-                ->from($this->conn->quoteIdentifier('attribute'))
-                ->where('id IN (:ids)')
-                ->andWhere('deleted = :false')
+            $qb = $this->conn->createQueryBuilder()
+                ->select('a.*')
+                ->from($this->conn->quoteIdentifier('attribute'), 'a')
+                ->where('a.id IN (:ids)')
+                ->andWhere('a.deleted = :false')
                 ->setParameter('ids', array_unique($attributeIds), Connection::PARAM_INT_ARRAY)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+                ->setParameter('false', false, ParameterType::BOOLEAN);
+            $this->joinSubtypes($qb, 'a');
 
-            foreach ($attributes as $attribute) {
-                $this->attributes[$attribute['id']] = $attribute;
+            foreach ($qb->fetchAllAssociative() as $attribute) {
+                $this->attributes[$attribute['id']] = $this->prepareSubtypeColumns($attribute);
             }
 
             if (empty($this->attributes[$id])) {
@@ -297,7 +389,9 @@ class AttributeFieldConverter
             $qb->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false');
         }
 
-        $res = $qb->fetchAllAssociative();
+        $this->joinSubtypes($qb, 'a');
+
+        $res = array_map([$this, 'prepareSubtypeColumns'], $qb->fetchAllAssociative());
 
         foreach ($res as $k => $attribute) {
             if (!empty($attribute['channel_name'])) {
@@ -354,21 +448,26 @@ class AttributeFieldConverter
                             $attributeData = [];
                         }
 
+                        // the properties of the classification attribute replace the settings of the attribute type
                         foreach ($propertyFields as $field) {
-                            $attributeData['field'][$field] = null;
+                            $res[$k][Util::toUnderScore($field)] = null;
                         }
 
                         $classificationAttributeData = @json_decode($classificationAttribute['data'] ?? '', true);
                         if (!empty($classificationAttributeData['field'])) {
                             foreach ($classificationAttributeData['field'] as $param => $paramValue) {
-                                $attributeData['field'][$param] = $paramValue;
+                                if (in_array($param, $propertyFields)) {
+                                    $res[$k][Util::toUnderScore($param)] = $paramValue;
+                                } else {
+                                    $attributeData['field'][$param] = $paramValue;
+                                }
                             }
                         }
 
                         if (!empty($classificationAttributeData['where'])
                             && !empty($classificationAttributeData['whereScope'])
                             && in_array($attribute['type'], ['link', 'linkMultiple'])
-                            && ($attributeData['field']['entityType'] ?? null) === $classificationAttributeData['whereScope']
+                            && ($attribute['entity_type'] ?? null) === $classificationAttributeData['whereScope']
                         ) {
                             $attributeData['where'] = $classificationAttributeData['where'];
                         }
@@ -429,15 +528,15 @@ class AttributeFieldConverter
             }
 
             if (!empty($preparedAttributesIds)) {
-                $attrs = $this->conn->createQueryBuilder()
-                    ->select('*')
-                    ->from($this->conn->quoteIdentifier('attribute'))
-                    ->where('id IN (:ids)')
-                    ->setParameter('ids', $preparedAttributesIds, $this->conn::PARAM_STR_ARRAY)
-                    ->fetchAllAssociative();
+                $qb = $this->conn->createQueryBuilder()
+                    ->select('a.*')
+                    ->from($this->conn->quoteIdentifier('attribute'), 'a')
+                    ->where('a.id IN (:ids)')
+                    ->setParameter('ids', $preparedAttributesIds, $this->conn::PARAM_STR_ARRAY);
+                $this->joinSubtypes($qb, 'a');
 
-                foreach ($attrs as $attr) {
-                    $res[] = array_merge($attr, ['entity_id' => $entity->get('id')]);
+                foreach ($qb->fetchAllAssociative() as $attr) {
+                    $res[] = array_merge($this->prepareSubtypeColumns($attr), ['entity_id' => $entity->get('id')]);
                 }
             }
         }
@@ -539,26 +638,22 @@ class AttributeFieldConverter
 
     public function getAttributesRowsByIds(array $attributesIds): array
     {
+        $qb = $this->conn->createQueryBuilder()
+            ->select('a.*')
+            ->from($this->conn->quoteIdentifier('attribute'), 'a')
+            ->where('a.id IN (:ids) or a.system_name IN (:ids)')
+            ->andWhere('a.deleted=:false')
+            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+
         if (class_exists("\\Pim\\Module")) {
-            return $this->conn->createQueryBuilder()
-                ->select('a.*, c.name as channel_name')
-                ->from($this->conn->quoteIdentifier('attribute'), 'a')
-                ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
-                ->where('a.id IN (:ids) or a.system_name IN (:ids)')
-                ->andWhere('a.deleted=:false')
-                ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            $qb->addSelect('c.name as channel_name')
+                ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false');
         }
 
-        return $this->conn->createQueryBuilder()
-            ->select('*')
-            ->from($this->conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids) or system_name IN (:ids)')
-            ->andWhere('deleted=:false')
-            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
+        $this->joinSubtypes($qb, 'a');
+
+        return array_map([$this, 'prepareSubtypeColumns'], $qb->fetchAllAssociative());
     }
 
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void

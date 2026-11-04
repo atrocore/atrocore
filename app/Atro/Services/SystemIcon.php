@@ -33,7 +33,7 @@ class SystemIcon extends ReferenceData
     {
         parent::putAclMeta($entity);
 
-        $entity->setMetaPermission('edit', false);
-        $entity->setMetaPermission('delete', false);
+        $entity->setAvailableAction('edit', false);
+        $entity->setAvailableAction('delete', false);
     }
 }

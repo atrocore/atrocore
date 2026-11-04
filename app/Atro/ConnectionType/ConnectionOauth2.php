@@ -148,7 +148,7 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
 
     public function getCacheKey(): string
     {
-        return 'cron_conn_' . $this->connectionEntity->get('id');
+        return 'cron_conn_' . $this->connectionEntity->get('supertypeId');
     }
 
     public function getHeaders(): array

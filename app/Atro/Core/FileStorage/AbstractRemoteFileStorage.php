@@ -161,7 +161,8 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
     protected function getConnection(Storage $storage)
     {
         if (empty($this->connectionCache[$storage->get('id')])) {
-            $connectionEntity = $storage->get($this->getConnectionField());
+            // the settings of the storage and of its connection are stored in their subtype records
+            $connectionEntity = $storage->getSubtype()->get($this->getConnectionField())->getSubtype();
             $this->connectionCache[$storage->get('id')] = $this
                 ->container
                 ->get('connectionFactory')
@@ -179,7 +180,7 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
         }
 
         try {
-            $connectionEntity = $storage->get($this->getConnectionField());
+            $connectionEntity = $storage->getSubtype()->get($this->getConnectionField())->getSubtype();
             $this->isAvailable = $this->container->get('connectionFactory')
                 ->create($connectionEntity)
                 ->testConnection($connectionEntity);

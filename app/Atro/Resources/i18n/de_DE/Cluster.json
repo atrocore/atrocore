@@ -6,7 +6,9 @@
     "rejectedClusterItems": "Abgelehnte Cluster Items",
     "stagingItemCount": "Anzahl der Contributor-Datensätze",
     "masterItemCount": "Master Item Count",
-    "state": "Bundesland/Kanton"
+    "status": "Status",
+    "consolidationMethod": "Konsolidierungsmethode",
+    "executionMode": "Ausführungsmodus"
   },
   "actions": {
     "reject": "Ablehnen",
@@ -17,12 +19,20 @@
     "split": "Aufteilen"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Leere Werte",
       "review": "Review",
       "invalid": "Ungültig",
-      "consolidatedAutomatically": "Konsolidiert (auto)",
       "consolidated": "Konsolidiert"
+    },
+    "consolidationMethod": {
+      "ruleBased": "Regelbasiert",
+      "hybrid": "Hybrid",
+      "manual": "Manuell"
+    },
+    "executionMode": {
+      "automatic": "Automatisch",
+      "manual": "Manuell"
     }
   },
   "actionConfirms": {
@@ -44,6 +54,11 @@
     "unconsolidated": "Nicht konsolidiert",
     "rejected": "Abgelehnt",
     "consolidationPreview": "Konsolidierungsvorschau",
+    "standardView": "Standard",
+    "comparisonView": "Vergleich",
+    "manualConsolidationView": "Manuelle Konsolidierung",
+    "suggestedValues": "Vorgeschlagene Werte",
+    "selectAllSuggestedValues": "Alle vorgeschlagenen Werte auswählen",
     "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
     "noConsolidationConfigured": "Für diese Entität ist keine Konsolidierung konfiguriert",
     "discard": "Verwerfen"
@@ -73,5 +88,8 @@
     "clusterMovedToClusterThis": "{user} hat {records} von Cluster {clusterLink} in diesen Cluster verschoben",
     "clusterMovedFromCluster": "{user} hat {records} von {entity} in Cluster {clusterLink} verschoben",
     "clusterMovedFromClusterThis": "{user} hat {records} von diesem Cluster in Cluster {clusterLink} verschoben"
+  },
+  "messages": {
+    "consolidated": "Konsolidiert"
   }
 }

@@ -1,51 +1,5 @@
 {
-  "params": [
-    {
-      "name": "foreignName",
-      "type": "varchar",
-      "tooltip": true
-    },
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "dropdown",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
-      "name": "protected",
-      "type": "bool"
-    },
-    {
-      "name": "currentUserAsDefault",
-      "type": "bool"
-    },
-    {
-      "name": "default",
-      "type": "varchar"
-    },
-    {
-      "name": "duplicateIgnore",
-      "type": "bool"
-    },
-    {
-      "name": "inheritanceDisabled",
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    },
-    {
-      "name": "selectPageSize",
-      "type": "int"
-    }
-  ],
+  "defaultValue": true,
   "actualFields": [
     "id"
   ],

@@ -17,9 +17,5 @@ use Atro\Entities\ActionExecution;
 
 interface TypeInterface
 {
-    /**
-     * @todo 3.0.0: returns ActionResultDTO (what AbstractAction::executeWithResult() returns today),
-     *       executeWithResult() and executeNow() are removed.
-     */
     public function execute(ActionExecution $execution, \stdClass $input): bool;
 }

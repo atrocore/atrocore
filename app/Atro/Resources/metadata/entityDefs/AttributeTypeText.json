@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "isMultilang": {
+      "type": "bool",
+      "hideMultilang": true,
+      "layoutDetailDisabled": true,
+      "layoutRemoveDisabled": true
+    },
+    "notNull": {
+      "type": "bool",
+      "default": false,
+      "layoutRemoveDisabled": true
+    },
+    "maxLength": {
+      "type": "int",
+      "filterDisabled": true,
+      "layoutRemoveDisabled": true,
+      "emHidden": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "filterDisabled": true,
+      "default": false,
+      "layoutRemoveDisabled": true,
+      "emHidden": true
+    },
+    "useDisabledTextareaInViewMode": {
+      "type": "bool",
+      "default": false,
+      "layoutRemoveDisabled": true
+    }
+  }
+}

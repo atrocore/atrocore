@@ -103,12 +103,12 @@ class TextType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['fullWidth'] = $attributeData['fullWidth'] ?? true;
         }
 
-        if (!empty($attributeData['maxLength'])) {
-            $entity->entityDefs['fields'][$name]['maxLength'] = $attributeData['maxLength'];
+        if (!empty($this->getSetting($row, 'maxLength'))) {
+            $entity->entityDefs['fields'][$name]['maxLength'] = $this->getSetting($row, 'maxLength');
         }
 
-        if (!empty($attributeData['countBytesInsteadOfCharacters'])) {
-            $entity->entityDefs['fields'][$name]['countBytesInsteadOfCharacters'] = $attributeData['countBytesInsteadOfCharacters'];
+        if (!empty($this->getSetting($row, 'countBytesInsteadOfCharacters'))) {
+            $entity->entityDefs['fields'][$name]['countBytesInsteadOfCharacters'] = $this->getSetting($row, 'countBytesInsteadOfCharacters');
         }
 
         $languages = $this->getLanguageMap();

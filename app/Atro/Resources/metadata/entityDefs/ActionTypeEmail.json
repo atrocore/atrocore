@@ -1,0 +1,209 @@
+{
+  "fields": {
+    "targetEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/target-entity"
+    },
+    "searchEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/search-entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate",
+                "update"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "showEmailPreview": {
+      "type": "bool",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "mode": {
+      "type": "enum",
+      "options": [
+        "basic",
+        "script"
+      ],
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "openApiEnabled": true,
+      "view": "views/fields/enum",
+      "required": true
+    },
+    "connection": {
+      "type": "link",
+      "required": true
+    },
+    "emailTemplate": {
+      "type": "link",
+      "entity": "EmailTemplate",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "emailTo": {
+      "type": "array",
+      "view": "views/fields/array-email",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "emailCc": {
+      "type": "array",
+      "view": "views/fields/array-email",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "emailBcc": {
+      "type": "array",
+      "view": "views/fields/array-email",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "emailScript": {
+      "type": "code",
+      "engine": "Twig",
+      "default": "{% set emailTo = ['email1@somedomain.com', 'email2@somedomain.com'] %}\n{% set emailCc = [] %}\n{% set emailBcc = [] %}\n{% set emailTemplateId = 'some-id' %}",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "script"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "links": {
+    "connection": {
+      "type": "belongsTo",
+      "entity": "Connection"
+    },
+    "emailTemplate": {
+      "type": "belongsTo",
+      "entity": "EmailTemplate",
+      "skipOrmDefs": true
+    }
+  }
+}

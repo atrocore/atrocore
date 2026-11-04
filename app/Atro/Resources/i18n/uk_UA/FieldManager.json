@@ -69,9 +69,6 @@
   "fieldParts": {
     "unit": {
       "unit": "(Одиниця)"
-    },
-    "datetimeOptional": {
-      "date": "Дата"
     }
   },
   "messages": {

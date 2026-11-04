@@ -30,7 +30,7 @@ Espo.define('views/cluster-item/record/list', 'views/record/list', Dep => Dep.ex
         return actions.filter(action => {
             const permission = action === 'remove' ? 'delete' : action;
 
-            return checkedItems.every(item => item.get('_meta')?.permissions?.[permission] !== false);
+            return checkedItems.every(item => item.get('_meta')?.availableActions?.[permission] !== false);
         });
     },
 

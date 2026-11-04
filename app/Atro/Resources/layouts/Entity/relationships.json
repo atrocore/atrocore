@@ -1,14 +1,5 @@
 [
   {
     "name": "fields"
-  },
-  {
-    "name": "attributes"
-  },
-  {
-    "name": "derivativeEntities"
-  },
-  {
-    "name": "uniqueIndexes"
   }
 ]

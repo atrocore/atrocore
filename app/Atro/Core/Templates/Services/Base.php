@@ -24,13 +24,13 @@ class Base extends Record
 
         // set permissions for additional actions of derivative entity
         if (!empty($masterEntity = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.primaryEntityId")) && !empty($entity->get('masterRecordId'))) {
-            $entity->setMetaPermission('updateMasterRecord', false);
+            $entity->setAvailableAction('updateMasterRecord', false);
             if ($this->getUser()->isAdmin()) {
-                $entity->setMetaPermission('updateMasterRecord', true);
+                $entity->setAvailableAction('updateMasterRecord', true);
             } else {
                 $masterRecord = $this->getEntityManager()->getRepository($masterEntity)->get($entity->get('masterRecordId'));
                 if ($masterRecord) {
-                    $entity->setMetaPermission('updateMasterRecord', $this->getAcl()->check($masterRecord, 'edit'));
+                    $entity->setAvailableAction('updateMasterRecord', $this->getAcl()->check($masterRecord, 'edit'));
                 }
             }
         }

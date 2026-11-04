@@ -1,0 +1,22 @@
+{
+  "iconClass": "swatches",
+  "recordViews": {
+    "detail": "views/attribute/record/detail",
+    "editSmall": "views/attribute/record/edit-small",
+    "list": "views/attribute/record/list"
+  },
+  "modalViews": {
+    "select": "views/attribute/modals/select-records"
+  },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "entityFilterResult",
+        "label": "entityFilterResult",
+        "view": "views/record/panels/entity-filter-result",
+        "entityField": "entityType",
+        "canClose": false
+      }
+    ]
+  }
+}

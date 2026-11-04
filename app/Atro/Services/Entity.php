@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\DataManager;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Services\ReferenceData;
@@ -22,6 +24,10 @@ class Entity extends ReferenceData
 {
     public function resetToDefault(string $scope): bool
     {
+        if (empty($this->getRepository()->get($scope))) {
+            throw new NotFound();
+        }
+
         if ($this->getMetadata()->get("scopes.$scope.isCustom")) {
             throw new Error("Can't reset to defaults custom entity '$scope'.");
         }
@@ -40,33 +46,61 @@ class Entity extends ReferenceData
         return true;
     }
 
-    public function getSelectAttributeList($params)
+    /**
+     * The entities of the system and of the modules cannot be deleted, their configuration can be reset to default.
+     */
+    public function putAclMeta(OrmEntity $entity): void
     {
-        return [];
-    }
+        parent::putAclMeta($entity);
 
-    protected function filterInput($data, ?OrmEntity $entity = null)
-    {
-        parent::filterInput($data, $entity);
+        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('id'), 'isCustom']));
 
-        if (!is_object($data) || empty($entity)) {
-            return;
+        $entity->setAvailableAction('resetToDefault', !$isCustom);
+        if (!$isCustom) {
+            $entity->setAvailableAction('delete', false);
         }
 
-        $fields = $this->getMetadata()->get(['scopes', $entity->get('id'), 'onlyEditableEmFields']);
-        if (!empty($fields)) {
-            foreach ($data as $field => $value) {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
-                if (empty($fieldDefs['type'])) {
-                    continue;
-                }
+        // a derived entity is created from its primary entity
+        if (!empty($entity->get('primaryEntityId'))) {
+            $entity->setAvailableAction('duplicate', false);
+        }
+    }
 
-                if (!in_array($field, $fields)) {
-                    unset($data->$field);
-                }
+    public function createEntity(\stdClass $attachment): string
+    {
+        if (!empty($attachment->_duplicatingEntityId)) {
+            $duplicating = $this->getRepository()->get($attachment->_duplicatingEntityId);
+            if (!empty($duplicating) && !empty($duplicating->get('primaryEntityId'))) {
+                throw new BadRequest($this->getInjection('language')->translate('derivativeCannotBeDuplicated', 'exceptions', 'Entity'));
             }
         }
 
+        return parent::createEntity($attachment);
+    }
+
+    /**
+     * Some entities allow to change only some of their parameters.
+     */
+    protected function getReadOnlyFields(OrmEntity $entity): array
+    {
+        $editable = $this->getMetadata()->get(['scopes', $entity->get('id'), 'onlyEditableEmFields']);
+        if (empty($editable)) {
+            return [];
+        }
+
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
+            if (!empty($defs['type']) && !in_array($field, $editable, true)) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
+    }
+
+    public function getSelectAttributeList($params)
+    {
+        return [];
     }
 
     protected function duplicateFields($entity, $duplicatingEntity): void

@@ -1,0 +1,211 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "isCustom"
+        },
+        false
+      ],
+      [
+        {
+          "name": "required"
+        },
+        {
+          "name": "isMultilang"
+        }
+      ],
+      [
+        {
+          "name": "protected"
+        },
+        {
+          "name": "notNull"
+        }
+      ],
+      [
+        {
+          "name": "readOnly"
+        },
+        false
+      ],
+      [
+        {
+          "name": "duplicateIgnore"
+        },
+        false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
+      ],
+      [
+        {
+          "name": "countBytesInsteadOfCharacters"
+        },
+        false
+      ],
+      [
+        {
+          "name": "seeMoreDisabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "lengthOfCut"
+        },
+        false
+      ],
+      [
+        {
+          "name": "rowsMin"
+        },
+        {
+          "name": "rowsMax"
+        }
+      ],
+      [
+        {
+          "name": "useDisabledTextareaInViewMode"
+        },
+        false
+      ],
+      [
+        {
+          "name": "defaultValueType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "default"
+        },
+        false
+      ],
+      [
+        {
+          "name": "defaultScript",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "tooltip"
+        },
+        false
+      ],
+      [
+        {
+          "name": "tooltipText"
+        },
+        {
+          "name": "tooltipLink"
+        }
+      ],
+      [
+        {
+          "name": "auditableDisabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isNonComparable"
+        },
+        {
+          "name": "inheritanceDisabled"
+        }
+      ],
+      [
+        {
+          "name": "modifiedExtendedDisabled"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "conditionalVisible"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalProtected"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalReadOnly"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "personalData",
+    "rows": [
+      [
+        {
+          "name": "personalData"
+        },
+        {
+          "name": "notInEveryRecord"
+        }
+      ],
+      [
+        {
+          "name": "category"
+        },
+        {
+          "name": "specialCategory"
+        }
+      ],
+      [
+        {
+          "name": "specialPersonDataCategory"
+        },
+        {
+          "name": "erasureMode"
+        }
+      ],
+      [
+        {
+          "name": "relevantForAccessRequest"
+        },
+        false
+      ]
+    ]
+  }
+]

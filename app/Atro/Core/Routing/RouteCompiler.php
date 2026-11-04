@@ -116,7 +116,7 @@ class RouteCompiler
 
                 // Skip the create route when creation is disabled for the entity.
                 if ($entry['class'] === \Atro\Core\EntityTypeHandlers\CreateHandler::class
-                    && $this->metadata->get("clientDefs.$entityName.createDisabled")
+                    && ($this->metadata->get("scopes.$entityName.createDisabled") || $this->metadata->get("clientDefs.$entityName.createDisabled"))
                 ) {
                     continue;
                 }

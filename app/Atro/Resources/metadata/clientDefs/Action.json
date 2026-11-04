@@ -1,26 +1,12 @@
 {
   "iconClass": "person-simple-run",
   "controller": "controllers/record",
-  "recordViews": {
-    "detail": "views/action/record/detail"
-  },
   "boolFilterList": [
     "notActionSet"
   ],
   "hiddenBoolFilterList": [
     "notActionSet"
   ],
-  "bottomPanels": {
-    "detail": [
-      {
-        "name": "entityFilterResult",
-        "label": "entityFilterResult",
-        "view": "views/record/panels/entity-filter-result",
-        "entityField": "searchEntity",
-        "canClose": false
-      }
-    ]
-  },
   "relationshipPanels": {
     "actions": {
       "selectAction": "selectRelatedEntity",

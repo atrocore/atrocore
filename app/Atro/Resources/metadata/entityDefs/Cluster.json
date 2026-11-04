@@ -32,7 +32,7 @@
       "notStorable": true,
       "protected": true
     },
-    "state": {
+    "status": {
       "type": "enum",
       "notStorable": true,
       "protected": true,
@@ -40,15 +40,39 @@
         "empty",
         "review",
         "consolidated",
-        "consolidatedAutomatically",
         "invalid"
       ],
       "optionColors": [
         "eeeeee",
         "b5e8ff",
         "8fff87",
-        "c4f97f",
         "ff6262"
+      ]
+    },
+    "consolidationMethod": {
+      "type": "enum",
+      "protected": true,
+      "options": [
+        "ruleBased",
+        "hybrid",
+        "manual"
+      ],
+      "optionColors": [
+        "c4f97f",
+        "ffe08a",
+        "ffb37c"
+      ]
+    },
+    "executionMode": {
+      "type": "enum",
+      "protected": true,
+      "options": [
+        "automatic",
+        "manual"
+      ],
+      "optionColors": [
+        "c4f97f",
+        "ffb37c"
       ]
     },
     "clusterItems": {

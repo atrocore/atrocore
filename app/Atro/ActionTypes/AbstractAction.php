@@ -150,7 +150,6 @@ abstract class AbstractAction implements TypeInterface
      *
      * @deprecated executeNow() of an action type is deprecated, override executeWithResult() instead
      *             (and execute() as "return $this->executeWithResult(...)->toBool();").
-     * @todo 3.0.0: returns ActionResultDTO, the executeNow() bridge is removed.
      */
     public function execute(ActionExecution $execution, \stdClass $input): bool
     {
@@ -173,9 +172,6 @@ abstract class AbstractAction implements TypeInterface
      * An action type reports it by overriding this method (and implementing execute() as
      * "return $this->executeWithResult(...)->toBool();"). Every other action type reports only a bool,
      * it is wrapped and "in background" stays unknown (null).
-     *
-     * @todo 3.0.0: this becomes execute() (TypeInterface::execute() returns ActionResultDTO), executeWithResult(),
-     *       executeNow() and ActionResultDTO::fromLegacy() are removed.
      */
     public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
     {

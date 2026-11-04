@@ -89,9 +89,9 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
         },
 
         getRelationModel(model, callback) {
-            if (model.get('__relationEntity')) {
+            if (model.getMeta('relationRecord')) {
                 this.getModelFactory().create(this.relationScope, relModel => {
-                    relModel.set(model.get('__relationEntity'));
+                    relModel.set(model.getMeta('relationRecord'));
                     model.relationModel = relModel
                     callback(relModel)
                 })

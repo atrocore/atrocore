@@ -434,6 +434,13 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.listenTo(this, 'change', function () {
                     var attributes = this.fetch();
                     this.model.set(attributes, { ui: true });
+
+                    if (this.hasLockedControls() && !this.readOnly && !this.isLocked()) {
+                        const field = this.getLockedFieldName();
+                        this.model.set('_lockedFields', {...(this.model.get('_lockedFields') || {}), [field]: true});
+                        this.setLockedMeta(field, true);
+                        this.setLockedControls();
+                    }
                 });
             }
         },
@@ -1457,15 +1464,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             model.set(attrs);
+            model.unset('_lockedFields', {silent: true});
             model._previousAttributes = res;
             model._updatedById = this.getUser().id; // block realtime
             // this.trigger('after:save'); // ignored because saving needs to be silent
             // model.trigger('after:save'); // ignored because saving needs to be silent
 
             if (this.hasLockedControls()) {
-                const metaValue = res['_meta']?.locked?.[this.getLockedFieldName()];
+                const metaValue = res['_meta']?.locked?.fields?.[this.getLockedFieldName()];
                 if (metaValue !== undefined) {
-                    this.model.setMeta('locked', this.getLockedFieldName(), metaValue);
+                    this.setLockedMeta(this.getLockedFieldName(), metaValue);
                 }
 
                 this.setLockedControls();
@@ -1517,8 +1525,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 const fetched = this.fetch();
                 if (typeof fetched === 'object') {
                     this.model.set(Object.fromEntries(
-                        Object.keys(fetched).map(key => [key, this.initialAttributes[key] ?? null])
+                        [...Object.keys(fetched), '_meta'].map(key => [key, this.initialAttributes[key] ?? null])
                     ));
+                    this.model.unset('_lockedFields');
                 } else {
                     this.model.set(this.initialAttributes);
                 }
@@ -2104,26 +2113,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         lockedControlAction() {
-            if (this.model.isNew()) {
-                const field = this.getLockedFieldName();
-                const lockedFields = this.model.get('_lockedFields') || [];
+            const field = this.getLockedFieldName();
+            const locked = this.isLocked();
 
-                if (this.isLocked()) {
-                    this.model.set('_lockedFields', lockedFields.filter(item => item !== field));
-                } else {
-                    this.model.set('_lockedFields', [...lockedFields, field]);
-                }
-
-                this.model.setMeta('locked', field, !this.isLocked());
-
+            if (this.model.isNew() || this.mode === 'edit') {
+                this.model.set('_lockedFields', {...(this.model.get('_lockedFields') || {}), [field]: !locked});
+                this.setLockedMeta(field, !locked);
                 this.setLockedControls();
-
-                Espo.Ui.success('Success');
             } else {
-                this.ajaxPostRequest((this.isLocked() ? 'unlockEntityField' : 'lockEntityField'), {
+                this.ajaxPostRequest((locked ? 'unlockEntityField' : 'lockEntityField'), {
                     entityName: this.model.urlRoot,
                     entityId: this.model.id,
-                    field: this.getLockedFieldName(),
+                    field: field,
                 }).then(() => {
                     Espo.Ui.success('Success');
                     this.model.fetch();
@@ -2136,7 +2137,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isLocked() {
-            return !!this.model.get('_meta')?.locked?.[this.getLockedFieldName()];
+            return !!this.model.get('_meta')?.locked?.fields?.[this.getLockedFieldName()];
+        },
+
+        setLockedMeta(field, value) {
+            const meta = Espo.Utils.cloneDeep(this.model.get('_meta') || {});
+            meta.locked = meta.locked || {};
+            meta.locked.fields = {...(meta.locked.fields || {}), [field]: value};
+            this.model.set('_meta', meta);
         },
 
         hasLockedControls() {
@@ -2146,7 +2154,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
                 !this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.getLockedFieldName(), 'disableFieldValueLock']) &&
-                (this.model.get('_meta')?.locked?._loaded || this.model.isNew()) &&
+                (this.model.get('_meta')?.locked?.loaded || this.model.isNew()) &&
                 !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
         },
 

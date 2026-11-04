@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "path": {
+      "type": "varchar",
+      "maxLength": 300,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "default": "upload/files",
+      "required": true
+    },
+    "syncFolders": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -80,4 +80,11 @@ class Entity extends Base
             'onlyBaseAndHierarchyTypes' => true
         ];
     }
+
+    protected function boolFilterCanBeSupertype(&$result)
+    {
+        $result['whereClause'][] = [
+            'canBeSupertype' => true
+        ];
+    }
 }

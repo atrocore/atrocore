@@ -18,7 +18,7 @@ Each action entry in `clientDefs` maps an action name to:
 
 The action label and confirmation messages come from the entity's i18n translation files.
 
-Action visibility per record is controlled by the backend via the `_meta.permissions` map returned with each record. If `_meta.permissions.myAction` is not truthy, the action is hidden for that record.
+Action visibility per record is controlled by the backend via the `_meta.availableActions` map returned with each record. If `_meta.availableActions.myAction` is not truthy, the action is hidden for that record.
 
 ---
 
@@ -82,6 +82,8 @@ The `exit` parameter navigates the user back to the list page after the action s
 ```
 
 When `exit: true` is set, the user is redirected to the list view after the action completes. When `refresh: true` is set instead, the record is re-fetched in place. Only one of the two should be used.
+
+When `redirect: true` is set, the user is taken to the `link` that the response returns, for example to a record the action has just created. The handler adds it to its JSON response: `{ "id": "<newId>", "link": "#MyEntity/view/<newId>" }`.
 
 The request body always contains `{ "action": "publish", "scope": "MyEntity", "id": "<recordId>" }`.
 
@@ -164,7 +166,8 @@ Key points:
 | `confirm` | bool | listActions, detailActions, relationshipPanels | Show a confirmation dialog before executing. The message comes from the `actionConfirms` i18n group. Default: `false`. For `massActions`, confirmation is triggered automatically by the presence of a `massActionConfirmMessages` entry. |
 | `refresh` | bool | all | Re-fetch the record or collection after the action completes. Default: `false`. |
 | `exit` | bool | detailActions only | Navigate back to the list page after the action completes. Use for actions that make the current record inaccessible (archive, delete). Takes precedence over `refresh`. |
-| `disabled` | bool | all | Hide the action from the UI entirely. Used to suppress built-in actions — e.g. `"update": { "disabled": true }` under `massActions` removes built-in Mass Update. |
+| `redirect` | bool | detailActions only | Navigate to the `link` returned in the response after the action completes, for example to the record the action has created. The response body must contain `link`, a client route such as `#MyEntity/view/<id>`; without it the flag has no effect. Takes precedence over `exit` and `refresh`. |
+| `disabled` | bool | all | Hide the action from the UI entirely. Used to suppress built-in actions — e.g. `"update": { "disabled": true }` under `massActions` removes built-in Mass Update, and `"duplicate": { "disabled": true }` under `detailActions` removes Duplicate from the detail page. |
 | `iconClass` | string | listActions, massActions, detailActions, relationshipPanels | Phosphor icon class shown next to the label. Example: `"ph ph-check"`. |
 | `acl` | string | listActions, massActions | ACL permission required to show the action (`"edit"`, `"delete"`). |
 | `sortOrder` | int | all | Controls position in the menu. Lower = higher up. Built-in actions start at 110. |
@@ -347,7 +350,7 @@ Return `['count' => $n]` so the success message can use the `{count}` placeholde
 
 ## Controlling Visibility per Record
 
-Actions are shown only when the backend sets the action name to `true` in `_meta.permissions`. Override `putAclMeta()` in the entity's **service** class:
+Actions are shown only when the backend sets the action name to `true` in `_meta.availableActions`. Override `putAclMeta()` in the entity's **service** class:
 
 ```php
 // app/Atro/Services/MyEntity.php
@@ -358,8 +361,8 @@ public function putAclMeta(\Espo\ORM\Entity $entity): void
 
     $isPending = $entity->get('status') === 'pending';
 
-    $entity->setMetaPermission('publish', $isPending && $this->getAcl()->check($entity, 'edit'));
-    $entity->setMetaPermission('reject',  $isPending && $this->getAcl()->check($entity, 'edit'));
+    $entity->setAvailableAction('publish', $isPending && $this->getAcl()->check($entity, 'edit'));
+    $entity->setAvailableAction('reject',  $isPending && $this->getAcl()->check($entity, 'edit'));
 }
 ```
 
@@ -370,7 +373,7 @@ public function putAclMetaForLink(\Espo\ORM\Entity $entityFrom, string $link, \E
 {
     parent::putAclMetaForLink($entityFrom, $link, $entity);
 
-    $entity->setMetaPermission('ship', $this->getAcl()->check($entity, 'edit'));
+    $entity->setAvailableAction('ship', $this->getAcl()->check($entity, 'edit'));
 }
 ```
 
