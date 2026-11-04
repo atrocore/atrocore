@@ -83,6 +83,62 @@ class Record extends RecordService
         return parent::createEntity($attachment);
     }
 
+    public function putAclMeta(Entity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        if ($this->hasPredecessorSuccessor($entity->getEntityName())) {
+            $entity->setAvailableAction(
+                'createSuccessor',
+                $this->getAcl()->check($entity->getEntityName(), 'create') && !$this->hasSuccessor($entity)
+            );
+        }
+    }
+
+    /**
+     * Creates a copy of the record that has the record as its predecessor, and returns the ID of the copy.
+     * A record has one successor at most.
+     */
+    public function createSuccessor(string $id): string
+    {
+        if (!$this->hasPredecessorSuccessor($this->getEntityType())) {
+            throw new BadRequest($this->getInjection('language')->translate('noPredecessorSuccessor', 'exceptions'));
+        }
+
+        if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
+            throw new Forbidden();
+        }
+
+        $attributes = $this->getDuplicateAttributes($id);
+
+        if ($this->hasSuccessor($this->getEntity($id))) {
+            throw new BadRequest($this->getInjection('language')->translate('alreadyHasSuccessor', 'exceptions'));
+        }
+
+        $attributes->predecessorId = $id;
+
+        return $this->createEntity($attributes);
+    }
+
+    protected function hasPredecessorSuccessor(string $entityName): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $entityName, 'hasPredecessorSuccessor']));
+    }
+
+    protected function hasSuccessor(Entity $entity): bool
+    {
+        if ($entity->has('successorId')) {
+            return !empty($entity->get('successorId'));
+        }
+
+        return !empty(
+            $this->getEntityManager()->getRepository($entity->getEntityName())
+                ->select(['id'])
+                ->where(['predecessorId' => $entity->get('id')])
+                ->findOne()
+        );
+    }
+
     protected function filterInput($data, ?Entity $entity = null)
     {
         parent::filterInput($data, $entity);
