@@ -110,6 +110,12 @@
       ],
       [
         {
+          "name": "defaultScript",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "tooltip"
         },
         false

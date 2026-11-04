@@ -111,22 +111,32 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
+      "type": "float",
       "tooltip": true
     },
     "defaultUnit": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "type": "link",
+      "entity": "Unit",
+      "foreignFilterFields": {
+        "measureId": "measureId"
+      },
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "measureId"
+            }
+          ]
+        }
+      }
     },
     "min": {
       "type": "float",
-      "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     },
     "max": {
       "type": "float",
-      "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     },
     "amountOfDigitsAfterComma": {

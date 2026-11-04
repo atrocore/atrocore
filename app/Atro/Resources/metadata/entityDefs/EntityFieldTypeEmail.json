@@ -112,8 +112,7 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
+      "type": "email",
       "tooltip": true
     },
     "pattern": {

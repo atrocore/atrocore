@@ -80,24 +80,30 @@
         }
       }
     },
-    "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
+    "defaultFrom": {
+      "type": "int",
       "tooltip": true
     },
-    "defaultFrom": {
-      "type": "float",
-      "notStorable": true,
-      "readOnly": true
-    },
     "defaultTo": {
-      "type": "float",
-      "notStorable": true,
-      "readOnly": true
+      "type": "int",
+      "tooltip": true
     },
     "defaultUnit": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "type": "link",
+      "entity": "Unit",
+      "foreignFilterFields": {
+        "measureId": "measureId"
+      },
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "measureId"
+            }
+          ]
+        }
+      }
     },
     "isNonComparable": {
       "type": "bool"

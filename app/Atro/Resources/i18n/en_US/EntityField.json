@@ -1,5 +1,6 @@
 {
   "fields": {
+    "defaultScript": "Default Value Script",
     "type": "Type",
     "entity": "Entity",
     "isCustom": "Custom",
@@ -82,6 +83,7 @@
     "relevantForAccessRequest": "Relevant for Access Request"
   },
   "tooltips": {
+    "defaultScript": "The script that calculates the default value of the field.",
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
     "foreignEntity": "This is the related entity which records are referenced in the current field.",
     "relationName": "This code is used to set the system name for the entity of type \"Relation\" that is automatically created.",

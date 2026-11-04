@@ -59,9 +59,9 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
-      "tooltip": true
+      "type": "bool",
+      "tooltip": true,
+      "notNull": false
     },
     "isNonComparable": {
       "type": "bool"

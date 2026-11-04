@@ -55,8 +55,8 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
+      "type": "enum",
+      "optionsField": "options",
       "tooltip": true
     },
     "isSorted": {

@@ -93,9 +93,36 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
-      "tooltip": true
+      "type": "markdown",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "defaultValueType",
+              "value": "script"
+            }
+          ]
+        }
+      }
+    },
+    "defaultScript": {
+      "type": "code",
+      "engine": "Twig",
+      "view": "views/entity-field/fields/script",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "defaultValueType",
+              "value": "script"
+            }
+          ]
+        }
+      }
     },
     "defaultValueType": {
       "type": "enum",

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "defaultScript": "Skript für den Standardwert",
     "type": "Typ",
     "entity": "Entität",
     "isCustom": "Benutzerdefiniert",
@@ -81,6 +82,7 @@
     "relevantForAccessRequest": "Relevant für Auskunftsersuchen"
   },
   "tooltips": {
+    "defaultScript": "Das Skript, das den Standardwert des Feldes berechnet.",
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
     "foreignEntity": "Dies ist die verwandte Entität, auf deren Datensätze im aktuellen Feld verwiesen wird.",
     "relationName": "Dieser Code wird verwendet, um den Systemnamen für die Entität vom Typ „Relation“ festzulegen, die automatisch erstellt wird.",

@@ -55,14 +55,9 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
+      "type": "link",
+      "entity": "File",
       "tooltip": true
-    },
-    "defaultName": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true
     },
     "fileType": {
       "type": "link",

@@ -81,8 +81,7 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
+      "type": "color",
       "tooltip": true
     },
     "isNonComparable": {

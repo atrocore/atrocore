@@ -120,14 +120,19 @@
       }
     },
     "default": {
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/value-container",
-      "tooltip": true
-    },
-    "defaultName": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true
+      "type": "link",
+      "entityNameField": "foreignEntityId",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "foreignEntityId"
+            }
+          ]
+        }
+      }
     },
     "dropdown": {
       "type": "bool",

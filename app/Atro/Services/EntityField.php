@@ -217,19 +217,21 @@ class EntityField extends ReferenceData
         $entity->set('fileTypesNames', $fileTypesNames);
     }
 
+    /**
+     * The names of the records chosen as the default value and as the default unit.
+     */
     protected function prepareDefaultField(Entity $entity): void
     {
-        if (empty($entity->get('default'))) {
-            return;
+        if (!empty($id = $entity->get('defaultUnitId'))) {
+            $unit = $this->getEntityManager()->getRepository('Unit')->get($id);
+            $entity->set('defaultUnitName', empty($unit) ? null : $unit->get('name'));
         }
 
         $foreignEntity = null;
         switch ($entity->get('type')) {
             case 'link':
             case 'linkMultiple':
-                $foreignEntity = $this
-                    ->getMetadata()
-                    ->get(['entityDefs', $entity->get('entityId'), 'links', $entity->get('code'), 'entity']);
+                $foreignEntity = $entity->get('foreignEntityId');
                 break;
             case 'measure':
                 $foreignEntity = 'Unit';
@@ -244,16 +246,14 @@ class EntityField extends ReferenceData
         }
 
         $repository = $this->getEntityManager()->getRepository($foreignEntity);
-        if ($entity->get('type') === 'linkMultiple') {
+        if (!empty($ids = $entity->get('defaultIds'))) {
             $defaultNames = [];
-            foreach ($repository->where(['id' => $entity->get('default')])->find() as $foreign) {
+            foreach ($repository->where(['id' => $ids])->find() as $foreign) {
                 $defaultNames[$foreign->get('id')] = $foreign->get('name');
             }
             $entity->set('defaultNames', $defaultNames);
-        } else {
-            if (!empty($foreign = $repository->get($entity->get('default')))) {
-                $entity->set('defaultName', $foreign->get('name'));
-            }
+        } elseif (!empty($id = $entity->get('defaultId')) && !empty($foreign = $repository->get($id))) {
+            $entity->set('defaultName', $foreign->get('name'));
         }
     }
 

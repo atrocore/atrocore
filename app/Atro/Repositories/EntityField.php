@@ -33,6 +33,7 @@ class EntityField extends ReferenceData
      * processed separately.
      */
     public const NOT_PARAM_FIELDS = [
+        'defaultScript',
         'name',
         'code',
         'entity',
@@ -55,6 +56,12 @@ class EntityField extends ReferenceData
         'conditionalVisible',
         'conditionalDisableOptions',
     ];
+
+    /**
+     * The link parameters stored by their own name, not by the name of their attribute, e.g. the ID of the default
+     * record is stored as "default".
+     */
+    public const LINK_PARAMS_STORED_BY_NAME = ['default', 'defaultUnit'];
 
     protected ?array $boolFields = null;
 
@@ -213,6 +220,17 @@ class EntityField extends ReferenceData
 
         if ($fieldDefs['type'] === 'bool') {
             $result['allowNullForBool'] = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.notNull") === false;
+        }
+
+        // the link parameters stored by their own name are the attributes of the links of the entity field
+        foreach (self::LINK_PARAMS_STORED_BY_NAME as $param) {
+            if (isset($result[$param])) {
+                $result[is_array($result[$param]) ? $param . 'Ids' : $param . 'Id'] = $result[$param];
+            }
+        }
+
+        if (($result['defaultValueType'] ?? null) === 'script') {
+            $result['defaultScript'] = $result['default'] ?? null;
         }
 
         return $result;
@@ -1087,6 +1105,11 @@ class EntityField extends ReferenceData
         $defsScope  = $subtype ?? $this->entityName;
         $typeFields = $this->getParamFields($subtype);
 
+        // the default value set by a script is stored as the default value
+        if ($entity->get('defaultValueType') === 'script' && $entity->isAttributeChanged('defaultScript')) {
+            $entity->set('default', $entity->get('defaultScript'));
+        }
+
         // the "where" filter of a link is stored as a parameter, it is sent as a part of "data"
         foreach (array_merge(['where'], $typeFields) as $field) {
             if ($this->getMetadata()->get(['entityDefs', $defsScope, 'fields', $field, 'notStorable'])) {
@@ -1095,11 +1118,17 @@ class EntityField extends ReferenceData
 
             $fieldType = $this->getMetadata()->get(['entityDefs', $defsScope, 'fields', $field, 'type']);
 
+            // a link parameter is stored by the name of its attribute, e.g. "measureId", except the ones stored by
+            // their own name, e.g. "default"
+            $key = $field;
             if ($fieldType === 'link') {
                 $field .= 'Id';
+                $key = in_array($key, self::LINK_PARAMS_STORED_BY_NAME, true) ? $key : $field;
+            } elseif ($fieldType === 'linkMultiple') {
+                $field .= 'Ids';
             }
 
-            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
+            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$key] ?? null;
 
             if ($field === 'where' && isset($entity->_input->data)) {
                 $value = !empty($where = $entity->_input->data?->where) ? json_decode(json_encode($where), true) : [];
@@ -1122,13 +1151,13 @@ class EntityField extends ReferenceData
 
             if ($loadedVal === $entity->get($field)) {
                 $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
-                    "fields.{$entity->get('code')}.{$field}"
+                    "fields.{$entity->get('code')}.{$key}"
                 ]);
             } else {
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                     'fields' => [
                         $entity->get('code') => [
-                            $field => $entity->get($field)
+                            $key => $entity->get($field)
                         ]
                     ]
                 ]);
