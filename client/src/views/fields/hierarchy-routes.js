@@ -12,7 +12,7 @@ Espo.define('views/fields/hierarchy-routes', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
-        type: 'jsonArray',
+        type: 'jsonObject',
 
         listTemplate: 'fields/hierarchy-routes/detail',
 

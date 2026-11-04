@@ -14,7 +14,6 @@ Espo.define('views/attribute/fields/type', 'views/fields/enum',
         inlineEditDisabled: true,
 
         setup: function () {
-            this.params.groupTranslation = 'EntityField.groupOptions.type'
             Dep.prototype.setup.call(this);
 
             this.updateOptions();
@@ -27,6 +26,7 @@ Espo.define('views/attribute/fields/type', 'views/fields/enum',
         updateOptions() {
             this.params.options = [];
             this.params.groupOptions = [];
+            this.translatedGroups = {};
             this.translatedOptions = {};
 
             if (!this.params.required) {
@@ -53,6 +53,7 @@ Espo.define('views/attribute/fields/type', 'views/fields/enum',
                 if (!groupObject) {
                     groupObject = {name: group, options: []}
                     this.params.groupOptions.push(groupObject)
+                    this.translatedGroups[group] = this.translate(group, 'subtypeGroups', 'Attribute');
                 }
 
                 groupObject.options.push(attributeType)

@@ -102,5 +102,12 @@
     "attributeIsUsedInClassifications": "Atrybut jest używany w klasyfikacjach. Proszę najpierw zaktualizować klasyfikacje.",
     "invalidType": "Atrybut type '{type}' jest nieprawidłowy",
     "entityNotAllowToChoose": "Nie można wybrać podmiotu."
+  },
+  "subtypeGroups": {
+    "character": "Charakter",
+    "numeric": "Numeryczny",
+    "date": "Data / godzina",
+    "reference": "Odniesienie",
+    "other": "Inne"
   }
 }

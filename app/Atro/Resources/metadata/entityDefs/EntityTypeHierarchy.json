@@ -1,0 +1,788 @@
+{
+  "fields": {
+    "sortBy": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/sort-by",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "sortDirection": {
+      "type": "enum",
+      "options": [
+        "asc",
+        "desc"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "statusField": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/status-field",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "kanbanViewMode": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "statusField"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "kanbanStatusIgnoreList": {
+      "type": "multiEnum",
+      "view": "views/admin/entity-manager/fields/kanban-status-ignore-list",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "kanbanViewMode"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "quickActions": {
+      "type": "multiEnum",
+      "view": "views/admin/entity-manager/fields/quick-actions",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "deleteWithoutConfirmation": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "clearDeletedAfterDays": {
+      "type": "int",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "modifiedExtendedRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/modified-extended-relations",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "duplicatableRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/duplicatable-relations",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasOwner": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasAssignedUser": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasTeam": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "disableActionHistory": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "multiParents": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "dragAndDrop": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "fieldValueInheritance": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "relationInheritance": {
+      "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "disabled": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasActive": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasArchive": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "role": {
+      "type": "enum",
+      "default": "base",
+      "options": [
+        "base",
+        "contributor"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "primaryEntity": {
+      "type": "link",
+      "view": "views/entity/fields/primary-entity",
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "hideFieldTypeFilters": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "streamDisabled": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "derivativeEnabled": {
+      "type": "bool",
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "uniqueIndexes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "nonComparableFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/non-comparable-fields",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "auditedDisabledFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/audited-disabled-fields",
+      "notStorable": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "auditedEnabledRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/audited-enabled-relations",
+      "notStorable": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "nonDuplicatableFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/non-duplicatable-fields",
+      "notStorable": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "hasAssociate": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isSystem"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasAttribute": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "attributesDisabled"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "code",
+              "value": "Listing"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasClassification": {
+      "type": "bool",
+      "view": "views/entity/fields/has-classification",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "singleClassification": {
+      "type": "bool",
+      "view": "views/entity/fields/single-classification",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "disableAttributeLinking": {
+      "type": "bool",
+      "view": "views/entity/fields/disable-attribute-linking",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "textFilterFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/text-filter-fields",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "derivativeEntities": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "deleteValuesAfterUnlinkingClassification": {
+      "type": "bool",
+      "view": "views/entity/fields/delete-values-after-unlinking-classification",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "linkAttributesWithClassificationAutomatically": {
+      "type": "bool",
+      "view": "views/entity/fields/link-attributes-with-classification-automatically",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "containsPersonalData": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "isPerson": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "containsPersonalData"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "links": {
+    "primaryEntity": {
+      "type": "belongsTo",
+      "entity": "EntityTypeHierarchy",
+      "foreign": "derivativeEntities"
+    },
+    "derivativeEntities": {
+      "type": "hasMany",
+      "entity": "EntityTypeHierarchy",
+      "foreign": "primaryEntity"
+    },
+    "uniqueIndexes": {
+      "type": "hasMany",
+      "foreign": "entity",
+      "entity": "EntityUniqueIndex"
+    }
+  }
+}

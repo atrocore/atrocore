@@ -19,7 +19,7 @@
       "noLoad": false
     },
     "folderPath": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "view": "views/folder/fields/folder-path",
       "notStorable": true,
       "readOnly": true,

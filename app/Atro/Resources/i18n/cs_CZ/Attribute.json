@@ -102,5 +102,12 @@
     "attributeIsUsedInClassifications": "Atribut se používá v klasifikacích. Nejprve prosím aktualizujte klasifikace.",
     "invalidType": "Typ atributu '{type}' je neplatný",
     "entityNotAllowToChoose": "Entitu nelze vybrat."
+  },
+  "subtypeGroups": {
+    "character": "Postava",
+    "numeric": "Číselné",
+    "date": "Datum / čas",
+    "reference": "Odkaz",
+    "other": "Další"
   }
 }

@@ -24,7 +24,7 @@
       "emHidden": true
     },
     "conditionalDisableOptions": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "view": "views/entity-field/fields/conditional-disable-options",
       "layoutRemoveDisabled": true,
       "massUpdateDisabled": true,

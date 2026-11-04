@@ -546,6 +546,8 @@ class Metadata
             $entityName = $primaryEntityId;
         }
 
+        $entityName = $this->getReferenceDataSupertype($entityName) ?? $entityName;
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
@@ -578,6 +580,8 @@ class Metadata
             $entityName = $entityId;
         }
 
+        $entityName = $this->getReferenceDataSupertype($entityName) ?? $entityName;
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
@@ -596,6 +600,31 @@ class Metadata
         }
 
         return $path;
+    }
+
+    /**
+     * The records of a subtype of a reference data entity are the records of the supertype, they are served by the
+     * classes of the supertype.
+     */
+    public function getReferenceDataSupertype(string $entityName): ?string
+    {
+        if ($this->get("scopes.$entityName.type") !== 'ReferenceData') {
+            return null;
+        }
+
+        return $this->get("scopes.$entityName.supertypeId");
+    }
+
+    /**
+     * The subtype of the supertype for the value of the "type" field of a supertype record.
+     */
+    public function getSubtypeScope(string $supertype, ?string $type): ?string
+    {
+        if ($type === null || $type === '') {
+            return null;
+        }
+
+        return $this->get(['scopes', $supertype, 'subtypeScopes', $type]);
     }
 
     public function getScopeModuleName(string $scopeName): ?string

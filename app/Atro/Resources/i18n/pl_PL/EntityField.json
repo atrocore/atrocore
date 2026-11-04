@@ -106,6 +106,36 @@
     "selectPageSize": "Liczba rekordów wyświetlanych na stronie w oknie dialogowym wyboru. Unikaj zbyt wysokich wartości, ponieważ może to spowolnić lub zawiesić przeglądarkę użytkownika."
   },
   "options": {
+    "type": {
+      "array": "Tablica",
+      "autoincrement": "Automatyczne zwiększanie",
+      "bool": "Boolean",
+      "code": "code",
+      "color": "Kolor",
+      "date": "Data",
+      "datetime": "Data-czas",
+      "email": "E-mail",
+      "enum": "Lista",
+      "file": "Plik",
+      "float": "Liczba zmiennoprzecinkowa",
+      "foreign": "Obcy",
+      "int": "Liczba całkowita",
+      "jsonObject": "Obiekt JSON",
+      "link": "Link",
+      "linkMultiple": "Wielokrotny link",
+      "linkParent": "Link nadrzędny",
+      "markdown": "Markdown",
+      "measure": "Miara",
+      "multiEnum": "Lista wielowartościowa",
+      "password": "Hasło",
+      "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
+      "rangeInt": "Zakres liczb całkowitych",
+      "script": "Skrypt",
+      "text": "Tekst",
+      "url": "Adres URL",
+      "varchar": "Ciąg znaków",
+      "wysiwyg": "HTML"
+    },
     "outputType": {
       "text": "Tekst",
       "int": "Liczba całkowita",
@@ -151,20 +181,14 @@
       "unlink": "Odłącz"
     }
   },
-  "groupOptions": {
-    "type": {
-      "character": "Charakter",
-      "numeric": "Numeryczny",
-      "date": "Data / godzina",
-      "reference": "Odniesienie",
-      "other": "Inne"
-    }
-  },
-  "confirmations": {
-    "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
+  "subtypeGroups": {
+    "character": "Charakter",
+    "numeric": "Numeryczny",
+    "date": "Data / godzina",
+    "reference": "Odniesienie",
+    "other": "Inne"
   },
   "labels": {
-    "resetToDefault": "Resetuj do domyślnego",
     "relationManagement": "Zarządzanie relacjami",
     "conditionalProperties": "Właściwości warunkowe",
     "personalData": "Dane osobowe"
@@ -177,5 +201,11 @@
     "optionCodeShouldBeUnique": "Kod opcji musi być unikalny.",
     "optionCodeUsedInDisabledOptionsRules": "Opcja '%s' jest używana w regułach wyłączonych opcji i nie może zostać zmieniona.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "Opcja '%s' jest używana w regułach wyłączonych opcji i nie może zostać usunięta."
+  },
+  "actions": {
+    "resetToDefault": "Resetuj do domyślnego"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
   }
 }

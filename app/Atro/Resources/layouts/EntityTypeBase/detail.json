@@ -1,0 +1,201 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "isCustom"
+        }
+      ],
+      [
+        {
+          "name": "streamDisabled"
+        },
+        {
+          "name": "disableActionHistory"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "namePlural"
+        }
+      ],
+      [
+        {
+          "name": "iconClass"
+        },
+        {
+          "name": "quickActions"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "hasArchive"
+        },
+        {
+          "name": "hasActive"
+        }
+      ],
+      [
+        {
+          "name": "sortBy"
+        },
+        {
+          "name": "sortDirection"
+        }
+      ],
+      [
+        {
+          "name": "statusField"
+        },
+        {
+          "name": "kanbanViewMode"
+        }
+      ],
+      [
+        {
+          "name": "kanbanStatusIgnoreList"
+        },
+        false
+      ],
+      [
+        {
+          "name": "deleteWithoutConfirmation"
+        },
+        false
+      ],
+      [
+        {
+          "name": "clearDeletedAfterDays"
+        },
+        false
+      ],
+      [
+        {
+          "name": "modifiedExtendedRelations"
+        },
+        false
+      ],
+      [
+        {
+          "name": "duplicatableRelations"
+        },
+        {
+          "name": "nonDuplicatableFields"
+        }
+      ],
+      [
+        {
+          "name": "hideFieldTypeFilters"
+        },
+        false
+      ],
+      [
+        {
+          "name": "textFilterFields"
+        },
+        {
+          "name": "nonComparableFields"
+        }
+      ],
+      [
+        {
+          "name": "auditedDisabledFields"
+        },
+        {
+          "name": "auditedEnabledRelations"
+        }
+      ],
+      [
+        {
+          "name": "hasAttribute"
+        },
+        {
+          "name": "hasClassification"
+        }
+      ],
+      [
+        {
+          "name": "disableAttributeLinking"
+        },
+        {
+          "name": "singleClassification"
+        }
+      ],
+      [
+        {
+          "name": "deleteValuesAfterUnlinkingClassification"
+        },
+        {
+          "name": "linkAttributesWithClassificationAutomatically"
+        }
+      ],
+      [
+        {
+          "name": "hasAssociate"
+        },
+        false
+      ],
+      [
+        {
+          "name": "containsPersonalData"
+        },
+        {
+          "name": "isPerson"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "derivation",
+    "rows": [
+      [
+        {
+          "name": "primaryEntity"
+        },
+        {
+          "name": "role"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "accessManagement",
+    "rows": [
+      [
+        {
+          "name": "hasOwner"
+        },
+        {
+          "name": "hasAssignedUser"
+        }
+      ],
+      [
+        {
+          "name": "hasTeam"
+        },
+        false
+      ]
+    ]
+  }
+]

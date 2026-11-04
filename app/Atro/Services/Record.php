@@ -73,8 +73,70 @@ class Record extends RecordService
         return null;
     }
 
+    /**
+     * Renders the script on the first record of the entity, e.g. to show the preview of a script field.
+     */
+    public function previewScript(string $script, string $outputType = 'text'): array
+    {
+        $entity = $this->getRepository()->order('id', 'ASC')->findOne();
+        if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']))) {
+            $this->getInjection(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($entity);
+        }
+
+        $preview = $this->getInjection('twig')->renderTemplate($script, ['entity' => $entity], $outputType);
+        if (is_string($preview) && $outputType !== 'wysiwyg') {
+            $outputType = 'text';
+        }
+
+        return [
+            'preview'    => $preview,
+            'entityName' => $this->entityType,
+            'entity'     => empty($entity) ? null : $entity->toArray(),
+            'outputType' => $outputType,
+        ];
+    }
+
+    public function putMeta(Entity $entity): void
+    {
+        parent::putMeta($entity);
+
+        if ($this->isMetaGroupRequested('readOnlyFields') && !empty($fields = $this->getReadOnlyFields($entity))) {
+            $meta = $entity->get('_meta') ?? [];
+            $meta['readOnlyFields'] = array_values($fields);
+            $entity->set('_meta', $meta);
+        }
+    }
+
+    /**
+     * The fields that cannot be changed in the record, while the other records of the entity can have them changed.
+     */
+    protected function getReadOnlyFields(Entity $entity): array
+    {
+        return [];
+    }
+
+    /**
+     * A subtype record is the supertype record, the listeners of the supertype service apply to it as well.
+     */
+    protected function dispatchEvent(string $action, Event $event): Event
+    {
+        $event = parent::dispatchEvent($action, $event);
+
+        $supertype = $this->getMetadata()->get(['scopes', $this->entityType, 'supertypeId']);
+        if (empty($supertype)) {
+            return $event;
+        }
+
+        return $this->getInjection('eventManager')->dispatch($supertype . 'Service', $action, $event);
+    }
+
     public function createEntity(\stdClass $attachment): string
     {
+        // the records of such an entity cannot be created at all, also not as duplicates
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'createDisabled']))) {
+            throw new NotFound($this->getInjection('language')->translate('recordCannotBeCreated', 'exceptions'));
+        }
+
         // each record of an entity with subtypes belongs to one of them, so it is created via the subtype
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasSubtypes']))) {
             throw new BadRequest($this->getInjection('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
@@ -94,6 +156,13 @@ class Record extends RecordService
         // the subtype of a record is set by the subtype on creation and cannot be changed
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasSubtypes']))) {
             unset($data->type);
+        }
+
+        // the read-only fields of the record are not changed
+        if (!empty($entity)) {
+            foreach ($this->getReadOnlyFields($entity) as $field) {
+                unset($data->$field, $data->{$field . 'Id'}, $data->{$field . 'Ids'});
+            }
         }
     }
 

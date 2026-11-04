@@ -1,0 +1,195 @@
+{
+  "fields": {
+    "duplicateIgnore": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "required": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "allowNullForBool": {
+      "type": "bool",
+      "notStorable": true
+    },
+    "readOnly": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "protected"
+            }
+          ]
+        }
+      }
+    },
+    "protected": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
+    "default": {
+      "type": "bool",
+      "tooltip": true,
+      "notNull": false
+    },
+    "isNonComparable": {
+      "type": "bool"
+    },
+    "inheritanceDisabled": {
+      "view": "views/admin/field-manager/fields/inheritance-disabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    "auditableDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "conditionalRequired": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "relevantForAccessRequest": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    },
+    "erasureMode": {
+      "options": [
+        "nullify",
+        "retain"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        },
+        "disableOptions": [
+          {
+            "options": [
+              "nullify"
+            ],
+            "conditionGroup": [
+              {
+                "type": "isFalse",
+                "attribute": "allowNullForBool"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

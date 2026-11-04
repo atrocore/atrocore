@@ -25,10 +25,7 @@ Espo.define('views/admin/entity-manager/fields/audited-disabled-fields', 'views/
             this.params.options = [];
             this.translatedOptions = {};
             $.each((this.getMetadata().get(['entityDefs', this.model.get('code'), 'fields']) || {}), (field, fieldDefs) => {
-                if (
-                    fieldDefs.type !== 'jsonArray'
-                    && fieldDefs.emHidden !== true
-                ) {
+                if (fieldDefs.emHidden !== true) {
                     this.params.options.push(field);
                     this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('code'));
                 }

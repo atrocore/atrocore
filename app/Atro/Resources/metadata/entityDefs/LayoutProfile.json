@@ -39,13 +39,13 @@
       "type": "link"
     },
     "navigation": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "view": "views/layout-profile/fields/navigation",
       "filterDisabled": true,
       "massUpdateDisabled": true
     },
     "dashboardLayout": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "layoutDetailDisabled": true,
@@ -59,7 +59,7 @@
       "layoutListDisabled": true
     },
     "favoritesList": {
-      "type": "jsonArray",
+      "type": "array",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "layoutDetailDisabled": true,

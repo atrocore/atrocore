@@ -2,58 +2,17 @@
   "controller": "controllers/record",
   "iconClass": "database",
   "limit": 2000,
-  "recordViews": {
-    "list": "views/admin/entity-manager/record/list",
-    "detail": "views/admin/entity-manager/record/detail",
-    "detailSmall": "views/admin/entity-manager/record/detail",
-    "edit": "views/admin/entity-manager/record/edit",
-    "editSmall": "views/admin/entity-manager/record/edit"
-  },
   "relationshipPanels": {
     "fields": {
       "select": false,
       "limit": 2000,
-      "view": "views/entity/record/panels/fields",
       "actions": {
         "unlinkRelated": {
           "disabled": true
         }
       },
       "hideShowFullList": true
-    },
-    "derivativeEntities": {
-      "select": false,
-      "actions": {
-        "unlinkRelated": {
-          "disabled": true
-        }
-      }
-    },
-    "subtypes": {
-      "select": false,
-      "actions": {
-        "unlinkRelated": {
-          "disabled": true
-        }
-      }
-    },
-    "uniqueIndexes": {
-      "select": false,
-      "actions": {
-        "unlinkRelated": {
-          "disabled": true
-        }
-      }
     }
-  },
-  "bottomPanels": {
-    "detail": [
-      {
-        "name": "attributes",
-        "label": "attributes",
-        "view": "views/admin/field-manager/record/panels/attributes"
-      }
-    ]
   },
   "boolFilterList": [
     "canHasAttributes",
@@ -68,5 +27,14 @@
     "canHasAssociates",
     "onlyForDerivativeEnabled",
     "canBeSupertype"
-  ]
+  ],
+  "detailActions": {
+    "resetToDefault": {
+      "name": "resetToDefault",
+      "url": "Entity/{{id}}/resetToDefault",
+      "confirm": true,
+      "refresh": true,
+      "sortOrder": 300
+    }
+  }
 }

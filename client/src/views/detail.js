@@ -785,7 +785,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             if (res && JSON.stringify(res).includes('{{')) {
                 const entityFieldId = this.model.name + '_' + link;
                 const recordId = this.model.id || '';
-                const url = 'EntityField/' + entityFieldId + '/prepareFieldWhere' + (recordId ? '?recordId=' + recordId : '');
+                // the filter is defined by the field of the relation, a link or a multiple link
+                const subtype = this.model.getFieldParam(link, 'type') === 'link' ? 'EntityFieldTypeLink' : 'EntityFieldTypeLinkMultiple';
+                const url = subtype + '/' + entityFieldId + '/where' + (recordId ? '?recordId=' + recordId : '');
                 this.ajaxGetRequest(url, null, {async: false}).success(response => {
                     res = response?.where || res;
                 });

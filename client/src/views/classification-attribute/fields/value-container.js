@@ -54,12 +54,8 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
 
             let hasDefault = this.mode === 'list';
 
-            if (this.model.get('attributeType')){
-                (this.getMetadata().get(`fields.${this.model.get('attributeType')}.params`) || []).forEach(item => {
-                    if (item.name === 'default' || item.name === 'defaultDate'){
-                        hasDefault = true;
-                    }
-                })
+            if (this.model.get('attributeType') && this.getMetadata().get(['fields', this.model.get('attributeType'), 'defaultValue'])) {
+                hasDefault = true;
             }
 
             if (hasDefault) {

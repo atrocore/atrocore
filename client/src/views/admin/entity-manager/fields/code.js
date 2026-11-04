@@ -51,7 +51,7 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
                 }
             });
 
-            this.listenTo(this.model, 'change:type change:supertypeId', () => {
+            this.listenTo(this.model, 'change:type change:supertypeEntityId', () => {
                 if (this.model.id) {
                     return;
                 }
@@ -63,8 +63,8 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
         },
 
         getSubtypePrefix() {
-            if (this.model.get('type') === 'Subtype' && this.model.get('supertypeId')) {
-                return this.model.get('supertypeId') + 'Type';
+            if (this.model.get('type') === 'Subtype' && this.model.get('supertypeEntityId')) {
+                return this.model.get('supertypeEntityId') + 'Type';
             }
 
             return '';
@@ -76,7 +76,7 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
                 return '';
             }
 
-            return this.translate(this.model.get('supertypeId'), 'scopeNames') + ': ';
+            return this.translate(this.model.get('supertypeEntityId'), 'scopeNames') + ': ';
         },
 
         getNameFromCode() {

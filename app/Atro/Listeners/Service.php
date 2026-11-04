@@ -70,8 +70,8 @@ class Service extends AbstractListener
             return;
         }
 
-        $subtype = $entityName . 'Type' . ucfirst((string)$entity->get('type'));
-        if ($this->getMetadata()->get(['scopes', $subtype, 'type']) !== 'Subtype') {
+        $subtype = $this->getMetadata()->getSubtypeScope($entityName, (string)$entity->get('type'));
+        if (empty($subtype)) {
             return;
         }
 

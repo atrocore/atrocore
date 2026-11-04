@@ -20,17 +20,8 @@ Espo.define('views/entity/fields/supertype', 'views/fields/link',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:supertypeId', () => {
+            this.listenTo(this.model, 'change:supertypeEntityId', () => {
                 this.inheritIconClass();
-            });
-
-            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, cb) => {
-                if (link === 'subtypes') {
-                    attributes.type = 'Subtype';
-                    attributes.supertypeId = this.model.id;
-                    attributes.supertypeName = this.model.get('name');
-                    cb(attributes);
-                }
             });
         },
 
@@ -43,7 +34,7 @@ Espo.define('views/entity/fields/supertype', 'views/fields/link',
         },
 
         inheritIconClass() {
-            if (this.model.id || !this.model.get('supertypeId')) {
+            if (this.model.id || !this.model.get('supertypeEntityId')) {
                 return;
             }
 
@@ -53,7 +44,7 @@ Espo.define('views/entity/fields/supertype', 'views/fields/link',
                 return;
             }
 
-            this.inheritedIconClass = this.getMetadata().get(['clientDefs', this.model.get('supertypeId'), 'iconClass']) || null;
+            this.inheritedIconClass = this.getMetadata().get(['clientDefs', this.model.get('supertypeEntityId'), 'iconClass']) || null;
             this.model.set('iconClass', this.inheritedIconClass);
         },
 

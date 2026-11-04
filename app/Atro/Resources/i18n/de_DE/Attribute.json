@@ -107,5 +107,12 @@
     "attributeEntityMustBeSameAsInCompositeAttribute": "Das Attribut-Entität muss dasselbe sein wie im zusammengesetzten Attribut.",
     "attributeNotBelongToEntity": "Das Attribut gehört nicht zu dieser Entität.",
     "entityNotAllowToChoose": "Die Entität kann nicht ausgewählt werden."
+  },
+  "subtypeGroups": {
+    "character": "Charakter",
+    "numeric": "Numerisch",
+    "date": "Datum / Uhrzeit",
+    "reference": "Referenz",
+    "other": "Sonstige"
   }
 }

@@ -450,7 +450,7 @@ class Language
         $source = $scopeDefs['primaryEntityId'] ?? $scopeDefs['derivativeForRelation'] ?? null;
 
         // a subtype shows the fields of its supertype, so it uses their translations
-        if ($source === null && $scopeDefs['type'] === 'Subtype') {
+        if ($source === null && !empty($scopeDefs['supertypeId'])) {
             $source = $scopeDefs['supertypeId'] ?? null;
         }
 

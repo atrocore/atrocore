@@ -13,27 +13,8 @@ Espo.define('views/entity/fields/primary-entity', 'views/fields/link',
 
         createDisabled: true,
 
-        selectBoolFilterList: ['fieldsFilter', 'onlyForDerivativeEnabled'],
-
-        boolFilterData: {
-            fieldsFilter() {
-                return {
-                    type: [this.model.get('type')]
-                };
-            }
-        },
-
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, cb) => {
-                if (link === 'derivativeEntities') {
-                    attributes.primaryEntityId = this.model.id;
-                    attributes.type = this.model.get('type');
-                    cb(attributes)
-                }
-            })
-        },
+        // the primary entity has the same type, the link points to the subtype of this type
+        selectBoolFilterList: ['onlyForDerivativeEnabled'],
 
     })
 );

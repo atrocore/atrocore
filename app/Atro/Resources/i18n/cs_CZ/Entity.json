@@ -69,12 +69,8 @@
     "accessManagement": "Správa přístupu",
     "hierarchyManagement": "Správa hierarchie",
     "other": "Další",
-    "resetToDefault": "Obnovení výchozího nastavení",
     "attributes": "Atributy",
     "derivation": "Odvození"
-  },
-  "confirmations": {
-    "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Záznamy pro tento subjekt jsou trvale vymazány XX dní po datu vymazání.",
@@ -103,5 +99,11 @@
     "derivativeWithSuchRoleExists": "Již existuje odvozená entita s touto rolí.",
     "derivativeFromDerivativeNotSupporting": "Odvozená entita nemůže být vytvořena z jiné odvozené entity.",
     "cannotRemoveDerivativeDirectly": "Odvozené entity nelze odstranit přímo."
+  },
+  "actions": {
+    "resetToDefault": "Obnovení výchozího nastavení"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"
   }
 }

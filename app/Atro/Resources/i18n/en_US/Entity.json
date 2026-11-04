@@ -49,7 +49,7 @@
     "role": "Role",
     "containsPersonalData": "Contains Personal Data",
     "isPerson": "Is Person",
-    "supertype": "Supertype",
+    "supertypeEntity": "Supertype",
     "subtypes": "Subtypes"
   },
   "options": {
@@ -73,12 +73,8 @@
     "accessManagement": "Access management",
     "hierarchyManagement": "Hierarchy management",
     "other": "Other",
-    "resetToDefault": "Reset to default",
     "attributes": "Attributes",
     "derivation": "Derivation"
-  },
-  "confirmations": {
-    "resetToDefault": "Are you sure you want to reset configuration to default?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Records for this entity are permanently deleted XX days after the deletion date.",
@@ -98,9 +94,10 @@
     "auditedDisabledFields": "Changes in these fields are not displayed as Activity.",
     "auditedEnabledRelations": "Changes in these relations are displayed as Activity.",
     "linkAttributesWithClassificationAutomatically": "If an attribute is directly linked to a record, and that record is linked to a classification, then the attribute will also be linked to that classification.",
-    "supertype": "The entity this subtype extends. The subtype stores only its own fields, all common data is stored in the supertype. The code of the subtype must start with the code of the supertype followed by \"Type\", e.g. \"ExportFeedTypeSimple\"."
+    "supertypeEntity": "The entity this subtype extends. The subtype stores only its own fields, all common data is stored in the supertype. The code of the subtype must start with the code of the supertype followed by \"Type\", e.g. \"ExportFeedTypeSimple\"."
   },
   "exceptions": {
+    "derivativeCannotBeDuplicated": "A derived entity cannot be duplicated, create a new derived entity from its primary entity.",
     "derivativeWithSuchRoleExists": "There is already a derivative entity with this role.",
     "derivativeFromDerivativeNotSupporting": "A derived entity cannot be created from another derived entity.",
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not both be in relations that affect the modification date/time.",
@@ -121,5 +118,11 @@
     "entityHasSubtypes": "Entity cannot be deleted because it has subtypes. Please delete them first.",
     "subtypeParamCannotBeChanged": "Parameter \"%s\" cannot be changed for an entity of type \"Subtype\". Only fields and relations can be added to a subtype.",
     "derivativeFromSubtypeNotSupporting": "A derived entity cannot be created from a subtype."
+  },
+  "actions": {
+    "resetToDefault": "Reset to default"
+  },
+  "actionConfirms": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
   }
 }

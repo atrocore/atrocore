@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
@@ -27,7 +28,101 @@ use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
 {
+    /**
+     * The fields of the entity field that are not stored as the parameters of the field definition, they are
+     * processed separately.
+     */
+    public const NOT_PARAM_FIELDS = [
+        'defaultScript',
+        'name',
+        'code',
+        'entity',
+        'customizable',
+        'tooltipText',
+        'data',
+        '_meta',
+        'supertype',
+        'relationType',
+        'foreignEntity',
+        'foreignCode',
+        'relationName',
+        'linkMultipleField',
+        'isNonComparable',
+        'isDuplicatableRelation',
+        'modifiedExtendedEnabled',
+        'conditionalRequired',
+        'conditionalReadOnly',
+        'conditionalProtected',
+        'conditionalVisible',
+        'conditionalDisableOptions',
+    ];
+
+    /**
+     * The link parameters stored by their own name, not by the name of their attribute, e.g. the ID of the default
+     * record is stored as "default".
+     */
+    public const LINK_PARAMS_STORED_BY_NAME = ['default', 'defaultUnit'];
+
     protected ?array $boolFields = null;
+
+    /**
+     * The default value of a field has to be valid for the field: an option of a list field, a unit of the measure
+     * of the field.
+     */
+    protected function validateDefaultValue(OrmEntity $entity): void
+    {
+        if (
+            $entity->get('type') === 'enum'
+            && ($entity->isNew() || $entity->isAttributeChanged('default') || $entity->isAttributeChanged('options') || $entity->isAttributeChanged('required'))
+        ) {
+            $default = $entity->get('default');
+            if ($default === null || $default === '') {
+                if (!empty($entity->get('required'))) {
+                    throw new BadRequest($this->getLanguage()->translate('defaultEnumValueCannotBeEmpty', 'exceptions', 'EntityField'));
+                }
+            } elseif (!in_array($default, $entity->get('options') ?? [], true)) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('defaultValueIsNotOption', 'exceptions', 'EntityField'), $default));
+            }
+        }
+
+        // the default value of a measure field and the default unit of a number are units of the measure of the field
+        $attributes = ['defaultUnitId'];
+        if ($entity->get('type') === 'measure') {
+            $attributes[] = 'defaultId';
+        }
+
+        foreach ($attributes as $attribute) {
+            if (empty($unitId = $entity->get($attribute))) {
+                continue;
+            }
+
+            if (!$entity->isNew() && !$entity->isAttributeChanged($attribute) && !$entity->isAttributeChanged('measureId')) {
+                continue;
+            }
+
+            $unit = $this->getEntityManager()->getRepository('Unit')->get($unitId);
+            if (empty($unit) || $unit->get('measureId') !== $entity->get('measureId')) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('defaultUnitIsNotOfMeasure', 'exceptions', 'EntityField'), $unitId));
+            }
+        }
+    }
+
+    /**
+     * The fields of the subtype that are the parameters of the field definition of its type.
+     */
+    public function getParamFields(?string $subtype): array
+    {
+        $result = [];
+        foreach ($this->getMetadata()->get(['entityDefs', (string)$subtype, 'fields'], []) as $field => $defs) {
+            if (empty($defs['type']) || !empty($defs['notStorable']) || in_array($field, self::NOT_PARAM_FIELDS, true)) {
+                continue;
+            }
+            $result[] = $field;
+        }
+
+        return $result;
+    }
+
     protected function getEntityById($id)
     {
         $parts = explode("_", $id, 2);
@@ -36,7 +131,7 @@ class EntityField extends ReferenceData
         }
 
         $item = $this->prepareItem($parts[0], $parts[1]);
-        if (!empty($item)) {
+        if (!empty($item) && $this->isItemOfSubtype($item)) {
             $entity = $this->entityFactory->create($this->entityName);
             $entity->set($item);
             $this->prepareVirtualBoolFields($entity);
@@ -76,7 +171,7 @@ class EntityField extends ReferenceData
 
         if ($this->boolFields === null) {
             $this->boolFields = [];
-            foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $defs) {
                 if ($defs['type'] === 'bool') {
                     $this->boolFields[] = $field;
                 }
@@ -95,7 +190,7 @@ class EntityField extends ReferenceData
                 $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
             }
             if ($fieldDefs['type'] === 'link') {
-                $fieldDefs['relationType'] = $linkDefs['type'] === 'hasOne'
+                $fieldDefs['relationType'] = ($linkDefs['type'] ?? null) === 'hasOne'
                     ? 'oneToOne'
                     : $linkDefs['relationType'] ?? 'manyToOne';
             }
@@ -103,8 +198,7 @@ class EntityField extends ReferenceData
                 $fieldDefs['foreignEntityId']   = $linkDefs['entity'];
                 $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
             } else {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName], []);
-
+                // a link to a reference data entity has no relation, the entity is defined by the field
                 if (!empty($fieldDefs['entity'])) {
                     $foreignScope = $this->getMetadata()->get(['scopes', $fieldDefs['entity']], []);
 
@@ -122,6 +216,11 @@ class EntityField extends ReferenceData
             $label = $this->translate('combined' . ucfirst($fieldName), 'fields', $entityName);
         }
 
+        // the options of some lists are defined on UI, they are not a part of the definition
+        if (in_array($fieldDefs['type'], ['enum', 'multiEnum']) && !isset($fieldDefs['options'])) {
+            $fieldDefs['options'] = [];
+        }
+
         $translatedOptions = null;
         if (in_array($fieldDefs['type'], ['enum', 'multiEnum']) && !empty($fieldDefs['options'])) {
             foreach ($fieldDefs['options'] as $option) {
@@ -134,6 +233,8 @@ class EntityField extends ReferenceData
 
         $result = array_merge($fieldDefs, [
             'id'                        => "{$entityName}_{$fieldName}",
+            // the record of a subtype is the record of the supertype "EntityField" with the same ID
+            'supertypeId'               => "{$entityName}_{$fieldName}",
             'code'                      => $fieldName,
             'name'                      => $label,
             'entityId'                  => $entityName,
@@ -161,6 +262,17 @@ class EntityField extends ReferenceData
 
         if ($fieldDefs['type'] === 'bool') {
             $result['allowNullForBool'] = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.notNull") === false;
+        }
+
+        // the link parameters stored by their own name are the attributes of the links of the entity field
+        foreach (self::LINK_PARAMS_STORED_BY_NAME as $param) {
+            if (isset($result[$param])) {
+                $result[is_array($result[$param]) ? $param . 'Ids' : $param . 'Id'] = $result[$param];
+            }
+        }
+
+        if (($result['defaultValueType'] ?? null) === 'script') {
+            $result['defaultScript'] = $result['default'] ?? null;
         }
 
         return $result;
@@ -216,8 +328,9 @@ class EntityField extends ReferenceData
         foreach ($entities as $entityName) {
             if (!$filterIsMultilang) {
                 $items[] = [
-                    'id'         => "{$entityName}_id",
-                    'code'       => 'id',
+                    'id'          => "{$entityName}_id",
+                    'supertypeId' => "{$entityName}_id",
+                    'code'        => 'id',
                     'name'       => 'ID',
                     'type'       => 'varchar',
                     'required'   => false,
@@ -272,6 +385,8 @@ class EntityField extends ReferenceData
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        $this->validateDefaultValue($entity);
 
         if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
             if (!RegexUtil::validate($entity->get('pattern'))) {
@@ -547,10 +662,16 @@ class EntityField extends ReferenceData
         $this->clearEntityScriptFields($entity);
     }
 
-    public function updateOptionCode(string $scope, string $field, string $oldValue, string $newValue): bool
+    public function updateOptionCode(string $id, string $oldValue, string $newValue): bool
     {
-        $type        = $this->getMetadata()->get("scopes.{$scope}.type");
-        $fieldEntity = $this->get($scope . '_' . $field);
+        $fieldEntity = $this->get($id);
+        if (empty($fieldEntity)) {
+            throw new NotFound();
+        }
+
+        $scope = $fieldEntity->get('entityId');
+        $field = $fieldEntity->get('code');
+        $type  = $this->getMetadata()->get("scopes.{$scope}.type");
 
         if (!in_array($oldValue, $fieldEntity->get('options'))) {
             throw new BadRequest('Such option old option code does not exist.');
@@ -576,6 +697,10 @@ class EntityField extends ReferenceData
         $key           = array_search($oldValue, $options);
         $options[$key] = $newValue;
         $fieldEntity->set('options', $options);
+        // the default value is the option, its code is changed too
+        if ($fieldEntity->get('default') === $oldValue) {
+            $fieldEntity->set('default', $newValue);
+        }
         $this->save($fieldEntity);
 
         // replace Translations
@@ -1024,46 +1149,34 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isAuditableRelation', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where', 'personalData', 'notInEveryRecord', 'category', 'specialCategory', 'specialPersonDataCategory', 'erasureMode', 'relevantForAccessRequest'];
+        $subtype    = $this->getMetadata()->getSubtypeScope('EntityField', (string)$entity->get('type'));
+        $defsScope  = $subtype ?? $this->entityName;
+        $typeFields = $this->getParamFields($subtype);
 
-        $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
-
-        if (in_array('script', $typeFields) && !empty($entity->get('isMultilang'))) {
-            $languages = [];
-
-            if (!empty($this->getConfig()->get('isMultilangActive'))) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
-                    $languages[$code] = $code;
-                    foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
-                        if ($code === $v['code']) {
-                            $languages[$code] = $v['name'];
-                            break;
-                        }
-                    }
-                }
-            }
-
-            foreach ($languages as $language => $languageName) {
-                $typeFields[] = 'script' . ucfirst(Util::toCamelCase(strtolower($language)));
-            }
+        // the default value set by a script is stored as the default value
+        if ($entity->get('defaultValueType') === 'script' && $entity->isAttributeChanged('defaultScript')) {
+            $entity->set('default', $entity->get('defaultScript'));
         }
 
-        if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            $typeFields[] = 'optionColors';
-        }
-
-        foreach (array_merge($commonFields, $typeFields) as $field) {
-            if ($this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.notStorable")) {
+        // the "where" filter of a link is stored as a parameter, it is sent as a part of "data"
+        foreach (array_merge(['where'], $typeFields) as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $defsScope, 'fields', $field, 'notStorable'])) {
                 continue;
             }
 
-            $fieldType = $this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.type");
+            $fieldType = $this->getMetadata()->get(['entityDefs', $defsScope, 'fields', $field, 'type']);
 
+            // a link parameter is stored by the name of its attribute, e.g. "measureId", except the ones stored by
+            // their own name, e.g. "default"
+            $key = $field;
             if ($fieldType === 'link') {
                 $field .= 'Id';
+                $key = in_array($key, self::LINK_PARAMS_STORED_BY_NAME, true) ? $key : $field;
+            } elseif ($fieldType === 'linkMultiple') {
+                $field .= 'Ids';
             }
 
-            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
+            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$key] ?? null;
 
             if ($field === 'where' && isset($entity->_input->data)) {
                 $value = !empty($where = $entity->_input->data?->where) ? json_decode(json_encode($where), true) : [];
@@ -1086,13 +1199,13 @@ class EntityField extends ReferenceData
 
             if ($loadedVal === $entity->get($field)) {
                 $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
-                    "fields.{$entity->get('code')}.{$field}"
+                    "fields.{$entity->get('code')}.{$key}"
                 ]);
             } else {
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                     'fields' => [
                         $entity->get('code') => [
-                            $field => $entity->get($field)
+                            $key => $entity->get($field)
                         ]
                     ]
                 ]);
