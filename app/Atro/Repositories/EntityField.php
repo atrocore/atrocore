@@ -66,6 +66,48 @@ class EntityField extends ReferenceData
     protected ?array $boolFields = null;
 
     /**
+     * The default value of a field has to be valid for the field: an option of a list field, a unit of the measure
+     * of the field.
+     */
+    protected function validateDefaultValue(OrmEntity $entity): void
+    {
+        if (
+            $entity->get('type') === 'enum'
+            && ($entity->isNew() || $entity->isAttributeChanged('default') || $entity->isAttributeChanged('options') || $entity->isAttributeChanged('required'))
+        ) {
+            $default = $entity->get('default');
+            if ($default === null || $default === '') {
+                if (!empty($entity->get('required'))) {
+                    throw new BadRequest($this->getLanguage()->translate('defaultEnumValueCannotBeEmpty', 'exceptions', 'EntityField'));
+                }
+            } elseif (!in_array($default, $entity->get('options') ?? [], true)) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('defaultValueIsNotOption', 'exceptions', 'EntityField'), $default));
+            }
+        }
+
+        // the default value of a measure field and the default unit of a number are units of the measure of the field
+        $attributes = ['defaultUnitId'];
+        if ($entity->get('type') === 'measure') {
+            $attributes[] = 'defaultId';
+        }
+
+        foreach ($attributes as $attribute) {
+            if (empty($unitId = $entity->get($attribute))) {
+                continue;
+            }
+
+            if (!$entity->isNew() && !$entity->isAttributeChanged($attribute) && !$entity->isAttributeChanged('measureId')) {
+                continue;
+            }
+
+            $unit = $this->getEntityManager()->getRepository('Unit')->get($unitId);
+            if (empty($unit) || $unit->get('measureId') !== $entity->get('measureId')) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('defaultUnitIsNotOfMeasure', 'exceptions', 'EntityField'), $unitId));
+            }
+        }
+    }
+
+    /**
      * The fields of the subtype that are the parameters of the field definition of its type.
      */
     public function getParamFields(?string $subtype): array
@@ -343,6 +385,8 @@ class EntityField extends ReferenceData
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        $this->validateDefaultValue($entity);
 
         if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
             if (!RegexUtil::validate($entity->get('pattern'))) {
@@ -653,6 +697,10 @@ class EntityField extends ReferenceData
         $key           = array_search($oldValue, $options);
         $options[$key] = $newValue;
         $fieldEntity->set('options', $options);
+        // the default value is the option, its code is changed too
+        if ($fieldEntity->get('default') === $oldValue) {
+            $fieldEntity->set('default', $newValue);
+        }
         $this->save($fieldEntity);
 
         // replace Translations

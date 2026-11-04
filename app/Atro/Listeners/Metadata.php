@@ -1337,7 +1337,7 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs'][$scope]['fields']['children']['layoutNavigationDisabled'] = true;
 
             $data['entityDefs'][$scope]['fields']['routes'] = [
-                "type"               => "jsonArray",
+                "type"               => "jsonObject",
                 "view"               => "views/fields/hierarchy-routes",
                 "protected"          => true,
                 "massUpdateDisabled" => true,
@@ -1353,7 +1353,7 @@ class Metadata extends AbstractMetadataListener
             }
 
             $data['entityDefs'][$scope]['fields']['routesNames'] = [
-                "type"                 => "jsonArray",
+                "type"                 => "jsonObject",
                 "notStorable"          => true,
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,
@@ -1365,7 +1365,7 @@ class Metadata extends AbstractMetadataListener
             ];
 
             $data['entityDefs'][$scope]['fields']['routesNamesSimplified'] = [
-                "type"                 => "jsonArray",
+                "type"                 => "jsonObject",
                 "notStorable"          => true,
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,

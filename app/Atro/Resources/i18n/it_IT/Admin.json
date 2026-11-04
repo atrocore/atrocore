@@ -212,7 +212,6 @@
     "rangeInt": "Intervallo di numeri interi",
     "rangeFloat": "Intervallo del galleggiante",
     "wysiwyg": "HTML",
-    "jsonArray": "Array JSON",
     "jsonObject": "Oggetto JSON",
     "measure": "Misura",
     "markdown": "Markdown"

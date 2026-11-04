@@ -126,7 +126,6 @@
     "rangeInt": "Rozsah celých čísel",
     "rangeFloat": "Rozsah plováku",
     "wysiwyg": "HTML",
-    "jsonArray": "Pole JSON",
     "jsonObject": "Objekt JSON",
     "measure": "Míra",
     "markdown": "Markdown"

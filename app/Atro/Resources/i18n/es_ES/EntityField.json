@@ -121,7 +121,6 @@
       "float": "Decimal",
       "foreign": "Clave foránea",
       "int": "Entero",
-      "jsonArray": "Json Array",
       "jsonObject": "Json Object",
       "link": "Enlace",
       "linkMultiple": "Enlace múltiple",

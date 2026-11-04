@@ -122,7 +122,6 @@
       "float": "Дійсне число",
       "foreign": "Іноземні",
       "int": "Ціле число",
-      "jsonArray": "Масив JSON",
       "jsonObject": "Об'єкт JSON",
       "link": "Посилання",
       "linkMultiple": "Кілька посилань",
@@ -197,6 +196,9 @@
     "personalData": "Персональні дані"
   },
   "exceptions": {
+    "defaultEnumValueCannotBeEmpty": "Для обов'язкового поля-списку треба вибрати значення за замовчуванням.",
+    "defaultValueIsNotOption": "Значення за замовчуванням \"%s\" не є опцією поля.",
+    "defaultUnitIsNotOfMeasure": "Одиниця за замовчуванням \"%s\" не належить мірі поля.",
     "nullValuesExist": "Деякі записи мають нульові значення",
     "fieldIsUsedInUniqueIndex": "Поле '%s' використовується в унікальному індексі(ах) '%s' і не може бути видалене.",
     "cannotAddRequiredFieldWithExistingRecords": "Ви не можете додати обов'язкове поле до існуючих записів без значення за замовчуванням",

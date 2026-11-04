@@ -113,7 +113,6 @@
       "float": "Поплавок",
       "foreign": "Зарубежные",
       "int": "Целое число",
-      "jsonArray": "Массив JSON",
       "jsonObject": "Объект JSON",
       "link": "Ссылка",
       "linkMultiple": "Множественная ссылка",

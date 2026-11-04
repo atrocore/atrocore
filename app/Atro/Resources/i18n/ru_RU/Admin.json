@@ -205,7 +205,6 @@
     "rangeInt": "Целочисленный диапазон",
     "rangeFloat": "Диапазон поплавков",
     "wysiwyg": "HTML",
-    "jsonArray": "Массив JSON",
     "jsonObject": "Объект JSON",
     "measure": "Мера",
     "unit": "Единица измерения",

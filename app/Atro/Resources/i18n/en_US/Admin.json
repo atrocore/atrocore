@@ -126,7 +126,6 @@
     "rangeInt": "Integer Range",
     "rangeFloat": "Float Range",
     "wysiwyg": "HTML",
-    "jsonArray": "JSON array",
     "jsonObject": "JSON object",
     "measure": "Measure",
     "markdown": "Markdown"

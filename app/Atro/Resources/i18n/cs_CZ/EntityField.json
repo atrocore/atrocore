@@ -121,7 +121,6 @@
       "float": "Float",
       "foreign": "Zahraniční",
       "int": "Celé číslo",
-      "jsonArray": "Pole JSON",
       "jsonObject": "Objekt JSON",
       "link": "Odkaz",
       "linkMultiple": "Více odkazů",

@@ -410,14 +410,15 @@ class OpenApiGenerator
             case "bool":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
                 break;
-            case "jsonArray":
-                if (empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
-                    $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => (object)[]];
-                }
-                break;
             case "jsonObject":
+                // a JSON value is an object or a list
                 if (empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
-                    $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
+                    $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                        'anyOf' => [
+                            ['type' => 'object', 'nullable' => true],
+                            ['type' => 'array', 'items' => (object)[]],
+                        ],
+                    ];
                 }
                 break;
             case "array":

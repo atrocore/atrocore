@@ -125,7 +125,6 @@
       "float": "Float",
       "foreign": "Foreign",
       "int": "Integer",
-      "jsonArray": "JSON array",
       "jsonObject": "JSON object",
       "link": "Link",
       "linkMultiple": "Multiple link",
@@ -200,6 +199,9 @@
     "personalData": "Personal Data"
   },
   "exceptions": {
+    "defaultEnumValueCannotBeEmpty": "The default value has to be selected for a required list field.",
+    "defaultValueIsNotOption": "The default value \"%s\" is not an option of the field.",
+    "defaultUnitIsNotOfMeasure": "The default unit \"%s\" is not a unit of the measure of the field.",
     "nullValuesExist": "Some records have null values",
     "fieldIsUsedInUniqueIndex": "The field '%s' is used in the unique index(es) '%s' and cannot be deleted.",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",

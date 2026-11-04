@@ -113,7 +113,6 @@
     "autoincrement": "Auto-incrément",
     "bool": "Booléen",
     "date": "Date",
-    "jsonArray": "Tableau JSON",
     "jsonObject": "Objet JSON",
     "measure": "Mesure",
     "markdown": "Markdown"

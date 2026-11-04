@@ -121,7 +121,6 @@
       "float": "Flottant",
       "foreign": "Étranger",
       "int": "Entier",
-      "jsonArray": "Tableau JSON",
       "jsonObject": "Objet JSON",
       "link": "Lien",
       "linkMultiple": "Lien multiple",

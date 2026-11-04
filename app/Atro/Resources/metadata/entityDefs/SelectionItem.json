@@ -41,7 +41,7 @@
       }
     },
     "entity": {
-      "type": "jsonArray",
+      "type": "jsonObject",
       "notStorable": true
     },
     "selection": {

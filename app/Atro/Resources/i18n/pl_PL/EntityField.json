@@ -120,7 +120,6 @@
       "float": "Liczba zmiennoprzecinkowa",
       "foreign": "Obcy",
       "int": "Liczba całkowita",
-      "jsonArray": "Tablica JSON",
       "jsonObject": "Obiekt JSON",
       "link": "Link",
       "linkMultiple": "Wielokrotny link",

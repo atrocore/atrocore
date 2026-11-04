@@ -126,7 +126,6 @@
     "rangeInt": "Zakres liczb całkowitych",
     "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
     "wysiwyg": "HTML",
-    "jsonArray": "Tablica JSON",
     "jsonObject": "Obiekt JSON",
     "measure": "Miara",
     "markdown": "Markdown"

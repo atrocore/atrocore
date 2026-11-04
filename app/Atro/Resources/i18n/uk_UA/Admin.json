@@ -213,7 +213,6 @@
     "attachmentMultiple": "Багаторазове кріплення",
     "rangeInt": "Цілочисельний діапазон",
     "rangeFloat": "Діапазон плаваючих значень",
-    "jsonArray": "Масив JSON",
     "jsonObject": "Об'єкт JSON",
     "markdown": "Уцінка"
   }

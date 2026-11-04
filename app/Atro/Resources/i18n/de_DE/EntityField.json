@@ -123,7 +123,6 @@
       "float": "Kommazahl",
       "foreign": "Fremdbezug",
       "int": "Ganzzahl",
-      "jsonArray": "JSON-Array",
       "jsonObject": "JSON-Objekt",
       "link": "Link",
       "linkMultiple": "Link mit Mehrfachauswahl",
@@ -198,6 +197,9 @@
     "personalData": "Personenbezogene Daten"
   },
   "exceptions": {
+    "defaultEnumValueCannotBeEmpty": "Für ein Pflicht-Listenfeld muss ein Standardwert ausgewählt werden.",
+    "defaultValueIsNotOption": "Der Standardwert \"%s\" ist keine Option des Feldes.",
+    "defaultUnitIsNotOfMeasure": "Die Standardeinheit \"%s\" ist keine Einheit der Maßeinheit des Feldes.",
     "nullValuesExist": "Einige Datensätze haben Nullwerte",
     "fieldIsUsedInUniqueIndex": "Das Feld '%s' wird im Unique-Index bzw. in den Unique-Indizes '%s' verwendet und kann nicht gelöscht werden.",
     "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen",

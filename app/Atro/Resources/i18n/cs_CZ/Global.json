@@ -34,7 +34,6 @@
     "EntityFieldTypeFloat": "Pole entity: Float",
     "EntityFieldTypeForeign": "Pole entity: Zahraniční",
     "EntityFieldTypeInt": "Pole entity: Celé číslo",
-    "EntityFieldTypeJsonArray": "Pole entity: Pole JSON",
     "EntityFieldTypeJsonObject": "Pole entity: Objekt JSON",
     "EntityFieldTypeLink": "Pole entity: Odkaz",
     "EntityFieldTypeLinkMultiple": "Pole entity: Více odkazů",
@@ -216,7 +215,6 @@
     "EntityFieldTypeFloat": "Pole entity: Float",
     "EntityFieldTypeForeign": "Pole entity: Zahraniční",
     "EntityFieldTypeInt": "Pole entity: Celé číslo",
-    "EntityFieldTypeJsonArray": "Pole entity: Pole JSON",
     "EntityFieldTypeJsonObject": "Pole entity: Objekt JSON",
     "EntityFieldTypeLink": "Pole entity: Odkaz",
     "EntityFieldTypeLinkMultiple": "Pole entity: Více odkazů",
@@ -922,7 +920,6 @@
     "writeYourCommentHere": "Napište svůj komentář zde",
     "checkForNewNotifications": "Kontrola nových oznámení",
     "massFollowResultSingle": "Nyní je sledován {count} záznam",
-    "defaultEnumValueCannotBeEmpty": "Pokud je prázdná hodnota zakázána, měla by být vybrána výchozí hodnota.",
     "minimumRecordForComparison": "Nemůžete mít méně než {počet} záznamů.",
     "notPossibleToOpenDetailView": "Zobrazení detailů není možné otevřít."
   },
