@@ -167,13 +167,18 @@ class Record extends RecordService
             throw new BadRequest($this->getInjection('language')->translate('noPredecessorSuccessor', 'exceptions'));
         }
 
+        $entity = $this->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound("{$this->getEntityType()} with id $id not found");
+        }
+
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
             throw new Forbidden();
         }
 
         $attributes = $this->getDuplicateAttributes($id);
 
-        if ($this->hasSuccessor($this->getEntity($id))) {
+        if ($this->hasSuccessor($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('alreadyHasSuccessor', 'exceptions'));
         }
 
