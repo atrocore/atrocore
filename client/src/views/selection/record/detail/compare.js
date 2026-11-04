@@ -103,7 +103,7 @@ Espo.define('views/selection/record/detail/compare', [
             this.getCollectionFactory().create(this.itemScope, (collection) => {
                 self.collection = collection;
                 self.collection.add(itemModel);
-                self.collection.url = this.selectionModel.name + '/' + this.selectionModel.id + '/' + this.relationName;
+                self.collection.url = 'entityRelation?entityName=' + this.selectionModel.name + '&id=' + this.selectionModel.id + '&link=' + this.relationName;
                 callback(self);
             });
         },

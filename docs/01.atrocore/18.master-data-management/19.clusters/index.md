@@ -154,6 +154,7 @@ If the Consolidation Script is missing, fails or returns no values, an error is 
 - Participating cluster items are consolidated after the merge is executed.
 - Contributor records that did not participate in the merge (i.e., removed from the merge interface) remain unchanged.
 - If a field in the Golden Record is locked via a value lock, the lock is ignored – the selected value is applied regardless.
+- If [field value lock](https://store.atrocore.com/en/advanced-data-management/20113) is enabled for the master entity, all fields selected in the Manual Consolidation View become locked in the Golden Record, including the fields taken from the Suggested Values column. The **Clear value locks** action of the Golden Record item removes these locks.
 - The merge is executed on behalf of the current user – the **Execute Consolidation As** setting of the Consolidation is ignored. The user needs the permissions to create and edit the master record.
 - **Update Master Automatically** is not triggered by the merge, so the selected values are not overwritten by the Consolidation Script.
 - The cluster gets the consolidation method "Rule-based" if all fields are taken from the Suggested Values column, "Manual" if none of them, otherwise "Hybrid". The execution mode is "Manual".
@@ -179,7 +180,9 @@ The following actions are available for cluster items in both Standard and Compa
 
 - **Move** – transfers the cluster item to an existing cluster selected by the user. A cluster picker dialog opens, filtered to clusters of the same master entity. If the item was consolidated, it is deconsolidated before the move. If the item is the Golden Record, the source cluster loses its Golden Record. The item cannot be moved to a cluster where it was previously rejected. Both the source and target clusters record the move in their activity streams.
 
-- **Delete** Deletes the corresponding record and its cluster item.
+- **Clear value locks** – removes all [value locks](https://store.atrocore.com/en/advanced-data-management/20113) of the corresponding record. Available only for the records with locked fields.
+
+- **Delete** – deletes the corresponding record and its cluster item. If the deleted record is the Golden Record, the cluster loses its Golden Record.
 
 ## Consolidating Cluster Items
 

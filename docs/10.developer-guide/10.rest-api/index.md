@@ -1130,7 +1130,7 @@ When present, it provides the real actor and delegator for `createdBy` and/or `m
 
 ### `_meta.locked`
 
-Populated for the entities with field value locking enabled. `loaded` tells that the locks of the record are loaded, `fields` holds the lock of every field that has one, keyed by field name. `fields` is always an object, an empty one when no field has a lock.
+Populated for the entities with field value locking enabled. `loaded` tells that the locks of the record are loaded, `fields` lists the locked fields, keyed by field name. `fields` is always an object, an empty one when no field is locked.
 
 ```json
 {
@@ -1141,7 +1141,7 @@ Populated for the entities with field value locking enabled. `loaded` tells that
       "loaded": true,
       "fields": {
         "name": true,
-        "description": false
+        "description": true
       }
     }
   }
