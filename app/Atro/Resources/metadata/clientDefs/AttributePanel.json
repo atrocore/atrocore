@@ -17,8 +17,7 @@
         "onlyForEntity"
       ],
       "dragDrop": {
-        "isActive": true,
-        "sortField": "sortOrder"
+        "isActive": true
       },
       "sortBy": "sortOrder",
       "asc": true,

@@ -98,6 +98,15 @@ class Subtype extends Record
         return parent::duplicateAndLinkEntityMass($id, $link, $where, $selectData);
     }
 
+    public function updateRelationSortOrder(string $id, string $link, array $ids, int $offset = 0): bool
+    {
+        if ($this->isSupertypeLink($link)) {
+            return $this->getSupertypeService()->updateRelationSortOrder($this->getSupertypeRecordId($id), $link, $ids, $offset);
+        }
+
+        return parent::updateRelationSortOrder($id, $link, $ids, $offset);
+    }
+
     public function unlinkAll(string $id, string $link): bool
     {
         if ($this->isSupertypeLink($link)) {

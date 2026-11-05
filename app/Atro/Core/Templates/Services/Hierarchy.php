@@ -1167,11 +1167,6 @@ class Hierarchy extends Base
             return parent::updateEntity($id, $data);
         }
 
-        if (property_exists($data, '_sortedIds') && property_exists($data, '_id') && property_exists($data, '_link') && $data->_link === 'children') {
-            $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
-            return true;
-        }
-
         if (property_exists($data, '_position') && property_exists($data, '_target') && property_exists($data, 'parentId')) {
             if (empty($entity = $this->getRepository()->get($id))) {
                 throw new NotFound();

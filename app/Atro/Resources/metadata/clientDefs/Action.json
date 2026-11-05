@@ -15,8 +15,7 @@
       ],
       "dragDrop": {
         "isActive": true,
-        "maxSize": 20,
-        "sortField": "action_set_linker_mm.sortOrder"
+        "maxSize": 20
       },
       "view": "views/action/record/panels/actions"
     },

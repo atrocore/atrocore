@@ -264,31 +264,49 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
+        /**
+         * The rows can be dragged when the order of the records is kept in a field: in the "sortField" of the link
+         * for the records of a relation, in the "collection.sortField" of the entity for all records of the entity.
+         */
         setupDraggableParams() {
             this.dragableListRows = this.dragableListRows || this.options.dragableListRows;
-            this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || this.options.listRowsOrderSaveUrl;
             const params = new URLSearchParams((this.collection.url || '').split('?')[1]);
 
             const mainScope = params.get('entityName');
             this.relationName = params.get('link');
 
+            this.sortOrderRequest = null;
             if (mainScope && this.relationName) {
                 const dragDropDefs = this.getMetadata().get(['clientDefs', mainScope, 'relationshipPanels', this.relationName, 'dragDrop']);
-                if (dragDropDefs && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {
-                    this.dragableListRows = dragDropDefs.isActive;
-                    this.dragableSortField = dragDropDefs.sortField;
-                    if (this.dragableSortField) {
-                        this.collection.sortBy = this.dragableSortField;
-                        this.collection.defaultSortBy = this.dragableSortField;
-                    }
-                    this.dragableSortAsc = 'asc' in dragDropDefs ? !!dragDropDefs.asc : this.collection.defaultAsc;
-                    if (dragDropDefs.orderSaveUrl) {
-                        this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || dragDropDefs.orderSaveUrl;
-                    }
+                const sortField = this.getMetadata().get(['entityDefs', mainScope, 'links', this.relationName, 'sortField']);
+                if (dragDropDefs && sortField && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {
+                    this.dragableListRows = !!dragDropDefs.isActive;
+                    // the records of the relation are returned in their order when no other order is requested
+                    this.dragableSortBy = null;
+                    this.sortOrderRequest = {
+                        url: 'entityRelationSortOrder',
+                        data: {entityName: mainScope, id: params.get('id'), link: this.relationName}
+                    };
+                }
+            } else if (this.dragableListRows) {
+                const scope = this.options.scope || this.collection.name;
+                const sortField = this.getMetadata().get(['entityDefs', scope, 'collection', 'sortField']);
+                if (sortField) {
+                    this.dragableSortBy = sortField;
+                    this.sortOrderRequest = {
+                        url: 'entitySortOrder',
+                        data: {entityName: scope}
+                    };
                 }
             }
 
+            if (!this.sortOrderRequest) {
+                this.dragableListRows = false;
+            }
+
             if (this.dragableListRows) {
+                this.collection.sortBy = this.collection.defaultSortBy = this.dragableSortBy;
+                this.collection.asc = this.collection.defaultAsc = true;
                 this.listenTo(this.collection, 'listSorted', () => this.collection.fetch());
             }
         },
@@ -1733,17 +1751,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
                 });
 
-                if (this.dragableSortField) {
-                    var currentSortInfo = this.getSortFieldInfo(this.collection.sortBy);
-                    var dragSortInfo = this.getSortFieldInfo(this.dragableSortField);
-                    if (
-                        !currentSortInfo || !dragSortInfo
-                        || currentSortInfo.scope !== dragSortInfo.scope
-                        || currentSortInfo.field !== dragSortInfo.field
-                        || !!this.collection.asc !== !!this.dragableSortAsc
-                    ) {
-                        allowed = false;
-                    }
+                // the rows can be dragged only when the records are shown in their order
+                if ((this.collection.sortBy || null) !== this.dragableSortBy || !this.collection.asc) {
+                    allowed = false;
                 }
 
                 if (!allowed) {
@@ -1945,99 +1955,24 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         saveListItemOrder(e, ui) {
-            let url;
-            let data;
-            let parentView = this.getParentView();
-            let link = null;
-            let parentModel = null;
-            if (parentView) {
-                if (parentView.link) {
-                    link = parentView.link;
-                }
-                if (parentView.model) {
-                    parentModel = parentView.model;
-                }
+            if (!this.sortOrderRequest) {
+                return;
             }
 
-            // the relations of a subtype record belong to its supertype record
-            const supertype = typeof parentModel?.getSupertype === 'function' ? parentModel.getSupertype() : null;
-            const parentScope = supertype || parentModel?.urlRoot;
-            const parentId = supertype ? parentModel.get('supertypeId') : parentModel?.id;
+            const parentModel = this.getParentView()?.model;
+            const data = Object.assign({}, this.sortOrderRequest.data, {
+                ids: this.getIdsFromDom(),
+                offset: this.collection.offset || 0
+            });
 
-            if (this.dragableSortField) {
-                const itemId = this.getItemId(ui);
-                if (itemId && parentModel) {
-                    const sortFieldValue = this.getSortFieldValue(itemId);
-                    url = `${this.scope}/${itemId}`;
-
-                    let ids = this.getIdsFromDom();
-
-                    let previousItemId = null;
-                    let tmp = null;
-                    ids.forEach(id => {
-                        if (id === itemId) {
-                            previousItemId = tmp;
-                        }
-                        tmp = id;
-                    });
-
-                    data = {
-                        _scope: parentScope,
-                        _id: parentId,
-                        _link: link,
-                        _sortedIds: ids,
-                        _itemId: itemId,
-                        _previousItemId: previousItemId,
-                        [this.dragableSortField]: sortFieldValue
-                    };
-                }
-            } else if (this.listRowsOrderSaveUrl) {
-                url = this.listRowsOrderSaveUrl;
-                data = {
-                    ids: this.getIdsFromDom(),
-                    parentId: parentId
-                };
-            }
-            if (url) {
-                this.ajaxPatchRequest(url, data)
-                    .then(response => {
-                        let statusMsg = 'Error occurred';
-                        let type = 'error';
-                        if (response) {
-                            statusMsg = 'Saved';
-                            type = 'success';
-                        }
-                        this.notify(statusMsg, type, 3000);
-                        if (parentModel) {
-                            parentModel.trigger('after:dragDrop', link);
-                        }
-                    }, error => {
-                        this.collection.fetch();
-                    })
-                    .always(() => this.collection.trigger('listSorted'));
-            } else {
-                this.collection.trigger('listSorted', this.getIdsFromDom());
-            }
-        },
-
-        getItemId(ui) {
-            let id;
-            if (ui && ui.item) {
-                id = ui.item.data('id');
-            }
-            return id;
-        },
-
-        getSortFieldValue(id) {
-            let value;
-            const ids = this.getIdsFromDom();
-            const currIndex = ids.indexOf(id);
-            if (currIndex > 0) {
-                value = this.collection.get(ids[currIndex - 1]).get(this.dragableSortField) + 10;
-            } else {
-                value = this.collection.get(ids[currIndex + 1]).get(this.dragableSortField) - 10;
-            }
-            return value;
+            this.ajaxPatchRequest(this.sortOrderRequest.url, data)
+                .then(() => {
+                    this.notify('Saved', 'success', 3000);
+                    if (parentModel && this.relationName) {
+                        parentModel.trigger('after:dragDrop', this.relationName);
+                    }
+                })
+                .always(() => this.collection.trigger('listSorted'));
         },
 
         getIdsFromDom() {
@@ -2645,12 +2580,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 });
             }
 
-            const urlParts = (this.collection.url || '').split('/');
-            const hasDragDrop = !!(this.getMetadata().get(['clientDefs', urlParts.shift(), 'relationshipPanels', urlParts.pop(), 'dragDrop']));
-
             let model = this.collection.model.prototype;
             defs.forEach(item => {
-                if (hasDragDrop || item.name && ['wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
+                // the records of a draggable list are shown in their order
+                if (this.dragableListRows || item.name && ['wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
                     item.sortable = false;
                 }
             });

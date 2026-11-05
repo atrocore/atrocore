@@ -65,7 +65,8 @@
     "attributes": {
       "type": "hasMany",
       "foreign": "attributePanel",
-      "entity": "Attribute"
+      "entity": "Attribute",
+      "sortField": "sortOrder"
     }
   },
   "collection": {

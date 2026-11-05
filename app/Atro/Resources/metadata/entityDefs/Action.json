@@ -586,6 +586,7 @@
       "relationName": "actionSetLinker",
       "foreign": "actionsSet",
       "entity": "Action",
+      "sortField": "sortOrder",
       "midKeys": [
         "actionId",
         "setId"

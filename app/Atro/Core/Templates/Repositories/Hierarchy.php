@@ -391,24 +391,6 @@ class Hierarchy extends Base
         }
     }
 
-    public function updateHierarchySortOrder(string $parentId, array $ids): void
-    {
-        /** @var Relation $relationRepository */
-        $relationRepository = $this->getEntityManager()->getRepository(ucfirst(Util::toCamelCase($this->hierarchyTableName)));
-
-        $collection = [];
-        foreach ($relationRepository->where(['parentId' => $parentId, 'entityId' => $ids])->find() as $v) {
-            $collection[$v->get('entityId')] = $v;
-        }
-
-        foreach ($ids as $k => $id) {
-            $sortOrder = $k * 10;
-            $entity = $collection[$id];
-            $entity->set('hierarchySortOrder', $sortOrder);
-            $this->getEntityManager()->saveEntity($entity);
-        }
-    }
-
     public function getParentsRecursivelyArray(string $id): array
     {
         $entity = $this->get($id);

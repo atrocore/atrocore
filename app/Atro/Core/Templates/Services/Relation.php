@@ -112,11 +112,6 @@ class Relation extends Record
     public function updateEntity(string $id, \stdClass $data): bool
     {
         if ($this->isAssociatesRelation()) {
-            if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
-                $this->getRepository()->updateAssociatesSortOrder($data->_sortedIds);
-                return true;
-            }
-
             $pdo = $this->getEntityManager()->getPDO();
 
             if (!$pdo->inTransaction()) {
