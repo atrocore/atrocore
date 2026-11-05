@@ -280,12 +280,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
 
-            this.getFieldManager().getParamList(this.type).forEach(function (d) {
-                var name = d.name;
+            // the parameters of the field are the ones of its definition in the metadata of the entity
+            Object.keys((this.model.defs?.fields || {})[this.name] || {}).forEach(name => {
                 if (!(name in this.params)) {
                     this.params[name] = this.model.getFieldParam(this.name, name) || null;
                 }
-            }, this);
+            });
 
             this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']) || this.model.getFieldParam(this.name, 'measureId');
             if (this.params.measureId) {

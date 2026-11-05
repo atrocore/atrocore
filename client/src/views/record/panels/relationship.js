@@ -50,8 +50,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         dragableListRows: undefined,
 
-        listRowsOrderSaveUrl: undefined,
-
         filtersLayoutLoaded: false,
 
         listInlineEditModeEnabled: false,
@@ -454,7 +452,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true,
                         dragableListRows: this.dragableListRows,
-                        listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
                         panelView: this,
                         openInTab: !!this.defs.isInSmallView,
                         canUnlink: canUnlink,

@@ -86,7 +86,6 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                         headerDisabled: true,
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true,
-                        listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
                         panelView: this,
                     }, function (view) {
                         view.getSelectAttributeList(selectAttributeList => {
