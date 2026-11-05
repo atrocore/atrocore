@@ -119,6 +119,9 @@ Accept: application/json
 Authorization-Token: ***************
 ```
 
+A relation with a manual order returns its records in this order when `sortBy` is not given, and the order is changed
+via `PATCH /api/entityRelationSortOrder`. See [Sorting Linked Records](../02.understanding-atrocore/05.entities/index.md#sorting-linked-records).
+
 -----
 
 ###  Filtering with the `where` Parameter

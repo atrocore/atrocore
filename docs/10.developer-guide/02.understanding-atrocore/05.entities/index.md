@@ -447,6 +447,126 @@ The resulting data model includes:
     - `associatingItem` with foreign field `associatingItemId` - Reference to the second record
     - `association` with foreign field `associationId` - Reference to the association type from the `Association` entity
 
+### Sorting Linked Records
+
+A relation keeps a manual order of its records when its link defines `sortField` - an integer field that stores the
+position of each linked record. The order is a property of the relation, so it works the same way for the UI, the REST
+API and PHP code.
+
+**One-to-many:** the field belongs to the foreign entity.
+
+**File:** `entityDefs/Manufacturer.json`
+
+```json
+{
+    "links": {
+        "products": {
+            "type": "hasMany",
+            "entity": "Product",
+            "foreign": "manufacturer",
+            "sortField": "sortOrder" // Product.sortOrder keeps the position
+        }
+    }
+}
+```
+
+**Many-to-many:** the field belongs to the junction entity, so a product can have a different position in each
+relation.
+
+**File:** `entityDefs/BrandManufacturer.json`
+
+```json
+{
+    "fields": {
+        "sortOrder": {
+            "type": "int"
+        }
+    }
+}
+```
+
+**File:** `entityDefs/Manufacturer.json`
+
+```json
+{
+    "links": {
+        "brands": {
+            "type": "hasMany",
+            "entity": "Brand",
+            "relationName": "BrandManufacturer",
+            "foreign": "manufacturers",
+            "sortField": "sortOrder" // BrandManufacturer.sortOrder keeps the position
+        }
+    }
+}
+```
+
+The children of hierarchies are sortable out of the box: the system sets `sortField` of the `children` link to
+`hierarchySortOrder`.
+
+With `sortField` defined:
+
+- **The linked records are returned in their order.** `GET /api/entityRelation` and the relationship panel sort the
+  records by `sortField` when no `sortBy` is given.
+- **The order is changed via the API:**
+
+  ```http
+  PATCH /api/entityRelationSortOrder HTTP/1.1
+  Content-Type: application/json
+
+  {"entityName": "Manufacturer", "id": "...", "link": "brands", "ids": ["b3", "b1", "b2"], "offset": 0}
+  ```
+
+  `ids` are the linked records in the new order, `offset` is the position of the first of them among all linked
+  records. The other linked records keep their order around them, so a client sends only the records it shows, e.g.
+  one page of the panel. The records are numbered 1, 2, 3… The endpoint requires the edit access to the record.
+- **The order is changed in PHP** via the service of the entity:
+
+  ```php
+  $this->getServiceFactory()->create('Manufacturer')->updateRelationSortOrder($manufacturerId, 'brands', $brandIds);
+  ```
+
+  The positions are saved via the repository of the entity keeping `sortField`, so its hooks run on each change. A
+  service changes the sorting of its entity by overriding `updateRelationSortOrder()`.
+- **The rows of the relationship panel are dragged** when the panel enables it in `clientDefs`:
+
+  ```json
+  {
+      "relationshipPanels": {
+          "brands": {
+              "dragDrop": {
+                  "isActive": true,
+                  "maxSize": 20 // optional: the number of records per page of the panel
+              }
+          }
+      }
+  }
+  ```
+
+A new linked record has no position. To put it at the end of the relation, set `sortField` in `beforeSave` of the
+repository of the entity keeping it, e.g. to the maximal position of the relation plus one.
+
+#### Sorting All Records of an Entity
+
+An entity whose records have one common order, e.g. rules applied one after another, defines the field in
+`collection.sortField`:
+
+**File:** `entityDefs/TranslationRule.json`
+
+```json
+{
+    "collection": {
+        "sortBy": "sortOrder",
+        "asc": true,
+        "sortField": "sortOrder"
+    }
+}
+```
+
+The order is changed via `PATCH /api/entitySortOrder` with `{"entityName": ..., "ids": [...], "offset": 0}` or
+`updateSortOrder($ids, $offset)` of the service of the entity. A list view shows draggable rows for such an entity with
+the `dragableListRows: true` option.
+
 ### Key Configuration Properties
 
 When defining relationships, these properties are most important:
@@ -458,6 +578,7 @@ When defining relationships, these properties are most important:
 | `entity`        | The target entity name this relationship connects to                                   |
 | `foreign`       | The field name on the target entity that completes this relationship                   |
 | `relationName`  | For Many-to-many only: defines the junction table name (must match on both sides)      |
+| `sortField`     | The integer field keeping the manual order of the linked records, see [Sorting Linked Records](#sorting-linked-records) |
 | `hasAssociated` | Boolean flag in entity scope that enables self-referential relationships               |
 
 ### Database Impact
