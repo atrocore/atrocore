@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\EntityType;
 use Atro\Core\Routing\Route;
@@ -26,15 +27,15 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    summary: 'Mass erase personal data',
-    description: 'Erases the personal data fields of multiple records according to the erasure mode of each field. Small batches are processed immediately, larger ones are delegated to a job. Available for global administrators and data privacy administrators only.',
+    summary: 'Mass erase personal data (synchronous)',
+    description: 'Erases the personal data fields of multiple records synchronously according to the erasure mode of each field and returns the result immediately. Available for global administrators and data privacy administrators only.',
     tag: '{entityName}',
     parameters: [
         [
             'name'        => 'entityName',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'Entity name that contains personal data (e.g. "Person")',
+            'description' => 'Entity name that contains personal data',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -46,16 +47,14 @@ use Psr\Http\Server\RequestHandlerInterface;
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
+                    'required'   => [
+                        'ids',
+                    ],
                     'properties' => [
-                        'ids'   => [
+                        'ids' => [
                             'type'        => 'array',
                             'items'       => ['type' => 'string'],
-                            'description' => 'IDs of the records. Ignored when `where` is provided.',
-                        ],
-                        'where' => [
-                            'type'        => 'array',
-                            'items'       => ['type' => 'object'],
-                            'description' => 'Where clause to select the records.',
+                            'description' => 'IDs of the records.',
                         ],
                     ],
                 ],
@@ -64,20 +63,29 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Result of the erasure: `count` and `errors` when processed immediately, or `jobId` when delegated to a job',
+            'description' => 'Success',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'sync'   => ['type' => 'boolean'],
-                            'count'  => ['type' => 'integer'],
-                            'errors' => ['type' => 'array', 'items' => ['type' => 'string']],
-                            'jobId'  => ['type' => 'string'],
+                            'erased' => [
+                                'type' => 'integer',
+                            ],
+                            'errors' => [
+                                'type'        => 'array',
+                                'description' => 'List of error messages for records that could not be erased.',
+                                'items'       => [
+                                    'type' => 'string',
+                                ],
+                            ],
                         ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'ids are missing, or ids count exceeds the configured limit',
         ],
         403 => [
             'description' => 'Forbidden — the current user is neither a global administrator nor a data privacy administrator',
@@ -92,12 +100,18 @@ class MassErasePersonalDataHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
         $data       = $this->getRequestBody($request);
 
-        $params = property_exists($data, 'where')
-            ? ['where' => json_decode(json_encode($data->where), true)]
-            : ['ids' => $data->ids ?? []];
+        if (empty($data->ids)) {
+            throw new BadRequest('ids is required');
+        }
 
+        $limit = $this->getConfig()->get('massErasePersonalDataMaxCountWithoutJob', 200);
+        if (count($data->ids) > $limit) {
+            throw new BadRequest("Too many ids: maximum allowed is $limit. Use /$entityName/massErasePersonalDataAsync for large batches.");
+        }
+
+        $params = ['ids' => $data->ids, 'maxCountWithoutJob' => PHP_INT_MAX];
         $result = $this->getRecordService($entityName)->massErasePersonalData($params);
 
-        return new JsonResponse($result);
+        return new JsonResponse(['erased' => $result['count'], 'errors' => $result['errors']]);
     }
 }

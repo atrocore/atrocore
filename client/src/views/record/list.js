@@ -1188,16 +1188,20 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         massActionErasePersonalData: function () {
-            const payload = this.allResultIsChecked
+            const threshold = this.getConfig().get('massErasePersonalDataMaxCountWithoutJob') || 200;
+            const isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
+            const url = `${this.entityType}/massErasePersonalData` + (isAsync ? 'Async' : '');
+            const payload = isAsync
                 ? {where: this.collection.getWhereForCheckedRecords()}
-                : {ids: this.checkedList};
+                : {ids: this.checkedList.map(id => String(id))};
 
             this.confirm({
                 message: this.translate('erasePersonalDataRecordsConfirmation', 'messages'),
                 confirmText: this.translate('Erase')
             }, () => {
                 this.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(`${this.entityType}/massErasePersonalData`, payload).then(result => {
+                this.ajaxPostRequest(url, payload).then(result => {
+                    result.sync = !isAsync;
                     this.processMassActionResult(result);
                     this.collection.fetch();
                 });

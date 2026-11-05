@@ -1045,9 +1045,9 @@ class Record extends RecordService
         }
 
         $params['action']             = 'erasePersonalData';
-        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
-        $params['maxChunkSize']       = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
-        $params['minChunkSize']       = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['maxCountWithoutJob'] = $params['maxCountWithoutJob'] ?? $this->getConfig()->get('massErasePersonalDataMaxCountWithoutJob', 200);
+        $params['maxChunkSize']       = $this->getConfig()->get('massErasePersonalDataMaxChunkSize', 3000);
+        $params['minChunkSize']       = $this->getConfig()->get('massErasePersonalDataMinChunkSize', 400);
         $params['singleActionMethod'] = 'erasePersonalData';
 
         $result = $this->executeMassAction($params, function ($id) {
