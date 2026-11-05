@@ -103,7 +103,7 @@ class LastViewed extends AbstractService
                 ->where('a.user_id = :userId')
                 ->andWhere('a.deleted = :false')
                 ->andWhere('a.controller_name IN (:targetTypeList)')
-                ->andWhere('a.data LIKE :data_history');
+                ->andWhere('LOWER(a.data) LIKE :data_history');
 
             if ($entityName && $entityId) {
                 $subQb->andWhere('(a.controller_name <> :entityName OR a.target_id <> :entityId OR a.target_id IS NULL)');
@@ -116,7 +116,8 @@ class LastViewed extends AbstractService
                 }
             }
 
-            $queryHeader = $tabId ? '%"Entity-History":["' . $tabId . '"]%' : '%"Entity-History":%';
+            // the name of the header is stored as the web server received it, which depends on the HTTP version
+            $queryHeader = strtolower($tabId ? '%"Entity-History":["' . $tabId . '"]%' : '%"Entity-History":%');
 
             $qb->join($t, "({$subQb->getSQL()})", 'sub', "sub.id = $t.id AND sub.rn = 1")
                 ->setParameter('userId', $this->getUser()->id)
