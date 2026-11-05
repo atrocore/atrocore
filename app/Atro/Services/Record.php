@@ -1098,7 +1098,8 @@ class Record extends RecordService
     }
 
     /**
-     * Moves the $ids to $offset in the current order of $records and numbers all records starting from 1.
+     * Moves the $ids to $offset in the current order of $records and numbers all records in steps of 10, so that a
+     * record can be put between two others by setting its sort field manually.
      *
      * @param Entity[] $records the records in the current order, keyed by the ID of the sorted record
      */
@@ -1114,7 +1115,7 @@ class Record extends RecordService
 
         foreach ($sortedIds as $k => $id) {
             $record = $records[$id];
-            $sortOrder = $k + 1;
+            $sortOrder = ($k + 1) * 10;
             if ($record->get($sortField) === $sortOrder) {
                 continue;
             }
