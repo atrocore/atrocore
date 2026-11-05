@@ -172,6 +172,9 @@ class User extends RDB
                 if ($entity->isAttributeChanged('isUserAdmin')) {
                     throw new Forbidden();
                 }
+                if ($entity->isAttributeChanged('isDataPrivacyAdmin')) {
+                    throw new Forbidden();
+                }
                 if ($entity->getFetched('isAdmin')) {
                     throw new Forbidden();
                 }
@@ -313,7 +316,8 @@ class User extends RDB
             || $entity->isAttributeChanged('isAdmin')
             || $entity->isAttributeChanged('isEntityAdmin')
             || $entity->isAttributeChanged('isRoleAdmin')
-            || $entity->isAttributeChanged('isUserAdmin')) {
+            || $entity->isAttributeChanged('isUserAdmin')
+            || $entity->isAttributeChanged('isDataPrivacyAdmin')) {
             $this
                 ->getAclManager()
                 ->clearAclCache();

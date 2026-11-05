@@ -130,6 +130,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.reRender();
             });
 
+            // notes of the erased fields are removed, so the whole stream must be reloaded
+            this.listenTo(this.model, 'after:erasePersonalData', () => {
+                this.fetchCollection();
+            });
+
             this.setupFilter();
         },
 
