@@ -1171,6 +1171,22 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 && (this.getUser().isAdmin() || this.getUser().isDataPrivacyAdmin());
         },
 
+        actionErasePersonalData: function (data) {
+            const id = (data || {}).id;
+            if (!id) return;
+
+            this.confirm({
+                message: this.translate('erasePersonalDataRecordConfirmation', 'messages'),
+                confirmText: this.translate('Erase')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(`${this.entityType}/${id}/erasePersonalData`, {}).then(() => {
+                    this.notify('Done', 'success');
+                    this.collection.get(id)?.fetch();
+                });
+            });
+        },
+
         massActionErasePersonalData: function () {
             const payload = this.allResultIsChecked
                 ? {where: this.collection.getWhereForCheckedRecords()}

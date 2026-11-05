@@ -27,7 +27,7 @@ abstract class AbstractErasureResolver
     }
 
     /**
-     * Checks whether the field can be anonymized by this resolver
+     * Checks whether the field can be erased by this resolver
      */
     abstract public function supports(Entity $entity, string $field): bool;
 

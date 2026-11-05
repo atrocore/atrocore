@@ -36,7 +36,7 @@ class Note
         $this->container = $container;
     }
 
-    public function afterEntitySaved(OrmEntity $entity, array $options = []): void
+    public function afterEntitySaved(OrmEntity $entity): void
     {
         if ($entity->isNew()) {
             $this->handleRelationEntity($entity, 'Relate');
@@ -45,8 +45,7 @@ class Note
         if ($this->streamEnabled($entity->getEntityName())) {
             $this->followEntity($entity);
 
-            // erased values must not get into the stream, the "Erase" note is created instead
-            if (!$entity->isNew() && empty($options['erasePersonalData'])) {
+            if (!$entity->isNew()) {
                 $this->handleAudited($entity);
             }
         }

@@ -1417,8 +1417,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->executeStatement();
     }
 
-    public function erasePersonalData(Entity $entity, ?array $processed = []): void
+    public function erasePersonalData(Entity $entity, array &$processed = []): void
     {
+        $erasedFields = [];
         foreach (($this->getPersonalDataFields($entity->id) ?? []) as $field) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
 
@@ -1439,7 +1440,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if (!empty($erasedFields)) {
             $entity->set('erasedAt', (new \DateTime())->format('Y-m-d H:i:s'));
 
-            $this->getEntityManager()->saveEntity($entity, ['erase' => true]);
+            $this->getEntityManager()->saveEntity($entity, ['erasePersonalData' => true, 'erasedFields' => $erasedFields]);
         }
     }
 

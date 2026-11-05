@@ -75,18 +75,17 @@ class Anonymize extends AbstractErasureResolver
             case 'text':
             case 'markdown':
             case 'wysiwyg':
-                $value = $isUnique ? $this->generateUniqueText($entity, $field, $defs) : self::DEFAULT_VALUE;
+                $value = $isUnique ? $this->prepareUniqueText($entity, $field, $defs) : self::DEFAULT_VALUE;
                 $entity->set($field, $this->cutToMaxLength($value, $defs));
                 break;
             case 'url':
-                $value = $isUnique ? $this->generateUniqueText($entity, $field, $defs, self::DEFAULT_URL) : self::DEFAULT_URL;
+                $value = $isUnique ? $this->prepareUniqueText($entity, $field, $defs, self::DEFAULT_URL) : self::DEFAULT_URL;
                 $entity->set($field, $this->cutToMaxLength($value, $defs));
                 break;
             case 'email':
-                // the email always gets a random hash, not derived from the previous value
                 $suffix = '@' . self::DEFAULT_EMAIL_DOMAIN;
                 $value = $isUnique
-                    ? $this->generateUniqueText($entity, $field, $defs, 'anon-', $suffix)
+                    ? $this->prepareUniqueText($entity, $field, $defs, 'anon-', $suffix)
                     : $this->cutToMaxLength('anon-' . $this->generateHash(), $defs, $suffix) . $suffix;
                 $entity->set($field, $value);
                 break;
@@ -96,12 +95,13 @@ class Anonymize extends AbstractErasureResolver
                     $this->nullify($entity, $field);
                     break;
                 }
-                $entity->set($field, $this->prepareDate($entity->get($field))->format($type === 'datetime' ? 'Y-m-d H:i:s' : 'Y-m-d'));
+                $value = $this->prepareDate($entity->get($field));
+                $entity->set($field, $value->format($type === 'datetime' ? 'Y-m-d H:i:s' : 'Y-m-d'));
                 break;
             case 'int':
             case 'float':
                 if ($isUnique) {
-                    $entity->set($field, $this->generateUniqueNumber($entity, [$field], $defs, $type === 'float'));
+                    $entity->set($field, $this->prepareUniqueNumber($entity, [$field], $defs));
                 } else {
                     $entity->set($field, $this->getZero($defs));
                 }
@@ -122,8 +122,7 @@ class Anonymize extends AbstractErasureResolver
                         $rangeDefs['max'] = min($rangeDefs['max'] ?? $toDefs['max'], $toDefs['max']);
                     }
 
-                    // the range is unique as a whole, the same value in both parts keeps "from" not greater than "to"
-                    $value = $this->generateUniqueNumber($entity, [$from, $to], $rangeDefs, $type === 'rangeFloat');
+                    $value = $this->prepareUniqueNumber($entity, [$from, $to], $rangeDefs);
                     $entity->set($from, $value);
                     $entity->set($to, $value);
                 } else {
@@ -132,11 +131,11 @@ class Anonymize extends AbstractErasureResolver
                 }
                 break;
             case 'enum':
-                $this->createOption($entity, $field);
+                $this->prepareOption($entity, $field);
                 $entity->set($field, self::DEFAULT_OPTION);
                 break;
             case 'multiEnum':
-                $this->createOption($entity, $field);
+                $this->prepareOption($entity, $field);
                 $entity->set($field, [self::DEFAULT_OPTION]);
                 break;
             case 'array':
@@ -147,7 +146,7 @@ class Anonymize extends AbstractErasureResolver
         }
     }
 
-    protected function generateUniqueText(Entity $entity, string $field, array $defs, string $prefix = self::DEFAULT_VALUE . '-', string $suffix = ''): string
+    protected function prepareUniqueText(Entity $entity, string $field, array $defs, string $prefix = self::DEFAULT_VALUE . '-', string $suffix = ''): string
     {
         for ($i = 0; $i < 100; $i++) {
             $value = $this->cutToMaxLength($prefix . $this->generateHash(), $defs, $suffix) . $suffix;
@@ -212,9 +211,9 @@ class Anonymize extends AbstractErasureResolver
      * Generates a random unique number that starts with "9" and has the maximum possible amount of digits,
      * e.g. 900000000 - 999999999 for the int field
      */
-    protected function generateUniqueNumber(Entity $entity, array $attributes, array $defs, bool $isFloat): int|float
+    protected function prepareUniqueNumber(Entity $entity, array $attributes, array $defs): int|float
     {
-        $digits = $this->getMaxDigits($defs, $isFloat);
+        $digits = $this->getMaxDigits($defs);
         if ($digits < 1) {
             throw new Error("Unique number for '{$attributes[0]}' cannot be generated.");
         }
@@ -243,7 +242,7 @@ class Anonymize extends AbstractErasureResolver
             }
 
             if (!$this->isValueUsed($entity, $where)) {
-                return $isFloat ? (float)$value : $value;
+                return $value;
             }
         }
 
@@ -253,11 +252,11 @@ class Anonymize extends AbstractErasureResolver
     /**
      * Returns the maximum amount of digits of the number that starts with "9" and fits the field
      */
-    protected function getMaxDigits(array $defs, bool $isFloat): int
+    protected function getMaxDigits(array $defs): int
     {
         if (isset($defs['max'])) {
             $max = (int)floor((float)$defs['max']);
-        } elseif ($isFloat) {
+        } elseif (in_array($defs['type'], ['float', 'rangeFloat'])) {
             // float keeps 15 significant digits without losing precision
             $max = 999999999999999;
         } elseif (($defs['dbType'] ?? null) === 'bigint') {
@@ -283,14 +282,14 @@ class Anonymize extends AbstractErasureResolver
     /**
      * Adds "_anonymized" option to the enum field, so the anonymized value stays valid
      */
-    protected function createOption(Entity $entity, string $field): void
+    protected function prepareOption(Entity $entity, string $field): void
     {
         $options = $this->getFieldDefs($entity, $field)['options'] ?? [];
         if (in_array(self::DEFAULT_OPTION, $options)) {
             return;
         }
 
-        $fieldEntity = $this->getEntityManager()->getRepository('EntityField')->get($entity->getEntityType() . '_' . $field);
+        $fieldEntity = $this->getEntityManager()->getRepository('EntityField')->get($entity->getEntityName() . '_' . $field);
         if (empty($fieldEntity)) {
             throw new Error("Field '$field' is not found.");
         }

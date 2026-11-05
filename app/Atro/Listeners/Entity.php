@@ -40,7 +40,13 @@ class Entity extends AbstractListener
         /** @var OrmEntity $entity */
         $entity = $event->getArgument('entity');
 
-        $this->getNoteUtil()->afterEntitySaved($entity, $event->getArgument('options') ?? []);
+        $options = $event->getArgument('options') ?? [];
+        if (!empty($options['erasePersonalData'])) {
+            // erased values must not get into the stream, the "Erase" note is created instead
+            $this->getNoteUtil()->afterPersonalDataErased($entity, $options['erasedFields'] ?? []);
+        } else {
+            $this->getNoteUtil()->afterEntitySaved($entity);
+        }
 
         $this->getNotificationManager()->afterEntitySaved($entity);
 

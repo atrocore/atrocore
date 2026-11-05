@@ -335,7 +335,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.notify(this.translate('pleaseWait', 'messages'));
                 this.ajaxPostRequest(`${this.scope}/${this.model.id}/erasePersonalData`, {}).then(() => {
                     this.notify('Done', 'success');
-                    this.model.fetch();
+                    this.model.fetch().then(() => {
+                        this.model.trigger('after:erasePersonalData');
+                    });
                 });
             });
         },

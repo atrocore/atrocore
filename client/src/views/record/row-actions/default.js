@@ -112,6 +112,12 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             );
         },
 
+        canErasePersonalData: function () {
+            return !!this.getMetadata().get(['scopes', this.model.name, 'containsPersonalData'])
+                && this.getMetadata().get(['scopes', this.model.name, 'type']) !== 'ReferenceData'
+                && (this.getUser().isAdmin() || this.getUser().isDataPrivacyAdmin());
+        },
+
         getActionList: function () {
             const scope = this.options.scope ?? this.model.name;
             const filters = this.getStorage().get('listQueryBuilder', scope);
@@ -122,6 +128,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 "select": 130,
                 "quickCompare": 140,
                 "quickRemove": 150,
+                "erasePersonalData": 160,
             }
 
             if(filters?.bool?.onlyDeleted === true) {
@@ -210,6 +217,15 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                                 data: { id: this.model.id, scope: this.model.name },
                             });
                         }
+                    }
+                } else if (actionName === 'erasePersonalData') {
+                    if (this.canErasePersonalData()) {
+                        list.push({
+                            action: 'erasePersonalData',
+                            label: 'Erase',
+                            iconClass: 'ph ph-eraser',
+                            data: { id: this.model.id }
+                        });
                     }
                 } else if (actionName === 'quickRemove') {
                     if (this.model.get('_meta')?.availableActions?.delete) {
