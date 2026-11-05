@@ -519,7 +519,8 @@ With `sortField` defined:
 
   `ids` are the linked records in the new order, `offset` is the position of the first of them among all linked
   records. The other linked records keep their order around them, so a client sends only the records it shows, e.g.
-  one page of the panel. The records are numbered 1, 2, 3… The endpoint requires the edit access to the record.
+  one page of the panel. The records are numbered 10, 20, 30…, so a record can be put between two others by setting
+  `sortField` manually. The endpoint requires the edit access to the record.
 - **The order is changed in PHP** via the service of the entity:
 
   ```php
@@ -544,7 +545,7 @@ With `sortField` defined:
   ```
 
 A new linked record has no position. To put it at the end of the relation, set `sortField` in `beforeSave` of the
-repository of the entity keeping it, e.g. to the maximal position of the relation plus one.
+repository of the entity keeping it, e.g. to the maximal position of the relation plus 10.
 
 #### Sorting All Records of an Entity
 
