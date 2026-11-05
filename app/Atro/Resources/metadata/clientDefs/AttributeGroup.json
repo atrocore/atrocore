@@ -21,12 +21,7 @@
       "view": "views/attribute-group/record/panels/attributes",
       "selectBoolFilterList": [
         "onlyForEntity"
-      ],
-      "dragDrop": {
-        "isActive": true
-      },
-      "sortBy": "attributeGroupSortOrder",
-      "asc": true
+      ]
     }
   }
 }

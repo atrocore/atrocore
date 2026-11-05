@@ -514,8 +514,22 @@ class ReferenceData extends Repository implements Injectable
         return $collection;
     }
 
+    /**
+     * The "orderBy" select parameter that puts the records linked via $link in their order, null if the relation has
+     * no "sortField".
+     */
+    public function getRelationSortOrderBy(Entity $entity, string $link): ?string
+    {
+        return $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'sortField']) ?: null;
+    }
+
     public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
     {
+        if (empty($selectParams['orderBy']) && !empty($orderBy = $this->getRelationSortOrderBy($entity, $link))) {
+            $selectParams['orderBy'] = $orderBy;
+            $selectParams['order'] = 'ASC';
+        }
+
         $relationType = $entity->getRelationType($link);
         $entityType   = $entity->getRelationParam($link, 'entity');
 

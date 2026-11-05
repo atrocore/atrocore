@@ -267,6 +267,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         /**
          * The rows can be dragged when the order of the records is kept in a field: in the "sortField" of the link
          * for the records of a relation, in the "collection.sortField" of the entity for all records of the entity.
+         * A relationship panel disables the dragging with "dragDropDisabled".
          */
         setupDraggableParams() {
             this.dragableListRows = this.dragableListRows || this.options.dragableListRows;
@@ -277,10 +278,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.sortOrderRequest = null;
             if (mainScope && this.relationName) {
-                const dragDropDefs = this.getMetadata().get(['clientDefs', mainScope, 'relationshipPanels', this.relationName, 'dragDrop']);
                 const sortField = this.getMetadata().get(['entityDefs', mainScope, 'links', this.relationName, 'sortField']);
-                if (dragDropDefs && sortField && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {
-                    this.dragableListRows = !!dragDropDefs.isActive;
+                const dragDropDisabled = this.getMetadata().get(['clientDefs', mainScope, 'relationshipPanels', this.relationName, 'dragDropDisabled']);
+                if (sortField && !dragDropDisabled && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {
+                    this.dragableListRows = true;
                     // the records of the relation are returned in their order when no other order is requested
                     this.dragableSortBy = null;
                     this.sortOrderRequest = {

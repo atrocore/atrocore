@@ -13,10 +13,6 @@
       "selectBoolFilterList": [
         "notActionSet"
       ],
-      "dragDrop": {
-        "isActive": true,
-        "maxSize": 20
-      },
       "view": "views/action/record/panels/actions"
     },
     "executions": {

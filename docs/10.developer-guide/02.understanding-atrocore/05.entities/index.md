@@ -506,8 +506,9 @@ The children of hierarchies are sortable out of the box: the system sets `sortFi
 
 With `sortField` defined:
 
-- **The linked records are returned in their order.** `GET /api/entityRelation` and the relationship panel sort the
-  records by `sortField` when no `sortBy` is given.
+- **The linked records are returned in their order.** `GET /api/entityRelation`, the relationship panel and the
+  repository (`$entity->get('brands')`, `findRelated()`) sort the records by `sortField` when no other order is given.
+  The relationship panel does not need `sortBy` for it.
 - **The order is changed via the API:**
 
   ```http
@@ -529,16 +530,14 @@ With `sortField` defined:
 
   The positions are saved via the repository of the entity keeping `sortField`, so its hooks run on each change. A
   service changes the sorting of its entity by overriding `updateRelationSortOrder()`.
-- **The rows of the relationship panel are dragged** when the panel enables it in `clientDefs`:
+- **The rows of the relationship panel can be dragged** to change the order. A panel whose order must not be changed
+  by dragging, e.g. because it is set by an integration, disables it in `clientDefs`:
 
   ```json
   {
       "relationshipPanels": {
           "brands": {
-              "dragDrop": {
-                  "isActive": true,
-                  "maxSize": 20 // optional: the number of records per page of the panel
-              }
+              "dragDropDisabled": true
           }
       }
   }
