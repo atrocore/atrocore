@@ -1959,6 +1959,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
+            // the relations of a subtype record belong to its supertype record
+            const supertype = typeof parentModel?.getSupertype === 'function' ? parentModel.getSupertype() : null;
+            const parentScope = supertype || parentModel?.urlRoot;
+            const parentId = supertype ? parentModel.get('supertypeId') : parentModel?.id;
+
             if (this.dragableSortField) {
                 const itemId = this.getItemId(ui);
                 if (itemId && parentModel) {
@@ -1977,8 +1982,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     });
 
                     data = {
-                        _scope: parentModel.urlRoot,
-                        _id: parentModel.id,
+                        _scope: parentScope,
+                        _id: parentId,
                         _link: link,
                         _sortedIds: ids,
                         _itemId: itemId,
@@ -1990,7 +1995,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 url = this.listRowsOrderSaveUrl;
                 data = {
                     ids: this.getIdsFromDom(),
-                    parentId: parentModel?.id
+                    parentId: parentId
                 };
             }
             if (url) {
