@@ -1,5 +1,5 @@
 {
-  "iconClass": "person-simple-run",
+  "iconClass": "plus-circle",
   "recordViews": {
     "detail": "views/action/record/detail"
   }

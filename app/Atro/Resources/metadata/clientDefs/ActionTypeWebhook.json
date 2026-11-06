@@ -1,5 +1,5 @@
 {
-  "iconClass": "person-simple-run",
+  "iconClass": "webhooks-logo",
   "recordViews": {
     "detail": "views/action/record/detail"
   }
