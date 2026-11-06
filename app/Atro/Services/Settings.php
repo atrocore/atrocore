@@ -144,8 +144,11 @@ class Settings extends AbstractService
             $data->siteUrl = rtrim($data->siteUrl, '/');
         }
 
-        // api docs password is stored only as a hash, an empty value keeps the current one
-        if (property_exists($data, 'apiDocsPassword')) {
+        // an empty api docs username disables the api docs and drops the stored password
+        if (property_exists($data, 'apiDocsUsername') && (string)$data->apiDocsUsername === '') {
+            $data->apiDocsPassword = null;
+        } elseif (property_exists($data, 'apiDocsPassword')) {
+            // api docs password is stored only as a hash, an empty value keeps the current one
             if ((string)$data->apiDocsPassword === '') {
                 unset($data->apiDocsPassword);
             } else {
