@@ -151,6 +151,10 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
         getOption: function (key) {
             return this.optionsData[key];
+        },
+
+        getDataUrl: function () {
+            return 'Dashlet/' + this.name;
         }
 
     });
