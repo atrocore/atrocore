@@ -38,7 +38,7 @@ As you can see module consist of two main folders - `app`, where the backend par
      - `scopes` - general parameters for entity types
      - `fields` - field type definitions
 - `Services` - main business logic to work with data
-> A record service handles CRUD operations over entities. They extend base class `Atro\Services\Record`.
+> A record service handles CRUD operations over entities. It extends the template of the entity type, e.g. `Atro\Core\Templates\Services\Base`.
 - Main methods of the Record service are:
     - `readEntity` - get an entity record
     - `createEntity` - create new entity record

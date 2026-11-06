@@ -16,12 +16,12 @@ namespace Atro\Core\EntityTypeHandlers;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Services\Record;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 use Atro\Handlers\AbstractHandler;
+use Atro\Core\Services\AbstractRecordService;
 
 #[Route(
     path: '/{entityName}/{id}',
@@ -82,7 +82,7 @@ class ReadHandler extends AbstractHandler
         $id                = (string)$request->getAttribute('id');
         $withRelationships = $request->getQueryParams()['withRelationships'] ?? null;
 
-        /** @var Record $service */
+        /** @var AbstractRecordService $service */
         $service = $this->getRecordService($entityName);
 
         $id = $service->resolveIdBySlug($id) ?? $id;

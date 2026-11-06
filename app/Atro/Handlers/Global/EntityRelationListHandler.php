@@ -17,10 +17,10 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Atro\Services\Record;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\AbstractRecordService;
 
 #[Route(
     path: '/entityRelation',
@@ -163,7 +163,7 @@ class EntityRelationListHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        /** @var Record $service */
+        /** @var AbstractRecordService $service */
         $service = $this->getRecordService($entityName);
 
         $params                  = $this->buildListParams($request);

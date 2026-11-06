@@ -17,7 +17,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Espo\ORM\Entity;
-use Atro\Services\Record;
+use Atro\Core\Services\AbstractRecordService;
 
 class Create extends AbstractAction
 {
@@ -201,7 +201,7 @@ class Create extends AbstractAction
         return true;
     }
 
-    protected function getService(string $name): Record
+    protected function getService(string $name): AbstractRecordService
     {
         if (!isset($this->services[$name])) {
             $this->services[$name] = $this->getServiceFactory()->create($name);

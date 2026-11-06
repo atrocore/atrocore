@@ -18,10 +18,11 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Atro\Services\Record;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\AbstractRecordService;
+use Atro\Core\Services\Interfaces\SortableInterface;
 
 #[Route(
     path: '/entityRelationSortOrder',
@@ -108,8 +109,8 @@ class EntityRelationSortOrderHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        /** @var Record $service */
-        $service = $this->getRecordService($entityName);
+        /** @var AbstractRecordService $service */
+        $service = $this->getRecordServiceWith($entityName, SortableInterface::class);
 
         return new BoolResponse($service->updateRelationSortOrder($id, $link, $data->ids, (int)($data->offset ?? 0)));
     }

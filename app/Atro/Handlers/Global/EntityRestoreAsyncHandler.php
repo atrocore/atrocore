@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
 
 #[Route(
     path: '/entityRestoreAsync',
@@ -105,7 +106,7 @@ class EntityRestoreAsyncHandler extends AbstractHandler
         $params = $this->buildMassParams($data);
         $params['maxCountWithoutJob'] = -1;
 
-        $result = $this->getRecordService($data->entityName)->massRestore($params);
+        $result = $this->getRecordServiceWith($data->entityName, MassActionsInterface::class)->massRestore($params);
 
         return new JsonResponse($result);
     }

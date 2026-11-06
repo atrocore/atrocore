@@ -26,6 +26,7 @@ use Atro\DTOs\DataLineage\DataLineageTreeDTO;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
+use Atro\Core\Utils\NameField;
 
 class DataLineage extends AbstractService
 {
@@ -287,8 +288,7 @@ class DataLineage extends AbstractService
             return null;
         }
 
-        $service = $this->getServiceFactory()->create($entity->getEntityName());
-        $value = $service instanceof Record ? $service->getLocalizedNameValue($entity, $entity->getEntityName()) : null;
+        $value = $this->getEntityManager()->getContainer()->get(NameField::class)->getLocalizedValue($entity, $entity->getEntityName());
 
         return !empty($value) ? $value : $entity->get('id');
     }

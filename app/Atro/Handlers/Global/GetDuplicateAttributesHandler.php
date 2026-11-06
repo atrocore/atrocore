@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\EditableInterface;
 
 #[Route(
     path: '/entityDuplicateValues',
@@ -29,7 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     summary: 'Get pre-filled fields values for duplicating an entity record',
     description: 'Returns the fields values of the given record pre-processed for duplication.
-    
+
 **Response object keys:**
 - All fields values from the source record.
 - `id`, `createdAt` and `modifiedAt` are always removed.
@@ -95,7 +96,7 @@ class GetDuplicateAttributesHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        $result = $this->getRecordService($entityName)->getDuplicateAttributes($id);
+        $result = $this->getRecordServiceWith($entityName, EditableInterface::class)->getDuplicateAttributes($id);
 
         return new JsonResponse(is_array($result) ? $result : (array)$result);
     }

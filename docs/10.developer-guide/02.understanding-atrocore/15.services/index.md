@@ -26,7 +26,24 @@ A mechanism receives its dependencies via the constructor and is obtained from t
 
 When you create a new entity, AtroCore resolves a default service — an instance of `\Atro\Core\Templates\Services\{type}`, where `{type}` is the entity type: `Base`, `Hierarchy`, `Archive`, `ReferenceData`, `Relation` or `Subtype`.
 
-`Atro\Core\Templates\Services\` contains exactly one class per entity type. Each template contains only the methods that make sense for its entity type and does not get other methods through inheritance. For example, `ReferenceData` has no stream, so its service has no `follow()` or `unfollow()` methods. Methods shared by several templates live in the abstract classes in `Atro\Core\Services\`.
+`Atro\Core\Templates\Services\` contains exactly one class per entity type. Each template contains only the methods that make sense for its entity type and does not get other methods through inheritance. For example, `ReferenceData` has no stream, so its service has no `follow()` or `unfollow()` methods.
+
+Every template extends `Atro\Core\Services\AbstractRecordService`, which reads the records and prepares them for the output. The other operations are traits of `Atro\Core\Services\Traits`, each with an interface of `Atro\Core\Services\Interfaces`; a template uses the traits its type supports and implements their interfaces:
+
+| Trait / interface | Operations | Templates |
+|---|---|---|
+| `EditableTrait` / `EditableInterface` | create, update, validation of the input, duplication | Base, Relation, ReferenceData, Subtype |
+| `LinkableTrait` / `LinkableInterface` | link, unlink | Base, ReferenceData, Subtype |
+| `SortableTrait` / `SortableInterface` | manual sort order of the records and of the related records | Base, ReferenceData, Subtype |
+| `DeletableTrait` / `DeletableInterface` | delete | Base, Relation, ReferenceData |
+| `SoftDeletableTrait` / `SoftDeletableInterface` | restore, delete permanently | Base, Relation |
+| `MassActionsTrait` / `MassActionsInterface` | mass update, mass delete, mass restore | Base, Relation |
+
+The operations of a single entity type are methods of its template: the stream, the ownership, merging, kanban, the derivatives and the attributes are in `Base` (and `Hierarchy`, which extends it). A trait is created only for an operation used by two or more templates.
+
+`EditableTrait` calls three hooks that a template overrides: `validateEntityInput()` checks the input before it is applied to the record, `prepareEntityToStore()` prepares the record and `validateEntityBeforeStore()` checks it before it is stored. `Base` uses them for the operations of its own, e.g. it sets the owner and the assigned user in `prepareEntityToStore()` and checks the assignment in `validateEntityBeforeStore()`; the other templates have no such methods.
+
+Code that calls an operation for any entity checks that its service supports it: `$service instanceof LinkableInterface`. A handler uses `$this->getRecordServiceWith($entityName, LinkableInterface::class)`, which returns `BadRequest` for an entity whose type does not support the operation.
 
 Never override an inherited method only to throw `BadRequest` or `Forbidden`. If an operation is not valid for the entity type, the method must not exist in its service.
 

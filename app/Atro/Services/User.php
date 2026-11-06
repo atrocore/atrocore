@@ -24,8 +24,9 @@ use Atro\Core\Utils\PasswordHash;
 use Atro\Repositories\PasswordChangeRequest as PasswordChangeRequestRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
+use Atro\Core\Templates\Services\Base;
 
-class User extends Record
+class User extends Base
 {
     protected $internalAttributeList = ['password'];
 

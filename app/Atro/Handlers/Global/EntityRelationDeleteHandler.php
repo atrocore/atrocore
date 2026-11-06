@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\LinkableInterface;
 
 #[Route(
     path: '/entityRelation',
@@ -109,7 +110,7 @@ class EntityRelationDeleteHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        $service = $this->getRecordService($entityName);
+        $service = $this->getRecordServiceWith($entityName, LinkableInterface::class);
 
         if (!empty($qp['all'])) {
             $service->unlinkAll($id, $link);

@@ -17,10 +17,36 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
-use Atro\Services\Record;
+use Atro\Core\Services\AbstractRecordService;
+use Atro\Core\Services\Interfaces\EditableInterface;
+use Atro\Core\Services\Interfaces\DeletableInterface;
+use Atro\Core\Services\Interfaces\SoftDeletableInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
+use Atro\Core\Services\Traits\EditableTrait;
+use Atro\Core\Services\Traits\DeletableTrait;
+use Atro\Core\Services\Traits\SoftDeletableTrait;
+use Atro\Core\Services\Traits\MassActionsTrait;
 
-class Relation extends Record
+/**
+ * The service of the entities of type Relation: the records linking the records of two entities.
+ */
+class Relation extends AbstractRecordService implements
+    EditableInterface,
+    DeletableInterface,
+    SoftDeletableInterface,
+    MassActionsInterface
 {
+    use EditableTrait {
+        createEntity as protected doCreateEntity;
+        updateEntity as protected doUpdateEntity;
+        isEntityUpdated as protected doIsEntityUpdated;
+        beforeUpdateEntity as protected doBeforeUpdateEntity;
+        storeEntity as protected doStoreEntity;
+    }
+    use DeletableTrait;
+    use SoftDeletableTrait;
+    use MassActionsTrait;
+
     protected function isAssociatesRelation(): bool
     {
         return !empty($this->getAssociatesScope());
@@ -74,7 +100,7 @@ class Relation extends Record
 
             try {
                 foreach ($attachments as $attachment) {
-                    $id = parent::createEntity($attachment);
+                    $id = $this->doCreateEntity($attachment);
                     $entity = $this->getRepository()->get($id);
                     if (property_exists($attachment, 'reverseAssociationId') && !empty($attachment->reverseAssociationId)) {
                         try {
@@ -83,7 +109,7 @@ class Relation extends Record
                             $reverseAttachment->associatedItemId = $attachment->associatingItemId;
                             $reverseAttachment->associationId = $attachment->reverseAssociationId;
                             $reverseAttachment->{"reverseAssociated{$scope}Id"} = $entity->get('id');
-                            $reverseId = parent::createEntity($reverseAttachment);
+                            $reverseId = $this->doCreateEntity($reverseAttachment);
                             $entity->set("reverseAssociated{$scope}Id", $reverseId);
                             $this->getRepository()->save($entity, ['skipAll' => true]);
                         } catch (\Throwable $e) {
@@ -106,7 +132,7 @@ class Relation extends Record
             return $entity->get('id');
         }
 
-        return Parent::createEntity($attachment);
+        return $this->doCreateEntity($attachment);
     }
 
     public function updateEntity(string $id, \stdClass $data): bool
@@ -120,7 +146,7 @@ class Relation extends Record
             }
 
             try {
-                parent::updateEntity($id, $data);
+                $this->doUpdateEntity($id, $data);
                 $entity = $this->getRepository()->get($id);
 
                 if (!property_exists($data, '__skipUpdateReverse')) {
@@ -145,7 +171,7 @@ class Relation extends Record
             return true;
         }
 
-        return Parent::updateEntity($id, $data);
+        return $this->doUpdateEntity($id, $data);
     }
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
@@ -154,19 +180,18 @@ class Relation extends Record
             $this->prepareReverseAssociation($entity);
         }
 
-        return parent::isEntityUpdated($entity, $data);
+        return $this->doIsEntityUpdated($entity, $data);
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
-        parent::beforeUpdateEntity($entity, $data);
+        $this->doBeforeUpdateEntity($entity, $data);
 
         $this->validateArchivedRelationSides($entity);
     }
 
     protected function beforeDeleteEntity(Entity $entity)
     {
-        parent::beforeDeleteEntity($entity);
 
         $this->validateArchivedRelationSides($entity);
     }
@@ -193,7 +218,7 @@ class Relation extends Record
             return $result;
         }
 
-        return Parent::storeEntity($entity);
+        return $this->doStoreEntity($entity);
     }
 
     public function updateReverseAssociation(Entity $entity, \stdClass $data): void
@@ -214,7 +239,7 @@ class Relation extends Record
             $reverseAttachment->associatedItemId = $entity->get("associatingItemId");
             $reverseAttachment->associationId = $data->reverseAssociationId;
             $reverseAttachment->{$reverseIdField} = $entity->get('id');
-            $reverseId = parent::createEntity($reverseAttachment);
+            $reverseId = $this->doCreateEntity($reverseAttachment);
             $entity->set($reverseIdField, $reverseId);
             $this->getRepository()->save($entity, ['skipAll' => true]);
             return;
@@ -238,7 +263,7 @@ class Relation extends Record
 
         if (!empty((array)$reverseAttachment)) {
             $reverseAttachment->__skipUpdateReverse = true;
-            parent::updateEntity($entity->get($reverseIdField), $reverseAttachment);
+            $this->doUpdateEntity($entity->get($reverseIdField), $reverseAttachment);
         }
     }
 
@@ -292,5 +317,4 @@ class Relation extends Record
 
         return true;
     }
-
 }

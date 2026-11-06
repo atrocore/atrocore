@@ -22,6 +22,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\LinkableInterface;
 
 #[Route(
     path: '/entityRelation',
@@ -118,7 +119,7 @@ class EntityRelationCreateHandler extends AbstractHandler
         }
 
         $shouldDuplicateForeign = !empty($data->shouldDuplicateForeign);
-        $service                = $this->getRecordService($entityName);
+        $service                = $this->getRecordServiceWith($entityName, LinkableInterface::class);
 
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {

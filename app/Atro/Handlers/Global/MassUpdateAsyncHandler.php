@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
 
 #[Route(
     path: '/entityMassUpdateAsync',
@@ -132,7 +133,7 @@ class MassUpdateAsyncHandler extends AbstractHandler
             'where'              => json_decode(json_encode($data->where), true),
             'maxCountWithoutJob' => -1,
         ];
-        $result = $this->getRecordService($entityName)->massUpdate($data->values, $params);
+        $result = $this->getRecordServiceWith($entityName, MassActionsInterface::class)->massUpdate($data->values, $params);
 
         return new JsonResponse($result);
     }

@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Espo\ORM\Entity;
+use Atro\Core\Utils\Util;
 
 /**
  * Base for action types that either act on one preselected record (applyToPreselectedRecords)
@@ -129,7 +130,7 @@ abstract class AbstractBulkAction extends AbstractAction
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
         $maxChunkSize      = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
         $minChunkSize      = $this->getConfig()->get('massUpdateMinChunkSize', 400);
-        $chunkSize         = \Atro\Services\Record::getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
+        $chunkSize         = Util::getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
 
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([
