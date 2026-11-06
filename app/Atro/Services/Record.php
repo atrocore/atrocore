@@ -31,6 +31,9 @@ use Espo\Services\RecordService;
 
 class Record extends RecordService
 {
+    /** @var array<string, array{entity: string, multiple: bool}>|null */
+    protected ?array $linkedRecordsFieldDefs = null;
+
     /**
      * Resolves $id to the entity's real id in a single query, allowing it to also be looked up by its `isSlug`
      * field (when the entity type has one). Returns null (leaving $id untouched) when there's no slug field to
@@ -105,6 +108,167 @@ class Record extends RecordService
             $meta['readOnlyFields'] = array_values($fields);
             $entity->set('_meta', $meta);
         }
+
+        // the records of a collection are processed together, after the collection is loaded
+        if (empty($entity->_fromCollection) && $this->isMetaGroupRequested('linkedRecords')) {
+            $this->putMetaLinkedRecords(new EntityCollection([$entity], $entity->getEntityName()));
+        }
+    }
+
+    public function getSelectAttributeList($params)
+    {
+        $res = parent::getSelectAttributeList($params);
+
+        // the ids of the linked records have to be selected to load the records
+        if (is_array($res) && $this->isMetaGroupRequested('linkedRecords') && !empty($requested = self::getRequestedLinkedFields())) {
+            $seed = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
+            foreach (array_keys($this->getLinkedRecordsFieldList($seed, $requested)) as $name) {
+                foreach ([$name . 'Id', $name . 'Ids'] as $attribute) {
+                    if (!in_array($attribute, $res) && $seed->hasAttribute($attribute)) {
+                        $res[] = $attribute;
+                    }
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    public function findEntities($params)
+    {
+        $result = parent::findEntities($params);
+
+        // the linked records are loaded once for the whole collection, after the ids of its records are loaded
+        if (!empty($result['collection']) && $this->isMetaGroupRequested('linkedRecords')) {
+            $this->putMetaLinkedRecords($result['collection']);
+        }
+
+        return $result;
+    }
+
+    /**
+     * The names of the link and linkMultiple fields and attributes listed by the Meta-Linked-Fields header, whose
+     * records the linkedRecords meta group carries. The value * stands for the link fields and the link and linkMultiple
+     * attributes.
+     *
+     * @return string[]
+     */
+    public static function getRequestedLinkedFields(): array
+    {
+        $names = [];
+        foreach (explode(',', (string)self::getHeader('Meta-Linked-Fields')) as $name) {
+            $name = trim($name);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
+    }
+
+    /**
+     * Puts the full records of the link and linkMultiple fields listed by the Meta-Linked-Fields header to the
+     * linkedRecords meta group, keyed by the name of the field. The records of the whole collection are loaded with
+     * one query per linked entity, and each linked record is prepared once, however many records refer to it.
+     */
+    protected function putMetaLinkedRecords(EntityCollection $collection): void
+    {
+        $requested = self::getRequestedLinkedFields();
+        if (empty($requested) || count($collection) === 0) {
+            return;
+        }
+
+        // [entity id => [field name => ['entity' => linked entity name, 'multiple' => bool]]]
+        $fieldsMap = [];
+        $ids       = [];
+        foreach ($collection as $entity) {
+            $fields = $this->getLinkedRecordsFieldList($entity, $requested);
+            if (empty($fields)) {
+                continue;
+            }
+
+            $fieldsMap[$entity->id] = $fields;
+            foreach ($fields as $name => $field) {
+                foreach ((array)$entity->get($field['multiple'] ? $name . 'Ids' : $name . 'Id') as $id) {
+                    if (!empty($id)) {
+                        $ids[$field['entity']][$id] = $id;
+                    }
+                }
+            }
+        }
+
+        if (empty($fieldsMap)) {
+            return;
+        }
+
+        $records = [];
+        foreach ($ids as $entityName => $entityIds) {
+            if (!$this->getAcl()->check($entityName, 'read')) {
+                continue;
+            }
+
+            // the linked records are prepared as a collection, the same way as the records of a list
+            $foreignService    = $this->getServiceFactory()->create($entityName);
+            $foreignCollection = $this->getEntityManager()->getRepository($entityName)->where(['id' => array_values($entityIds)])->find();
+            $foreignService->prepareCollectionForOutput($foreignCollection);
+            foreach ($foreignCollection as $foreignEntity) {
+                $foreignService->loadAdditionalFieldsForList($foreignEntity);
+                $foreignService->prepareEntityForOutput($foreignEntity);
+                $records[$entityName][$foreignEntity->get('id')] = $foreignEntity->toArray();
+            }
+        }
+
+        foreach ($collection as $entity) {
+            foreach ($fieldsMap[$entity->id] ?? [] as $name => $field) {
+                if ($field['multiple']) {
+                    $list = [];
+                    foreach ((array)$entity->get($name . 'Ids') as $id) {
+                        if (isset($records[$field['entity']][$id])) {
+                            $list[] = $records[$field['entity']][$id];
+                        }
+                    }
+                    $entity->setMeta('linkedRecords', $name, $list);
+                } else {
+                    $id = $entity->get($name . 'Id');
+                    $entity->setMeta('linkedRecords', $name, !empty($id) ? ($records[$field['entity']][$id] ?? null) : null);
+                }
+            }
+        }
+    }
+
+    /**
+     * The link and linkMultiple fields of the record that are requested by the Meta-Linked-Fields header. The value *
+     * stands for the link fields: a linkMultiple field has to be listed by its name, as the ids of its records are
+     * loaded with an additional query. An entity with attributes adds them in its own service.
+     *
+     * @return array<string, array{entity: string, multiple: bool}>
+     */
+    protected function getLinkedRecordsFieldList(Entity $entity, array $requested): array
+    {
+        // the fields of the entity type are resolved once
+        if ($this->linkedRecordsFieldDefs === null) {
+            $this->linkedRecordsFieldDefs = [];
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $name => $defs) {
+                if (empty($defs['type']) || !in_array($defs['type'], ['link', 'linkMultiple'], true)) {
+                    continue;
+                }
+
+                $entityName = $defs['entity'] ?? $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $name, 'entity']);
+                if (!empty($entityName)) {
+                    $this->linkedRecordsFieldDefs[$name] = ['entity' => $entityName, 'multiple' => $defs['type'] === 'linkMultiple'];
+                }
+            }
+        }
+
+        $all    = in_array('*', $requested, true);
+        $result = [];
+        foreach ($this->linkedRecordsFieldDefs as $name => $field) {
+            if (in_array($name, $requested, true) || ($all && !$field['multiple'])) {
+                $result[$name] = $field;
+            }
+        }
+
+        return $result;
     }
 
     /**

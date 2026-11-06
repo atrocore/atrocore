@@ -35,4 +35,27 @@ class Base extends Record
             }
         }
     }
+
+    /**
+     * Adds the link and linkMultiple attributes of the record, listed by their system names or by *, to the fields.
+     */
+    protected function getLinkedRecordsFieldList(Entity $entity, array $requested): array
+    {
+        $result = parent::getLinkedRecordsFieldList($entity, $requested);
+
+        if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute'])) {
+            $all = in_array('*', $requested, true);
+            foreach ($entity->entityDefs['fields'] ?? [] as $name => $defs) {
+                if (
+                    !empty($defs['attributeId']) && !empty($defs['entity'])
+                    && in_array($defs['type'] ?? null, ['link', 'linkMultiple'], true)
+                    && ($all || in_array($name, $requested, true))
+                ) {
+                    $result[$name] = ['entity' => $defs['entity'], 'multiple' => $defs['type'] === 'linkMultiple'];
+                }
+            }
+        }
+
+        return $result;
+    }
 }
