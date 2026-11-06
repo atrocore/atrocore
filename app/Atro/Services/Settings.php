@@ -55,7 +55,7 @@ class Settings extends AbstractService
 
     public function getScriptConfig(): array
     {
-        return array_merge($this->getAppService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
+        return array_merge($this->getGlobalService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
     }
 
     public function getConfigData(): array
@@ -190,9 +190,9 @@ class Settings extends AbstractService
         return $this->getInjection('fieldManagerUtil');
     }
 
-    protected function getAppService(): App
+    protected function getGlobalService(): GlobalService
     {
-        return $this->getInjection('serviceFactory')->create('App');
+        return $this->getInjection('serviceFactory')->create('Global');
     }
 
     private function setData(array|\stdClass $data): void

@@ -17,7 +17,7 @@ use Atro\Core\Utils\Database\Schema\Schema;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Schema\Comparator;
-use Atro\Services\App;
+use Atro\Core\DataManager;
 use Atro\Core\Utils\Config;
 
 class Base
@@ -114,7 +114,7 @@ class Base
 
     protected function rebuild()
     {
-        App::createRebuildNotification();
+        DataManager::pushPublicData('isNeedToRebuildDatabase', true);
     }
 
     /**

@@ -90,7 +90,7 @@ class SearchHandler extends AbstractHandler
     {
         $qp = $request->getQueryParams();
 
-        $result = $this->getServiceFactory()->create('GlobalSearch')->find(
+        $result = $this->getServiceFactory()->create('Global')->globalSearch(
             (string) ($qp['q'] ?? ''),
         );
 

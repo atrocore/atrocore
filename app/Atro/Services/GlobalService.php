@@ -27,8 +27,14 @@ use Atro\Repositories\SoftwarePackage;
 use Atro\Services\SoftwarePackage as SoftwarePackageService;
 use Espo\Core\Acl;
 
-class App extends AbstractService
+/**
+ * The service of the general API of the system, not bound to any entity: the endpoints in Handlers/Global.
+ * It is available as the service `Global`.
+ */
+class GlobalService extends AbstractService
 {
+    public const GLOBAL_SEARCH_MAX = 20;
+
     private const PUBLIC_CONFIG_KEYS
         = [
             'applicationName', 'companyLogoId', 'dateFormat',
@@ -121,15 +127,10 @@ class App extends AbstractService
         ];
     }
 
-    public static function createRebuildNotification(): void
-    {
-        DataManager::pushPublicData('isNeedToRebuildDatabase', true);
-    }
-
     public function rebuild(): void
     {
         if (Application::isSystemUpdating()) {
-            self::createRebuildNotification();
+            DataManager::pushPublicData('isNeedToRebuildDatabase', true);
         } else {
             $this->getDataManager()->rebuild();
         }
@@ -298,6 +299,47 @@ class App extends AbstractService
         $repository->deletePersonalDataRecord($recordId, $field);
 
         return true;
+    }
+
+    /**
+     * Searches the records of the entities of the global search by the text.
+     */
+    public function globalSearch(string $query): array
+    {
+        $list = [];
+
+        foreach ($this->getConfig()->get('globalSearchEntityList', []) as $entityName) {
+            if (count($list) >= self::GLOBAL_SEARCH_MAX) {
+                break;
+            }
+
+            if (!$this->getAcl()->checkScope($entityName, 'read')) {
+                continue;
+            }
+            if (!$this->getMetadata()->get(['scopes', $entityName])) {
+                continue;
+            }
+
+            $selectManager = $this->getInjection('container')->get('selectManagerFactory')->create($entityName);
+            $params = ['select' => ['id']];
+
+            if ($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'name'])) {
+                $params['select'][] = 'name';
+            }
+
+            $selectManager->manageAccess($params);
+            $selectManager->applyTextFilter($query, $params);
+
+            $collection = $this->getEntityManager()->getRepository($entityName)->limit(0, self::GLOBAL_SEARCH_MAX - count($list))->find($params);
+            foreach ($collection as $entity) {
+                $list[] = array_merge($entity->toArray(), ['_scope' => $entity->getEntityName()]);
+            }
+        }
+
+        return [
+            'count' => count($list),
+            'list'  => $list
+        ];
     }
 
     protected function getMaxUploadSize(): int

@@ -94,7 +94,7 @@ class GenerateScriptAttributesSnippetHandler extends AbstractHandler
         }
 
         return new JsonResponse(
-            $this->getServiceFactory()->create('App')->prepareScriptAttributes($data->entityName, $data->attributesIds)
+            $this->getServiceFactory()->create('Global')->prepareScriptAttributes($data->entityName, $data->attributesIds)
         );
     }
 }

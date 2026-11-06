@@ -10,7 +10,7 @@ This design pattern ensures that your business logic is centralized, reusable, a
 
 A service is always about an entity. `{Module}\Services\{EntityName}` contains the business logic of the API of that entity, e.g. `Pim\Services\Product` for `Product`.
 
-The only exception is the `Global` service (`Atro\Services\Global`). It contains the methods of general nature that are not bound to any entity — the ones used by the handlers in `Handlers/Global`. The name matches `Global` used in metadata and translations.
+The only exception is the `Global` service. It contains the methods of general nature that are not bound to any entity — the ones used by the handlers in `Handlers/Global`. The name matches `Global` used in metadata and translations. `global` is a reserved word of PHP, so the class is `Atro\Services\GlobalService`, registered as `Global` in `app.services`: `$serviceFactory->create('Global')`.
 
 Any other class does not belong in the `Services` namespace:
 
