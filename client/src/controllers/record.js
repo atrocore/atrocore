@@ -284,7 +284,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
             options = options || {};
 
             if (this.hasSubtypes()) {
-                this.createSubtypeRecord(options);
+                if (options.subtype) {
+                    this.getRouter().dispatch(options.subtype, 'create', options);
+                } else {
+                    this.createSubtypeRecord(options);
+                }
                 return;
             }
 
