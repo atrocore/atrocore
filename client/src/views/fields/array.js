@@ -90,6 +90,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         setup: function () {
+            this.setupParamsFromDefs(['options', 'translation', 'noEmptyString']);
+
             Dep.prototype.setup.call(this);
 
             this.noEmptyString = this.params.noEmptyString;

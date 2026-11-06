@@ -113,6 +113,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         setup: function () {
+            this.setupParamsFromDefs(['options', 'default', 'isSorted', 'translation', 'optionColors']);
+
             Dep.prototype.setup.call(this);
 
             if (!this.params.options) {

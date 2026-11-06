@@ -1173,6 +1173,21 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return defs?.['conditionalProperties']?.['disableOptions'];
         },
 
+        /**
+         * The params of the field are the ones of its definition in the model, e.g. model.defs.fields.<field>.options.
+         * A param that is not set yet is read from the definition.
+         */
+        setupParamsFromDefs: function (names) {
+            names.forEach(param => {
+                if (this.params[param] === undefined || this.params[param] === null) {
+                    const value = this.model.getFieldParam(this.name, param);
+                    if (value !== undefined && value !== null) {
+                        this.params[param] = Espo.Utils.clone(value);
+                    }
+                }
+            });
+        },
+
         getDisableOptionsViaConditions() {
             let res = [];
             (this.getDisableOptionsRules() || []).forEach(rule => {

@@ -66,6 +66,8 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         },
 
         setup: function () {
+            this.setupParamsFromDefs(['options', 'isSorted', 'translation', 'optionColors']);
+
             if (this.options.dragDrop === false || this.model.getFieldParam(this.name, 'dragDrop') === false) {
                 this.dragDrop = false;
             }
