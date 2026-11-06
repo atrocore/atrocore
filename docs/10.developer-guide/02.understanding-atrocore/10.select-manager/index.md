@@ -10,7 +10,7 @@ To get started, create a `SelectManager` instance using the `selectManagerFactor
 
 
 ```php
-/** @var \Espo\Core\SelectManagers\Base $selectManager */
+/** @var \Atro\Core\SelectManagers\Base $selectManager */
 $selectManager = $container->get('selectManagerFactory')->create($entityName);
 $repository = $container->get('entityManager')->getRepository($entityName);
 
@@ -389,7 +389,7 @@ $where = [
 
 You can create custom bool filters by extending the entity's **`SelectManager`**.
 
-1.  **Create the SelectManager File**: In your module, create a file at `\ModuleName\SelectManagers\{EntityName}.php`. This class must extend `\Espo\Core\SelectManagers\Base`.
+1.  **Create the SelectManager File**: In your module, create a file at `\ModuleName\SelectManagers\{EntityName}.php`. This class must extend `\Atro\Core\SelectManagers\Base`.
 
 2.  **Define the Filter Method**: Create a new protected method named `boolFilter<FilterName>`. This method will contain the logic for your filter. For our `Manufacturer` entity, let's create a filter named `onlyNotActive`:
 
@@ -397,7 +397,7 @@ You can create custom bool filters by extending the entity's **`SelectManager`**
 <?php
 namespace ExampleModule\SelectManagers;
 
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 class Manufacturer extends Base
 {

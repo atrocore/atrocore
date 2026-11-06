@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\ReferenceData;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class Style extends Base
+class Style extends ReferenceData
 {
     protected ?bool $isCollectionRequest;
 

@@ -17,7 +17,7 @@ use Espo\ORM\Entity;
 
 class UserProfile extends Base
 {
-    public function checkScope(\Espo\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    public function checkScope(\Atro\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
         if($action === 'read') {
             return true;

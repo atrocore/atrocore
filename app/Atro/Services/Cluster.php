@@ -23,6 +23,7 @@ use Atro\Core\Templates\Services\Base;
 use Atro\DTOs\Cluster\MassActionResultDTO;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Atro\Core\Services\AbstractRecordService;
 
 class Cluster extends Base
 {
@@ -250,7 +251,7 @@ class Cluster extends Base
 
         /** @var RDB $masterRepository */
         $masterRepository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
-        /** @var Record $masterService */
+        /** @var AbstractRecordService $masterService */
         $masterService = $this->getContainer()->get('serviceFactory')->create($cluster->get('masterEntity'));
 
         $sourceList = [];
@@ -355,7 +356,7 @@ class Cluster extends Base
             }
         }
 
-        $this->getRecordService('MassActions')->upsert($upsertData);
+        $this->getServiceFactory()->create('Global')->upsert($upsertData);
 
         try {
             $attributes->input->_skipCheckForConflicts = true;

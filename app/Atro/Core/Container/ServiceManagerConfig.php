@@ -82,7 +82,7 @@ class ServiceManagerConfig
         \Atro\Core\Utils\Metadata::class                => 'metadata',
         \Atro\Core\Utils\Language::class                => 'language',
         \Atro\Core\Utils\UniqueIndexDescriber::class    => 'uniqueIndexDescriber',
-        \Espo\Core\Utils\Metadata::class                => 'metadata',
+        \Atro\Core\Utils\Metadata::class                => 'metadata',
         \Atro\Core\Utils\FileManager::class             => 'fileManager',
         \Espo\Core\Utils\File\Manager::class            => 'fileManager',
         \Atro\Core\DataManager::class                   => 'dataManager',

@@ -14,15 +14,39 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Services;
 
 use Atro\Core\Exceptions\NotFound;
-use Atro\Services\Record;
 use Espo\ORM\Entity;
+use Atro\Core\Services\AbstractRecordService;
+use Atro\Core\Services\Interfaces\EditableInterface;
+use Atro\Core\Services\Interfaces\LinkableInterface;
+use Atro\Core\Services\Interfaces\SortableInterface;
+use Atro\Core\Services\Traits\EditableTrait;
+use Atro\Core\Services\Traits\LinkableTrait;
+use Atro\Core\Services\Traits\SortableTrait;
 
 /**
  * A subtype record is the supertype record extended with the subtype fields, the repository splits the data
  * between both tables. The relations of the supertype are served by the supertype record.
  */
-class Subtype extends Record
+class Subtype extends AbstractRecordService implements
+    EditableInterface,
+    LinkableInterface,
+    SortableInterface
 {
+    use EditableTrait {
+        filterInput as protected doFilterInput;
+    }
+    use LinkableTrait {
+        linkEntity as protected doLinkEntity;
+        duplicateAndLinkEntity as protected doDuplicateAndLinkEntity;
+        unlinkEntity as protected doUnlinkEntity;
+        linkEntityMass as protected doLinkEntityMass;
+        duplicateAndLinkEntityMass as protected doDuplicateAndLinkEntityMass;
+        unlinkAll as protected doUnlinkAll;
+    }
+    use SortableTrait {
+        updateRelationSortOrder as protected doUpdateRelationSortOrder;
+    }
+
     public function loadAdditionalFields(Entity $entity, bool $skipLinkMultiple = false)
     {
         parent::loadAdditionalFields($entity, $skipLinkMultiple);
@@ -59,7 +83,7 @@ class Subtype extends Record
             return $this->getSupertypeService()->linkEntity($this->getSupertypeRecordId($id), $link, $foreignId);
         }
 
-        return parent::linkEntity($id, $link, $foreignId);
+        return $this->doLinkEntity($id, $link, $foreignId);
     }
 
     public function duplicateAndLinkEntity($id, $link, $foreignId): bool
@@ -68,7 +92,7 @@ class Subtype extends Record
             return $this->getSupertypeService()->duplicateAndLinkEntity($this->getSupertypeRecordId($id), $link, $foreignId);
         }
 
-        return parent::duplicateAndLinkEntity($id, $link, $foreignId);
+        return $this->doDuplicateAndLinkEntity($id, $link, $foreignId);
     }
 
     public function unlinkEntity($id, $link, $foreignId)
@@ -77,7 +101,7 @@ class Subtype extends Record
             return $this->getSupertypeService()->unlinkEntity($this->getSupertypeRecordId($id), $link, $foreignId);
         }
 
-        return parent::unlinkEntity($id, $link, $foreignId);
+        return $this->doUnlinkEntity($id, $link, $foreignId);
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
@@ -86,7 +110,7 @@ class Subtype extends Record
             return $this->getSupertypeService()->linkEntityMass($this->getSupertypeRecordId($id), $link, $where, $selectData);
         }
 
-        return parent::linkEntityMass($id, $link, $where, $selectData);
+        return $this->doLinkEntityMass($id, $link, $where, $selectData);
     }
 
     public function duplicateAndLinkEntityMass($id, $link, $where, $selectData = null)
@@ -95,7 +119,7 @@ class Subtype extends Record
             return $this->getSupertypeService()->duplicateAndLinkEntityMass($this->getSupertypeRecordId($id), $link, $where, $selectData);
         }
 
-        return parent::duplicateAndLinkEntityMass($id, $link, $where, $selectData);
+        return $this->doDuplicateAndLinkEntityMass($id, $link, $where, $selectData);
     }
 
     public function updateRelationSortOrder(string $id, string $link, array $ids, int $offset = 0): bool
@@ -104,7 +128,7 @@ class Subtype extends Record
             return $this->getSupertypeService()->updateRelationSortOrder($this->getSupertypeRecordId($id), $link, $ids, $offset);
         }
 
-        return parent::updateRelationSortOrder($id, $link, $ids, $offset);
+        return $this->doUpdateRelationSortOrder($id, $link, $ids, $offset);
     }
 
     public function unlinkAll(string $id, string $link): bool
@@ -113,12 +137,12 @@ class Subtype extends Record
             return $this->getSupertypeService()->unlinkAll($this->getSupertypeRecordId($id), $link);
         }
 
-        return parent::unlinkAll($id, $link);
+        return $this->doUnlinkAll($id, $link);
     }
 
     protected function filterInput($data, ?Entity $entity = null)
     {
-        parent::filterInput($data, $entity);
+        $this->doFilterInput($data, $entity);
 
         if (!is_object($data)) {
             return;
@@ -145,10 +169,7 @@ class Subtype extends Record
         return $this->getMetadata()->get(['scopes', $this->entityType, 'supertypeId']);
     }
 
-    /**
-     * @return Record
-     */
-    protected function getSupertypeService()
+    protected function getSupertypeService(): Base
     {
         return $this->getServiceFactory()->create($this->getSupertypeName());
     }
@@ -230,7 +251,7 @@ class Subtype extends Record
 
             $record = $this->getEntityManager()->getEntity($foreignEntity, $id);
             if (!empty($record)) {
-                $entity->set($field . 'Name', $record->get($this->getNameField($foreignEntity)));
+                $entity->set($field . 'Name', $record->get($this->getNameFieldUtil()->getField($foreignEntity)));
             }
         }
     }

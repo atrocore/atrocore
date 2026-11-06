@@ -17,10 +17,10 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Atro\Services\Record;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\AbstractRecordService;
 
 #[Route(
     path: '/Classification/relateRecords',
@@ -91,7 +91,7 @@ class RelateRecordsHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        /** @var Record $service */
+        /** @var AbstractRecordService $service */
         $service = $this->getServiceFactory()->create($data->entityName);
 
         if (empty($data->classificationsIds)) {

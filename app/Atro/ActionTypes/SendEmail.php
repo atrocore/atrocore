@@ -85,7 +85,7 @@ class SendEmail extends AbstractAction
 
             $searchEntity = $action->getSubtype()?->get('searchEntity') ?? $targetEntity;
 
-            /** @var \Espo\Core\SelectManagers\Base $selectManager */
+            /** @var \Atro\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntity);
 
             /** @var \Atro\Core\Templates\Repositories\Base $repository */

@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Templates\Services\Base;
 
 #[Route(
     path: '/entityMerge',
@@ -97,7 +98,7 @@ class EntityMergeHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        $this->getServiceFactory()->create($data->entityName)->merge(
+        $this->getRecordServiceWith($data->entityName, Base::class)->merge(
             !empty($data->targetId) ? $data->targetId : null,
             $data->sourceIds,
             $data->attributes

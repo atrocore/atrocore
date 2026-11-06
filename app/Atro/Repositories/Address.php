@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Espo\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 class Address extends Base

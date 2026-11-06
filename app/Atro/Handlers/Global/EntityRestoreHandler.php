@@ -20,6 +20,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
 
 #[Route(
     path: '/entityRestore',
@@ -101,7 +102,7 @@ class EntityRestoreHandler extends AbstractHandler
             throw new BadRequest("Too many ids: maximum allowed is $limit. Use /entityRestoreAsync for large batches.");
         }
 
-        $result = $this->getRecordService($data->entityName)->massRestore($this->buildMassParams($data));
+        $result = $this->getRecordServiceWith($data->entityName, MassActionsInterface::class)->massRestore($this->buildMassParams($data));
 
         return new JsonResponse(['restored' => $result['count'], 'errors' => $result['errors']]);
     }

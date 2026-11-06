@@ -13,10 +13,10 @@ namespace Atro\EntryPoints;
 
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\ClientManager;
+use Atro\Core\Utils\ClientManager;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
-use Espo\Core\Utils\Language;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;

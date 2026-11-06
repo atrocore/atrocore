@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\SeederFactory;
-use Atro\Core\Templates\Services\HasContainer;
+use Atro\Core\Container;
+use Atro\Core\Services\AbstractService;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
 use Atro\Core\Utils\Config;
@@ -26,9 +27,31 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Atro\Core\Utils\PasswordHash;
 use Atro\Entities\User;
+use Espo\ORM\EntityManager;
 
-class Installer extends HasContainer
+class Installer extends AbstractService
 {
+    /**
+     * The system is not installed yet, so the services depending on the database are read from the container
+     * only when they are used.
+     */
+    protected $dependencies = ['container', 'memoryStorage'];
+
+    protected function getContainer(): Container
+    {
+        return $this->getInjection('container');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->getContainer()->get('entityManager');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->getContainer()->get('config');
+    }
+
     private array $allTranslations = [];
 
     /**

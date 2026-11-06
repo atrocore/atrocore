@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\LinkableInterface;
 
 #[Route(
     path: '/entityRelationBulk',
@@ -126,8 +127,8 @@ class EntityRelationBulkCreateHandler extends AbstractHandler
         }
 
         $relationData = json_decode(json_encode($data->data), true);
-        $service      = $this->getServiceFactory()->create('MassActions');
+        $service      = $this->getRecordServiceWith($entityName, LinkableInterface::class);
 
-        return new JsonResponse($service->addRelation($ids, $foreignIds, $entityName, $link, $relationData));
+        return new JsonResponse($service->addRelation($ids, $foreignIds, $link, $relationData));
     }
 }

@@ -31,8 +31,23 @@ use Espo\ORM\EntityCollection;
 class Hierarchy extends Base
 {
     protected $mandatorySelectAttributeList = ['routes'];
+
     private array $parentsCache = [];
 
+    protected function getForbiddenLinksToMerge(): array
+    {
+        $links = parent::getForbiddenLinksToMerge();
+        if (empty($this->getMetadata()->get(['scopes', $this->entityName, 'multiParents']))) {
+            $links[] = 'parents';
+        }
+
+        return $links;
+    }
+
+    protected function getFieldsNotCopiedFromPrimary(): array
+    {
+        return array_merge(parent::getFieldsNotCopiedFromPrimary(), ['parentId', 'parentIds', 'childrenIds', 'routes']);
+    }
 
     public function getSelectAttributeList($params)
     {
@@ -627,7 +642,6 @@ class Hierarchy extends Base
         return array_merge(parent::getAllowedMassActions(), ['fillFromChildren']);
     }
 
-
     public function getTreeDataForSelectedNode(string $id, array $sortParams): array
     {
         $entity = $this->getEntity($id);
@@ -751,7 +765,7 @@ class Hierarchy extends Base
 
     protected function prepareTreeNode($entity, array &$tree, array $ids, string $sortBy = 'id'): void
     {
-        $value = $this->getLocalizedNameValue($entity, $this->entityName);
+        $value = $this->getNameFieldUtil()->getLocalizedValue($entity, $this->entityName);
 
         $tree[$entity->get('id')]['id'] = $entity->get('id');
         $tree[$entity->get('id')]['name'] = $value;
@@ -1045,7 +1059,6 @@ class Hierarchy extends Base
         return true;
     }
 
-
     public function getChildren(string $parentId, array $params): array
     {
         $result = [];
@@ -1069,7 +1082,7 @@ class Hierarchy extends Base
         }
 
         foreach ($records as $k => $record) {
-            $value = $this->getLocalizedNameValue($record, $this->entityName);
+            $value = $this->getNameFieldUtil()->getLocalizedValue($record, $this->entityName);
             $result[] = [
                 'id'             => $record['id'],
                 'name'           => $value,
@@ -1677,7 +1690,6 @@ class Hierarchy extends Base
             $unInheritedFields[] = $field;
         }
 
-
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
             if (in_array($field, $unInheritedFields)) {
@@ -1766,7 +1778,6 @@ class Hierarchy extends Base
             return [];
         }
 
-
         $inheritedFields = [];
         foreach ($parents as $parent) {
             $this->getServiceFactory()->create($parent->getEntityType())->prepareEntityForOutput($parent);
@@ -1809,11 +1820,10 @@ class Hierarchy extends Base
         return $this->getMetadata()->get(['scopes', $this->entityType, 'type']) === 'Hierarchy';
     }
 
-
     public function getSelectForTree(array $additionalFields = []): array
     {
-        $res = ['id', $this->getNameField($this->entityType), 'routes'];
-        $field = $this->getLocalizedNameField($this->entityType);
+        $res = ['id', $this->getNameFieldUtil()->getField($this->entityType), 'routes'];
+        $field = $this->getNameFieldUtil()->getLocalizedField($this->entityType);
         if (!empty($field)) {
             $res[] = $field;
         }

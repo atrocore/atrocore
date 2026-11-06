@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
 
 #[Route(
     path: '/entityMassDelete',
@@ -123,7 +124,7 @@ class MassDeleteHandler extends AbstractHandler
             $params['permanently'] = $data->permanently;
         }
 
-        $result = $this->getRecordService($entityName)->massRemove($params);
+        $result = $this->getRecordServiceWith($entityName, MassActionsInterface::class)->massRemove($params);
 
         return new JsonResponse(['deleted' => $result['count'], 'errors' => $result['errors']]);
     }

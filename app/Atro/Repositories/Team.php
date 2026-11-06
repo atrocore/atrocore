@@ -16,7 +16,7 @@ namespace Atro\Repositories;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 
-class Team extends \Espo\Core\ORM\Repositories\RDB
+class Team extends \Atro\Core\ORM\Repositories\RDB
 {
     protected function afterSave(Entity $entity, array $options = [])
     {

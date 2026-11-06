@@ -508,7 +508,6 @@ class Util
         return $content;
     }
 
-
     /**
      * Get class name from the file path
      *
@@ -605,5 +604,21 @@ class Util
     public static function generateUniqueHash(): string
     {
         return IdGenerator::unsortableId();
+    }
+
+    /**
+     * The number of the records processed by one job when the records are split between the jobs running at once.
+     */
+    public static function getChunkSize(int $total, int $maxChunkSize, int $minChunkSize, int $maxConcurrentJobs): int
+    {
+        if ($total <= $minChunkSize * $maxConcurrentJobs) {
+            return $minChunkSize;
+        }
+
+        if ($total <= $maxChunkSize * $maxConcurrentJobs) {
+            return (int)ceil($total / $maxConcurrentJobs);
+        }
+
+        return $maxChunkSize;
     }
 }

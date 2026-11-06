@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Language;
+use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
 
 abstract class AbstractConnection

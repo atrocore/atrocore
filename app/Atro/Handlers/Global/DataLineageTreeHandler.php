@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Atro\Services\DataLineage;
+use Atro\Services\GlobalService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -173,10 +173,10 @@ class DataLineageTreeHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        /** @var DataLineage $service */
-        $service = $this->getServiceFactory()->create('DataLineage');
+        /** @var GlobalService $service */
+        $service = $this->getServiceFactory()->create('Global');
 
-        $tree = $service->getTree(
+        $tree = $service->getDataLineageTree(
             $entityName,
             $id,
             !empty($qp['endpointEntityName']) ? (string)$qp['endpointEntityName'] : null,

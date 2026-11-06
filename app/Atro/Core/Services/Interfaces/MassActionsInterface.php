@@ -11,14 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Core\Services\Interfaces;
 
-interface DashletInterface
+/**
+ * The records of the entity can be updated, deleted and restored in bulk. Implemented by Atro\Core\Services\Traits\MassActionsTrait.
+ */
+interface MassActionsInterface
 {
-    /**
-     * Get dashlet data
-     *
-     * @return array
-     */
-    public function getDashlet(): array;
+    public function massUpdate($data, array $params);
+
+    public function massRestore(array $params);
+
+    public function massRemove(array $params);
 }

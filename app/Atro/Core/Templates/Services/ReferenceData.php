@@ -15,12 +15,33 @@ namespace Atro\Core\Templates\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Services\Record;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Atro\Core\Services\AbstractRecordService;
+use Atro\Core\Services\Interfaces\EditableInterface;
+use Atro\Core\Services\Interfaces\LinkableInterface;
+use Atro\Core\Services\Interfaces\SortableInterface;
+use Atro\Core\Services\Interfaces\DeletableInterface;
+use Atro\Core\Services\Traits\EditableTrait;
+use Atro\Core\Services\Traits\LinkableTrait;
+use Atro\Core\Services\Traits\SortableTrait;
+use Atro\Core\Services\Traits\DeletableTrait;
 
-class ReferenceData extends Record
+/**
+ * The service of the entities of type ReferenceData: the records are stored in a file, the relations are kept as
+ * the lists of the IDs of the related records.
+ */
+class ReferenceData extends AbstractRecordService implements
+    EditableInterface,
+    LinkableInterface,
+    SortableInterface,
+    DeletableInterface
 {
+    use EditableTrait;
+    use LinkableTrait;
+    use SortableTrait;
+    use DeletableTrait;
+
     public function linkEntity($id, $link, $foreignId)
     {
         $defs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link]);
@@ -92,11 +113,6 @@ class ReferenceData extends Record
         throw new BadRequest('Not implemented');
     }
 
-    public function linkEntityMass($id, $link, $where, $selectData = null)
-    {
-        throw new BadRequest();
-    }
-
     public function unlinkAll(string $id, string $link): bool
     {
         $defs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link]);
@@ -115,36 +131,6 @@ class ReferenceData extends Record
         }
 
         throw new BadRequest('Not implemented');
-    }
-
-    public function massUpdate($data, array $params)
-    {
-        throw new BadRequest();
-    }
-
-    public function follow($id, $userId = null)
-    {
-        throw new BadRequest();
-    }
-
-    public function unfollow($id, $userId = null)
-    {
-        throw new BadRequest();
-    }
-
-    public function massFollow(array $params, $userId = null)
-    {
-        throw new BadRequest();
-    }
-
-    public function massUnfollow(array $params, $userId = null)
-    {
-        throw new BadRequest();
-    }
-
-    public function massRemove(array $params)
-    {
-        throw new BadRequest();
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void

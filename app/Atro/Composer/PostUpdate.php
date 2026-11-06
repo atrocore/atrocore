@@ -19,7 +19,7 @@ use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Config;
-use Espo\Core\Utils\Language;
+use Atro\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 
 class PostUpdate

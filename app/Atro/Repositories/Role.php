@@ -18,7 +18,7 @@ use Atro\Entities\Role as RoleEntity;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 
-class Role extends \Espo\Core\ORM\Repositories\RDB
+class Role extends \Atro\Core\ORM\Repositories\RDB
 {
     public const ACTIONS = [
         'create',

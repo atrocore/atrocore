@@ -88,6 +88,6 @@ class UpsertAsyncHandler extends AbstractHandler
             $data = [];
         }
 
-        return new JsonResponse($this->getServiceFactory()->create('MassActions')->upsertViaJob($data));
+        return new JsonResponse($this->getServiceFactory()->create('Global')->upsertViaJob($data));
     }
 }

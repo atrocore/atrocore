@@ -302,7 +302,7 @@ class MyEntityMassRejectHandler extends AbstractHandler
 
 ### Service method for mass actions
 
-The handler delegates to a service method that calls `executeMassAction()` — a helper in `Atro\Services\Record` that runs synchronously for small sets and dispatches background jobs for large ones.
+The handler delegates to a service method that calls `executeMassAction()` — a helper in `Atro\Core\Services\AbstractRecordService` that runs synchronously for small sets and dispatches background jobs for large ones.
 
 ```php
 // app/Atro/Services/MyEntity.php

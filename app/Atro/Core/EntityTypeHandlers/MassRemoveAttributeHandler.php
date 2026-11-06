@@ -96,7 +96,7 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requires: ['hasAttribute'])]
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]
 class MassRemoveAttributeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
