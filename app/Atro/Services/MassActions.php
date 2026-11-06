@@ -22,7 +22,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Container;
 use Atro\Core\Services\AbstractService;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Language;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 

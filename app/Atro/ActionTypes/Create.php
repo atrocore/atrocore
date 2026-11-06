@@ -33,7 +33,7 @@ class Create extends AbstractAction
         $action = $execution->get('action');
 
         if (!empty($searchEntityName = $action->getSubtype()?->get('searchEntity'))) {
-            /** @var \Espo\Core\SelectManagers\Base $selectManager */
+            /** @var \Atro\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityName);
 
             /** @var \Atro\Core\Templates\Repositories\Base $repository */

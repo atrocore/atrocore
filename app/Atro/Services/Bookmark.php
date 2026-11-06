@@ -19,7 +19,7 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Espo\ORM\EntityCollection;
 
 class Bookmark extends Base

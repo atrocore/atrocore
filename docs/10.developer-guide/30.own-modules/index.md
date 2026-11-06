@@ -27,7 +27,7 @@ As you can see module consist of two main folders - `app`, where the backend par
 - `Resources` - has several subfolders such as:
   - `i18n` - contain modules translations
   - `layouts` - contain module layouts
-  - `metadata` - contain module metadata, which are available in the backend as instance of `Espo\Core\Utils\Metadata` class from container
+  - `metadata` - contain module metadata, which are available in the backend as instance of `Atro\Core\Utils\Metadata` class from container
   > To get data from metadata use such way `$metadata->get(['entityDefs', 'Test', 'fields', 'name', 'type'], 'varchar')`.
   Second argument means default value. In frontend metadata object is accessible from all views object by method `getMatedata`.
   For example `this.getMetadata().get(['entityDefs', 'Test', 'fields', 'name', 'type'])`.
@@ -38,7 +38,7 @@ As you can see module consist of two main folders - `app`, where the backend par
      - `scopes` - general parameters for entity types
      - `fields` - field type definitions
 - `Services` - main business logic to work with data
-> A record service handles CRUD operations over entities. They extend base class `Espo\Services\Record`.
+> A record service handles CRUD operations over entities. They extend base class `Atro\Services\Record`.
 - Main methods of the Record service are:
     - `readEntity` - get an entity record
     - `createEntity` - create new entity record

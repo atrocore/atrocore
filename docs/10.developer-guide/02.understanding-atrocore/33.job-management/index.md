@@ -31,7 +31,7 @@ namespace YourModule\Jobs;
 use Atro\Jobs\AbstractJob;
 use Atro\Jobs\JobInterface;
 use Atro\Entities\Job;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
 class ExampleJob extends AbstractJob implements JobInterface
 {

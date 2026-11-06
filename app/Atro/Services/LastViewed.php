@@ -77,7 +77,7 @@ class LastViewed extends AbstractService
 
         $targetTypeList[] = 'App';
 
-        /** @var \Espo\Core\SelectManagers\Base $selectManager */
+        /** @var \Atro\Core\SelectManagers\Base $selectManager */
         $selectManager = $this->getInjection('selectManagerFactory')->create('ActionHistoryRecord');
         $params = [
             'maxSize' => $maxSize,
