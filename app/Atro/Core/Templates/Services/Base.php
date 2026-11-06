@@ -998,7 +998,7 @@ class Base extends AbstractRecordService implements
             }
         }
 
-        $this->getRecordService('MassActions')->upsert($upsertData);
+        $this->getServiceFactory()->create('Global')->upsert($upsertData);
 
         if (!empty($id)) {
             try {

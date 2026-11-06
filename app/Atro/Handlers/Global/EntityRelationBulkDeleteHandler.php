@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Services\Interfaces\LinkableInterface;
 
 #[Route(
     path: '/entityRelationBulk',
@@ -127,6 +128,6 @@ class EntityRelationBulkDeleteHandler extends AbstractHandler
 
         $relationData = json_decode(json_encode($data->data), true);
 
-        return new JsonResponse($this->getServiceFactory()->create('MassActions')->removeRelation($ids, $foreignIds, $entityName, $link, $relationData));
+        return new JsonResponse($this->getRecordServiceWith($entityName, LinkableInterface::class)->removeRelation($ids, $foreignIds, $link, $relationData));
     }
 }

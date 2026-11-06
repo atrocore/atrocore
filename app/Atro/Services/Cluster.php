@@ -356,7 +356,7 @@ class Cluster extends Base
             }
         }
 
-        $this->getRecordService('MassActions')->upsert($upsertData);
+        $this->getServiceFactory()->create('Global')->upsert($upsertData);
 
         try {
             $attributes->input->_skipCheckForConflicts = true;

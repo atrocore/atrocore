@@ -31,4 +31,8 @@ interface LinkableInterface
     public function unlinkAll(string $id, string $link): bool;
 
     public function handleLinkEntitiesErrors(string $id, string $link, bool $shouldDuplicateForeign): void;
+
+    public function addRelation(array $ids, array $foreignIds, string $link, ?array $relationData = null): array;
+
+    public function removeRelation(array $ids, array $foreignIds, string $link, ?array $relationData = null): array;
 }
