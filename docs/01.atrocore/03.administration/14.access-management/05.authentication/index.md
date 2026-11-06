@@ -2,7 +2,7 @@
 title: Authentication
 --- 
 
-The Authentication page allows you to configure security settings related to user authentication tokens, session management and password reset.
+The Authentication page allows you to configure security settings related to user authentication tokens, session management, password reset, rate limiting and access to the REST API documentation.
 To set them go to `Administration > Authentication`.
 
 ![authentication](./_assets/authentication.png){.medium}
@@ -42,3 +42,14 @@ The *Rate Limit* panel protects the login and the password reset request from au
 The login is limited per IP address and per user name; the password reset request per IP address. All other API requests are not limited. Users behind one shared address (for example an office network) share the limit of that address, so raise **Rate Limit: Requests** if many of them open the application at the same moment.
 
 For details, including how to limit requests in the web server in addition, see [Rate Limiting](../../../../08.security/02.rate-limiting/index.md).
+
+## API Documentation
+
+The *API Documentation* panel protects the REST API documentation at `/apidocs/` and its OpenAPI schema with HTTP Basic authentication.
+
+- **Username**: the user name for the API documentation.
+- **Password**: the password for the API documentation. It is stored only as a hash and is never shown – leave the field empty to keep the current password.
+
+These credentials are independent of AtroCore users – any person who knows them can open the API documentation, without an AtroCore account.
+
+Both fields are empty by default, and the API documentation is not accessible (`401 Unauthorized`) until both a username and a password are set. To disable access again, clear the **Username** and save – the stored password is removed as well, so a new password has to be set to enable the API documentation again.
