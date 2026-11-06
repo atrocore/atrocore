@@ -6570,7 +6570,6 @@ button.close {
 .modal-footer {
     padding: 14px;
     text-align: right;
-    border-top: 1px solid #e5e5e5
 }
 
 .modal-footer .btn + .btn {
@@ -13330,13 +13329,14 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .modal-header {
-    background-color: var(--nav-menu-background);
+    background-color: #fff;
+    border-bottom: 1px solid #e5e5e5;
     padding-top: 12px;
     padding-bottom: 12px
 }
 
 .modal-header a, .modal-title {
-    color: var(--nav-font-color);
+    color: var(--primary-font-color);
     text-transform: uppercase;
     font-weight: 600;
     font-size: 14px
@@ -13348,7 +13348,7 @@ input#sn-checkbox-open-in-new-window {
 
 .modal-header .close:hover, .modal-header .close:focus,
 .modal-header .close > span {
-    color: var(--nav-font-color);
+    color: var(--primary-font-color);
     display: inline-block;
 }
 
