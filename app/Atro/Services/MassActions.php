@@ -19,16 +19,28 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Services\HasContainer;
+use Atro\Core\Container;
+use Atro\Core\Services\AbstractService;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
-class MassActions extends HasContainer
+class MassActions extends AbstractService
 {
+    protected function getContainer(): Container
+    {
+        return $this->getInjection('container');
+    }
+
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translate($label, $category, $scope);
+    }
+
     protected function init()
     {
+        $this->addDependency('container');
         $this->addDependency('selectManagerFactory');
         parent::init();
     }

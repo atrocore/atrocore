@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Services\AbstractService;
 use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;

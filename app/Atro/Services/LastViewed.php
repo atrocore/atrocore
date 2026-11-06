@@ -11,6 +11,7 @@
 
 namespace Atro\Services;
 
+use Atro\Core\Services\AbstractService;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;

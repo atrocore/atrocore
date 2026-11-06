@@ -17,11 +17,11 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\LanguageResolvers\AbstractLanguageResolver;
 use Atro\DTOs\TranslationKeyDTO;
 use Atro\Repositories\Translation as TranslationRepository;
-use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
 use Atro\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Atro\Core\Http\RequestHeaders;
 
 class Language
 {
@@ -61,7 +61,7 @@ class Language
             return $GLOBALS['localeId'];
         }
 
-        $localeId = AbstractService::getHeader('Locale-Id');
+        $localeId = RequestHeaders::get('Locale-Id');
 
         if (empty($localeId) && $user) {
             $localeId = $user->get('localeId');

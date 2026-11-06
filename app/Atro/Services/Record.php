@@ -28,6 +28,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Espo\Services\RecordService;
+use Atro\Core\Http\RequestHeaders;
 
 class Record extends RecordService
 {
@@ -100,7 +101,7 @@ class Record extends RecordService
     {
         parent::putMeta($entity);
 
-        if ($this->isMetaGroupRequested('readOnlyFields') && !empty($fields = $this->getReadOnlyFields($entity))) {
+        if (RequestHeaders::isMetaGroupRequested('readOnlyFields') && !empty($fields = $this->getReadOnlyFields($entity))) {
             $meta = $entity->get('_meta') ?? [];
             $meta['readOnlyFields'] = array_values($fields);
             $entity->set('_meta', $meta);

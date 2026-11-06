@@ -15,7 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
-use Espo\Core\Services\Base;
+use Atro\Core\Services\AbstractService;
 
 /**
  * User-defined variables, stored apart from the configuration.
@@ -24,7 +24,7 @@ use Espo\Core\Services\Base;
  * in the config they would share a namespace with the system parameters, and
  * every mechanism that exposes the config would risk exposing them too.
  */
-class Variable extends Base
+class Variable extends AbstractService
 {
     public const FILE_PATH = 'data/variables.json';
 

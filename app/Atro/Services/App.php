@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Services\AbstractService;
 use Atro\Core\Application;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\DataManager;
