@@ -284,7 +284,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
             options = options || {};
 
             if (this.hasSubtypes()) {
-                this.createSubtypeRecord(options);
+                if (options.subtype) {
+                    this.getRouter().dispatch(options.subtype, 'create', options);
+                } else {
+                    this.createSubtypeRecord(options);
+                }
                 return;
             }
 
@@ -436,7 +440,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         createSubtypeRecord: function (options) {
             let selected = false;
 
-            this.get('master').createView('selectSubtype', 'views/modals/select-subtype', {scope: this.name}, view => {
+            this.master(master => master.createView('selectSubtype', 'views/modals/select-subtype', {scope: this.name}, view => {
                 view.render();
 
                 this.listenToOnce(view, 'select', subtype => {
@@ -450,7 +454,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                         this.getRouter().navigate(options.returnUrl || '#' + this.name, {trigger: !options.returnUrl});
                     }
                 });
-            });
+            }));
         },
 
         beforeMerge: function () {

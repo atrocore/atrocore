@@ -1,5 +1,5 @@
 {
-  "iconClass": "plug",
+  "iconClass": "storefront",
   "recordViews": {
     "detail": "views/connection/record/detail"
   }

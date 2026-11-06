@@ -11,43 +11,38 @@
 /**
  * Each record of an entity with subtypes belongs to one of them, so the subtype is chosen before the record is created.
  */
-Espo.define('views/modals/select-subtype', 'views/modals/array-field-add', Dep => Dep.extend({
+Espo.define('views/modals/select-subtype', 'view', Dep => Dep.extend({
 
-    template: 'modals/select-subtype',
+    _template: '',
 
-    events: {
-        'click button[data-action="add"]': function (e) {
-            this.trigger('select', $(e.currentTarget).attr('data-value'));
-        },
-    },
-
-    data() {
-        const subtypes = this.getSubtypes();
-
-        const translatedOptions = {};
-        subtypes.forEach(subtype => {
-            translatedOptions[subtype] = this.translate(subtype, 'scopeNames');
-        });
-
-        return {
-            optionList: subtypes,
-            translatedOptions: translatedOptions
-        };
-    },
+    svelteComponent: null,
 
     setup() {
         Dep.prototype.setup.call(this);
 
-        this.header = this.translate('selectType', 'labels', 'Global');
+        this.once('remove', () => {
+            if (this.svelteComponent) {
+                this.svelteComponent.$destroy();
+                this.svelteComponent = null;
+            }
+        });
     },
 
-    getSubtypes() {
-        const scopes = this.getMetadata().get('scopes') || {};
+    afterRender() {
+        Dep.prototype.afterRender.call(this);
 
-        return Object.keys(scopes)
-            .filter(scope => scopes[scope].supertypeId === this.options.scope)
-            .filter(scope => this.getAcl().check(scope, 'create'))
-            .sort((a, b) => this.translate(a, 'scopeNames').localeCompare(this.translate(b, 'scopeNames')));
+        this.svelteComponent = new Svelte.SubtypeSelectModal({
+            target: document.body,
+            props: {
+                scope: this.options.scope,
+                onSelect: subtype => this.trigger('select', subtype),
+                onClose: () => this.close()
+            }
+        });
+    },
+
+    close() {
+        this.remove();
     },
 
 }));

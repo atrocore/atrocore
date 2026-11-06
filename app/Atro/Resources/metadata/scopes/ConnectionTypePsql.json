@@ -2,6 +2,7 @@
   "entity": true,
   "type": "Subtype",
   "supertypeId": "Connection",
+  "subtypeGroup": "database",
   "layouts": false,
   "customizable": false,
   "importable": false,
