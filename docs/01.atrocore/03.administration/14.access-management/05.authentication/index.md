@@ -3,7 +3,7 @@ title: Authentication
 --- 
 
 The Authentication page allows you to configure security settings related to user authentication tokens, session management, password reset, rate limiting and access to the REST API documentation.
-To set them go to `Administration > Authentication`.
+To set them go to `Administration / Authentication`.
 
 ![authentication](./_assets/authentication.png){.medium}
 
@@ -46,6 +46,8 @@ For details, including how to limit requests in the web server in addition, see 
 ## API Documentation
 
 The *API Documentation* panel protects the REST API documentation at `/apidocs/` and its OpenAPI schema with HTTP Basic authentication.
+
+![api-documentation-settings](./_assets/api-documentation-settings.png){.medium}
 
 - **Username**: the user name for the API documentation.
 - **Password**: the password for the API documentation. It is stored only as a hash and is never shown – leave the field empty to keep the current password.
