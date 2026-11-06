@@ -27,7 +27,7 @@ The limit counts *different addresses*, not attempts. A person who mistypes a pa
 
 ## Settings ##
 
-The values are set in `Administration > Authentication`, panel *Rate Limit* (see [Authentication](../../01.atrocore/03.administration/14.access-management/05.authentication/index.md#rate-limit)).
+The values are set in `Administration / Authentication`, panel *Rate Limit* (see [Authentication](../../01.atrocore/03.administration/14.access-management/05.authentication/index.md#rate-limit)).
 
 | Setting | Default | Description |
 | --- | --- | --- |
