@@ -112,5 +112,13 @@
       "tokenAuthApi": "API автентифікації токенів",
       "apiKey": "Ключ API"
     }
+  },
+  "subtypeGroups": {
+    "httpAuthentication": "HTTP-автентифікація",
+    "database": "Бази даних",
+    "fileStorage": "Файлові сховища",
+    "ai": "ШІ",
+    "business": "Бізнес-застосунки",
+    "other": "Інше"
   }
 }

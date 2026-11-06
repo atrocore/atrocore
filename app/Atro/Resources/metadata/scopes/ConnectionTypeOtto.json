@@ -2,6 +2,7 @@
   "entity": true,
   "type": "Subtype",
   "supertypeId": "Connection",
+  "subtypeGroup": "business",
   "layouts": false,
   "customizable": false,
   "importable": false,

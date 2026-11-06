@@ -113,5 +113,13 @@
     "onlySmtpConnectionsSupported": "Sending test emails is only supported for SMTP connections.",
     "apiKeyValueIsEmpty": "API Key is empty.",
     "apiKeyTestNotSupported": "Connections of this type cannot be tested."
+  },
+  "subtypeGroups": {
+    "httpAuthentication": "HTTP Authentication",
+    "database": "Database",
+    "fileStorage": "File Storage",
+    "ai": "AI",
+    "business": "Business Applications",
+    "other": "Other"
   }
 }
