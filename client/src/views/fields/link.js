@@ -193,7 +193,6 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         getCreateAttributes: function () {
             let attributes = {};
             let presetAttributeList = [];
-            let hasLinkedWithRule = false;
 
             // prepare attributes by where filter
             (this.model?.defs?.fields?.[this.name]?.where || []).forEach(item => {
@@ -203,7 +202,6 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                         const values = Array.isArray(rule.value) ? rule.value : [rule.value];
 
                         if (rule.operator === 'linked_with') {
-                            hasLinkedWithRule = true;
                             let entityName = this.getMetadata().get(`entityDefs.${this.foreignScope}.links.${rule.field}.entity`);
 
                             this.ajaxGetRequest(
@@ -254,9 +252,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 }
             });
 
-            // the attributes that the filter has set, for the conditional properties of the new record; the list is
-            // passed by reference, because the values of a "linked_with" rule are loaded after this call returns
-            if (presetAttributeList.length || hasLinkedWithRule) {
+            // the attributes that the filter has set, for the conditional properties of the new record
+            if (presetAttributeList.length) {
                 attributes._presetAttributeList = presetAttributeList;
             }
 
