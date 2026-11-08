@@ -16,6 +16,7 @@ namespace Atro\Core\EntityTypeHandlers;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\EntityType;
 use Atro\Core\Routing\Route;
+use Atro\Core\Services\Interfaces\PersonalDataErasableInterface;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,7 +69,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy'], requires: ['containsPersonalData'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation'], requires: ['containsPersonalData'])]
 class ErasePersonalDataHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -76,7 +77,7 @@ class ErasePersonalDataHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
         $id = $request->getAttribute('id');
 
-        $result = $this->getRecordService($entityName)->erasePersonalData($id);
+        $result = $this->getRecordServiceWith($entityName, PersonalDataErasableInterface::class)->erasePersonalData($id);
 
         return new BoolResponse($result);
     }

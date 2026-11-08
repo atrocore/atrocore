@@ -22,10 +22,12 @@ use Atro\Core\Services\Interfaces\EditableInterface;
 use Atro\Core\Services\Interfaces\DeletableInterface;
 use Atro\Core\Services\Interfaces\SoftDeletableInterface;
 use Atro\Core\Services\Interfaces\MassActionsInterface;
+use Atro\Core\Services\Interfaces\PersonalDataErasableInterface;
 use Atro\Core\Services\Traits\EditableTrait;
 use Atro\Core\Services\Traits\DeletableTrait;
 use Atro\Core\Services\Traits\SoftDeletableTrait;
 use Atro\Core\Services\Traits\MassActionsTrait;
+use Atro\Core\Services\Traits\PersonalDataErasableTrait;
 
 /**
  * The service of the entities of type Relation: the records linking the records of two entities.
@@ -34,7 +36,8 @@ class Relation extends AbstractRecordService implements
     EditableInterface,
     DeletableInterface,
     SoftDeletableInterface,
-    MassActionsInterface
+    MassActionsInterface,
+    PersonalDataErasableInterface
 {
     use EditableTrait {
         createEntity as protected doCreateEntity;
@@ -46,6 +49,7 @@ class Relation extends AbstractRecordService implements
     use DeletableTrait;
     use SoftDeletableTrait;
     use MassActionsTrait;
+    use PersonalDataErasableTrait;
 
     protected function isAssociatesRelation(): bool
     {

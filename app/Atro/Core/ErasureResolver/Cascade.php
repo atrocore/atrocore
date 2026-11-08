@@ -13,10 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Atro\Core\Exceptions\Error;
-use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
-use Espo\Services\RecordService;
 
 class Cascade extends AbstractErasureResolver
 {
@@ -32,24 +29,16 @@ class Cascade extends AbstractErasureResolver
             return false;
         }
 
+        if ($this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) === 'ReferenceData') {
+            return false;
+        }
+
+        $repository = $this->getEntityManager()->getRepository($foreignEntityType);
+
         foreach ($this->getLinkedEntities($entity, $field) as $foreign) {
-            $this->getService($foreignEntityType)->erasePersonalData($foreign->id, $processed);
+            $repository->erasePersonalData($foreign, $processed);
         }
 
         return true;
-    }
-
-    protected function getServerFactory(): ServiceFactory
-    {
-        return $this->getContainer()->get('serviceFactory');
-    }
-
-    protected function getService(string $serviceName): RecordService
-    {
-        if ($this->getServerFactory()->checkExists($serviceName)) {
-            return $this->getServerFactory()->create($serviceName);
-        }
-
-        throw new Error("Service '$serviceName' does not exist");
     }
 }

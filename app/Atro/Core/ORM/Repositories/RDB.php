@@ -1417,8 +1417,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->executeStatement();
     }
 
+    /**
+     * @param array $processed records that are already erased, prevents endless loops for cascade erasure
+     */
     public function erasePersonalData(Entity $entity, array &$processed = []): void
     {
+        if (isset($processed[$this->entityType][$entity->id])) {
+            return;
+        }
+        $processed[$this->entityType][$entity->id] = true;
+
         $erasedFields = [];
         foreach (($this->getPersonalDataFields($entity->id) ?? []) as $field) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
@@ -1465,7 +1473,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $this->getEntityManager()->getMapper()->toDb($this->entityName . 'PersonalData');
     }
 
-
     protected function getErasureResolver(string $mode): AbstractErasureResolver
     {
         $className = $this->getMetadata()->get(['app', 'erasureResolvers', $mode, 'className']);
@@ -1473,7 +1480,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             throw new Error("Erasure resolver for erasure mode '$mode' is not registered.");
         }
 
-        /** @var AbstractErasureResolver $resolver */
         return $this->getEntityManager()->getContainer()->get($className);
     }
 }

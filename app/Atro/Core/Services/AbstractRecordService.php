@@ -252,62 +252,6 @@ abstract class AbstractRecordService extends AbstractService
         return $entity;
     }
 
-    public function massErasePersonalData(array $params): array
-    {
-        if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
-            throw new Forbidden();
-        }
-
-        $params['action']             = 'erasePersonalData';
-        $params['maxCountWithoutJob'] = $params['maxCountWithoutJob'] ?? $this->getConfig()->get('massErasePersonalDataMaxCountWithoutJob', 200);
-        $params['maxChunkSize']       = $this->getConfig()->get('massErasePersonalDataMaxChunkSize', 3000);
-        $params['minChunkSize']       = $this->getConfig()->get('massErasePersonalDataMinChunkSize', 400);
-        $params['singleActionMethod'] = 'erasePersonalData';
-
-        $result = $this->executeMassAction($params, function ($id) {
-            $this->erasePersonalData($id);
-        });
-
-        if (empty($result)) {
-            throw new BadRequest("Entity '{$this->getEntityType()}' does not contain personal data.");
-        }
-
-        [$count, $errors, $sync, $jobEntity] = array_pad($result, 4, null);
-
-        return $sync
-            ? ['count' => $count, 'errors' => $errors, 'sync' => true]
-            : ['jobId' => $jobEntity->get('id'), 'sync' => false];
-    }
-
-    public function erasePersonalData(string $id, array &$processed = []): bool
-    {
-        if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
-            throw new Forbidden();
-        }
-
-        $entityType = $this->getEntityType();
-        if (empty($this->getMetadata()->get(['scopes', $entityType, 'containsPersonalData'])) || $this->getMetadata()->get(['scopes', $entityType, 'type']) === 'ReferenceData') {
-            throw new BadRequest("Entity '$entityType' does not contain personal data.");
-        }
-
-        // prevents endless loops for cascade erasure
-        if (isset($processed[$entityType][$id])) {
-            return true;
-        }
-        $processed[$entityType][$id] = true;
-
-        /** @var \Atro\Core\ORM\Repositories\RDB $repository */
-        $repository = $this->getRepository();
-
-        if (empty($entity = $repository->get($id))) {
-            throw new NotFound();
-        }
-
-        $repository->erasePersonalData($entity, $processed);
-
-        return true;
-    }
-
     protected function getScriptFieldsList(Entity $entity): array
     {
         $result = [];

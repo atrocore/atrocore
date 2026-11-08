@@ -27,12 +27,14 @@ use Atro\Core\Services\Interfaces\DeletableInterface;
 use Atro\Core\Services\Interfaces\EditableInterface;
 use Atro\Core\Services\Interfaces\LinkableInterface;
 use Atro\Core\Services\Interfaces\MassActionsInterface;
+use Atro\Core\Services\Interfaces\PersonalDataErasableInterface;
 use Atro\Core\Services\Interfaces\SoftDeletableInterface;
 use Atro\Core\Services\Interfaces\SortableInterface;
 use Atro\Core\Services\Traits\DeletableTrait;
 use Atro\Core\Services\Traits\EditableTrait;
 use Atro\Core\Services\Traits\LinkableTrait;
 use Atro\Core\Services\Traits\MassActionsTrait;
+use Atro\Core\Services\Traits\PersonalDataErasableTrait;
 use Atro\Core\Services\Traits\SoftDeletableTrait;
 use Atro\Core\Services\Traits\SortableTrait;
 use Atro\ORM\DB\RDB\Mapper;
@@ -51,7 +53,8 @@ class Base extends AbstractRecordService implements
     SortableInterface,
     DeletableInterface,
     SoftDeletableInterface,
-    MassActionsInterface
+    MassActionsInterface,
+    PersonalDataErasableInterface
 {
     use EditableTrait;
     use LinkableTrait;
@@ -59,6 +62,7 @@ class Base extends AbstractRecordService implements
     use DeletableTrait;
     use SoftDeletableTrait;
     use MassActionsTrait;
+    use PersonalDataErasableTrait;
 
     private $streamService;
 

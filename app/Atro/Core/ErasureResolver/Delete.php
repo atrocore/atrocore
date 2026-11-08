@@ -20,8 +20,13 @@ class Delete extends AbstractErasureResolver
     public function supports(Entity $entity, string $field): bool
     {
         $fieldDefs = $this->getFieldDefs($entity, $field);
+        if (!in_array($fieldDefs['type'] ?? null, self::LINK_TYPES)) {
+            return false;
+        }
 
-        return in_array($fieldDefs['type'] ?? null, self::LINK_TYPES);
+        $foreignEntityType = $this->getForeignEntityType($entity, $field);
+
+        return empty($foreignEntityType) || $this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) !== 'Subtype';
     }
 
     public function resolve(Entity $entity, string $field, array &$processed = []): bool
@@ -30,9 +35,14 @@ class Delete extends AbstractErasureResolver
 
         $this->unlink($entity, $field, $linkedEntities);
 
+        $foreignType = $this->getMetadata()->get(['scopes', $this->getForeignEntityType($entity, $field), 'type'], 'Base');
+
         foreach ($linkedEntities as $foreign) {
             $this->getEntityManager()->removeEntity($foreign);
-            $this->getEntityManager()->getRepository($foreign->getEntityName())->deleteFromDb($foreign->id);
+
+            if ($foreignType !== 'ReferenceData') {
+                $this->getEntityManager()->getRepository($foreign->getEntityName())->deleteFromDb($foreign->id);
+            }
         }
 
         return true;

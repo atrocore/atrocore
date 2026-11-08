@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\EntityType;
 use Atro\Core\Routing\Route;
+use Atro\Core\Services\Interfaces\PersonalDataErasableInterface;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -92,7 +93,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy'], requires: ['containsPersonalData'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation'], requires: ['containsPersonalData'])]
 class MassErasePersonalDataHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -110,7 +111,7 @@ class MassErasePersonalDataHandler extends AbstractHandler
         }
 
         $params = ['ids' => $data->ids, 'maxCountWithoutJob' => PHP_INT_MAX];
-        $result = $this->getRecordService($entityName)->massErasePersonalData($params);
+        $result = $this->getRecordServiceWith($entityName, PersonalDataErasableInterface::class)->massErasePersonalData($params);
 
         return new JsonResponse(['erased' => $result['count'], 'errors' => $result['errors']]);
     }
