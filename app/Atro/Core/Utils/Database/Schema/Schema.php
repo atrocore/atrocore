@@ -15,7 +15,7 @@ namespace Atro\Core\Utils\Database\Schema;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Manager as EventManager;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
 use Espo\Core\ORM\EntityManager;

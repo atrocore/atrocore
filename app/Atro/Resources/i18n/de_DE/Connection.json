@@ -112,5 +112,13 @@
       "tokenAuthApi": "Token-Authentifizierungs-API",
       "apiKey": "API-Schlüssel"
     }
+  },
+  "subtypeGroups": {
+    "httpAuthentication": "HTTP-Authentifizierung",
+    "database": "Datenbank",
+    "fileStorage": "Dateispeicher",
+    "ai": "KI",
+    "business": "Geschäftsanwendungen",
+    "other": "Sonstige"
   }
 }

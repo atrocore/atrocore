@@ -50,8 +50,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         dragableListRows: undefined,
 
-        listRowsOrderSaveUrl: undefined,
-
         filtersLayoutLoaded: false,
 
         listInlineEditModeEnabled: false,
@@ -377,9 +375,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${this.link}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
-                if (this.defs.dragDrop && this.defs.dragDrop.maxSize) {
-                    collection.maxSize = this.defs.dragDrop.maxSize;
-                }
 
                 if (this.defs.filters) {
                     var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
@@ -454,7 +449,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true,
                         dragableListRows: this.dragableListRows,
-                        listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
                         panelView: this,
                         openInTab: !!this.defs.isInSmallView,
                         canUnlink: canUnlink,

@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Atro\Handlers;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\UnsupportedMediaType;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
-use \Atro\Services\AbstractService;
+use Atro\Core\Services\AbstractService;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\ORM\EntityManager;
@@ -89,12 +91,23 @@ abstract class AbstractHandler implements MiddlewareInterface
 
     protected function getRecordService(string $entityName): AbstractService
     {
-        if ($this->getServiceFactory()->checkExists($entityName)) {
-            return $this->getServiceFactory()->create($entityName);
+        if (!$this->getServiceFactory()->checkExists($entityName)) {
+            throw new NotFound("Entity '$entityName' not found.");
         }
 
-        $service = $this->getServiceFactory()->create('Record');
-        $service->setEntityType($entityName);
+        return $this->getServiceFactory()->create($entityName);
+    }
+
+    /**
+     * The service of the entity, when the entity supports the operation: the service implements the interface of the
+     * capability (Atro\Core\Services\Interfaces) or extends the template of the entity type.
+     */
+    protected function getRecordServiceWith(string $entityName, string $capability): AbstractService
+    {
+        $service = $this->getRecordService($entityName);
+        if (!$service instanceof $capability) {
+            throw new BadRequest("The operation is not available for the entity '$entityName'.");
+        }
 
         return $service;
     }

@@ -1363,6 +1363,9 @@ class Metadata extends AbstractMetadataListener
                 'type' => 'int'
             ];
 
+            // the children are sorted by the order kept in the hierarchy table
+            $data['entityDefs'][$scope]['links']['children']['sortField'] = 'hierarchySortOrder';
+
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
             }

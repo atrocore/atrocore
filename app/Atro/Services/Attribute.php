@@ -258,18 +258,6 @@ class Attribute extends Base
         }
     }
 
-    public function updateEntity(string $id, \stdClass $data): bool
-    {
-        foreach (['attributeGroupSortOrder', 'sortOrder'] as $field) {
-            if (property_exists($data, $field) && property_exists($data, '_sortedIds')) {
-                $this->getRepository()->updateSortOrder($data->_sortedIds, $field);
-                return true;
-            }
-        }
-
-        return parent::updateEntity($id, $data);
-    }
-
     protected function init()
     {
         parent::init();

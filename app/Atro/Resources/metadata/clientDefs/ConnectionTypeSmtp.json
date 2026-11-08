@@ -1,5 +1,5 @@
 {
-  "iconClass": "plug",
+  "iconClass": "envelope",
   "recordViews": {
     "detail": "views/connection/record/detail-smtp"
   }

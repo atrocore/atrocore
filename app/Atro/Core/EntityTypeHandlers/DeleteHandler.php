@@ -81,7 +81,7 @@ class DeleteHandler extends AbstractHandler
 
         $service = $this->getRecordService($entityName);
 
-        $permanently = trim((string) $service::getHeader('permanently'));
+        $permanently = trim($request->getHeaderLine('permanently'));
         $method      = ($permanently && (strtolower($permanently) === 'true' || $permanently === '1'))
             ? 'deleteEntityPermanently'
             : 'deleteEntity';

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Services\AbstractService;
 use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
@@ -55,7 +56,7 @@ class Settings extends AbstractService
 
     public function getScriptConfig(): array
     {
-        return array_merge($this->getAppService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
+        return array_merge($this->getGlobalService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
     }
 
     public function getConfigData(): array
@@ -145,8 +146,11 @@ class Settings extends AbstractService
             $data->siteUrl = rtrim($data->siteUrl, '/');
         }
 
-        // api docs password is stored only as a hash, an empty value keeps the current one
-        if (property_exists($data, 'apiDocsPassword')) {
+        // an empty api docs username disables the api docs and drops the stored password
+        if (property_exists($data, 'apiDocsUsername') && (string)$data->apiDocsUsername === '') {
+            $data->apiDocsPassword = null;
+        } elseif (property_exists($data, 'apiDocsPassword')) {
+            // api docs password is stored only as a hash, an empty value keeps the current one
             if ((string)$data->apiDocsPassword === '') {
                 unset($data->apiDocsPassword);
             } else {
@@ -187,9 +191,9 @@ class Settings extends AbstractService
         return $this->getInjection('fieldManagerUtil');
     }
 
-    protected function getAppService(): App
+    protected function getGlobalService(): GlobalService
     {
-        return $this->getInjection('serviceFactory')->create('App');
+        return $this->getInjection('serviceFactory')->create('Global');
     }
 
     private function setData(array|\stdClass $data): void

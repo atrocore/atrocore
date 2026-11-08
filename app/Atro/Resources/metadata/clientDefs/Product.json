@@ -29,12 +29,7 @@
             "selectAction": "selectRelatedEntity",
             "selectBoolFilterList": [
                 "notParents"
-            ],
-            "dragDrop": {
-                "isActive": true,
-                "maxSize": 20,
-                "sortField": "sortOrder"
-            }
+            ]
         }
     },
     "iconClass": "package"

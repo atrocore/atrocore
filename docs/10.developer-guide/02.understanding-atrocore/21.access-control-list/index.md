@@ -47,7 +47,7 @@ Here is a template for a custom ACL class:
 namespace Atro\Acl;
 
 use Espo\Core\Acl\Base;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 
 class {EntityName} extends Base

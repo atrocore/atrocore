@@ -18,8 +18,9 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
-use Atro\Services\Record;
 use Espo\ORM\Entity;
+use Atro\Core\Utils\Util;
+use Atro\Core\Services\AbstractRecordService;
 
 class Update extends AbstractAction
 {
@@ -66,7 +67,7 @@ class Update extends AbstractAction
                 $maxChunkSize      = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
                 $minChunkSize      = $this->getConfig()->get('massUpdateMinChunkSize', 400);
 
-                $chunkSize = Record::getChunkSize($count, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
+                $chunkSize = Util::getChunkSize($count, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
 
                 $offset = 0;
 
@@ -138,7 +139,6 @@ class Update extends AbstractAction
         return ActionResultDTO::done($this->updateEntity($sourceEntity, $sourceEntity, $execution, $input));
     }
 
-
     public function updateEntity(Entity $entity, ?Entity $triggeredEntity, ActionExecution $execution, \stdClass $input): bool
     {
         $action     = $execution->get('action');
@@ -198,9 +198,9 @@ class Update extends AbstractAction
 
         $inputData->_workflowAction = !empty($input->triggeredEntityId);
 
-        /** @var Record $service */
+        /** @var AbstractRecordService $service */
         $service = $this->getServiceFactory()->create($entity->getEntityType());
-        if ($service instanceof Record) {
+        if ($service instanceof AbstractRecordService) {
             /** @var Event $event */
             $event = $input->event ?? null;
             if (!empty($event) && !empty($event->getArgument('options')['pseudoTransactionId'])) {

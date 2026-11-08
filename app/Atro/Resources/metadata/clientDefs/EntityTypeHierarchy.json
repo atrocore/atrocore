@@ -1,4 +1,5 @@
 {
+  "iconClass": "tree-structure",
   "relationshipPanels": {
     "derivativeEntities": {
       "select": false,

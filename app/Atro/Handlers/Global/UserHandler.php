@@ -122,7 +122,7 @@ class UserHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getServiceFactory()->create('App')->getUserData();
+        $data = $this->getServiceFactory()->create('Global')->getUserData();
         unset($data['user']->token);
 
         $cookieHeader = $request->getHeaderLine('Authorization-Cookie');

@@ -112,5 +112,13 @@
       "tokenAuthApi": "API d'authentification par jeton",
       "apiKey": "Clé d'API"
     }
+  },
+  "subtypeGroups": {
+    "httpAuthentication": "Authentification HTTP",
+    "database": "Base de données",
+    "fileStorage": "Stockage de fichiers",
+    "ai": "IA",
+    "business": "Applications métier",
+    "other": "Autre"
   }
 }

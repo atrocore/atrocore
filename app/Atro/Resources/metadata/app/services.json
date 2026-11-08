@@ -1,7 +1,6 @@
 {
-  "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
+  "Global": "\\Atro\\Services\\GlobalService",
   "Installer": "\\Atro\\Services\\Installer",
-  "MassActions": "\\Atro\\Services\\MassActions",
   "Avatar": "\\Atro\\Services\\Avatar",
   "ConnectionTypeAtrocore": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypePdoSql": "\\Atro\\Services\\ConnectionSubtype",

@@ -23,7 +23,7 @@ class Upsert extends AbstractJob implements JobInterface
         $data = $job->getPayload();
 
         try {
-            $result = $this->getServiceFactory()->create('MassActions')->upsert((array)Json::decode(Json::encode($data)));
+            $result = $this->getServiceFactory()->create('Global')->upsert((array)Json::decode(Json::encode($data)));
             $message = Json::encode($result);
         } catch (\Throwable $e) {
             $message = $e->getMessage();

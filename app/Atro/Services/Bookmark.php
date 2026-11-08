@@ -19,7 +19,7 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Espo\ORM\EntityCollection;
 
 class Bookmark extends Base
@@ -153,8 +153,8 @@ class Bookmark extends Base
 
             $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
-            $fields = ['id', $this->getNameField($scope)];
-            $localizedNameField = $this->getLocalizedNameField($scope);
+            $fields = ['id', $this->getNameFieldUtil()->getField($scope)];
+            $localizedNameField = $this->getNameFieldUtil()->getLocalizedField($scope);
             if (!empty($localizedNameField)) {
                 $fields[] = $localizedNameField;
             }
@@ -169,7 +169,7 @@ class Bookmark extends Base
             $result = [];
 
             foreach ($collection as $key => $item) {
-                $value = $this->getLocalizedNameValue($item, $scope);
+                $value = $this->getNameFieldUtil()->getLocalizedValue($item, $scope);
                 $result[] = [
                     'id'             => $item->get('id'),
                     'name'           => !empty($value) ? $value : $item->get('id'),
@@ -181,7 +181,6 @@ class Bookmark extends Base
                 ];
             }
         }
-
 
         return [
             'list'  => $result,
@@ -251,5 +250,4 @@ class Bookmark extends Base
         }
         return $collection;
     }
-
 }

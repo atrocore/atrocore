@@ -81,7 +81,7 @@ class ComputeEntityScriptFieldHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        $this->getServiceFactory()->create('App')->computeEntityScriptField(
+        $this->getServiceFactory()->create('Global')->computeEntityScriptField(
             $data->entityName,
             $data->id,
             $data->field

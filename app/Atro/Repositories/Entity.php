@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Atro\Core\DataManager;
+use Atro\DTOs\TranslationKeyDTO;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 
@@ -177,6 +178,7 @@ class Entity extends ReferenceData
             'supertypeEntityId'     => $row['supertypeId'] ?? null,
             'name'                  => $this->translate($code, 'scopeNames'),
             'namePlural'            => $this->translate($code, 'scopeNamesPlural'),
+            'description'           => $this->getLanguage()->findTranslation(new TranslationKeyDTO('Global', empty($row['supertypeId']) ? 'scopeDescriptions' : 'subtypeDescriptions', $code)),
             'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
             'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
             'quickActions'          => $this->getMetadata()->get(['clientDefs', $code, 'quickActions'], []),
@@ -370,10 +372,6 @@ class Entity extends ReferenceData
                 'isCustom'        => true
             ];
 
-            if (!empty($entity->get('description'))) {
-                $data['description'] = $entity->get('description');
-            }
-
             file_put_contents("data/metadata/scopes/{$entity->get('code')}.json", json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
             if (!empty($entity->get('iconClass'))) {
@@ -383,6 +381,10 @@ class Entity extends ReferenceData
 
             $this->getTranslationRepository()->setTranslation('Global', 'scopeNames', $entity->get('code'), $entity->get('name'));
             $this->getTranslationRepository()->setTranslation('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get('namePlural'));
+
+            if (!empty($entity->get('description'))) {
+                $this->getTranslationRepository()->setTranslation('Global', 'scopeDescriptions', $entity->get('code'), $entity->get('description'));
+            }
 
             $this->getDataManager()->rebuild();
 
@@ -495,6 +497,11 @@ class Entity extends ReferenceData
             } elseif (in_array($field, ['name', 'namePlural'])) {
                 $category = $field === 'namePlural' ? 'scopeNamesPlural' : 'scopeNames';
                 $this->getTranslationRepository()->setTranslation('Global', $category, $entity->get('code'), $entity->get($field));
+            } elseif ($field === 'description') {
+                $category = empty($entity->get('supertypeEntityId')) ? 'scopeDescriptions' : 'subtypeDescriptions';
+                if (!empty($entity->get($field)) || !empty($this->getTranslationRepository()->getTranslation('Global', $category, $entity->get('code')))) {
+                    $this->getTranslationRepository()->setTranslation('Global', $category, $entity->get('code'), (string)$entity->get($field));
+                }
             } elseif ($field === 'sortBy') {
                 $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['sortBy'] ?? null;
                 if ($loadedVal === $entity->get($field)) {
@@ -786,6 +793,8 @@ class Entity extends ReferenceData
             if (
                 $label->get('code') === "Global.scopeNames.{$entity->get('code')}"
                 || $label->get('code') === "Global.scopeNamesPlural.{$entity->get('code')}"
+                || $label->get('code') === "Global.scopeDescriptions.{$entity->get('code')}"
+                || $label->get('code') === "Global.subtypeDescriptions.{$entity->get('code')}"
             ) {
                 $this->getEntityManager()->removeEntity($label);
             }

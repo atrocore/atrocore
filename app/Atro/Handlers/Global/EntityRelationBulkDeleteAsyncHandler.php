@@ -121,7 +121,7 @@ class EntityRelationBulkDeleteAsyncHandler extends AbstractHandler
             throw new BadRequest('foreignWhere is required');
         }
 
-        $result = $this->getServiceFactory()->create('MassActions')->removeRelationViaJob(
+        return new JsonResponse($this->getServiceFactory()->create('Global')->removeRelationViaJob(
             $entityName,
             $link,
             [
@@ -129,8 +129,6 @@ class EntityRelationBulkDeleteAsyncHandler extends AbstractHandler
                 'foreignWhere' => json_decode(json_encode($data->foreignWhere), true),
                 'relationData' => !empty($data->data) ? json_decode(json_encode($data->data), true) : null,
             ]
-        );
-
-        return new JsonResponse($result);
+        ));
     }
 }

@@ -103,12 +103,10 @@
     },
     "apiDocsUsername": {
       "type": "varchar",
-      "required": true,
       "tooltip": true
     },
     "apiDocsPassword": {
       "type": "password",
-      "required": true,
       "tooltip": true
     },
     "passwordChangeRequestResendInterval": {

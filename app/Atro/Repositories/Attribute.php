@@ -565,20 +565,6 @@ class Attribute extends Base
         return true;
     }
 
-    public function updateSortOrder(array $ids, string $field): void
-    {
-        $column = Util::toUnderScore($field);
-        foreach ($ids as $k => $id) {
-            $this->getConnection()->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
-                ->set($column, ':sortOrder')
-                ->where('a.id = :id')
-                ->setParameter('sortOrder', $k * 10)
-                ->setParameter('id', $id)
-                ->executeQuery();
-        }
-    }
-
     public function beforeSave(Entity $entity, array $options = [])
     {
         // the type of an attribute is the subtype of its record

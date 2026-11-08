@@ -1,5 +1,5 @@
 {
-  "iconClass": "plug",
+  "iconClass": "lock-key",
   "recordViews": {
     "detail": "views/connection/record/detail"
   }

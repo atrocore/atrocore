@@ -632,6 +632,19 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 returnDispatchParams: returnDispatchParams
             });
 
+            if (this.getMetadata().get(['scopes', this.scope, 'hasSubtypes'])) {
+                this.createView('selectSubtype', 'views/modals/select-subtype', {scope: this.scope}, view => {
+                    view.render();
+
+                    this.listenToOnce(view, 'select', subtype => {
+                        view.close();
+                        router.navigate(url, { trigger: false });
+                        router.dispatch(this.scope, 'create', _.extend(options, {subtype: subtype}));
+                    });
+                });
+                return;
+            }
+
             router.navigate(url, { trigger: false });
             router.dispatch(this.scope, 'create', options);
         },

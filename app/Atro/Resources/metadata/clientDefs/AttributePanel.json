@@ -16,12 +16,6 @@
       "selectBoolFilterList": [
         "onlyForEntity"
       ],
-      "dragDrop": {
-        "isActive": true,
-        "sortField": "sortOrder"
-      },
-      "sortBy": "sortOrder",
-      "asc": true,
       "actions": {
         "unlinkRelated": {
           "disabled": true

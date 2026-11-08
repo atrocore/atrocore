@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
-use Espo\Core\Utils\Language;
+use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 

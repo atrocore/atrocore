@@ -113,6 +113,6 @@ class UpsertHandler extends AbstractHandler
             $data = [];
         }
 
-        return new JsonResponse($this->getServiceFactory()->create('MassActions')->upsert($data));
+        return new JsonResponse($this->getServiceFactory()->create('Global')->upsert($data));
     }
 }

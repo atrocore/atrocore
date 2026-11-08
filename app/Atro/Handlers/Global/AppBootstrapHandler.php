@@ -61,6 +61,6 @@ class AppBootstrapHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('App')->getBootstrapData());
+        return new JsonResponse($this->getServiceFactory()->create('Global')->getBootstrapData());
     }
 }

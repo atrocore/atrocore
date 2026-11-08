@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Entities\Job;
-use Atro\Services\Record;
+use Atro\Core\Utils\Util;
 
 class EntityRelationBulkCreator extends AbstractJob implements JobInterface
 {
@@ -63,7 +63,7 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
 
         $foreignChunkSize = min($foreignTotal, $maxChunkSize);
         $mainChunkSize    = min(
-            Record::getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs),
+            Util::getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs),
             max(1, (int)floor($maxChunkSize / $foreignChunkSize))
         );
 

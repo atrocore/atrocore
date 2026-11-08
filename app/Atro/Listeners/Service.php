@@ -15,8 +15,8 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Utils\Language;
-use Atro\Services\AbstractService;
 use Espo\ORM\Entity;
+use Atro\Core\Http\RequestHeaders;
 
 class Service extends AbstractListener
 {
@@ -25,10 +25,7 @@ class Service extends AbstractListener
         /* @var Entity $entity */
         $entity = $event->getArgument('entity');
 
-        /* @var AbstractService $service */
-        $service = $event->getArgument('service');
-
-        if (empty($entity->id) || !$service->isMetaGroupRequested('personalData')) {
+        if (empty($entity->id) || !RequestHeaders::isMetaGroupRequested('personalData')) {
             return;
         }
 
@@ -49,10 +46,7 @@ class Service extends AbstractListener
         /* @var Entity $entity */
         $entity = $event->getArgument('entity');
 
-        /* @var AbstractService $service */
-        $service = $event->getArgument('service');
-
-        if (empty($entity) || !$service->isMetaGroupRequested('subtype')) {
+        if (empty($entity) || !RequestHeaders::isMetaGroupRequested('subtype')) {
             return;
         }
 

@@ -1,5 +1,5 @@
 {
-  "iconClass": "swatches",
+  "iconClass": "article",
   "recordViews": {
     "detail": "views/attribute/record/detail",
     "editSmall": "views/attribute/record/edit-small",

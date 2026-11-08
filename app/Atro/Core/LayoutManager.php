@@ -22,10 +22,10 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
-use Atro\Services\AbstractService;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
+use Atro\Core\Http\RequestHeaders;
 
 /**
  * Class LayoutManager
@@ -803,7 +803,7 @@ class LayoutManager
             $disabledLanguages = [];
         }
 
-        $localeId = AbstractService::getHeader('Locale-Id');
+        $localeId = RequestHeaders::get('Locale-Id');
         if (!empty($localeId)) {
             $userLocale = $entityManager->getEntity('Locale', $localeId);
         }

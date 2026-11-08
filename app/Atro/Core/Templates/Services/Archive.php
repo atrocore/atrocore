@@ -14,43 +14,15 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Services\Record;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Atro\Core\Services\AbstractRecordService;
 
-class Archive extends Record
+/**
+ * The service of the entities of type Archive: the records are only read.
+ */
+class Archive extends AbstractRecordService
 {
-    public function createEntity(\stdClass $attachment): string
-    {
-        throw new Forbidden();
-    }
-
-    public function updateEntity(string $id, \stdClass $data): bool
-    {
-        throw new Forbidden();
-    }
-
-    public function deleteEntity(string $id): bool
-    {
-        throw new Forbidden();
-    }
-
-    public function restoreEntity($id)
-    {
-        throw new Forbidden();
-    }
-
-    public function follow($id, $userId = null)
-    {
-        throw new Forbidden();
-    }
-
-    public function unfollow($id, $userId = null)
-    {
-        throw new Forbidden();
-    }
-
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);

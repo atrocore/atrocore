@@ -257,25 +257,6 @@ class Relation extends Base
         }
     }
 
-    public function updateAssociatesSortOrder(array $ids): void
-    {
-        $collection = $this->where(['id' => $ids])->find();
-        if (count($collection) === 0) {
-            return;
-        }
-
-        foreach ($ids as $k => $id) {
-            $sortOrder = (int)$k * 10;
-            foreach ($collection as $entity) {
-                if ($entity->get('id') !== (string)$id) {
-                    continue;
-                }
-                $entity->set('sorting', $sortOrder);
-                $this->save($entity);
-            }
-        }
-    }
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

@@ -19,8 +19,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Utils\Json;
 use Atro\Entities\User;
-use Atro\Services\Record;
 use Espo\ORM\EntityManager;
+use Atro\Core\Services\AbstractRecordService;
 
 class PseudoTransactionManager
 {
@@ -77,7 +77,6 @@ class PseudoTransactionManager
     {
         return $this->push($entityType, '', $action, $this->prepareInputData($data), $parentId);
     }
-
 
     public function run(): void
     {
@@ -251,7 +250,7 @@ class PseudoTransactionManager
             $userContext->set($user);
 
             $service = $this->container->get('serviceFactory')->create($job['entity_type']);
-            if ($service instanceof Record) {
+            if ($service instanceof AbstractRecordService) {
                 $service->setPseudoTransactionId($job['id']);
             }
 

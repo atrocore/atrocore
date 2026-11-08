@@ -1520,7 +1520,7 @@ class Base
     {
         $mainAlias    = QueryConverter::TABLE_ALIAS;
         $column       = Util::toUnderScore($attribute);
-        $foreignTable = Util::toUnderScore($foreignEntity);
+        $foreignTable = $this->getEntityManager()->getDbal()->quoteIdentifier(Util::toUnderScore($foreignEntity));
         $uid          = IdGenerator::unsortableId();
         $alias        = 'lnkdel_' . $uid;
         $deletedParam = 'lnkdel_p_' . $uid;

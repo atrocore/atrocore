@@ -14,7 +14,7 @@ All API requests must include the header `Content-Type: application/json`. Reque
 
 The REST API documentation is automatically generated for each AtroCore project based on its configurations and installed modules. You can access it at `https://ATROCORE_INSTANCE_URL/apidocs/`. The OpenAPI schema itself is available at `https://ATROCORE_INSTANCE_URL/apidocs/openapi.json`.
 
-The OpenAPI schema is always protected by HTTP Basic authentication with its own credentials, independent of AtroCore users; the browser asks for them when the documentation page loads the schema. Set them in `Administration > Authentication`, panel **API Documentation**. The schema is not accessible until both username and password are set. The password is stored as a hash and cannot be read back.
+The OpenAPI schema is always protected by HTTP Basic authentication with its own credentials, independent of AtroCore users; the browser asks for them when the documentation page loads the schema. Set them in `Administration / Authentication`, panel **API Documentation**. The schema is not accessible until both username and password are set. The password is stored as a hash and cannot be read back.
 
 To call the routes from Swagger, use the login and password of an AtroCore user in the basic authentication of the Swagger UI.
 
@@ -118,6 +118,9 @@ Host: demo.atropim.com
 Accept: application/json
 Authorization-Token: ***************
 ```
+
+A relation with a manual order returns its records in this order when `sortBy` is not given, and the order is changed
+via `PATCH /api/entityRelationSortOrder`. See [Sorting Linked Records](../02.understanding-atrocore/05.entities/index.md#sorting-linked-records).
 
 -----
 

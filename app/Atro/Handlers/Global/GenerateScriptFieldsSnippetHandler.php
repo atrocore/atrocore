@@ -94,7 +94,7 @@ class GenerateScriptFieldsSnippetHandler extends AbstractHandler
         }
 
         return new JsonResponse(
-            $this->getServiceFactory()->create('App')->prepareScriptFields($data->entityName, $data->fields)
+            $this->getServiceFactory()->create('Global')->prepareScriptFields($data->entityName, $data->fields)
         );
     }
 }

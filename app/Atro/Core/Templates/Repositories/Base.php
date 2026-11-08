@@ -19,7 +19,6 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\Util;
-use Atro\Services\Record;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;

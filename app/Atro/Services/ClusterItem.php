@@ -24,6 +24,7 @@ use Atro\DTOs\Cluster\MoveResultDTO;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
+use Atro\Core\Http\RequestHeaders;
 
 class ClusterItem extends Base
 {
@@ -510,7 +511,7 @@ class ClusterItem extends Base
         if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
             $entity->set('cluster', $entityFrom);
 
-            if ($this->isMetaGroupRequested('state')) {
+            if (RequestHeaders::isMetaGroupRequested('state')) {
                 $entity->setMeta('state', 'consolidated', $this->isClusterItemConsolidated($entity));
                 $entity->setMeta('state', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
             }

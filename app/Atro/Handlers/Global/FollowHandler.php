@@ -21,6 +21,7 @@ use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Templates\Services\Base;
 
 #[Route(
     path: '/entitySubscription',
@@ -111,7 +112,7 @@ class FollowHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $result = $this->getRecordService($entityName)->massFollow($this->buildMassParams($data));
+        $result = $this->getRecordServiceWith($entityName, Base::class)->massFollow($this->buildMassParams($data));
 
         return new JsonResponse($result);
     }

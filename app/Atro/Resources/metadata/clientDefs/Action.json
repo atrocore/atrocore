@@ -13,11 +13,6 @@
       "selectBoolFilterList": [
         "notActionSet"
       ],
-      "dragDrop": {
-        "isActive": true,
-        "maxSize": 20,
-        "sortField": "action_set_linker_mm.sortOrder"
-      },
       "view": "views/action/record/panels/actions"
     },
     "executions": {

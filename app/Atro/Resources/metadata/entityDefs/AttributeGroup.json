@@ -77,7 +77,8 @@
     "attributes": {
       "type": "hasMany",
       "foreign": "attributeGroup",
-      "entity": "Attribute"
+      "entity": "Attribute",
+      "sortField": "attributeGroupSortOrder"
     }
   },
   "collection": {
