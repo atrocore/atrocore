@@ -115,6 +115,45 @@ class Record extends RecordService
         }
     }
 
+    public function putMeta(Entity $entity): void
+    {
+        parent::putMeta($entity);
+
+        // the records of a collection are processed together, after the collection is loaded
+        if (empty($entity->_fromCollection) && $this->isMetaGroupRequested('linkedRecords')) {
+            $this->getLinkedRecordLoader()->load(new EntityCollection([$entity], $entity->getEntityName()));
+        }
+    }
+
+    public function getSelectAttributeList($params)
+    {
+        $res = parent::getSelectAttributeList($params);
+
+        // the ids of the linked records have to be selected to load the records
+        if (is_array($res) && $this->isMetaGroupRequested('linkedRecords') && !empty(self::getRequestedLinkedFields())) {
+            $seed = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
+            foreach ($this->getLinkedRecordLoader()->getIdAttributes($seed) as $attribute) {
+                if (!in_array($attribute, $res)) {
+                    $res[] = $attribute;
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    public function findEntities($params)
+    {
+        $result = parent::findEntities($params);
+
+        // the linked records are loaded once for the whole collection, after the ids of its records are loaded
+        if (!empty($result['collection']) && $this->isMetaGroupRequested('linkedRecords')) {
+            $this->getLinkedRecordLoader()->load($result['collection']);
+        }
+
+        return $result;
+    }
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);

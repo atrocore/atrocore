@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\LinkedRecords\LinkedRecordsLoader;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
@@ -93,6 +94,26 @@ abstract class AbstractService implements Injectable
         return $groups;
     }
 
+    /**
+     * The names of the link and linkMultiple fields and attributes listed by the Meta-Linked-Fields header, whose
+     * records the linkedRecords meta group carries. The value * stands for the link fields and the link and
+     * linkMultiple attributes.
+     *
+     * @return string[]
+     */
+    public static function getRequestedLinkedFields(): array
+    {
+        $names = [];
+        foreach (explode(',', (string)self::getHeader('Meta-Linked-Fields')) as $name) {
+            $name = trim($name);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
+    }
+
     public static function getHeader(string $name): ?string
     {
         try {
@@ -168,6 +189,11 @@ abstract class AbstractService implements Injectable
     protected function getEntityManager(): EntityManager
     {
         return $this->getInjection('entityManager');
+    }
+
+    protected function getLinkedRecordLoader(): LinkedRecordsLoader
+    {
+        return $this->getEntityManager()->getContainer()->get(LinkedRecordsLoader::class);
     }
 
     protected function getConfig(): Config
