@@ -14,15 +14,19 @@ declare(strict_types=1);
 namespace Atro\AfterInstall;
 
 use Atro\Core\ModuleManager\AfterInstallInterface;
+use Atro\Core\Utils\Config;
 use Espo\ORM\EntityManager;
 
 /**
- * Creates the main locale and the main language.
+ * Creates the main locale and the main language. The language and the time zone of the main locale are the
+ * ones chosen during the installation (`language` and `timeZone` of the config), English and UTC otherwise.
  */
 class CreateLocalization implements AfterInstallInterface
 {
-    public function __construct(private readonly EntityManager $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly Config $config
+    ) {
     }
 
     public static function getSortOrder(): int
@@ -36,9 +40,9 @@ class CreateLocalization implements AfterInstallInterface
             'id'                             => 'main',
             'name'                           => 'Main',
             'code'                           => 'en_US',
-            'languageCode'                   => 'en_US',
+            'languageCode'                   => $this->config->get('language') ?: 'en_US',
             'dateFormat'                     => 'DD.MM.YYYY',
-            'timeZone'                       => 'UTC',
+            'timeZone'                       => $this->config->get('timeZone') ?: 'UTC',
             'weekStart'                      => 'monday',
             'timeFormat'                     => 'HH:mm',
             'thousandSeparator'              => '.',
