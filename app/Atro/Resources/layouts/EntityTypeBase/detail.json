@@ -163,6 +163,20 @@
         {
           "name": "isPerson"
         }
+      ],
+      [
+        {
+          "name": "createDisabled"
+        },
+        {
+          "name": "editDisabled"
+        }
+      ],
+      [
+        {
+          "name": "deleteDisabled"
+        },
+        false
       ]
     ]
   },

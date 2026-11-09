@@ -41,6 +41,20 @@
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "createDisabled"
+        },
+        {
+          "name": "editDisabled"
+        }
+      ],
+      [
+        {
+          "name": "deleteDisabled"
+        },
+        false
       ]
     ]
   }

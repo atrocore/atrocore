@@ -71,6 +71,20 @@
         {
           "name": "auditedEnabledRelations"
         }
+      ],
+      [
+        {
+          "name": "createDisabled"
+        },
+        {
+          "name": "editDisabled"
+        }
+      ],
+      [
+        {
+          "name": "deleteDisabled"
+        },
+        false
       ]
     ]
   }

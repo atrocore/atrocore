@@ -113,6 +113,16 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
                 return false;
             }
 
+            // the records of the entity cannot be edited by anybody
+            if (action === 'edit' && this.metadata.get(['scopes', scope, 'editDisabled'])) {
+                return false;
+            }
+
+            // the records of the entity cannot be deleted by anybody
+            if (action === 'delete' && this.metadata.get(['scopes', scope, 'deleteDisabled'])) {
+                return false;
+            }
+
             let checkScope = (scope, action) => {
                 var data = (this.data.table || {})[scope];
                 if (typeof data === 'undefined') {
@@ -155,13 +165,14 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
             var scope = model.name;
 
             // todo move this to custom acl
-            if (action == 'edit') {
-                if (!model.isEditable()) {
+            if (action === 'edit') {
+                if (!model.isEditable() || this.metadata.get(['scopes', scope, 'editDisabled'])) {
                     return false;
                 }
             }
-            if (action == 'delete') {
-                if (!model.isRemovable()) {
+
+            if (action === 'delete') {
+                if (!model.isRemovable() || this.metadata.get(['scopes', scope, 'deleteDisabled'])) {
                     return false;
                 }
             }
