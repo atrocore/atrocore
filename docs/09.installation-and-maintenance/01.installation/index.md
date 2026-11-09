@@ -38,19 +38,35 @@ cd /var/www/my-atrocore-project
 
 > Git may be used for this step, so make sure that [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) is installed. Please note, it is still possible to install the application without having `git`.
 
-#### AtroPIM
+#### If you want to install AtroPIM with demo data
+> Demo data can be installed only for MySQL database system.
+
+```
+sudo git clone https://github.com/atrocore/skeleton-pim.git .
+```
+
+#### If you want to install AtroPIM without demo data
 ```
 sudo git clone https://github.com/atrocore/skeleton-pim-no-demo.git .
 ```
 
-#### AtroCore
+#### If you want to install AtroCore with demo data
+> Demo data can be installed only for MySQL database system.
+
+```
+sudo git clone https://github.com/atrocore/skeleton-atrocore.git .
+```
+
+#### If you want to install AtroCore without demo data
 ```
 sudo git clone https://github.com/atrocore/skeleton-atrocore-no-demo.git .
 ```
 
 #### Installation without `git`
 If you have no git installed you may still copy the files to the project folder manually. You can download the files from one of these repositories:
+- https://github.com/atrocore/skeleton-pim
 - https://github.com/atrocore/skeleton-pim-no-demo
+- https://github.com/atrocore/skeleton-atrocore
 - https://github.com/atrocore/skeleton-atrocore-no-demo
 
 ### 4. Create database and user
@@ -104,7 +120,7 @@ The installation is done from the command line in the project directory:
 sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar install-atrocore
 ```
 
-The installer installs the system files, checks the PHP of the command line and of the web server, prepares the database, creates the administrator and fills the system with its default data. It asks for the database access, the URL of the site, the administrator and the initial settings. When the installation is done, it shows the URL, the username and the password of the administrator. If no administrator password is given, a strong one is generated.
+The installer installs the system files, checks the PHP of the command line and of the web server, prepares the database, creates the administrator and fills the system with its default data. A skeleton with demo data also gets its demo data loaded. It asks for the database access, the URL of the site, the administrator and the initial settings. When the installation is done, it shows the URL, the username and the password of the administrator. If no administrator password is given, a strong one is generated.
 
 The installation can also be done by one command, without any question. Every parameter is given as an option or as an environment variable:
 ```
