@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * AtroCore Software
  *
  * This source file is available under GNU General Public License version 3 (GPLv3).
@@ -9,58 +9,48 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Seeders;
+declare(strict_types=1);
 
-use Doctrine\DBAL\ParameterType;
+namespace Atro\AfterInstall;
 
-class LayoutProfileSeeder extends AbstractSeeder
+use Atro\Core\ModuleManager\AfterInstallInterface;
+use Espo\ORM\EntityManager;
+
+/**
+ * Creates the default layout profile with the navigation, the favorites and the dashboards, and sets it to
+ * every user.
+ */
+class CreateLayoutProfile implements AfterInstallInterface
 {
+    public function __construct(private readonly EntityManager $entityManager)
+    {
+    }
+
+    public static function getSortOrder(): int
+    {
+        return 70;
+    }
+
     public function run(): void
     {
-        $defaultId = '019c0a6a-6ecb-70d3-8427-cbc546cad873';
-        $menus = $this->getDefaultMenu();
-        $favList = $this->getFavorites();
         $defaultDashboards = $this->getDefaultDashboards();
 
-        try {
-            // remove default layout profile if exists
-            $this->getConnection()->createQueryBuilder()
-                ->delete('layout_profile')
-                ->where('id = :id')
-                ->setParameter('id', $defaultId)
-                ->executeQuery();
+        $profile = $this->entityManager->getRepository('LayoutProfile')->get();
+        $profile->set([
+            'id'              => '019c0a6a-6ecb-70d3-8427-cbc546cad873',
+            'name'            => 'Standard',
+            'isActive'        => true,
+            'isDefault'       => true,
+            'navigation'      => $this->getDefaultMenu(),
+            'favoritesList'   => $this->getFavorites(),
+            'dashboardLayout' => $defaultDashboards['layout'],
+            'dashletsOptions' => $defaultDashboards['options'],
+        ]);
+        $this->entityManager->saveEntity($profile);
 
-            // create default profile
-            $this->getConnection()->createQueryBuilder()
-                ->insert('layout_profile')
-                ->values([
-                    'id'               => ':id',
-                    'name'             => ':name',
-                    'is_active'        => ':true',
-                    'is_default'       => ':true',
-                    'navigation'       => ':navigation',
-                    'dashboard_layout' => ':dashboardLayout',
-                    'dashlets_options' => ':dashletsOptions',
-                    'favorites_list'   => ':favorites_list'
-                ])->setParameters([
-                    'id'              => $defaultId,
-                    'name'            => 'Standard',
-                    'navigation'      => json_encode($menus),
-                    'favorites_list'  => json_encode($favList),
-                    'dashboardLayout' => json_encode($defaultDashboards['layout']),
-                    'dashletsOptions'  => json_encode($defaultDashboards['options']),
-                ])
-                ->setParameter('true', true, ParameterType::BOOLEAN)
-                ->executeStatement();
-
-            // update layout profile for all users
-            $this->getConnection()->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier('user'))
-                ->set('layout_profile_id', ':id')
-                ->where('id is not null')
-                ->setParameter('id', $defaultId)
-                ->executeStatement();
-        } catch (\Throwable $e) {
+        foreach ($this->entityManager->getRepository('User')->find() as $user) {
+            $user->set('layoutProfileId', $profile->get('id'));
+            $this->entityManager->saveEntity($user);
         }
     }
 

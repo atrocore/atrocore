@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * AtroCore Software
  *
  * This source file is available under GNU General Public License version 3 (GPLv3).
@@ -9,100 +9,112 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Seeders;
+declare(strict_types=1);
 
+namespace Atro\AfterInstall;
+
+use Atro\Core\Exceptions\Error;
+use Atro\Core\ModuleManager\AfterInstallInterface;
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
+use Espo\ORM\EntityManager;
 
-class NotificationProfileSeeder extends AbstractSeeder
+/**
+ * Creates the default notification profile with its rules and templates, and the email templates of the
+ * password change.
+ */
+class CreateNotificationProfile implements AfterInstallInterface
 {
+    private const DEFAULT_PROFILE_ID = '019c3209-6531-70bb-87b5-91597ba9c80b';
+    private const DEFAULT_PROFILE_NAME = 'Default Notification Profile';
+
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly Config $config
+    ) {
+    }
+
+    public static function getSortOrder(): int
+    {
+        return 40;
+    }
+
     public function run(): void
     {
-        $defaultProfileId = '019c3209-6531-70bb-87b5-91597ba9c80b';
-        $defaultProfileName = 'Default Notification Profile';
+        $this->create('NotificationProfile', [
+            'id'       => self::DEFAULT_PROFILE_ID,
+            'name'     => self::DEFAULT_PROFILE_NAME,
+            'isActive' => true,
+        ]);
+
+        $this->config->set('defaultNotificationProfileId', self::DEFAULT_PROFILE_ID);
+        $this->config->set('defaultNotificationProfileName', self::DEFAULT_PROFILE_NAME);
+        $this->config->save();
+
         $emailTemplates = [];
-
-        $this->getConfig()->set('defaultNotificationProfileId', $defaultProfileId);
-        $this->getConfig()->set('defaultNotificationProfileName', $defaultProfileName);
-        $this->getConfig()->save();
-
-        try {
-            $this->getConnection()->createQueryBuilder()
-                ->insert('notification_profile')
-                ->values([
-                    'id'        => ':id',
-                    'name'      => ':name',
-                    'is_active' => ':is_active',
-                ])
-                ->setParameter('id', $defaultProfileId)
-                ->setParameter('name', $defaultProfileName)
-                ->setParameter('is_active', true, ParameterType::BOOLEAN)
-                ->executeStatement();
-        } catch (\Throwable $e) {
-        }
-
-        $rules = $this->getDefaultRules();
-        foreach ($rules as $rule) {
-            if (!empty($rule['templates'])) {
-                $templates = $rule['templates'];
-                foreach ($templates as $type => $template) {
-                    if ($type === 'email') {
-                        $emailTemplates[$template['id']] = [
-                            'id'        => $template['id'],
-                            'code'      => $template['id'],
-                            'name'      => $template['name'],
-                            'subject'   => $template['data']['field']['subject'] ?? '',
-                            'body'      => $template['data']['field']['body'] ?? '',
-                            'createdAt' => date('Y-m-d H:i:s')
-                        ];
-
-                        continue;
-                    }
-
-                    try {
-                        $this->getConnection()->createQueryBuilder()
-                            ->insert('notification_template')
-                            ->values([
-                                'id'   => ':id',
-                                'name' => ':name',
-                                'data' => ':data'
-                            ])
-                            ->setParameter('id', $template['id'])
-                            ->setParameter('name', $template['name'])
-                            ->setParameter('data', json_encode($template['data']))
-                            ->executeStatement();
-                    } catch (\Throwable $e) {
-                    }
+        foreach ($this->getDefaultRules() as $rule) {
+            foreach ($rule['templates'] ?? [] as $type => $template) {
+                if ($type === 'email') {
+                    $emailTemplates[$template['id']] = [
+                        'id'        => $template['id'],
+                        'code'      => $template['id'],
+                        'name'      => $template['name'],
+                        'subject'   => $template['data']['field']['subject'] ?? '',
+                        'body'      => $template['data']['field']['body'] ?? '',
+                        'createdAt' => date('Y-m-d H:i:s'),
+                    ];
+                    continue;
                 }
+
+                $this->create('NotificationTemplate', [
+                    'id'   => $template['id'],
+                    'name' => $template['name'],
+                    'data' => $template['data'],
+                ]);
             }
 
-            try {
-                $query = $this->getConnection()->createQueryBuilder()
-                    ->insert('notification_rule');
-                $values = [];
-                foreach ($rule as $key => $value) {
-                    if ($key === 'templates') continue;
-                    $values[$key] = ":$key";
-                    $query = $query
-                        ->setParameter($key, is_array($value) ? json_encode($value) : $value, is_array($value) ? ParameterType::STRING : Mapper::getParameterType($value));
-                }
-                $query->values($values);
-                $query->executeStatement();
-            } catch (\Throwable $e) {
-            }
+            unset($rule['templates']);
+            $this->create('NotificationRule', $rule);
         }
 
-        $emailTemplates = array_merge($emailTemplates, $this->getPasswordEmailTemplates());
+        $this->createEmailTemplates(array_merge($emailTemplates, $this->getPasswordEmailTemplates()));
+    }
 
-        @mkdir(ReferenceData::DIR_PATH);
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json', json_encode($emailTemplates));
+    private function create(string $entityName, array $data): void
+    {
+        $entity = $this->entityManager->getRepository($entityName)->get();
+        $entity->set($data);
+
+        $this->entityManager->saveEntity($entity);
+    }
+
+    /**
+     * The templates contain the translations for the languages that are not active yet. An entity drops the
+     * values of the fields that do not exist, so the templates are written to the file of the reference data
+     * directly: the translations are there when the language is activated.
+     */
+    private function createEmailTemplates(array $templates): void
+    {
+        $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json';
+
+        $existing = [];
+        if (file_exists($file)) {
+            $existing = json_decode(file_get_contents($file), true) ?: [];
+        }
+
+        if (!is_dir(ReferenceData::DIR_PATH) && !mkdir(ReferenceData::DIR_PATH, 0777, true) && !is_dir(ReferenceData::DIR_PATH)) {
+            throw new Error('Failed to create the folder ' . ReferenceData::DIR_PATH . '.');
+        }
+
+        if (file_put_contents($file, json_encode(array_merge($existing, $templates))) === false) {
+            throw new Error("Failed to write $file.");
+        }
     }
 
     private function getDefaultRules(): array
     {
-        $defaultProfileId = '019c3209-6531-70bb-87b5-91597ba9c80b';
+        $defaultProfileId = self::DEFAULT_PROFILE_ID;
 
         return [
             [
@@ -110,14 +122,14 @@ class NotificationProfileSeeder extends AbstractSeeder
                 "name"                    => "Entity Update",
                 "entity"                  => '',
                 "occurrence"              => 'updating',
-                "notification_profile_id" => $defaultProfileId,
-                "is_active"               => true,
-                "ignore_self_action"      => true,
-                "as_owner"                => true,
-                "as_follower"             => true,
-                "as_assignee"             => true,
-                "as_team_member"          => false,
-                "as_notification_profile" => false,
+                "notificationProfileId"   => $defaultProfileId,
+                "isActive"                => true,
+                "ignoreSelfAction"        => true,
+                "asOwner"                 => true,
+                "asFollower"              => true,
+                "asAssignee"              => true,
+                "asTeamMember"            => false,
+                "asNotificationProfile"   => false,
                 "data"                    => [
                     "field" => [
                         "systemActive"     => true,
@@ -938,14 +950,14 @@ class NotificationProfileSeeder extends AbstractSeeder
                 "name"                    => "Note Creation Without parent",
                 "entity"                  => 'Note',
                 "occurrence"              => 'creation',
-                "notification_profile_id" => $defaultProfileId,
-                "is_active"               => true,
-                "ignore_self_action"      => true,
-                "as_owner"                => true,
-                "as_follower"             => true,
-                "as_assignee"             => true,
-                "as_team_member"          => true,
-                "as_notification_profile" => false,
+                "notificationProfileId"   => $defaultProfileId,
+                "isActive"                => true,
+                "ignoreSelfAction"        => true,
+                "asOwner"                 => true,
+                "asFollower"              => true,
+                "asAssignee"              => true,
+                "asTeamMember"            => true,
+                "asNotificationProfile"   => false,
                 "data"                    => [
                     "field" => [
                         "systemActive"     => true,
@@ -960,14 +972,14 @@ class NotificationProfileSeeder extends AbstractSeeder
                 "name"                    => "Note Creation in Entity",
                 "entity"                  => '',
                 "occurrence"              => 'note_created',
-                "notification_profile_id" => $defaultProfileId,
-                "is_active"               => true,
-                "ignore_self_action"      => true,
-                "as_owner"                => true,
-                "as_follower"             => true,
-                "as_assignee"             => true,
-                "as_team_member"          => false,
-                "as_notification_profile" => false,
+                "notificationProfileId"   => $defaultProfileId,
+                "isActive"                => true,
+                "ignoreSelfAction"        => true,
+                "asOwner"                 => true,
+                "asFollower"              => true,
+                "asAssignee"              => true,
+                "asTeamMember"            => false,
+                "asNotificationProfile"   => false,
                 "data"                    => [
                     "field" => [
                         "systemActive"     => true,
@@ -1039,14 +1051,14 @@ class NotificationProfileSeeder extends AbstractSeeder
                 "name"                    => "Mention",
                 "entity"                  => '',
                 "occurrence"              => 'mentioned',
-                "notification_profile_id" => $defaultProfileId,
-                "is_active"               => true,
-                "ignore_self_action"      => true,
-                "as_owner"                => false,
-                "as_follower"             => false,
-                "as_assignee"             => false,
-                "as_team_member"          => false,
-                "as_notification_profile" => false,
+                "notificationProfileId"   => $defaultProfileId,
+                "isActive"                => true,
+                "ignoreSelfAction"        => true,
+                "asOwner"                 => false,
+                "asFollower"              => false,
+                "asAssignee"              => false,
+                "asTeamMember"            => false,
+                "asNotificationProfile"   => false,
                 "data"                    => [
                     "field" => [
                         "systemActive"     => true,
@@ -1135,14 +1147,14 @@ class NotificationProfileSeeder extends AbstractSeeder
                 "name"                    => "Assignment/Ownership",
                 "entity"                  => '',
                 "occurrence"              => 'ownership_assignment',
-                "notification_profile_id" => $defaultProfileId,
-                "is_active"               => true,
-                "ignore_self_action"      => true,
-                "as_owner"                => true,
-                "as_follower"             => false,
-                "as_assignee"             => true,
-                "as_team_member"          => false,
-                "as_notification_profile" => false,
+                "notificationProfileId"   => $defaultProfileId,
+                "isActive"                => true,
+                "ignoreSelfAction"        => true,
+                "asOwner"                 => true,
+                "asFollower"              => false,
+                "asAssignee"              => true,
+                "asTeamMember"            => false,
+                "asNotificationProfile"   => false,
                 "data"                    => [
                     "field" => [
                         "systemActive"     => true,
@@ -1269,7 +1281,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
                 'bodyUkUa'         => '<h2>Ви надіслали запит на зміну пароля</h2><p>Якщо це були Ви, перейдіть за <a href="{{ link }}" target="_blank">посиланням</a> та змініть свій пароль. В іншому випадку ви можете проігнорувати цей лист.</p><p>Надана унікальна URL-адреса має обмежений термін дії, який незабаром спливе.</p>',
                 'allowAttachments' => false,
                 'createdAt'        => $datetime,
-                'createdById'      => $this->getConfig()->get('systemUserId')
+                'createdById'      => $this->config->get('systemUserId')
             ],
             'emailPasswordReset'         => [
                 'id'               => IdGenerator::unsortableId(),
@@ -1288,7 +1300,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
                 'bodyUkUa'         => '<h2>Ваш пароль більше не дійсний</h2><p>Щоб встановити новий пароль, перейдіть за <a href="{{ link }}" target="_blank">посиланням</a></p><p>Надана унікальна URL-адреса має обмежений термін дії, який незабаром спливе.</p>',
                 'allowAttachments' => false,
                 'createdAt'        => $datetime,
-                'createdById'      => $this->getConfig()->get('systemUserId')
+                'createdById'      => $this->config->get('systemUserId')
             ]
         ];
     }

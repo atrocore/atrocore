@@ -13,14 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\SeederFactory;
+use Atro\Core\ModuleManager\ModuleLifecycle;
 use Atro\Core\Container;
 use Atro\Core\Services\AbstractService;
 use Atro\Console\AbstractConsole;
-use Atro\Core\ModuleManager\Manager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
-use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
 use Atro\Core\Exceptions;
 use Doctrine\DBAL\ParameterType;
@@ -225,31 +223,6 @@ class Installer extends AbstractService
             // set reportingEnabled
             $this->getConfig()->set('reportingEnabled', !empty($params['reportingEnabled']));
             $this->getConfig()->save();
-
-            // create anonymous error reports job
-            $data = [
-                'id'             => '019c2cb5-1746-71ac-bdb2-9f65c3682235',
-                'name'           => 'Send anonymous error reports to AtroCore',
-                'type'           => 'SendReports',
-                'is_active'      => !empty($params['reportingEnabled']),
-                'scheduling'     => '*/15 * * * *',
-                'created_at'     => date('Y-m-d H:i:s'),
-                'modified_at'    => date('Y-m-d H:i:s'),
-                'created_by_id'  => $this->getConfig()->get('systemUserId'),
-                'modified_by_id' => $this->getConfig()->get('systemUserId'),
-            ];
-
-            $conn = $this->getEntityManager()->getConnection();
-            $qb = $conn->createQueryBuilder();
-            $qb->insert('scheduled_job');
-            foreach ($data as $columnName => $value) {
-                $qb->setValue($columnName, ":$columnName");
-                $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
-            }
-            try {
-                $qb->executeQuery();
-            } catch (\Throwable $e) {
-            }
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Installer Error: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());
             return ['status' => false, 'message' => $e->getMessage()];
@@ -619,28 +592,7 @@ class Installer extends AbstractService
             unlink($file);
         }
 
-        $seeders = [
-            \Atro\Seeders\LocalizationSeeder::class,
-            \Atro\Seeders\ScheduledJobSeeder::class,
-            \Atro\Seeders\FileStorageSeeder::class,
-            \Atro\Seeders\NotificationProfileSeeder::class,
-            \Atro\Seeders\HtmlSanitizerSeeder::class,
-            \Atro\Seeders\StyleSeeder::class,
-            \Atro\Seeders\LayoutProfileSeeder::class,
-            \Atro\Seeders\AttributePanelSeeder::class
-        ];
-
-        foreach ($seeders as $seeder) {
-            $this->getSeederFactory()->create($seeder)->run();
-        }
-
-        foreach ($this->getModuleManager()->getModulesList() as $name) {
-            try {
-                $this->getModuleManager()->getModuleInstallDeleteObject($name)->afterInstall();
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("After Install Module Error: {$e->getMessage()}");
-            }
-        }
+        $this->getContainer()->get(ModuleLifecycle::class)->afterInstallAll();
 
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate measures >/dev/null");
@@ -661,19 +613,6 @@ class Installer extends AbstractService
 
         // for statistics
         @file_get_contents("https://packagist.atrocore.com/packages.json?id=$appId");
-    }
-
-    /**
-     * @return Manager
-     */
-    private function getModuleManager(): Manager
-    {
-        return $this->getContainer()->get('moduleManager');
-    }
-
-    private function getSeederFactory(): SeederFactory
-    {
-        return $this->getContainer()->get('seederFactory');
     }
 
     private function getAllTranslations(): array
