@@ -122,7 +122,7 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
             };
 
             if(this.metadata.get(['scopes', scope, 'type']) === 'Relation') {
-                let relAction = action === 'read' ? action : 'edit';
+                let relAction = ['read', 'edit'].includes(action) ? 'read' : 'edit';
                 for (const relationEntity of this.getRelationEntities(scope)) {
                     if(!checkScope(relationEntity, relAction)) {
                         return false;
