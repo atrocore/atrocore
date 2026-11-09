@@ -15,6 +15,7 @@ namespace Atro\Core\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\RequestHeaders;
+use Atro\Core\LinkedRecords\LinkedRecordsLoader;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
@@ -87,6 +88,11 @@ abstract class AbstractService implements Injectable
     protected function getEntityManager(): EntityManager
     {
         return $this->getInjection('entityManager');
+    }
+
+    protected function getLinkedRecordLoader(): LinkedRecordsLoader
+    {
+        return $this->getEntityManager()->getContainer()->get(LinkedRecordsLoader::class);
     }
 
     protected function getConfig(): Config
