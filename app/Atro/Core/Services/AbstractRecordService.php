@@ -352,40 +352,6 @@ abstract class AbstractRecordService extends AbstractService
                     $entity->loadLinkMultipleField($field);
                 }
             }
-
-            if ($entity->getAttributeParam($attribute, 'isLinkEntity') && !$entity->has($attribute)) {
-                $linkedEntities = $this->findLinkedEntities($entity->get('id'), $attribute, []);
-                $entity->set($attribute, null);
-                if ($linkedEntities['total'] > 0) {
-                    $linkedEntitiesList = array_key_exists('collection', $linkedEntities) ? $linkedEntities['collection']->toArray() : $linkedEntities['list'];
-                    $entity->set($attribute, $linkedEntitiesList[0]);
-                }
-            }
-
-            if ($entity->getAttributeParam($attribute, 'isLinkMultipleCollection') && !$entity->has($attribute)) {
-                $linkDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $attribute]);
-                if (!empty($linkDefs['entity']) && $this->getMetadata()->get(['scopes', $linkDefs['entity'], 'type']) === 'Relationship') {
-                    $linkedEntities = $this
-                        ->getServiceFactory()
-                        ->create($linkDefs['entity'])
-                        ->findEntities([
-                            'where' => [
-                                [
-                                    'type'      => 'equals',
-                                    'attribute' => $linkDefs['foreign'] . 'Id',
-                                    'value'     => $entity->get('id'),
-                                ]
-                            ]
-                        ]);
-                } else {
-                    $linkedEntities = $this->findLinkedEntities($entity->get('id'), $attribute, []);
-                }
-                $entity->set($attribute, []);
-                if ($linkedEntities['total'] > 0) {
-                    $linkedEntitiesList = array_key_exists('collection', $linkedEntities) ? $linkedEntities['collection']->toArray() : $linkedEntities['list'];
-                    $entity->set($attribute, $linkedEntitiesList);
-                }
-            }
         }
     }
 
@@ -696,6 +662,8 @@ abstract class AbstractRecordService extends AbstractService
             $this->prepareEntityForOutput($e);
         }
 
+        $this->putMetaLinkedRecords($collection);
+
         $total = 0;
         if (empty($params['collectionOnly'])) {
             if (!$disableCount) {
@@ -977,6 +945,11 @@ abstract class AbstractRecordService extends AbstractService
             $this->putMetaColorOptionData($entity);
         }
 
+        // the records of a collection are processed together, after the collection is loaded
+        if (empty($entity->_fromCollection)) {
+            $this->putMetaLinkedRecords(new EntityCollection([$entity], $entity->getEntityName()));
+        }
+
         if ($this instanceof EditableInterface
             && RequestHeaders::isMetaGroupRequested('readOnlyFields')
             && !empty($fields = $this->getReadOnlyFields($entity))
@@ -984,6 +957,14 @@ abstract class AbstractRecordService extends AbstractService
             $meta = $entity->get('_meta') ?? [];
             $meta['readOnlyFields'] = array_values($fields);
             $entity->set('_meta', $meta);
+        }
+    }
+
+    protected function putMetaLinkedRecords(EntityCollection $collection): void
+    {
+        $loader = $this->getLinkedRecordLoader();
+        if ($loader->isRequested()) {
+            $loader->load($collection);
         }
     }
 
@@ -1361,6 +1342,16 @@ abstract class AbstractRecordService extends AbstractService
                         if (!in_array($fieldName, $attributeList)) {
                             $attributeList[] = $fieldName;
                         }
+                    }
+                }
+            }
+
+            // the ids of the linked records have to be selected to load the records
+            $loader = $this->getLinkedRecordLoader();
+            if ($loader->isRequested()) {
+                foreach ($loader->getIdAttributes($seed) as $attribute) {
+                    if (!in_array($attribute, $attributeList)) {
+                        $attributeList[] = $attribute;
                     }
                 }
             }
