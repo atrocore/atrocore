@@ -364,6 +364,8 @@ final class Application
         header('HTTP/1.1 503 Service Unavailable');
         header('Content-Type: text/html; charset=utf-8');
         header('Cache-Control: no-store');
+        // the installer checks via this header that the requests reach index.php (the URL rewriting works)
+        header('X-AtroCore-Status: not-installed');
 
         echo '<!doctype html><html><head><title>AtroCore</title></head><body style="font-family: sans-serif; margin: 3em">'
             . '<h1>AtroCore is not installed</h1>'

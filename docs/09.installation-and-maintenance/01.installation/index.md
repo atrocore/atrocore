@@ -132,7 +132,7 @@ Pass the passwords as environment variables rather than as options: an option is
 
 With `--json` the result is printed to the standard output as JSON (`status`, `siteUrl`, `admin.username`, `admin.password`, `webUser`, `warnings`), everything else goes to the standard error output.
 
-The installer checks the PHP of the web server by requesting a temporary script in `public/` via the URL of the site. If the site is not reachable from the server yet, skip the check with `--skip-web-check`.
+The installer checks the web server via the URL of the site: its PHP, by requesting a temporary script in `public/`, and the URL rewriting, by requesting a path under `/api/` that has to reach `index.php`. If the site is not reachable from the server yet, skip the check with `--skip-web-check`.
 
 The exit code of the installer tells what happened:
 
@@ -144,7 +144,7 @@ The exit code of the installer tells what happened:
 | 3 | The PHP of the command line or of the web server does not meet the requirements. |
 | 4 | The database cannot be connected to or created. |
 | 5 | The database is not empty: the system is already installed or the database belongs to something else. It is not touched. |
-| 6 | The PHP of the web server cannot be checked via the URL of the site. |
+| 6 | The web server cannot be checked via the URL of the site, or the URL rewriting is not configured. |
 
 ### 6. Change recursively the user and group ownership for your project files
 
