@@ -108,21 +108,6 @@ class Manager
     }
 
     /**
-     * @param string $name
-     *
-     * @return AfterInstallAfterDelete
-     */
-    public function getModuleInstallDeleteObject(string $name): AfterInstallAfterDelete
-    {
-        $class = sprintf('\\%s\\Event', $name);
-        if (!class_exists($class) || !is_a($class, AfterInstallAfterDelete::class, true)) {
-            $class = AfterInstallAfterDelete::class;
-        }
-
-        return new $class($this->getContainer());
-    }
-
-    /**
      * @param string $module
      */
     protected function loadModule(string $module): void

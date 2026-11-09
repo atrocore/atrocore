@@ -96,9 +96,13 @@ final class Config
         return self::writeAtomically(self::exportPhp($data));
     }
 
-    public static function isInstalled(): bool
+    /**
+     * Whether the installation of the system is complete. The installer sets it as its very last step, so a failed
+     * installation leaves the system not installed: it then works with the files only.
+     */
+    public function isInstalled(): bool
     {
-        return !empty(self::load()['isInstalled']);
+        return !empty($this->get('isInstalled'));
     }
 
     public function getSiteUrl(): string

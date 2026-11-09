@@ -99,7 +99,7 @@ class ActionHistoryMiddleware implements MiddlewareInterface
     {
         $config = $this->getConfig();
 
-        if (!$config->get('isInstalled')) {
+        if (!$config->isInstalled()) {
             return false;
         }
 

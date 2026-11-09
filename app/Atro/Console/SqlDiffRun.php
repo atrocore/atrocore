@@ -35,8 +35,8 @@ class SqlDiffRun extends AbstractConsole
             /** @var array $queries */
             $queries = $this->getContainer()->get('schema')->getDiffQueries();
         } catch (\Throwable $e) {
-            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
-            die();
+            echo $e->getTraceAsString() . PHP_EOL;
+            self::show($e->getMessage(), self::ERROR, true);
         }
 
         if (!empty($queries)) {

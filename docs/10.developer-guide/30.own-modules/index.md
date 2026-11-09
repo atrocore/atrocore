@@ -69,6 +69,71 @@ It has only one required method that must be realized - `getLoadOrder`. It must 
  In the `onLoad` method, You can add any code that need to be executed any time your module is loaded after any incoming request.
 For example, you can bind your custom classes in the [services container](../02.understanding-atrocore/01.service-container) or listen globally to any events using the [Event Manager](../02.understanding-atrocore/20.listeners).
 
+### AfterInstall and AfterDelete steps
+
+A module creates its default data when it is added to the system and cleans up after it is removed. Both are done by steps: small classes found without any registration.
+
+**AfterInstall** — a class in `app/AfterInstall/` implementing `Atro\Core\ModuleManager\AfterInstallInterface`. It is run once, when the module is added to the system. The core has its own steps in `Atro\AfterInstall`, they are run once, when the system is installed.
+
+```php
+namespace ExampleModule\AfterInstall;
+
+use Atro\Core\ModuleManager\AfterInstallInterface;
+use Atro\Core\ModuleManager\Navigation;
+use Espo\ORM\EntityManager;
+
+class CreateDefaultManufacturer implements AfterInstallInterface
+{
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly Navigation $navigation
+    ) {
+    }
+
+    public static function getSortOrder(): int
+    {
+        return 10;
+    }
+
+    public function run(): void
+    {
+        $manufacturer = $this->entityManager->getRepository('Manufacturer')->get();
+        $manufacturer->set('name', 'Default');
+        $this->entityManager->saveEntity($manufacturer);
+
+        $this->navigation->addItems(['Manufacturer']);
+    }
+}
+```
+
+When the steps are run, the system is complete: the database schema, the metadata and all services are available. A step is obtained from the container, its dependencies are injected via the constructor. Create the records via the entity manager, not via SQL: a change of an entity then breaks the step loudly instead of silently. Do not catch the exceptions — a failed step fails the installation.
+
+**AfterDelete** — a class in `app/AfterDelete/` extending `Atro\Core\ModuleManager\AbstractAfterDelete`. It is run once, after the module is removed.
+
+```php
+namespace ExampleModule\AfterDelete;
+
+use Atro\Core\ModuleManager\AbstractAfterDelete;
+use Atro\Core\ModuleManager\Navigation;
+
+class RemoveNavigationItems extends AbstractAfterDelete
+{
+    public static function getSortOrder(): int
+    {
+        return 10;
+    }
+
+    public function run(): void
+    {
+        (new Navigation($this->connection))->removeItems(['Manufacturer']);
+    }
+}
+```
+
+When the step is run, the code of the module does not exist anymore: the `AfterDelete` folder is copied to `data/module-manager-events/{Module}/AfterDelete/` on every update, and the step is run from the copy. That is why the step gets the database connection (`$this->connection`) and the config (`$this->config`) only, and uses the classes of the core only. The entities of the module are not in the metadata anymore, so their data is changed via the connection.
+
+**Order** — the steps of the core are run first, then the steps of the modules in their load order (`getLoadOrder()`). The steps of one module are run in the order of `getSortOrder()`, the lower one first.
+
 ### Frontend folder
 
 All client files are saved in two main folders - `templates`, where all module templates files are stored, and `src` that contain logic that will run on the client side.
