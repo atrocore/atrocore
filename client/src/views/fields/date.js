@@ -124,6 +124,8 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element = this.$el.find('[name="' + this.name + '"]');
 
