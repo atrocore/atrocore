@@ -59,6 +59,9 @@ class CreateAdmin extends AbstractConsole
             self::show('The administrator is not created: ' . $e->getMessage(), self::ERROR, true);
         }
 
+        // an administrator created outside of the user interface must leave a trace
+        $GLOBALS['log']->warning("Administrator '$userName' created from the console.");
+
         self::show("The administrator '$userName' is created.", self::SUCCESS);
     }
 }
