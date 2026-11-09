@@ -83,6 +83,8 @@ Authorization-Token: ***************
 
 > **Note:** The API may still return some additional fields, even if they aren't included in your `select` list. These are typically mandatory fields required by the backend or automatically included virtual fields.
 
+> **Deprecated:** `select` of a link field returns the full linked record. In 3.0 it returns only the ID and the name of the linked record; the full records are requested with the [`linkedRecords`](#full-records-of-linked-fields-the-linkedrecords-group) meta group.
+
 -----
 
 ###  Pagination
@@ -976,6 +978,57 @@ With-Meta-Groups: availableActions, linkOptions
 
 Ask only for the categories your client uses: `availableActions`, for example, runs an ACL check on every record of a list, which is significant on large lists.
 
+#### Full Records of Linked Fields: the `linkedRecords` Group
+
+By default, a link field returns only the ID and the name of the linked record (`brandId`, `brandName`), and a multiple link field returns `<field>Ids` and `<field>Names`. The `linkedRecords` group adds the full linked records, with all their fields and translations, to `_meta.linkedRecords`. The fields are listed by the `Meta-Linked-Fields` header, a comma-separated list of field names and attribute system names:
+
+```http
+GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j HTTP/1.1
+Host: demo.atropim.com
+Authorization-Token: ***************
+Flatten-Attributes: true
+With-Meta-Groups: linkedRecords
+Meta-Linked-Fields: brand, measuringTube
+```
+
+Response:
+```json
+{
+  "list": [
+    {
+      "id": "a01jz56xg5xe09abkmfg4dr0kvj",
+      "name": "Example Product",
+      "brandId": "a01j96c5ckye6fsvw6vza9e5an6",
+      "brandName": "Example Brand",
+      "measuringTubeId": "a01k2hr5hwqe0z9c067vgakyv4n",
+      "measuringTubeName": "Austenitic stainless steel",
+      "_meta": {
+        "linkedRecords": {
+          "brand": {
+            "id": "a01j96c5ckye6fsvw6vza9e5an6",
+            "name": "Example Brand",
+            "code": "EXAMPLE"
+          },
+          "measuringTube": {
+            "id": "a01k2hr5hwqe0z9c067vgakyv4n",
+            "code": "EV000494",
+            "name": "Austenitic stainless steel",
+            "nameDeDe": "Austenitischer Edelstahl"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+- A link field or attribute gives the record, or `null` when it is empty. A multiple link field or attribute gives a list of records, empty when there are none.
+- `Meta-Linked-Fields: *` returns every link field and every loaded link and multiple link attribute. A multiple link field has to be listed by its name, as the IDs of its records are loaded with an additional query. Without the header, the group is empty.
+- An attribute has to be loaded as well, with `attributes=<ids>` or `allAttributes=true`, and is listed by its system name.
+- It works for a single record (`GET /api/Product/{id}`) the same way as for a list. The linked records of a list are loaded with one query per linked entity, so the number of queries does not depend on the number of records.
+- The group works for the link and multiple link fields of every entity that returns `_meta`. Attributes are available for the entities that have them (Base and Hierarchy types). Only the linked entities the user may read are returned.
+- **Deprecated:** `select` also returns the full record of a link field: `GET /api/Product?select=id,brand` returns the whole `brand` record, and `select` of a multiple link field returns the list of the records. This behavior is deprecated and is removed in 3.0, where `select` returns only `<field>Id` and `<field>Name`. Use the `linkedRecords` group instead.
+
 ---
 
 ### The `_meta` Object Structure
@@ -1191,6 +1244,7 @@ The table below lists the currently known `_meta` categories. This list will gro
 |----------|---------------------------------------------------------------------------|---------|
 | `availableActions` | Always (when header is sent)                                         | Whether each action (edit, delete, stream, unlink, etc.) is available for the record |
 | `linkOptions` | When record has `Link` / `Multiple link` fields pointing to an entity with `color` | Full option objects (id, name, color, description) |
+| `linkedRecords` | When the `Meta-Linked-Fields` header lists link or multiple link fields or attributes | Full records of the linked fields, keyed by the field name |
 | `audit` | When a delegated session was involved                                     | Real actor and delegator for createdBy/modifiedBy |
 | `locked` | For the entities with field value locking enabled                        | Whether the locks are loaded and the lock of each field |
 | `state` | For the items of a cluster, in the linked records of the cluster          | Whether the item is consolidated and whether it is the golden record |
