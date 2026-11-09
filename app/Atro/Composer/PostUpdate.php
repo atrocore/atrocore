@@ -885,8 +885,11 @@ class PostUpdate
         return AbstractConsole::getPhpBinPath(self::$container->get('config'));
     }
 
+    /**
+     * Until the installation is complete, only the files of the system are updated.
+     */
     private static function isInstalled(): bool
     {
-        return Config::isInstalled();
+        return self::$container->get('config')->isInstalled();
     }
 }

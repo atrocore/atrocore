@@ -34,7 +34,7 @@ class Notification extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
+        if (!$this->getConfig()->isInstalled() || Application::isSystemUpdating()) {
             exit(1);
         }
 

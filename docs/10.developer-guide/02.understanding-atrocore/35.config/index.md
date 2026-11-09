@@ -143,7 +143,7 @@ Every key a module contributes automatically becomes read-only.
 
 | Parameter         | Type      | Description                                                                                                                              |
 |:------------------|:----------|:-----------------------------------------------------------------------------------------------------------------------------------------|
-| `isInstalled`     | `boolean` | The installation state of the application. Set to `true` upon completion of the installation wizard. If `false`, the wizard is launched. |
+| `isInstalled`     | `boolean` | The installation state of the application. Set to `true` by the installer as its very last step. If `false`, the system is not installed and the web interface shows a page that says so. |
 | `encryptionKey`   | `string`  | A unique secret key used to encrypt stored credentials, such as connection passwords.                                                    |
 | `amountOfDbDumps` | `integer` | The maximum number of database backups the system will store. Older backups are automatically deleted when this limit is reached.        |
 | `useCache`        | `boolean` | Activates or deactivates the backend and frontend caching mechanisms.                                                                    |

@@ -27,7 +27,7 @@ class Job extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled')) || file_exists(Application::COMPOSER_LOG_FILE) || empty($data['id'])) {
+        if (!$this->getConfig()->isInstalled() || file_exists(Application::COMPOSER_LOG_FILE) || empty($data['id'])) {
             exit(1);
         }
 

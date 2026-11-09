@@ -15,7 +15,6 @@ namespace Atro\Core\Routing;
 
 use Atro\Core\DataManager;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 
 /**
@@ -41,7 +40,6 @@ class RouteCompiler
         private readonly Metadata        $metadata,
         private readonly HandlerRegistry $handlerRegistry,
         private readonly ModuleManager   $moduleManager,
-        private readonly Config          $config,
     ) {
     }
 
@@ -162,10 +160,6 @@ class RouteCompiler
                 $routeAttr = $attrObj->newInstance();
 
                 if (empty($routeAttr->responses)) {
-                    continue;
-                }
-
-                if ($routeAttr->installerOnly && $this->config->get('isInstalled', false)) {
                     continue;
                 }
 

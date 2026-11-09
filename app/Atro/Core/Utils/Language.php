@@ -43,7 +43,7 @@ class Language
     public function __construct(Container $container, ?string $localeId = null)
     {
         if ($localeId === null) {
-            $user = $container->get('config')->get('isInstalled', false) ? $container->get('user') : null;
+            $user = $container->get('config')->isInstalled() ? $container->get('user') : null;
             $localeId = self::detectLocale($container->get('config'), $user);
         }
 
@@ -187,7 +187,7 @@ class Language
         if ($this->resolvers === null) {
             $this->resolvers = [];
 
-            if ($this->getConfig()->get('isInstalled', false)) {
+            if ($this->getConfig()->isInstalled()) {
                 foreach ($this->getMetadata()->get(['app', 'languageResolvers'], []) as $resolverDefs) {
                     if (empty($resolverDefs['className']) || !class_exists($resolverDefs['className'])) {
                         continue;
@@ -360,7 +360,7 @@ class Language
      */
     private function applyLanguageListeners(array $result): array
     {
-        if (!$this->getConfig()->get('isInstalled', false)) {
+        if (!$this->getConfig()->isInstalled()) {
             return $result;
         }
 
@@ -521,8 +521,13 @@ class Language
 
         $data = [];
 
-        if ($this->getConfig()->get('isInstalled', false)) {
-            $data = $this->getPreparedTranslations();
+        if ($this->getConfig()->isInstalled()) {
+            try {
+                $data = $this->getPreparedTranslations();
+            } catch (\Throwable $e) {
+                // the database has no schema yet, the translations of the modules are used then
+                $data = [];
+            }
         }
 
         if (empty($data)) {

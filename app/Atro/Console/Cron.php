@@ -41,7 +41,7 @@ class Cron extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled')) || file_exists(Application::COMPOSER_LOG_FILE)) {
+        if (!$this->getConfig()->isInstalled() || file_exists(Application::COMPOSER_LOG_FILE)) {
             exit(1);
         }
 

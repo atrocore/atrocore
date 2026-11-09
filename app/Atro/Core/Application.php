@@ -16,7 +16,6 @@ namespace Atro\Core;
 use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Services\Installer;
 use Atro\Services\SoftwarePackage;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Auth;
@@ -105,6 +104,10 @@ final class Application
      */
     public function run()
     {
+        if (!$this->getConfig()->isInstalled()) {
+            $this->showNotInstalled();
+        }
+
         ini_set('session.cookie_httponly', '1');
         ini_set('session.cookie_samesite', 'Lax');
         if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || str_starts_with((string)$this->getConfig()->get('siteUrl'), 'https://')) {
@@ -187,16 +190,6 @@ final class Application
     public function getContainer(): Container
     {
         return $this->container;
-    }
-
-    /**
-     * Is installed
-     *
-     * @return bool
-     */
-    public function isInstalled(): bool
-    {
-        return $this->getConfig()->get('isInstalled');
     }
 
     protected function showOpenApiJson(): void
@@ -284,11 +277,6 @@ final class Application
      */
     protected function runClient()
     {
-        // for installer
-        if (!$this->isInstalled()) {
-            $this->runInstallerClient();
-        }
-
         if (self::isSystemUpdating()) {
             $this->display('public/client/html/updating.html', ['year' => date('Y'), 'logFile' => 'data/composer.log', 'version' => SoftwarePackage::getCoreVersion()]);
         }
@@ -369,33 +357,19 @@ final class Application
     }
 
     /**
-     * Run client for installer
+     * The system is installed from the CLI only, a request before that gets this page and nothing else
      */
-    protected function runInstallerClient()
+    private function showNotInstalled(): void
     {
-        $result = ['status' => false, 'message' => ''];
+        header('HTTP/1.1 503 Service Unavailable');
+        header('Content-Type: text/html; charset=utf-8');
+        header('Cache-Control: no-store');
 
-        // check permissions and generate config
-        try {
-            /** @var Installer $installer */
-            $installer = $this->getContainer()->get('serviceFactory')->create('Installer');
-            $result['status'] = $installer->checkPermissions();
-        } catch (\Exception $e) {
-            $result['status'] = 'false';
-            $result['message'] = $e->getMessage();
-        }
-
-        // prepare vars
-        $vars = [
-            'applicationName' => 'AtroCore',
-            'status'          => $result['status'],
-            'message'         => $result['message'],
-            'classReplaceMap' => json_encode($this->getMetadata()->get(['app', 'clientClassReplaceMap'], [])),
-            'year'            => date('Y'),
-            'version'         => SoftwarePackage::getCoreVersion()
-        ];
-
-        $this->display('public/client/html/installation.html', $vars);
+        echo '<!doctype html><html><head><title>AtroCore</title></head><body style="font-family: sans-serif; margin: 3em">'
+            . '<h1>AtroCore is not installed</h1>'
+            . '<p>Install it from the project folder: <code>php atrocore-installer.phar install-atrocore</code></p>'
+            . '</body></html>';
+        exit;
     }
 
     /**
