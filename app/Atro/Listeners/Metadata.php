@@ -468,8 +468,8 @@ class Metadata extends AbstractMetadataListener
                 ];
             }
 
-            // an entity with a supertype cannot be created
-            if (!empty($scopeDefs['supertypeId'])) {
+            // the records of a supertype cannot be created directly, only via its subtypes
+            if (!empty($scopeDefs['hasSubtypes'])) {
                 $data['scopes'][$scope]['createDisabled'] = $scopeDefs['createDisabled'] = true;
             }
 
