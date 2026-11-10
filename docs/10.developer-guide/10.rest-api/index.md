@@ -83,7 +83,7 @@ Authorization-Token: ***************
 
 > **Note:** The API may still return some additional fields, even if they aren't included in your `select` list. These are typically mandatory fields required by the backend or automatically included virtual fields.
 
-> **Deprecated:** `select` of a link field returns the full linked record. In 3.0 it returns only the ID and the name of the linked record; the full records are requested with the [`linkedRecords`](#full-records-of-linked-fields-the-linkedrecords-group) meta group.
+> **Deprecated:** `select` of a link field returns the full linked record. In 3.0 `select=brand` returns nothing for that field, and the link is selected with `brandId` and `brandName` (`<field>Ids` and `<field>Names` for a multiple link field); the full records are requested with the [`linkedRecords`](#full-records-of-linked-fields-the-linkedrecords-group) meta group.
 
 -----
 
@@ -980,7 +980,7 @@ Ask only for the categories your client uses: `availableActions`, for example, r
 
 #### Full Records of Linked Fields: the `linkedRecords` Group
 
-By default, a link field returns only the ID and the name of the linked record (`brandId`, `brandName`), and a multiple link field returns `<field>Ids` and `<field>Names`. The `linkedRecords` group adds the full linked records, with all their fields and translations, to `_meta.linkedRecords`. The fields are listed by the `Meta-Linked-Fields` header, a comma-separated list of field names and attribute system names:
+Without `select`, a link field returns only the ID and the name of the linked record (`brandId`, `brandName`), and a multiple link field returns `<field>Ids` and `<field>Names`. With `select`, these attributes have to be named: `select=id,brandId,brandName`. The `linkedRecords` group adds the full linked records, with all their fields and translations, to `_meta.linkedRecords`. The fields are listed by the `Meta-Linked-Fields` header, a comma-separated list of field names and attribute system names:
 
 ```http
 GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j HTTP/1.1
@@ -1027,7 +1027,7 @@ Response:
 - An attribute has to be loaded as well, with `attributes=<ids>` or `allAttributes=true`, and is listed by its system name.
 - It works for a single record (`GET /api/Product/{id}`) the same way as for a list. The linked records of a list are loaded with one query per linked entity, so the number of queries does not depend on the number of records.
 - The group works for the link and multiple link fields of every entity that returns `_meta`. Attributes are available for the entities that have them (Base and Hierarchy types). Only the linked entities the user may read are returned.
-- **Deprecated:** `select` also returns the full record of a link field: `GET /api/Product?select=id,brand` returns the whole `brand` record, and `select` of a multiple link field returns the list of the records. This behavior is deprecated and is removed in 3.0, where `select` returns only `<field>Id` and `<field>Name`. Use the `linkedRecords` group instead.
+- **Deprecated:** `select` also returns the full record of a link field: `GET /api/Product?select=id,brand` returns the whole `brand` record, and `select` of a multiple link field returns the list of the records. This behavior is deprecated and is removed in 3.0, where `select=id,brand` returns nothing for the field and the link is selected with `brandId` and `brandName`. Use the `linkedRecords` group instead.
 
 ---
 
