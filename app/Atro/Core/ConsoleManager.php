@@ -97,7 +97,6 @@ class ConsoleManager
             "regenerate measures"                       => Console\RegenerateMeasures::class,
             "refresh translations"                      => Console\RefreshTranslations::class,
             "create admin <username>"                   => Console\CreateAdmin::class,
-            "after install"                             => Console\AfterInstall::class,
             "clear cache"                               => Console\ClearCache::class,
             "sql diff --show"                           => Console\SqlDiff::class,
             "sql diff --run"                            => Console\SqlDiffRun::class,
