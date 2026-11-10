@@ -82,34 +82,6 @@ class ModuleLifecycle
     }
 
     /**
-     * Copies the AfterDelete steps of every module, so that they exist after the module is removed.
-     */
-    public function copyAfterDeleteSteps(): void
-    {
-        foreach ($this->moduleManager->getModules() as $module) {
-            $dest = self::AFTER_DELETE_COPY_PATH . '/' . $module->getId();
-
-            $this->removeDir($dest);
-
-            $src = $module->getAppPath() . self::AFTER_DELETE_DIR;
-            if (!is_dir($src)) {
-                continue;
-            }
-
-            $dest .= '/' . self::AFTER_DELETE_DIR;
-            if (!is_dir($dest) && !mkdir($dest, 0777, true) && !is_dir($dest)) {
-                throw new Error("Failed to create the folder '$dest'.");
-            }
-
-            foreach (glob($src . '/*.php') as $file) {
-                if (!copy($file, $dest . '/' . basename($file))) {
-                    throw new Error("Failed to copy '$file' to '$dest'.");
-                }
-            }
-        }
-    }
-
-    /**
      * @return string[] the classes of the steps in the order they are run
      */
     private function findSteps(string $dir, string $namespace, string $parent): array
@@ -160,23 +132,5 @@ class ModuleLifecycle
 
         $this->entityManager->setUser($user);
         $this->userContext->set($user);
-    }
-
-    private function removeDir(string $dir): void
-    {
-        if (!is_dir($dir)) {
-            return;
-        }
-
-        $items = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($items as $item) {
-            $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
-        }
-
-        rmdir($dir);
     }
 }

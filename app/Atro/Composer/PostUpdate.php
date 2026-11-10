@@ -289,7 +289,24 @@ class PostUpdate
         }
 
         self::renderLine('Copying post-delete steps of the modules');
-        self::$container->get(ModuleLifecycle::class)->copyAfterDeleteSteps();
+
+        foreach (self::getModules() as $id) {
+            $dest = ModuleLifecycle::AFTER_DELETE_COPY_PATH . "/$id";
+
+            // the copy of a removed module is kept: its steps are run from it
+            self::removeDir($dest);
+
+            $src = dirname((new \ReflectionClass("\\$id\\Module"))->getFileName()) . '/' . ModuleLifecycle::AFTER_DELETE_DIR;
+            if (!is_dir($src)) {
+                continue;
+            }
+
+            if (!is_dir($dest) && !mkdir($dest, 0777, true) && !is_dir($dest)) {
+                throw new \RuntimeException("Failed to create the folder '$dest'.");
+            }
+
+            self::copyDir($src, $dest . '/' . ModuleLifecycle::AFTER_DELETE_DIR);
+        }
     }
 
     /**
