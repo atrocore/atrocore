@@ -49,12 +49,6 @@
         {
           "name": "editDisabled"
         }
-      ],
-      [
-        {
-          "name": "deleteDisabled"
-        },
-        false
       ]
     ]
   }

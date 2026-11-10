@@ -468,6 +468,11 @@ class Metadata extends AbstractMetadataListener
                 ];
             }
 
+            // an entity with a supertype cannot be created
+            if (!empty($scopeDefs['supertypeId'])) {
+                $data['scopes'][$scope]['createDisabled'] = $scopeDefs['createDisabled'] = true;
+            }
+
             // the records of the entity cannot be created, edited or deleted, so there is no access right for such actions
             $disabledActions = [];
             foreach (['createDisabled' => 'create', 'editDisabled' => 'edit', 'deleteDisabled' => 'delete'] as $key => $action) {

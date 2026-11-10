@@ -466,6 +466,18 @@
         }
       }
     },
+    "createDisabled": {
+      "type": "bool",
+      "default": false
+    },
+    "editDisabled": {
+      "type": "bool",
+      "default": false
+    },
+    "deleteDisabled": {
+      "type": "bool",
+      "default": false
+    },
     "derivativeEnabled": {
       "type": "bool",
       "readOnly": true,
