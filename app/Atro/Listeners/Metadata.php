@@ -753,7 +753,7 @@ class Metadata extends AbstractMetadataListener
     protected function prepareTextFilterFields(array &$data): void
     {
         foreach ($data['scopes'] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['textFilterFields'])) {
+            if (!empty($scopeDefs['textFilterFields']) || empty($data['entityDefs'][$scope]['fields'])) {
                 continue;
             }
 
