@@ -42,6 +42,17 @@ class Set extends AbstractMatchingRule
         return (float)$weight;
     }
 
+    public function isSymmetric(): bool
+    {
+        foreach ($this->rule->getNestedRules() as $rule) {
+            if (!$rule->isSymmetric()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function prepareMatchSelect(QueryBuilder $qb, Entity $stageEntity): void
     {
         foreach ($this->rule->getNestedRules() as $rule) {

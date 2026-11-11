@@ -45,18 +45,21 @@ class FieldSimilar extends AbstractMatchingRule
             if ($attribute && in_array($attribute->get('type'), ['array', 'multiEnum', 'linkMultiple'])) {
                 $stageValue  = is_string($stageValue) ? (json_decode($stageValue, true) ?? []) : ($stageValue ?? []);
                 $masterValue = is_string($masterValue) ? (json_decode($masterValue, true) ?? []) : ($masterValue ?? []);
+                if (empty($stageValue) || empty($masterValue)) {
+                    return 0.0;
+                }
                 sort($stageValue);
                 sort($masterValue);
 
                 return $stageValue === $masterValue ? $this->getWeight() : 0.0;
             }
 
-            if ($stageValue === null && $masterValue === null) {
-                return 0.0;
-            }
-
             $stageValue  = str_replace(' ', '', strtolower(trim((string)$stageValue)));
             $masterValue = str_replace(' ', '', strtolower(trim((string)$masterValue)));
+
+            if ($stageValue === '' || $masterValue === '') {
+                return 0.0;
+            }
 
             return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
@@ -74,7 +77,7 @@ class FieldSimilar extends AbstractMatchingRule
                 $masterValue = json_decode($masterValue, true) ?? [];
             }
 
-            if (!is_array($stageValue) || !is_array($masterValue)) {
+            if (!is_array($stageValue) || !is_array($masterValue) || empty($stageValue) || empty($masterValue)) {
                 return 0.0;
             }
 
@@ -84,12 +87,12 @@ class FieldSimilar extends AbstractMatchingRule
             return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
 
-        if ($stageEntity->get($field) === null && ($masterEntityData[$field] ?? null) === null) {
+        $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
+        $masterValue = str_replace(' ', '', strtolower(trim((string)($masterEntityData[$field] ?? ''))));
+
+        if ($stageValue === '' || $masterValue === '') {
             return 0.0;
         }
-
-        $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
-        $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
 
         return $stageValue === $masterValue ? $this->getWeight() : 0.0;
     }

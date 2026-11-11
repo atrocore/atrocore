@@ -46,20 +46,23 @@ class FieldSimilar extends AbstractBlockingRule
         $value = $stageEntity->get($field);
         $parameter = IdGenerator::unsortableId();
 
-        if ($value === null) {
+        if (is_array($value)) {
+            $parts = [];
+            foreach (array_unique($value) as $item) {
+                $itemParameter = IdGenerator::unsortableId();
+                $qb->setParameter($itemParameter, '%"' . $item . '"%');
+                $parts[] = "{$alias}.{$escapedColumnName} LIKE :$itemParameter";
+            }
+
+            return empty($parts) ? '1=0' : '(' . implode(' OR ', $parts) . ')';
+        }
+
+        $value = str_replace(' ', '', strtolower(trim((string)$value)));
+        if ($value === '') {
             return '1=0';
         }
 
-        if (empty($value)) {
-            return "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
-        }
-
-        if (is_array($value)) {
-            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
-            return "{$alias}.{$escapedColumnName} LIKE :$parameter";
-        }
-
-        $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
+        $qb->setParameter($parameter, $value);
 
         return "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
     }
@@ -90,21 +93,30 @@ class FieldSimilar extends AbstractBlockingRule
         $baseCondition = "{$subAlias}.{$tableName}_id = {$alias}.id"
             . " AND {$subAlias}.attribute_id = :{$attrParam}";
 
-        if ($value === null) {
-            return '1=0';
-        }
-
         if (is_array($value)) {
-            $valParam = IdGenerator::unsortableId();
-            $qb->setParameter($valParam, '%"' . reset($value) . '"%');
+            $parts = [];
+            foreach (array_unique($value) as $item) {
+                $itemParameter = IdGenerator::unsortableId();
+                $qb->setParameter($itemParameter, '%"' . $item . '"%');
+                $parts[] = "{$subAlias}.{$col} LIKE :$itemParameter";
+            }
+
+            if (empty($parts)) {
+                return '1=0';
+            }
 
             return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
                 . " WHERE {$baseCondition}"
-                . " AND {$subAlias}.{$col} LIKE :{$valParam})";
+                . " AND (" . implode(' OR ', $parts) . "))";
+        }
+
+        $value = str_replace(' ', '', strtolower(trim((string)$value)));
+        if ($value === '') {
+            return '1=0';
         }
 
         $valParam = IdGenerator::unsortableId();
-        $qb->setParameter($valParam, str_replace(' ', '', strtolower(trim((string)$value))));
+        $qb->setParameter($valParam, $value);
 
         return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
             . " WHERE {$baseCondition}"

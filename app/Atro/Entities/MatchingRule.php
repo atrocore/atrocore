@@ -38,6 +38,13 @@ class MatchingRule extends Base
             ->match($stageEntity, $masterEntityData);
     }
 
+    public function isSymmetric(): bool
+    {
+        return $this->getRepository()
+            ->createMatchingType($this)
+            ->isSymmetric();
+    }
+
     public function getNestedRules(): iterable
     {
         return $this->get('matchingRules') ?? [];

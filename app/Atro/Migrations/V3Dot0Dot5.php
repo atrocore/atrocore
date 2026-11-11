@@ -100,6 +100,112 @@ class V3Dot0Dot5 extends Base
         foreach (glob(self::COMPILED_DIR . '/MatchingRule/Where*.php') ?: [] as $file) {
             unlink($file);
         }
+
+        if ($toSchema->hasTable('matched_record')) {
+            $this->mergeMirroredMatchedRecords();
+        }
+    }
+
+    protected function mergeMirroredMatchedRecords(): void
+    {
+        $conn = $this->getDbal();
+
+        $matchings = $conn->createQueryBuilder()
+            ->select('id, number, entity, master_entity')
+            ->from('matching')
+            ->where('type = :type')
+            ->setParameter('type', 'duplicate')
+            ->fetchAllAssociative();
+
+        foreach ($matchings as $matching) {
+            while (true) {
+                $pairs = $conn->createQueryBuilder()
+                    ->select('a.id AS a_id, a.source_entity_id AS a_source, a.master_entity_id AS a_master, a.score AS a_score, a.has_cluster AS a_has_cluster, b.id AS b_id, b.score AS b_score, b.has_cluster AS b_has_cluster')
+                    ->from('matched_record', 'a')
+                    ->innerJoin('a', 'matched_record', 'b', 'b.matching_id = a.matching_id AND b.source_entity_id = a.master_entity_id AND b.master_entity_id = a.source_entity_id AND b.deleted = a.deleted')
+                    ->where('a.matching_id = :matchingId')
+                    ->andWhere('a.deleted = :false')
+                    ->andWhere('a.id < b.id')
+                    ->setParameter('matchingId', $matching['id'])
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setMaxResults(5000)
+                    ->fetchAllAssociative();
+
+                if (empty($pairs)) {
+                    break;
+                }
+
+                foreach ($pairs as $pair) {
+                    [$keepId, $removeId] = strcmp($pair['a_source'], $pair['a_master']) < 0
+                        ? [$pair['a_id'], $pair['b_id']]
+                        : [$pair['b_id'], $pair['a_id']];
+
+                    $conn->createQueryBuilder()
+                        ->update('matched_record')
+                        ->set('score', ':score')
+                        ->set('has_cluster', ':hasCluster')
+                        ->where('id = :id')
+                        ->setParameter('score', max((int)$pair['a_score'], (int)$pair['b_score']), ParameterType::INTEGER)
+                        ->setParameter('hasCluster', !empty($pair['a_has_cluster']) || !empty($pair['b_has_cluster']), ParameterType::BOOLEAN)
+                        ->setParameter('id', $keepId)
+                        ->executeStatement();
+
+                    $conn->createQueryBuilder()
+                        ->update('cluster_item')
+                        ->set('matched_record_id', ':keepId')
+                        ->where('matched_record_id = :removeId')
+                        ->setParameter('keepId', $keepId)
+                        ->setParameter('removeId', $removeId)
+                        ->executeStatement();
+
+                    $conn->createQueryBuilder()
+                        ->delete('matched_record')
+                        ->where('id = :id')
+                        ->setParameter('id', $removeId)
+                        ->executeStatement();
+                }
+            }
+
+            $lastId = '';
+            while (true) {
+                $rows = $conn->createQueryBuilder()
+                    ->select('id, source_entity_id, master_entity_id')
+                    ->from('matched_record')
+                    ->where('matching_id = :matchingId')
+                    ->andWhere('deleted = :false')
+                    ->andWhere('id > :lastId')
+                    ->orderBy('id')
+                    ->setParameter('matchingId', $matching['id'])
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('lastId', $lastId)
+                    ->setMaxResults(5000)
+                    ->fetchAllAssociative();
+
+                if (empty($rows)) {
+                    break;
+                }
+
+                foreach ($rows as $row) {
+                    $lastId = $row['id'];
+
+                    if (strcmp($row['source_entity_id'], $row['master_entity_id']) <= 0) {
+                        continue;
+                    }
+
+                    $conn->createQueryBuilder()
+                        ->update('matched_record')
+                        ->set('source_entity_id', ':sourceId')
+                        ->set('master_entity_id', ':masterId')
+                        ->set('hash', ':hash')
+                        ->where('id = :id')
+                        ->setParameter('sourceId', $row['master_entity_id'])
+                        ->setParameter('masterId', $row['source_entity_id'])
+                        ->setParameter('hash', md5(implode('_', [$matching['number'], $matching['entity'], $row['master_entity_id'], $matching['master_entity'], $row['source_entity_id']])))
+                        ->setParameter('id', $row['id'])
+                        ->executeStatement();
+                }
+            }
+        }
     }
 
     protected function createBlockingRuleTables(Schema $schema): void

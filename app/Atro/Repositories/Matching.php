@@ -242,6 +242,20 @@ class Matching extends Base
         $this->getEntityManager()->saveEntity($jobEntity);
     }
 
+    public function getRecordData(MatchingEntity $matching, string $id): array
+    {
+        $conn = $this->getEntityManager()->getDbal();
+
+        $row = $conn->createQueryBuilder()
+            ->select('*')
+            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('masterEntity')))))
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->fetchAssociative();
+
+        return empty($row) ? [] : Util::arrayKeysToCamelCase($row);
+    }
+
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getDbal();

@@ -30,6 +30,11 @@ class FieldContains extends AbstractMatchingRule
         ];
     }
 
+    public function isSymmetric(): bool
+    {
+        return false;
+    }
+
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
         if (!empty($this->settings->get('attributeId'))) {
@@ -47,14 +52,14 @@ class FieldContains extends AbstractMatchingRule
                 $stageValue  = is_string($stageValue) ? (json_decode($stageValue, true) ?? []) : ($stageValue ?? []);
                 $masterValue = is_string($masterValue) ? (json_decode($masterValue, true) ?? []) : ($masterValue ?? []);
 
-                if (!is_array($stageValue) || !is_array($masterValue)) {
+                if (!is_array($stageValue) || !is_array($masterValue) || empty($stageValue) || empty($masterValue)) {
                     return 0.0;
                 }
 
                 return empty(array_diff($stageValue, $masterValue)) ? $this->getWeight() : 0.0;
             }
 
-            if (empty($stageValue) && empty($masterValue)) {
+            if ((string)$stageValue === '' || (string)$masterValue === '') {
                 return 0.0;
             }
 
@@ -66,11 +71,7 @@ class FieldContains extends AbstractMatchingRule
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
         $stageValue = $stageEntity->get($field);
-        $masterValue = $masterEntityData[$field];
-
-        if (empty($stageValue) && empty($masterValue)) {
-            return 0.0;
-        }
+        $masterValue = $masterEntityData[$field] ?? null;
 
         if (in_array($fieldType, ['array', 'linkMultiple', 'multiEnum'])) {
             if ($fieldType === 'linkMultiple') {
@@ -80,7 +81,7 @@ class FieldContains extends AbstractMatchingRule
                 $masterValue = json_decode($masterValue, true) ?? [];
             }
 
-            if (!is_array($stageValue) || !is_array($masterValue)) {
+            if (!is_array($stageValue) || !is_array($masterValue) || empty($stageValue) || empty($masterValue)) {
                 return 0.0;
             }
 
@@ -88,7 +89,11 @@ class FieldContains extends AbstractMatchingRule
                 return $this->getWeight();
             }
         } else {
-            if (str_contains($masterValue, $stageValue)) {
+            if ((string)$stageValue === '' || (string)$masterValue === '') {
+                return 0.0;
+            }
+
+            if (str_contains((string)$masterValue, (string)$stageValue)) {
                 return $this->getWeight();
             }
         }

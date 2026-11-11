@@ -136,6 +136,16 @@ class MatchingManager
         // Find possible matches
         $possibleMatches = $this->getMatchingRepository()->findPossibleMatchesForEntity($matching, $entity);
 
+        $entityData = null;
+        if ($matching->get('type') === 'duplicate') {
+            foreach ($matchingRules as $rule) {
+                if (!$rule->isSymmetric()) {
+                    $entityData = $this->getMatchingRepository()->getRecordData($matching, $entity->id);
+                    break;
+                }
+            }
+        }
+
         $matchedRecordsRows = [];
 
         // Find actual matches
@@ -145,6 +155,17 @@ class MatchingManager
             foreach ($matchingRules as $rule) {
                 $maxMatchingScore += $rule->get('weight');
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
+            }
+
+            if ($entityData !== null) {
+                $candidate = $this->getEntityManager()->getRepository($entity->getEntityName())->get($row['id']);
+                if (!empty($candidate)) {
+                    $reverseScore = 0;
+                    foreach ($matchingRules as $rule) {
+                        $reverseScore += $rule->match($candidate, $entityData);
+                    }
+                    $matchingScore = max($matchingScore, $reverseScore);
+                }
             }
 
             $row['percentageScore'] = $maxMatchingScore > 0 ? $matchingScore / $maxMatchingScore * 100 : 0;

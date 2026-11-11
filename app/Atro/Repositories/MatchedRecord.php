@@ -139,10 +139,13 @@ class MatchedRecord extends Base
         string         $sourceId,
         string         $masterId,
         int            $score,
-        string         $matchedAt,
-        bool           $skipBidirectional = false
+        string         $matchedAt
     ): void
     {
+        if ($matching->get('type') === 'duplicate' && strcmp($sourceId, $masterId) > 0) {
+            [$sourceId, $masterId] = [$masterId, $sourceId];
+        }
+
         $sql
             = "INSERT INTO matched_record (id, type, source_entity, source_entity_id, master_entity, master_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :sourceEntity, :sourceEntityId, :masterEntity, :masterEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
         if (Converter::isPgSQL($this->getDbal())) {
@@ -172,10 +175,6 @@ class MatchedRecord extends Base
         $stmt->bindValue(':false', false, ParameterType::BOOLEAN);
 
         $stmt->execute();
-
-        if (!$skipBidirectional && $matching->get('type') === 'duplicate') {
-            $this->createMatchedRecord($matching, $masterId, $sourceId, $score, $matchedAt, true);
-        }
     }
 
     public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $sourceEntityName, string $sourceEntityId): void

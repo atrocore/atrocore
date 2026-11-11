@@ -26,6 +26,11 @@ abstract class AbstractMatchingRule extends AbstractRuleType
     {
     }
 
+    public function isSymmetric(): bool
+    {
+        return true;
+    }
+
     public function setRule(MatchingRuleEntity $rule): void
     {
         $this->rule = $rule;

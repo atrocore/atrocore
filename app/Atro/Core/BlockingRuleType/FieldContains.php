@@ -47,14 +47,28 @@ class FieldContains extends AbstractBlockingRule
         $value = $stageEntity->get($field);
         $parameter = IdGenerator::unsortableId();
 
-        if (empty($value)) {
-            $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
-        } elseif (is_array($value)) {
-            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
-            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
-        } else {
-            $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :$parameter";
-            $qb->setParameter($parameter, "%" . $stageEntity->get($this->settings->get('field')) . "%");
+        if (is_array($value)) {
+            $parts = [];
+            foreach (array_unique($value) as $item) {
+                $itemParameter = IdGenerator::unsortableId();
+                $qb->setParameter($itemParameter, '%"' . $item . '"%');
+                $parts[] = "{$alias}.{$escapedColumnName} LIKE :$itemParameter";
+            }
+
+            return empty($parts) ? '1=0' : '(' . implode(' OR ', $parts) . ')';
+        }
+
+        if ((string)$value === '') {
+            return '1=0';
+        }
+
+        $qb->setParameter($parameter, '%' . $value . '%');
+        $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
+
+        if ($this->rule->getMatching()?->get('type') === 'duplicate') {
+            $reverseParameter = IdGenerator::unsortableId();
+            $qb->setParameter($reverseParameter, (string)$value);
+            $sqlPart = "({$sqlPart} OR ({$alias}.{$escapedColumnName} <> '' AND :$reverseParameter LIKE CONCAT('%', {$alias}.{$escapedColumnName}, '%')))";
         }
 
         return $sqlPart;
@@ -86,27 +100,39 @@ class FieldContains extends AbstractBlockingRule
         $baseCondition = "{$subAlias}.{$tableName}_id = {$alias}.id"
             . " AND {$subAlias}.attribute_id = :{$attrParam}";
 
-        if ($value === null) {
+        if (is_array($value)) {
+            $parts = [];
+            foreach (array_unique($value) as $item) {
+                $itemParameter = IdGenerator::unsortableId();
+                $qb->setParameter($itemParameter, '%"' . $item . '"%');
+                $parts[] = "{$subAlias}.{$col} LIKE :$itemParameter";
+            }
+
+            if (empty($parts)) {
+                return '1=0';
+            }
+
             return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
                 . " WHERE {$baseCondition}"
-                . " AND ({$subAlias}.{$col} IS NULL OR {$subAlias}.{$col} = '' OR {$subAlias}.{$col} = '[]'))";
+                . " AND (" . implode(' OR ', $parts) . "))";
         }
 
-        if (is_array($value)) {
-            $valParam = IdGenerator::unsortableId();
-            $qb->setParameter($valParam, '%"' . reset($value) . '"%');
-
-            return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
-                . " WHERE {$baseCondition}"
-                . " AND {$subAlias}.{$col} LIKE :{$valParam})";
+        if ($value === null || (string)$value === '') {
+            return '1=0';
         }
 
         $valParam = IdGenerator::unsortableId();
         $qb->setParameter($valParam, '%' . $value . '%');
+        $condition = "{$subAlias}.{$col} LIKE :{$valParam}";
+
+        if ($this->rule->getMatching()?->get('type') === 'duplicate') {
+            $reverseParam = IdGenerator::unsortableId();
+            $qb->setParameter($reverseParam, (string)$value);
+            $condition = "({$condition} OR ({$subAlias}.{$col} <> '' AND :{$reverseParam} LIKE CONCAT('%', {$subAlias}.{$col}, '%')))";
+        }
 
         return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
             . " WHERE {$baseCondition}"
-            . " AND {$subAlias}.{$col} IS NOT NULL"
-            . " AND {$subAlias}.{$col} LIKE :{$valParam})";
+            . " AND {$condition})";
     }
 }

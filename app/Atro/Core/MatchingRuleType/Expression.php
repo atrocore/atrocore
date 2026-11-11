@@ -24,6 +24,11 @@ class Expression extends AbstractMatchingRule
         return [];
     }
 
+    public function isSymmetric(): bool
+    {
+        return false;
+    }
+
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $className = MatchingRuleRepository::getCompiledScoreExpressionClassName($this->rule);
