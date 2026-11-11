@@ -23,6 +23,9 @@ class Anonymize extends AbstractErasureResolver
     public const DEFAULT_URL = 'https://anonymized.invalid/';
     public const DEFAULT_EMAIL_DOMAIN = 'anonymized.invalid';
 
+    // the attempts to generate a unique value
+    public const MAX_UNIQUE_VALUE_ATTEMPTS = 20;
+
     public const SUPPORTED_TYPES = [
         'varchar',
         'text',
@@ -148,7 +151,7 @@ class Anonymize extends AbstractErasureResolver
 
     protected function prepareUniqueText(Entity $entity, string $field, array $defs, string $prefix = self::DEFAULT_VALUE . '-', string $suffix = ''): string
     {
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < self::MAX_UNIQUE_VALUE_ATTEMPTS; $i++) {
             $value = $this->cutToMaxLength($prefix . $this->generateHash(), $defs, $suffix) . $suffix;
             if (!$this->isValueUsed($entity, [$field => $value])) {
                 return $value;
@@ -233,7 +236,7 @@ class Anonymize extends AbstractErasureResolver
             throw new Error("Unique number for '{$attributes[0]}' cannot be generated.");
         }
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < self::MAX_UNIQUE_VALUE_ATTEMPTS; $i++) {
             $value = random_int($min, $max);
 
             $where = [];
