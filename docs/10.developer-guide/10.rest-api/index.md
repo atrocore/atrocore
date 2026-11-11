@@ -83,6 +83,8 @@ Authorization-Token: ***************
 
 > **Note:** The API may still return some additional fields, even if they aren't included in your `select` list. These are typically mandatory fields required by the backend or automatically included virtual fields.
 
+> **Note:** To select a link field, name its attributes: `<field>Id` and `<field>Name` for a link field, `<field>Ids` and `<field>Names` for a multiple link field. Naming the field itself (`select=id,<field>`) returns nothing for it. The full linked records are requested with the [`linkedRecords`](#full-records-of-linked-fields-the-linkedrecords-group) meta group.
+
 -----
 
 ###  Pagination
@@ -816,7 +818,7 @@ For advanced use cases, attributes can be retrieved and updated as part of the e
 
 ##### Attribute Basics
 
-Each attribute is stored with a unique internal ID and a **code** (required). The code is used as the key name for the virtual field in API responses.
+Each attribute is stored with a unique internal ID and a **system name** (required). The system name is used as the key name for the virtual field in API responses.
 
 An attribute may generate **multiple virtual fields** depending on its type. For example, a price attribute with a unit might result in a float field (e.g., `priceAmount`), a unit ID field (e.g., `priceAmountUnitId`), a unit name field, and additional supporting fields.
 
@@ -934,7 +936,7 @@ With `Flatten-Attributes: true`, you can pass an object instead of a raw ID. The
 - Use the **simple endpoints** (`/attributeValues`, `/addAttributes`, `/upsertAttributeValues`) for the recommended integration approach — these are fully described in the OpenAPI schema.
 - Use the **flattened format** only for advanced use cases — this approach is not in the OpenAPI schema and is documented here only.
 - One attribute may produce multiple virtual fields (value, unit, etc.).
-- Each attribute has a required **code**, which is used as the key name for its virtual field(s).
+- Each attribute has a required **system name**, which is used as the key name for its virtual field(s).
 - Attributes not mentioned in an update request remain unchanged.
 - To add attributes in flattened format, use `__attributes` with an array of attribute codes or IDs.
 
@@ -978,6 +980,57 @@ With-Meta-Groups: availableActions, linkOptions
 - Category names are case-sensitive. An unknown name is ignored.
 
 Ask only for the categories your client uses: `availableActions`, for example, runs an ACL check on every record of a list, which is significant on large lists.
+
+
+#### Full Records of Linked Fields: the `linkedRecords` Group
+
+Without `select`, a link field returns only the ID and the name of the linked record (`<field>Id`, `<field>Name`), and a multiple link field returns `<field>Ids` and `<field>Names`. With `select`, these attributes have to be named: `select=id,<field>Id,<field>Name`. Naming the field itself (`select=id,<field>`) returns nothing for it. The `linkedRecords` group adds the full linked records, with all their fields and translations, to `_meta.linkedRecords`. The fields are listed by the `Meta-Linked-Fields` header, a comma-separated list of field names and attribute system names:
+
+```http
+GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j HTTP/1.1
+Host: demo.atropim.com
+Authorization-Token: ***************
+Flatten-Attributes: true
+With-Meta-Groups: linkedRecords
+Meta-Linked-Fields: brand, measuringTube
+```
+
+Response:
+```json
+{
+  "list": [
+    {
+      "id": "a01jz56xg5xe09abkmfg4dr0kvj",
+      "name": "Example Product",
+      "brandId": "a01j96c5ckye6fsvw6vza9e5an6",
+      "brandName": "Example Brand",
+      "measuringTubeId": "a01k2hr5hwqe0z9c067vgakyv4n",
+      "measuringTubeName": "Austenitic stainless steel",
+      "_meta": {
+        "linkedRecords": {
+          "brand": {
+            "id": "a01j96c5ckye6fsvw6vza9e5an6",
+            "name": "Example Brand",
+            "code": "EXAMPLE"
+          },
+          "measuringTube": {
+            "id": "a01k2hr5hwqe0z9c067vgakyv4n",
+            "code": "EV000494",
+            "name": "Austenitic stainless steel",
+            "nameDeDe": "Austenitischer Edelstahl"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+- A link field or attribute gives the record, or `null` when it is empty. A multiple link field or attribute gives a list of records, empty when there are none.
+- `Meta-Linked-Fields: *` returns every link field and every loaded link and multiple link attribute. A multiple link field has to be listed by its name, as the IDs of its records are loaded with an additional query. Without the header, the group is empty.
+- An attribute has to be loaded as well, with `attributes=<ids>` or `allAttributes=true`, and is listed by its system name.
+- It works for a single record (`GET /api/Product/{id}`) the same way as for a list. The linked records of a list are loaded with one query per linked entity, so the number of queries does not depend on the number of records.
+- The group works for the link and multiple link fields of every entity that returns `_meta`. Attributes are available for the entities that have them (Base and Hierarchy types). Only the linked entities the user may read are returned.
 
 ---
 
@@ -1194,6 +1247,7 @@ The table below lists the currently known `_meta` categories. This list will gro
 |----------|---------------------------------------------------------------------------|---------|
 | `availableActions` | Always (when header is sent)                                         | Whether each action (edit, delete, stream, unlink, etc.) is available for the record |
 | `linkOptions` | When record has `Link` / `Multiple link` fields pointing to an entity with `color` | Full option objects (id, name, color, description) |
+| `linkedRecords` | When the `Meta-Linked-Fields` header lists link or multiple link fields or attributes | Full records of the linked fields, keyed by the field name |
 | `audit` | When a delegated session was involved                                     | Real actor and delegator for createdBy/modifiedBy |
 | `locked` | For the entities with field value locking enabled                        | Whether the locks are loaded and the lock of each field |
 | `state` | For the items of a cluster, in the linked records of the cluster          | Whether the item is consolidated and whether it is the golden record |

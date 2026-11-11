@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * AtroCore Software
  *
  * This source file is available under GNU General Public License version 3 (GPLv3).
@@ -9,21 +9,35 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Seeders;
+declare(strict_types=1);
 
-use Atro\Core\Templates\Repositories\ReferenceData;
+namespace Atro\AfterInstall;
 
-class StyleSeeder extends AbstractSeeder
+use Atro\Core\ModuleManager\AfterInstallInterface;
+use Espo\ORM\EntityManager;
+
+/**
+ * Creates the default styles of the user interface.
+ */
+class CreateStyles implements AfterInstallInterface
 {
+    public function __construct(private readonly EntityManager $entityManager)
+    {
+    }
+
+    public static function getSortOrder(): int
+    {
+        return 60;
+    }
+
     public function run(): void
     {
-        if (file_exists(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Style.json')) {
-            return;
-        }
+        foreach ($this->getDefaultStyles() as $data) {
+            $style = $this->entityManager->getRepository('Style')->get();
+            $style->set($data);
 
-        @mkdir(ReferenceData::DIR_PATH);
-        $styles = $this->getDefaultStyles();
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Style.json', json_encode($styles));
+            $this->entityManager->saveEntity($style);
+        }
     }
 
     private function getDefaultStyles(): array
@@ -57,10 +71,6 @@ class StyleSeeder extends AbstractSeeder
                 "error"                         => "#f2dede",
                 "customHeadCode"                => null,
                 "logo"                          => "client/modules/treo-core/img/core_logo_white.svg",
-                "createdAt"                     => date('Y-m-d H:i:s'),
-                "modifiedAt"                    => date('Y-m-d H:i:s'),
-                "createdById"                   => "1",
-                "createdByName"                 => "System",
             ],
             "light"   => [
                 "id"                            => "light",
@@ -90,10 +100,6 @@ class StyleSeeder extends AbstractSeeder
                 "error"                         => "#f2dede",
                 "customHeadCode"                => null,
                 "navbarStaticItemsHeight"       => 83,
-                "createdAt"                     => date('Y-m-d H:i:s'),
-                "modifiedAt"                    => date('Y-m-d H:i:s'),
-                "createdById"                   => "1",
-                "createdByName"                 => "System",
             ],
             "classic" => [
                 "id"                            => "classic",
@@ -122,10 +128,6 @@ class StyleSeeder extends AbstractSeeder
                 "information"                   => "#e0efff",
                 "error"                         => "#f2dede",
                 "customHeadCode"                => null,
-                "createdAt"                     => date('Y-m-d H:i:s'),
-                "modifiedAt"                    => date('Y-m-d H:i:s'),
-                "createdById"                   => "1",
-                "createdByName"                 => "System",
             ]
         ];
     }

@@ -54,7 +54,7 @@ class RateLimitMiddleware implements MiddlewareInterface
 
         $matchedRoute = $routeResult->getMatchedRoute();
         $options = $matchedRoute->getOptions()['rateLimit'] ?? null;
-        if ($options === null || !$this->getConfig()->get('isInstalled')) {
+        if ($options === null || !$this->getConfig()->isInstalled()) {
             return $handler->handle($request);
         }
 

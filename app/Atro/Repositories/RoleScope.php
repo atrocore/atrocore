@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\AclManager;
@@ -71,6 +72,26 @@ class RoleScope extends Base
         if (empty($this->getMetadata()->get("scopes.{$entity->get('name')}.hasAttribute"))) {
             $entity->set('createAttributeValueAction', null);
             $entity->set('deleteAttributeValueAction', null);
+        }
+
+        foreach (['create', 'edit', 'delete'] as $action) {
+            $attribute = "{$action}Action";
+
+            if (!$entity->isAttributeChanged($attribute) || in_array($entity->get($attribute), [null, 'no'], true)) {
+                continue;
+            }
+
+            if (empty($this->getMetadata()->get(['scopes', $entity->get('name'), "{$action}Disabled"]))) {
+                continue;
+            }
+
+            throw new BadRequest(
+                sprintf(
+                    $this->getLanguage()->translate('roleScopeActionDisabled', 'exceptions', 'RoleScope'),
+                    $this->getLanguage()->translate($attribute, 'fields', 'RoleScope'),
+                    $this->getLanguage()->translate($entity->get('name'), 'scopeNames')
+                )
+            );
         }
 
         parent::beforeSave($entity, $options);

@@ -95,6 +95,26 @@ class RequestHeaders
     }
 
     /**
+     * The names of the link and linkMultiple fields and attributes listed by the Meta-Linked-Fields header, whose
+     * records the linkedRecords meta group carries. The value * stands for the link fields and the link and
+     * linkMultiple attributes.
+     *
+     * @return string[]
+     */
+    public static function getRequestedLinkedFields(): array
+    {
+        $names = [];
+        foreach (explode(',', (string)self::get('Meta-Linked-Fields')) as $name) {
+            $name = trim($name);
+            if ($name !== '') {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
+    }
+
+    /**
      * The language the values have to be returned in: the Language header, or the language set for the current
      * process in $GLOBALS['languagePrism'].
      */

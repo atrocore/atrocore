@@ -118,6 +118,19 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 && (this.getUser().isAdmin() || this.getUser().isDataPrivacyAdmin());
         },
 
+        isActionAvailable: function (action) {
+            // the records of the entity cannot be edited or deleted by anybody
+            if (action === 'edit' && this.getMetadata().get(['scopes', this.model.name, 'editDisabled'])) {
+                return false;
+            }
+
+            if (action === 'delete' && this.getMetadata().get(['scopes', this.model.name, 'deleteDisabled'])) {
+                return false;
+            }
+
+            return !!this.model.get('_meta')?.availableActions?.[action];
+        },
+
         getActionList: function () {
             const scope = this.options.scope ?? this.model.name;
             const filters = this.getStorage().get('listQueryBuilder', scope);
@@ -158,7 +171,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             sortedActionKeys.forEach(actionName => {
                 if (actionName === 'quickRestore') {
                     if (filters && filters?.bool?.onlyDeleted === true) {
-                        if (this.model.get('_meta')?.availableActions?.delete) {
+                        if (this.isActionAvailable('delete')) {
                             list.push({
                                 action: 'quickRestore',
                                 label: 'Restore',
@@ -169,7 +182,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     }
                 } else if (actionName === 'deletePermanently') {
                     if (filters && filters?.bool?.onlyDeleted === true) {
-                        if (this.model.get('_meta')?.availableActions?.delete) {
+                        if (this.isActionAvailable('delete')) {
                             list.push({
                                 action: 'deletePermanently',
                                 label: 'deletePermanently',
@@ -187,7 +200,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         link: '#' + this.model.name + '/view/' + this.model.id
                     });
                 } else if (actionName === 'quickEdit') {
-                    if (this.model.get('_meta')?.availableActions?.edit) {
+                    if (this.isActionAvailable('edit')) {
                         list.push({
                             action: 'quickEdit',
                             label: 'Edit',
@@ -228,7 +241,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         });
                     }
                 } else if (actionName === 'quickRemove') {
-                    if (this.model.get('_meta')?.availableActions?.delete) {
+                    if (this.isActionAvailable('delete')) {
                         list.push({
                             action: 'quickRemove',
                             label: 'Remove',

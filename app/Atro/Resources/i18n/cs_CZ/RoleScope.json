@@ -21,5 +21,8 @@
     "own": "Vlastní",
     "no": "Ne",
     "yes": "Ano"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "Akci \"%1$s\" nelze povolit, protože je pro entitu \"%2$s\" zakázána."
   }
 }

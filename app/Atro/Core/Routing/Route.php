@@ -27,7 +27,6 @@ class Route
         public readonly array        $requestBody   = [],
         public readonly array        $responses     = [],
         public readonly array        $entities      = [],
-        public readonly bool         $installerOnly      = false,
         public readonly bool         $hidden             = false,
         public readonly bool         $skipActionHistory  = false,
         public readonly ?array       $rateLimit          = null,

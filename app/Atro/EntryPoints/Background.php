@@ -53,7 +53,7 @@ class Background extends AbstractEntryPoint
 
     protected function getBackground(): array
     {
-        if ($this->getConfig()->get('isInstalled')) {
+        if ($this->getConfig()->isInstalled()) {
             $backgrounds = $this->getConfig()->get('referenceData.Background', []);
             if (!empty($backgrounds)) {
                 $collection = $this->getEntityManager()->getRepository('File')

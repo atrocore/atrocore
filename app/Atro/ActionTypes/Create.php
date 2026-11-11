@@ -32,6 +32,11 @@ class Create extends AbstractAction
     {
         $action = $execution->get('action');
 
+        if (!empty($targetEntityName = $action->getSubtype()?->get('targetEntity'))) {
+            $actions = $action->get('type') === 'createOrUpdate' ? ['createDisabled', 'editDisabled'] : ['createDisabled'];
+            $this->validateEntityActionsEnabled($action, $targetEntityName, $actions);
+        }
+
         if (!empty($searchEntityName = $action->getSubtype()?->get('searchEntity'))) {
             /** @var \Atro\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityName);

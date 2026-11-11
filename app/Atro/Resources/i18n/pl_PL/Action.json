@@ -85,6 +85,7 @@
   },
   "exceptions": {
     "expressionCannotBeEmpty": "Wyrażenie nie może być puste.",
-    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta."
+    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta.",
+    "actionTypeDisabledForTargetEntity": "Typu akcji \"%1$s\" nie można użyć, ponieważ ta akcja jest wyłączona dla encji \"%2$s\"."
   }
 }

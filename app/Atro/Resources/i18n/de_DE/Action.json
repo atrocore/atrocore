@@ -89,6 +89,7 @@
   },
   "exceptions": {
     "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein.",
-    "forEditModeOnly": "Die Aktion '%s' ist nur im Bearbeitungsmodus verfügbar und kann hier nicht verwendet werden."
+    "forEditModeOnly": "Die Aktion '%s' ist nur im Bearbeitungsmodus verfügbar und kann hier nicht verwendet werden.",
+    "actionTypeDisabledForTargetEntity": "Der Aktionstyp \"%1$s\" kann nicht verwendet werden, da diese Aktion für die Entität \"%2$s\" deaktiviert ist."
   }
 }

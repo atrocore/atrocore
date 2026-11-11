@@ -192,13 +192,16 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         getCreateAttributes: function () {
             let attributes = {};
+            let presetAttributeList = [];
 
             // prepare attributes by where filter
             (this.model?.defs?.fields?.[this.name]?.where || []).forEach(item => {
                 if (item.condition === 'AND' && item.rules?.[0]) {
                     item.rules.forEach(rule => {
+                        const type = this.getMetadata().get(`entityDefs.${this.foreignScope}.fields.${rule.field}.type`);
+                        const values = Array.isArray(rule.value) ? rule.value : [rule.value];
+
                         if (rule.operator === 'linked_with') {
-                            let type = this.getMetadata().get(`entityDefs.${this.foreignScope}.fields.${rule.field}.type`);
                             let entityName = this.getMetadata().get(`entityDefs.${this.foreignScope}.links.${rule.field}.entity`);
 
                             this.ajaxGetRequest(
@@ -221,6 +224,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                                     if (type === 'link') {
                                         attributes[rule.field + 'Id'] = res.list[0]['id'];
                                         attributes[rule.field + 'Name'] = res.list[0]['name'];
+                                        presetAttributeList.push(rule.field + 'Id');
                                     } else if (type === 'linkMultiple') {
                                         let names = {};
                                         res.list.forEach(item => {
@@ -228,13 +232,30 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                                         })
                                         attributes[rule.field + 'Ids'] = Object.keys(names);
                                         attributes[rule.field + 'Names'] = names;
+                                        presetAttributeList.push(rule.field + 'Ids');
                                     }
                                 }
                             });
+                        } else if (['in', 'equal'].includes(rule.operator) && ['enum', 'varchar'].includes(type)) {
+                            // a filter that allows one value only gives the value to the new record
+                            if (values.length === 1 && values[0] !== null && values[0] !== '') {
+                                attributes[rule.field] = values[0];
+                                presetAttributeList.push(rule.field);
+                            }
+                        } else if (rule.operator === 'array_any_of' && type === 'multiEnum') {
+                            if (values.length > 0) {
+                                attributes[rule.field] = values;
+                                presetAttributeList.push(rule.field);
+                            }
                         }
                     });
                 }
             });
+
+            // the attributes that the filter has set, for the conditional properties of the new record
+            if (presetAttributeList.length) {
+                attributes._presetAttributeList = presetAttributeList;
+            }
 
             return attributes;
         },

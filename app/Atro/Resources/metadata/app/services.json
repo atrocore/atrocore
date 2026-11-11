@@ -1,6 +1,5 @@
 {
   "Global": "\\Atro\\Services\\GlobalService",
-  "Installer": "\\Atro\\Services\\Installer",
   "Avatar": "\\Atro\\Services\\Avatar",
   "ConnectionTypeAtrocore": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypePdoSql": "\\Atro\\Services\\ConnectionSubtype",

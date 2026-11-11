@@ -123,6 +123,12 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     meta: auditMeta || null,
                 });
 
+                if (this.mode === 'detail' && !this.options.disableToggleVisibility) {
+                    this.toggleVisibility();
+                }
+
+                this.conditionStates = this.buildConditionStates();
+
                 return;
             }
 

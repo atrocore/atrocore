@@ -18,6 +18,7 @@ use Atro\Core\Container;
 use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\ModuleManager\ModuleLifecycle;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Espo\ORM\EntityManager;
@@ -69,8 +70,8 @@ class PostUpdate
             // update modules list
             self::updateModulesList();
 
-            // copy modules event
-            self::copyModulesEvent();
+            // copy the post-delete steps of the modules
+            self::copyModulesAfterDeleteSteps();
 
             // copy modules migrations
             self::copyModulesMigrations();
@@ -279,46 +280,32 @@ class PostUpdate
     }
 
     /**
-     * Copy modules event class
+     * Copies the AfterDelete steps of the modules, so that they can be run after a module is removed
      */
-    private static function copyModulesEvent(): void
+    private static function copyModulesAfterDeleteSteps(): void
     {
         if (self::isInstalled() && !self::isChanged()) {
             return;
         }
 
-        self::renderLine('Copying post-install & post-delete scripts for modules');
-        foreach (self::getModules() as $module) {
-            // prepare class name
-            $className = "\\" . $module . "\\Event";
+        self::renderLine('Copying post-delete steps of the modules');
 
-            if (class_exists($className)) {
-                // get src
-                $src = (new \ReflectionClass($className))->getFileName();
+        foreach (self::getModules() as $id) {
+            $dest = ModuleLifecycle::AFTER_DELETE_COPY_PATH . "/$id";
 
-                if (!file_exists($src)) {
-                    continue 1;
-                }
+            // the copy of a removed module is kept: its steps are run from it
+            self::removeDir($dest);
 
-                // prepare dest
-                $dest = "data/module-manager-events/{$module}";
-
-                // create dir
-                self::createDir($dest);
-
-                // prepare dest
-                $dest .= "/Event.php";
-
-                // delete old
-                if (file_exists($dest)) {
-                    unlink($dest);
-                }
-
-                // copy
-                if (file_exists($src)) {
-                    copy($src, $dest);
-                }
+            $src = dirname((new \ReflectionClass("\\$id\\Module"))->getFileName()) . '/' . ModuleLifecycle::AFTER_DELETE_DIR;
+            if (!is_dir($src)) {
+                continue;
             }
+
+            if (!is_dir($dest) && !mkdir($dest, 0777, true) && !is_dir($dest)) {
+                throw new \RuntimeException("Failed to create the folder '$dest'.");
+            }
+
+            self::copyDir($src, $dest . '/' . ModuleLifecycle::AFTER_DELETE_DIR);
         }
     }
 
@@ -512,25 +499,22 @@ class PostUpdate
         // get diff
         $composerDiff = self::getComposerDiff();
 
-        // call afterInstall event
+        /** @var ModuleLifecycle $lifecycle */
+        $lifecycle = self::$container->get(ModuleLifecycle::class);
+
         if (!empty($composerDiff['install'])) {
             // rebuild
             self::$container->get('dataManager')->rebuild();
 
-            // run
             foreach ($composerDiff['install'] as $row) {
-                self::renderLine('Calling post-install script for ' . $row['id']);
-                self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterInstall();
+                self::renderLine('Calling post-install steps for ' . $row['id']);
+                $lifecycle->afterInstall($row['id']);
             }
         }
 
-        // call afterDelete event
-        if (!empty($composerDiff['delete'])) {
-            // run
-            foreach ($composerDiff['delete'] as $row) {
-                self::renderLine('Calling post-delete script for ' . $row['id']);
-                self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterDelete();
-            }
+        foreach ($composerDiff['delete'] as $row) {
+            self::renderLine('Calling post-delete steps for ' . $row['id']);
+            $lifecycle->afterDelete($row['id']);
         }
     }
 
@@ -918,8 +902,11 @@ class PostUpdate
         return AbstractConsole::getPhpBinPath(self::$container->get('config'));
     }
 
+    /**
+     * Until the installation is complete, only the files of the system are updated.
+     */
     private static function isInstalled(): bool
     {
-        return Config::isInstalled();
+        return self::$container->get('config')->isInstalled();
     }
 }

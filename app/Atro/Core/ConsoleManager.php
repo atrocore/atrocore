@@ -96,7 +96,7 @@ class ConsoleManager
             "list"                                      => Console\ListCommand::class,
             "regenerate measures"                       => Console\RegenerateMeasures::class,
             "refresh translations"                      => Console\RefreshTranslations::class,
-            "install demo-project"                      => Console\InstallDemoProject::class,
+            "create admin <username>"                   => Console\CreateAdmin::class,
             "clear cache"                               => Console\ClearCache::class,
             "sql diff --show"                           => Console\SqlDiff::class,
             "sql diff --run"                            => Console\SqlDiffRun::class,
@@ -117,7 +117,7 @@ class ConsoleManager
             "rebuild hierarchy routes for <entityName>" => Console\RebuildHierarchyRoutesForEntity::class,
         ];
 
-        if ($this->getConfig()->get('isInstalled')) {
+        if ($this->getConfig()->isInstalled()) {
             foreach ($this->getModuleManager()->getModules() as $module) {
                 $commands = array_merge($commands, $module->getConsoleCommands());
             }

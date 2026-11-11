@@ -56,7 +56,6 @@ class ServiceManagerConfig
         'layoutManager'            => \Atro\Core\LayoutManager::class,
         'metadata'                 => \Atro\Core\Utils\Metadata::class,
         'realtimeManager'          => \Atro\Core\RealtimeManager::class,
-        'seederFactory'            => \Atro\Core\SeederFactory::class,
         'condition'                => \Atro\Core\ConditionChecker::class,
         'matchingManager'          => \Atro\Core\MatchingManager::class,
         'uniqueIndexDescriber'     => \Atro\Core\Utils\UniqueIndexDescriber::class,

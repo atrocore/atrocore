@@ -74,6 +74,25 @@ Espo.define('views/selection/record/detail/compare', [
                     parentModelName: this.selectionModel.name,
                     relationName: this.relationName
                 })
+
+                this.listenTo(model, 'sync after:inlineEditSave', () => {
+                    this.ajaxGetRequest('entityRelation', {
+                        entityName: this.selectionModel.name,
+                        id: this.selectionModel.id,
+                        link: this.relationName,
+                        select: 'entityName,entityId',
+                        collectionOnly: true,
+                        where: [{type: 'equals', attribute: 'id', value: model.item.id}]
+                    }, {metaContext: 'list'}).then(result => {
+                        const data = (result.list || [])[0];
+                        if (!data) {
+                            return;
+                        }
+
+                        model.item.set('_meta', data._meta);
+                        this.getView(model.id + 'Action')?.reRender();
+                    });
+                });
             });
 
             this.listenTo(this, 'refresh', () => {

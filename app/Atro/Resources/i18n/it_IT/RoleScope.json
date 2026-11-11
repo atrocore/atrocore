@@ -21,5 +21,8 @@
     "own": "Proprietario",
     "no": "No",
     "yes": "Sì"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "L'azione \"%1$s\" non può essere consentita, perché è disabilitata per l'entità \"%2$s\"."
   }
 }

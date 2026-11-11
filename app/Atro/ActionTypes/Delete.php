@@ -27,6 +27,8 @@ class Delete extends AbstractAction
         $deletePermanently = $action->getSubtype()?->get('deletePermanently') ?? false;
 
         if (property_exists($input, 'where')) {
+            $this->validateEntityActionsEnabled($action, (string)$action->getSubtype()?->get('searchEntity'), ['deleteDisabled']);
+
             $res = $this->getServiceFactory()->create($action->getSubtype()?->get('searchEntity'))->massRemove([
                 'where'       => json_decode(json_encode($input->where), true),
                 'permanently' => $deletePermanently
@@ -58,6 +60,8 @@ class Delete extends AbstractAction
             $whereJson = $this->container->get('twig')->renderTemplate($whereJson, $templateData);
             $where = @json_decode($whereJson, true);
 
+            $this->validateEntityActionsEnabled($action, (string)$action->getSubtype()?->get('searchEntity'), ['deleteDisabled']);
+
             $res = $this->getServiceFactory()->create($action->getSubtype()?->get('searchEntity'))->massRemove([
                 'where'       => $where,
                 'permanently' => $deletePermanently
@@ -69,6 +73,8 @@ class Delete extends AbstractAction
                 throw new BadRequest('Action can be executed only from Source Entity.');
             }
         }
+
+        $this->validateEntityActionsEnabled($action, $sourceEntity->getEntityType(), ['deleteDisabled']);
 
         if ($deletePermanently) {
             return $this->getServiceFactory()->create($sourceEntity->getEntityType())->deleteEntityPermanently($sourceEntity->get('id'));

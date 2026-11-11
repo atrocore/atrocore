@@ -131,7 +131,11 @@ class LinkType extends AbstractFieldType
                             ->fetchAssociative();
 
 
-                        $entity->set($name . 'Name', $referenceItem[$localizedNameColumn] ?? $referenceItem[$foreignName] ?? null);
+                        // the row is keyed by the database columns, not by the field names
+                        $localizedValue = $referenceItem[Util::toUnderScore($localizedNameColumn)] ?? null;
+                        $foreignValue = $referenceItem[Util::toUnderScore($foreignName)] ?? null;
+
+                        $entity->set($name . 'Name', !empty(trim((string)$localizedValue)) ? $localizedValue : $foreignValue);
                     } catch (\Throwable $e) {
                         // ignore all
                     }

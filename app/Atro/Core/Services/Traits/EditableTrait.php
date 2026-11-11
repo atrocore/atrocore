@@ -840,6 +840,11 @@ trait EditableTrait
 
     public function updateEntity(string $id, \stdClass $data): bool
     {
+        // the records of such an entity cannot be edited at all
+        if (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'editDisabled']))) {
+            throw new Forbidden($this->getInjection('language')->translate('recordCannotBeEdited', 'exceptions'));
+        }
+
         $event = $this
             ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType(), 'service' => $this, 'result' => null]));
 

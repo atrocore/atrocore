@@ -14,8 +14,11 @@ declare(strict_types=1);
 namespace Atro\Core\Routing;
 
 use Atro\Core\DataManager;
+use Atro\Core\EntityTypeHandlers\CreateHandler;
+use Atro\Core\EntityTypeHandlers\DeleteHandler;
+use Atro\Core\EntityTypeHandlers\ListKanbanHandler;
+use Atro\Core\EntityTypeHandlers\UpdateHandler;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 
 /**
@@ -41,7 +44,6 @@ class RouteCompiler
         private readonly Metadata        $metadata,
         private readonly HandlerRegistry $handlerRegistry,
         private readonly ModuleManager   $moduleManager,
-        private readonly Config          $config,
     ) {
     }
 
@@ -115,14 +117,28 @@ class RouteCompiler
                 }
 
                 // Skip the create route when creation is disabled for the entity.
-                if ($entry['class'] === \Atro\Core\EntityTypeHandlers\CreateHandler::class
+                if ($entry['class'] === CreateHandler::class
                     && ($this->metadata->get("scopes.$entityName.createDisabled") || $this->metadata->get("clientDefs.$entityName.createDisabled"))
                 ) {
                     continue;
                 }
 
+                // Skip the update route when editing is disabled for the entity.
+                if ($entry['class'] === UpdateHandler::class
+                    && $this->metadata->get("scopes.$entityName.editDisabled")
+                ) {
+                    continue;
+                }
+
+                // Skip the delete route when deleting is disabled for the entity.
+                if ($entry['class'] === DeleteHandler::class
+                    && $this->metadata->get("scopes.$entityName.deleteDisabled")
+                ) {
+                    continue;
+                }
+
                 // Only register the kanban list route for entities that have kanban enabled.
-                if ($entry['class'] === \Atro\Core\EntityTypeHandlers\ListKanbanHandler::class
+                if ($entry['class'] === ListKanbanHandler::class
                     && !$this->metadata->get("clientDefs.$entityName.kanbanViewMode")
                 ) {
                     continue;
@@ -162,10 +178,6 @@ class RouteCompiler
                 $routeAttr = $attrObj->newInstance();
 
                 if (empty($routeAttr->responses)) {
-                    continue;
-                }
-
-                if ($routeAttr->installerOnly && $this->config->get('isInstalled', false)) {
                     continue;
                 }
 

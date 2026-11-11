@@ -26,6 +26,11 @@ trait DeletableTrait
 {
     public function deleteEntity(string $id): bool
     {
+        // the records of such an entity cannot be deleted at all
+        if (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'deleteDisabled']))) {
+            throw new Forbidden($this->getInjection('language')->translate('recordCannotBeDeleted', 'exceptions'));
+        }
+
         $id = $this
             ->dispatchEvent('beforeDeleteEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');

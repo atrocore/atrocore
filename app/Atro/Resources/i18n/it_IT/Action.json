@@ -85,6 +85,7 @@
   },
   "exceptions": {
     "expressionCannotBeEmpty": "L'espressione non può essere vuota.",
-    "forEditModeOnly": "L'azione '%s' è disponibile solo in modalità di modifica e non può essere utilizzata qui."
+    "forEditModeOnly": "L'azione '%s' è disponibile solo in modalità di modifica e non può essere utilizzata qui.",
+    "actionTypeDisabledForTargetEntity": "Il tipo di azione \"%1$s\" non può essere utilizzato, perché questa azione è disabilitata per l'entità \"%2$s\"."
   }
 }

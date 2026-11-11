@@ -666,12 +666,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupActionItems: function () {
-            this.buttonList = _.clone(this._initialButtonList);
-            this.buttonEditList = _.clone(this._initialButtonEditList);
-            this.dropdownItemList = _.clone(this._initialDropdownItemList);
-            this.dropdownEditItemList = _.clone(this._initialDropdownEditItemList);
-            this.additionalButtons = _.clone(this._initialAdditionalButtons);
-            this.additionalEditButtons = _.clone(this._initialAdditionalEditButtons);
+            this.buttonList = Espo.Utils.cloneDeep(this._initialButtonList);
+            this.buttonEditList = Espo.Utils.cloneDeep(this._initialButtonEditList);
+            this.dropdownItemList = Espo.Utils.cloneDeep(this._initialDropdownItemList);
+            this.dropdownEditItemList = Espo.Utils.cloneDeep(this._initialDropdownEditItemList);
+            this.additionalButtons = Espo.Utils.cloneDeep(this._initialAdditionalButtons);
+            this.additionalEditButtons = Espo.Utils.cloneDeep(this._initialAdditionalEditButtons);
 
             if (this.getMetadata().get(['scopes', this.model.name, 'disabled']) || this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Archive') {
                 this.buttonList = []
@@ -1569,10 +1569,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.buttonList = this.options.buttonList || this.buttonList;
             this.dropdownItemList = this.options.dropdownItemList || this.dropdownItemList;
 
-            this.buttonList = _.clone(this.buttonList);
-            this.buttonEditList = _.clone(this.buttonEditList);
-            this.dropdownItemList = _.clone(this.dropdownItemList);
-            this.dropdownEditItemList = _.clone(this.dropdownEditItemList);
+            this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
+            this.buttonEditList = Espo.Utils.cloneDeep(this.buttonEditList);
+            this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
+            this.dropdownEditItemList = Espo.Utils.cloneDeep(this.dropdownEditItemList);
 
             this.returnUrl = this.options.returnUrl || this.returnUrl;
             this.returnDispatchParams = this.options.returnDispatchParams || this.returnDispatchParams;
@@ -1678,12 +1678,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 label: 'Remove'
             }];
 
-            this._initialButtonList = _.clone(this.buttonList);
-            this._initialButtonEditList = _.clone(this.buttonEditList);
-            this._initialDropdownItemList = _.clone(this.dropdownItemList);
-            this._initialDropdownEditItemList = _.clone(this.dropdownEditItemList);
-            this._initialAdditionalButtons = _.clone(this.additionalButtons);
-            this._initialAdditionalEditButtons = _.clone(this.additionalEditButtons);
+            this._initialButtonList = Espo.Utils.cloneDeep(this.buttonList);
+            this._initialButtonEditList = Espo.Utils.cloneDeep(this.buttonEditList);
+            this._initialDropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
+            this._initialDropdownEditItemList = Espo.Utils.cloneDeep(this.dropdownEditItemList);
+            this._initialAdditionalButtons = Espo.Utils.cloneDeep(this.additionalButtons);
+            this._initialAdditionalEditButtons = Espo.Utils.cloneDeep(this.additionalEditButtons);
 
             this.isNew = this.model.isNew()
 

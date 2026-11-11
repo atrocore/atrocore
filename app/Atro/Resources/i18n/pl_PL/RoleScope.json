@@ -21,5 +21,8 @@
     "own": "Własny",
     "no": "Nie",
     "yes": "Tak"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "Akcji \"%1$s\" nie można zezwolić, ponieważ jest wyłączona dla encji \"%2$s\"."
   }
 }

@@ -21,5 +21,8 @@
     "own": "Eigene/s/r",
     "no": "Nein",
     "yes": "Ja"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "Die Aktion \"%1$s\" kann nicht erlaubt werden, da diese Aktion für die Entität \"%2$s\" deaktiviert ist."
   }
 }

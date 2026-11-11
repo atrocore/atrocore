@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager', 'conditions-checker'], function (Dep, SearchManager, ConditionsChecker) {
+Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager', 'conditions-checker', 'views/fields/link'], function (Dep, SearchManager, ConditionsChecker, Link) {
 
     return Dep.extend({
 
@@ -817,6 +817,15 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 attributes.teamsIds = this.model.get('teamsIds') || null;
                 attributes.teamsNames = this.model.get('teamsNames') || null;
             }
+
+            // a new record starts with the values of the filter of the link, as for a link field
+            _.extend(attributes, Link.prototype.getCreateAttributes.call({
+                model: this.model,
+                name: link,
+                foreignScope: scope,
+                getMetadata: () => this.getMetadata(),
+                ajaxGetRequest: (...args) => this.ajaxGetRequest(...args)
+            }));
 
             this.model.trigger('prepareAttributesForCreateRelated', attributes, link, preparedAttributes => {
                 attributes = preparedAttributes;
