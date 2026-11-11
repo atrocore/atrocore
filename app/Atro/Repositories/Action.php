@@ -57,6 +57,7 @@ class Action extends Base
             $entity->set('updateType', 'script');
         }
 
+        $this->validateDisabledTargetActions($entity);
         $this->validateConditionsExpression($entity);
     }
 
@@ -90,6 +91,49 @@ class Action extends Base
             $this->getConfig()->save();
 
             DataManager::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
+        }
+    }
+
+    /**
+     * The action can not be configured if the relevant action is disabled for the target entity, e.g. via "createDisabled"
+     *
+     * @param ActionEntity $action
+     *
+     * @return void
+     * @throws BadRequest
+     */
+    protected function validateDisabledTargetActions(ActionEntity $action): void
+    {
+        $disabledFlags = [
+            'create'         => ['createDisabled'],
+            'createOrUpdate' => ['createDisabled', 'editDisabled'],
+            'update'         => ['editDisabled'],
+            'delete'         => ['deleteDisabled'],
+        ];
+
+        $type = $action->get('type');
+        $targetEntity = $action->get('targetEntity');
+
+        if (empty($disabledFlags[$type]) || empty($targetEntity)) {
+            return;
+        }
+
+        if (!$action->isAttributeChanged('type') && !$action->isAttributeChanged('targetEntity')) {
+            return;
+        }
+
+        foreach ($disabledFlags[$type] as $flag) {
+            if (empty($this->getMetadata()->get(['scopes', $targetEntity, $flag]))) {
+                continue;
+            }
+
+            throw new BadRequest(
+                sprintf(
+                    $this->translateException('actionTypeDisabledForTargetEntity'),
+                    $this->getLanguage()->translateOption($type, 'type', 'Action'),
+                    $this->getLanguage()->translate($targetEntity, 'scopeNames')
+                )
+            );
         }
     }
 

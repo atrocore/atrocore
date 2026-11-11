@@ -16,6 +16,7 @@ namespace Atro\Core\Templates\Services;
 use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Atro\Core\Services\AbstractRecordService;
+use Atro\Core\Services\Interfaces\DeletableInterface;
 use Atro\Core\Services\Interfaces\EditableInterface;
 use Atro\Core\Services\Interfaces\LinkableInterface;
 use Atro\Core\Services\Interfaces\SortableInterface;
@@ -150,6 +151,34 @@ class Subtype extends AbstractRecordService implements
 
         // the supertype record is linked by the repository and the subtype is defined by the entity itself
         unset($data->supertypeId, $data->supertypeName, $data->type);
+    }
+
+    public function putAclMeta(Entity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        // the subtype record is deleted together with its supertype record
+        $entity->setAvailableAction('delete', $this->canDeleteSupertypeRecord($entity));
+    }
+
+    protected function canDeleteSupertypeRecord(Entity $entity): bool
+    {
+        $supertypeService = $this->getSupertypeService();
+        if (!$supertypeService instanceof DeletableInterface || empty($entity->get('supertypeId'))) {
+            return false;
+        }
+
+        if (!empty($this->getMetadata()->get(['scopes', $this->getSupertypeName(), 'deleteDisabled']))) {
+            return false;
+        }
+
+        if ($this->getUser()->isAdmin()) {
+            return true;
+        }
+
+        $supertypeRecord = $this->getEntityManager()->getRepository($this->getSupertypeName())->get($entity->get('supertypeId'));
+
+        return !empty($supertypeRecord) && $this->getAcl()->check($supertypeRecord, 'delete');
     }
 
     public function prepareEntityForOutput(Entity $entity)

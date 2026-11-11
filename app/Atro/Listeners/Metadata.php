@@ -468,11 +468,28 @@ class Metadata extends AbstractMetadataListener
                 ];
             }
 
-            // the records of the entity cannot be created, so there is no access right to create them
-            if (!empty($scopeDefs['createDisabled'])) {
+            // the records of a supertype cannot be created directly, only via its subtypes
+            if (!empty($scopeDefs['hasSubtypes'])) {
+                $data['scopes'][$scope]['createDisabled'] = $scopeDefs['createDisabled'] = true;
+            }
+
+            // the records of the entity cannot be created, edited or deleted, so there is no access right for such actions
+            $disabledActions = [];
+            foreach (['createDisabled' => 'create', 'editDisabled' => 'edit', 'deleteDisabled' => 'delete'] as $key => $action) {
+                // the subtypes have the access rights of the supertype, so the create right is needed to create the subtype records
+                if ($action === 'create' && !empty($scopeDefs['hasSubtypes'])) {
+                    continue;
+                }
+
+                if (!empty($scopeDefs[$key])) {
+                    $disabledActions[] = $action;
+                }
+            }
+
+            if (!empty($disabledActions)) {
                 $data['scopes'][$scope]['aclActionList'] = array_values(array_diff(
                     $scopeDefs['aclActionList'] ?? \Atro\Repositories\Role::ACTIONS,
-                    ['create']
+                    $disabledActions
                 ));
             }
         }

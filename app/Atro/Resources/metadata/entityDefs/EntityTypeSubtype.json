@@ -14,6 +14,14 @@
           ]
         }
       }
+    },
+    "createDisabled": {
+      "type": "bool",
+      "default": false
+    },
+    "editDisabled": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

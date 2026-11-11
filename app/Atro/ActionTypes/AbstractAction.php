@@ -253,6 +253,35 @@ abstract class AbstractAction implements TypeInterface
         return $this->container->get('actionManager');
     }
 
+    /**
+     * The records of the entity cannot be handled by the action if the relevant action is disabled for the entity, e.g. via "createDisabled"
+     *
+     * @param Entity $action
+     * @param string $entityType
+     * @param array  $flags e.g. ['createDisabled']
+     *
+     * @return void
+     * @throws BadRequest
+     */
+    protected function validateEntityActionsEnabled(Entity $action, string $entityType, array $flags): void
+    {
+        foreach ($flags as $flag) {
+            if (empty($this->getMetadata()->get(['scopes', $entityType, $flag]))) {
+                continue;
+            }
+
+            $language = $this->container->get('language');
+
+            throw new BadRequest(
+                sprintf(
+                    $language->translate('actionTypeDisabledForTargetEntity', 'exceptions', 'Action'),
+                    $language->translateOption((string)$action->get('type'), 'type', 'Action'),
+                    $language->translate($entityType, 'scopeNames')
+                )
+            );
+        }
+    }
+
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');

@@ -91,6 +91,14 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.removeDisabled = true;
             }
 
+            if (this.model && this.getMetadata().get(['scopes', this.model.name, 'editDisabled'])) {
+                this.editDisabled = true;
+            }
+
+            if (this.model && this.getMetadata().get(['scopes', this.model.name, 'deleteDisabled'])) {
+                this.removeDisabled = true;
+            }
+
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
             this.layoutName = this.options.layoutName || this.layoutName;
