@@ -83,6 +83,8 @@ Authorization-Token: ***************
 
 > **Note:** The API may still return some additional fields, even if they aren't included in your `select` list. These are typically mandatory fields required by the backend or automatically included virtual fields.
 
+> **Note:** To select a link field, name its attributes: `<field>Id` and `<field>Name` for a link field, `<field>Ids` and `<field>Names` for a multiple link field. Naming the field itself (`select=id,<field>`) returns nothing for it. The full linked records are requested with the [`linkedRecords`](#full-records-of-linked-fields-the-linkedrecords-group) meta group.
+
 -----
 
 ###  Pagination
@@ -982,7 +984,7 @@ Ask only for the categories your client uses: `availableActions`, for example, r
 
 #### Full Records of Linked Fields: the `linkedRecords` Group
 
-By default, a link field returns only the ID and the name of the linked record (`brandId`, `brandName`), and a multiple link field returns `<field>Ids` and `<field>Names`. The `linkedRecords` group adds the full linked records, with all their fields and translations, to `_meta.linkedRecords`. The fields are listed by the `Meta-Linked-Fields` header, a comma-separated list of field names and attribute system names:
+Without `select`, a link field returns only the ID and the name of the linked record (`<field>Id`, `<field>Name`), and a multiple link field returns `<field>Ids` and `<field>Names`. With `select`, these attributes have to be named: `select=id,<field>Id,<field>Name`. Naming the field itself (`select=id,<field>`) returns nothing for it. The `linkedRecords` group adds the full linked records, with all their fields and translations, to `_meta.linkedRecords`. The fields are listed by the `Meta-Linked-Fields` header, a comma-separated list of field names and attribute system names:
 
 ```http
 GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j HTTP/1.1
