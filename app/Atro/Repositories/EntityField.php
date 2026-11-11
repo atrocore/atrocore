@@ -535,7 +535,6 @@ class EntityField extends ReferenceData
                     if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
                         $hasDefault = !empty($entity->get('defaultFrom')) || !empty($entity->get('defaultTo'));
                     } elseif ($fieldType === 'bool') {
-                        // false is a valid default value of a bool field
                         $hasDefault = $entity->get('default') !== null;
                     } else {
                         $hasDefault = !empty($entity->get('default'));
