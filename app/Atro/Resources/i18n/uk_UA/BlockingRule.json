@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "matching": "Зіставлення",
+    "blockingRuleSet": "Набір",
+    "blockingRules": "Правила блокування",
+    "operator": "Оператор",
+    "attribute": "Атрибут",
+    "matchedWhereExpression": "Вираз відповідності where"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Поля",
+      "attributes": "Атрибути"
+    }
+  },
+  "options": {
+    "type": {
+      "fieldEqual": "Поле рівне",
+      "fieldSimilar": "Поле схоже",
+      "fieldContains": "Поле містить",
+      "set": "Набір",
+      "expression": "Вираз"
+    },
+    "operator": {
+      "and": "AND",
+      "or": "OR"
+    }
+  },
+  "exceptions": {
+    "notValidMatchingActivation": "Правило блокування можна змінювати лише для неактивного зіставлення.",
+    "notValidMatching": "Зіставлення недійсне",
+    "notValidMatchingRuleSet": "Набір правил блокування недійсний",
+    "notValidFieldType": "Тип поля не підтримується обраним типом правила.",
+    "notValidAttributeType": "Тип атрибута не підтримується обраним типом правила.",
+    "expressionCannotBeEmpty": "Вираз не може бути порожнім."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису). Повинен повертати масив умови where, що описує, які головні записи вважати кандидатами - ключі це назви полів, значення це те, з чим порівнювати (оператори можна вбудовувати в ключ, напр. `field>`, `field*`, а групи `OR`/`AND` можна вкладати для складніших умов) - напр. {nameFrFr: stageEntity.get('name')} знаходить головні записи, у яких nameFrFr дорівнює name вихідного запису."
+  }
+}

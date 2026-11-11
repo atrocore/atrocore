@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "fieldDefs": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "field": {
+      "type": "enum",
+      "view": "views/matching-rule/fields/entity-field",
+      "required": true
+    },
+    "attribute": {
+      "type": "link",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "links": {
+    "attribute": {
+      "type": "belongsTo",
+      "entity": "Attribute",
+      "layoutRelationshipsDisabled": true
+    }
+  }
+}

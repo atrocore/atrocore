@@ -164,7 +164,18 @@
     "AttributeTypeLinkMultiple": "Attribute: Multiple link",
     "AttributeTypeFile": "Attribute: File",
     "AttributeTypeArray": "Attribute: Array",
-    "AttributeTypeComposite": "Attribute: Composite"
+    "AttributeTypeComposite": "Attribute: Composite",
+    "BlockingRule": "Blocking Rule",
+    "MatchingRuleTypeFieldEqual": "Matching Rule: Field is Equal",
+    "MatchingRuleTypeFieldSimilar": "Matching Rule: Field is Similar",
+    "MatchingRuleTypeFieldContains": "Matching Rule: Field Contains",
+    "MatchingRuleTypeSet": "Matching Rule: Set",
+    "MatchingRuleTypeExpression": "Matching Rule: Expression",
+    "BlockingRuleTypeFieldEqual": "Blocking Rule: Field is Equal",
+    "BlockingRuleTypeFieldSimilar": "Blocking Rule: Field is Similar",
+    "BlockingRuleTypeFieldContains": "Blocking Rule: Field Contains",
+    "BlockingRuleTypeSet": "Blocking Rule: Set",
+    "BlockingRuleTypeExpression": "Blocking Rule: Expression"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Software Packages",
@@ -318,7 +329,18 @@
     "AttributeTypeLinkMultiple": "Attribute: Multiple link",
     "AttributeTypeFile": "Attribute: File",
     "AttributeTypeArray": "Attribute: Array",
-    "AttributeTypeComposite": "Attribute: Composite"
+    "AttributeTypeComposite": "Attribute: Composite",
+    "BlockingRule": "Blocking Rules",
+    "MatchingRuleTypeFieldEqual": "Matching Rule: Field is Equal",
+    "MatchingRuleTypeFieldSimilar": "Matching Rule: Field is Similar",
+    "MatchingRuleTypeFieldContains": "Matching Rule: Field Contains",
+    "MatchingRuleTypeSet": "Matching Rule: Set",
+    "MatchingRuleTypeExpression": "Matching Rule: Expression",
+    "BlockingRuleTypeFieldEqual": "Blocking Rule: Field is Equal",
+    "BlockingRuleTypeFieldSimilar": "Blocking Rule: Field is Similar",
+    "BlockingRuleTypeFieldContains": "Blocking Rule: Field Contains",
+    "BlockingRuleTypeSet": "Blocking Rule: Set",
+    "BlockingRuleTypeExpression": "Blocking Rule: Expression"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
@@ -1730,6 +1752,16 @@
     "AttributeTypeUrl": "A web address that can have its own value for each language, e.g. https://example.com/de.",
     "ConnectionTypePsql": "A relational database that also keeps JSON values as structured data, so tables and documents can be combined in one query.",
     "ConnectionTypeMsql": "A relational database from Microsoft, common in enterprise systems and reliable under large transactional workloads.",
-    "ConnectionTypeVertica": "Reads large tables fast thanks to column storage."
+    "ConnectionTypeVertica": "Reads large tables fast thanks to column storage.",
+    "MatchingRuleTypeFieldEqual": "Scores the candidate when the values of the field are equal.",
+    "MatchingRuleTypeFieldSimilar": "Scores the candidate when the values of the field are equal regardless of case and spaces.",
+    "MatchingRuleTypeFieldContains": "Scores the candidate when its value of the field contains the value of the record.",
+    "MatchingRuleTypeSet": "Combines several rules: AND sums their scores, OR takes the score of the first rule that matches.",
+    "MatchingRuleTypeExpression": "Scores the candidate by an ExpressionLanguage expression.",
+    "BlockingRuleTypeFieldEqual": "Selects the candidates whose value of the field is equal.",
+    "BlockingRuleTypeFieldSimilar": "Selects the candidates whose value of the field is equal regardless of case and spaces.",
+    "BlockingRuleTypeFieldContains": "Selects the candidates whose value of the field contains the value of the record.",
+    "BlockingRuleTypeSet": "Combines several rules with AND or OR.",
+    "BlockingRuleTypeExpression": "Selects the candidates by an ExpressionLanguage expression."
   }
 }

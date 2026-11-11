@@ -1,0 +1,36 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "number"
+        },
+        false
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "field"
+        }
+      ],
+      [
+        {
+          "name": "attribute"
+        },
+        false
+      ],
+      [
+        {
+          "name": "weight"
+        },
+        {
+          "name": "matching"
+        }
+      ]
+    ]
+  }
+]

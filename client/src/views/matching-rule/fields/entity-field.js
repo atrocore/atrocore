@@ -13,6 +13,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
     return Dep.extend({
 
         setup() {
+            this.isBlockingRule = (this.model.getSupertype ? this.model.getSupertype() : this.model.name) === 'BlockingRule';
             this.prepareListOptions();
             Dep.prototype.setup.call(this);
             this.onModelReady(() => {
@@ -44,13 +45,15 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             })
         },
 
-        findMatchingId(matchingRuleSetId) {
+        findMatchingId(ruleSetId) {
+            const ruleSetField = this.isBlockingRule ? 'blockingRuleSetId' : 'matchingRuleSetId';
+            const configKey = this.isBlockingRule ? 'blockingRules' : 'matchingRules';
             let res = null;
 
-            (this.getConfig().get('matchingRules') || []).forEach(item => {
-                if (item.id === matchingRuleSetId) {
-                    if (item.matchingRuleSetId) {
-                        res = this.findMatchingId(item.matchingRuleSetId);
+            (this.getConfig().get(configKey) || []).forEach(item => {
+                if (item.id === ruleSetId) {
+                    if (item[ruleSetField]) {
+                        res = this.findMatchingId(item[ruleSetField]);
                     } else {
                         res = item.matchingId;
                     }
@@ -61,9 +64,10 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
         },
 
         _getEntityName() {
+            const ruleSetField = this.isBlockingRule ? 'blockingRuleSetId' : 'matchingRuleSetId';
             let matchingId = this.model.get('matchingId');
-            if (this.model.get('matchingRuleSetId')) {
-                matchingId = this.findMatchingId(this.model.get('matchingRuleSetId'));
+            if (this.model.get(ruleSetField)) {
+                matchingId = this.findMatchingId(this.model.get(ruleSetField));
             }
 
             if (!matchingId) {
@@ -89,7 +93,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             }
 
             const hasAttribute = this.getMetadata().get(`scopes.${entityName}.hasAttribute`);
-            const availableTypes = this.getMetadata().get(`app.matchingRules.${this.model.get('type')}.fieldTypes`) || [];
+            const availableTypes = this.getMetadata().get(`app.${this.isBlockingRule ? 'blockingRules' : 'matchingRules'}.${this.model.get('type')}.fieldTypes`) || [];
 
             if (hasAttribute) {
                 this.params.groupOptions = [
@@ -146,7 +150,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                 return;
             }
 
-            const availableTypes = this.getMetadata().get(`app.matchingRules.${this.model.get('type')}.fieldTypes`) || [];
+            const availableTypes = this.getMetadata().get(`app.${this.isBlockingRule ? 'blockingRules' : 'matchingRules'}.${this.model.get('type')}.fieldTypes`) || [];
 
             const scope    = 'Attribute';
             const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';

@@ -12,9 +12,6 @@
 
 namespace Atro\Core\MatchingRuleType;
 
-use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\Util;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
 class FieldSimilar extends AbstractMatchingRule
@@ -32,42 +29,10 @@ class FieldSimilar extends AbstractMatchingRule
         ];
     }
 
-    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
-    {
-        $alias = $qb->getQueryPart('from')[0]['alias'];
-
-        if (!empty($this->rule->get('attributeId'))) {
-            return $this->buildAttributeSimilarSubquery($qb, $alias, $stageEntity);
-        }
-
-        $field = $this->rule->get('field');
-        $columnName = Util::toUnderScore($field);
-        $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
-        $value = $stageEntity->get($field);
-        $parameter = IdGenerator::unsortableId();
-
-        if ($value === null) {
-            return '1=0';
-        }
-
-        if (empty($value)) {
-            return "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
-        }
-
-        if (is_array($value)) {
-            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
-            return "{$alias}.{$escapedColumnName} LIKE :$parameter";
-        }
-
-        $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
-
-        return "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
-    }
-
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
-        if (!empty($this->rule->get('attributeId'))) {
-            $attributeId = $this->rule->get('attributeId');
+        if (!empty($this->settings->get('attributeId'))) {
+            $attributeId = $this->settings->get('attributeId');
             $entityName  = $stageEntity->getEntityName();
             $stageValue  = $this->loadAttributeRawValue($entityName, $stageEntity->id, $attributeId);
             $masterValue = $this->loadAttributeRawValue($entityName, $masterEntityData['id'], $attributeId);
@@ -96,7 +61,7 @@ class FieldSimilar extends AbstractMatchingRule
             return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
 
-        $field = $this->rule->get('field');
+        $field = $this->settings->get('field');
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
         if (in_array($fieldType, ['array', 'linkMultiple', 'multiEnum'])) {
@@ -127,52 +92,5 @@ class FieldSimilar extends AbstractMatchingRule
         $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
 
         return $stageValue === $masterValue ? $this->getWeight() : 0.0;
-    }
-
-    private function buildAttributeSimilarSubquery(QueryBuilder $qb, string $alias, Entity $stageEntity): string
-    {
-        $attributeId = $this->rule->get('attributeId');
-        $entityName  = $stageEntity->getEntityName();
-        $tableName   = Util::toUnderScore(lcfirst($entityName));
-
-        $attribute = $this->getEntityManager()->getEntity('Attribute', $attributeId);
-        if (!$attribute) {
-            return '1=0';
-        }
-
-        $col   = $this->getAttributeValueColumn($attribute->get('type'));
-        $value = $this->loadAttributeRawValue($entityName, $stageEntity->id, $attributeId);
-
-        if ($value === false) {
-            return '1=0';
-        }
-
-        $subAlias  = 'av_' . IdGenerator::unsortableId();
-        $attrParam = IdGenerator::unsortableId();
-
-        $qb->setParameter($attrParam, $attributeId);
-
-        $baseCondition = "{$subAlias}.{$tableName}_id = {$alias}.id"
-            . " AND {$subAlias}.attribute_id = :{$attrParam}";
-
-        if ($value === null) {
-            return '1=0';
-        }
-
-        if (is_array($value)) {
-            $valParam = IdGenerator::unsortableId();
-            $qb->setParameter($valParam, '%"' . reset($value) . '"%');
-
-            return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
-                . " WHERE {$baseCondition}"
-                . " AND {$subAlias}.{$col} LIKE :{$valParam})";
-        }
-
-        $valParam = IdGenerator::unsortableId();
-        $qb->setParameter($valParam, str_replace(' ', '', strtolower(trim((string)$value))));
-
-        return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
-            . " WHERE {$baseCondition}"
-            . " AND REPLACE(LOWER(TRIM({$subAlias}.{$col})), ' ', '') = :{$valParam})";
     }
 }

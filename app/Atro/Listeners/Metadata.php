@@ -3093,6 +3093,17 @@ class Metadata extends AbstractMetadataListener
                 'fieldTypes' => $className::getSupportedFieldTypes(),
             ];
         }
+
+        foreach ($data['app']['blockingRuleTypes'] ?? [] as $type => $typeDefs) {
+            $className = $typeDefs['className'] ?? null;
+            if (!$className || !class_exists($className)) {
+                continue;
+            }
+
+            $data['app']['blockingRules'][$type] = [
+                'fieldTypes' => $className::getSupportedFieldTypes(),
+            ];
+        }
     }
 
     protected function addThumbnailFieldsByTypesToFile(array &$data): void

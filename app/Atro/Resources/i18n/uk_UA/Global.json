@@ -162,7 +162,18 @@
     "AttributeTypeLinkMultiple": "Атрибут: Кілька посилань",
     "AttributeTypeFile": "Атрибут: Файл",
     "AttributeTypeArray": "Атрибут: Масив",
-    "AttributeTypeComposite": "Атрибут: Композит"
+    "AttributeTypeComposite": "Атрибут: Композит",
+    "BlockingRule": "Правило блокування",
+    "MatchingRuleTypeFieldEqual": "Правило зіставлення: Поле рівне",
+    "MatchingRuleTypeFieldSimilar": "Правило зіставлення: Поле схоже",
+    "MatchingRuleTypeFieldContains": "Правило зіставлення: Поле містить",
+    "MatchingRuleTypeSet": "Правило зіставлення: Набір",
+    "MatchingRuleTypeExpression": "Правило зіставлення: Вираз",
+    "BlockingRuleTypeFieldEqual": "Правило блокування: Поле рівне",
+    "BlockingRuleTypeFieldSimilar": "Правило блокування: Поле схоже",
+    "BlockingRuleTypeFieldContains": "Правило блокування: Поле містить",
+    "BlockingRuleTypeSet": "Правило блокування: Набір",
+    "BlockingRuleTypeExpression": "Правило блокування: Вираз"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Програмні пакети",
@@ -314,7 +325,18 @@
     "AttributeTypeLinkMultiple": "Атрибут: Кілька посилань",
     "AttributeTypeFile": "Атрибут: Файл",
     "AttributeTypeArray": "Атрибут: Масив",
-    "AttributeTypeComposite": "Атрибут: Композит"
+    "AttributeTypeComposite": "Атрибут: Композит",
+    "BlockingRule": "Правила блокування",
+    "MatchingRuleTypeFieldEqual": "Правило зіставлення: Поле рівне",
+    "MatchingRuleTypeFieldSimilar": "Правило зіставлення: Поле схоже",
+    "MatchingRuleTypeFieldContains": "Правило зіставлення: Поле містить",
+    "MatchingRuleTypeSet": "Правило зіставлення: Набір",
+    "MatchingRuleTypeExpression": "Правило зіставлення: Вираз",
+    "BlockingRuleTypeFieldEqual": "Правило блокування: Поле рівне",
+    "BlockingRuleTypeFieldSimilar": "Правило блокування: Поле схоже",
+    "BlockingRuleTypeFieldContains": "Правило блокування: Поле містить",
+    "BlockingRuleTypeSet": "Правило блокування: Набір",
+    "BlockingRuleTypeExpression": "Правило блокування: Вираз"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -1707,6 +1729,16 @@
     "AttributeTypeUrl": "Вебадреса, яка може мати окреме значення для кожної мови, наприклад https://example.com/uk.",
     "ConnectionTypePsql": "Реляційна база даних, яка також зберігає значення JSON як структуровані дані, тож таблиці й документи можна поєднувати в одному запиті.",
     "ConnectionTypeMsql": "Реляційна база даних від Microsoft, поширена в корпоративних системах і надійна під великим транзакційним навантаженням.",
-    "ConnectionTypeVertica": "Швидко читає великі таблиці завдяки колонковому зберіганню."
+    "ConnectionTypeVertica": "Швидко читає великі таблиці завдяки колонковому зберіганню.",
+    "MatchingRuleTypeFieldEqual": "Нараховує бал кандидату, коли значення поля рівні.",
+    "MatchingRuleTypeFieldSimilar": "Нараховує бал кандидату, коли значення поля рівні без урахування регістру та пробілів.",
+    "MatchingRuleTypeFieldContains": "Нараховує бал кандидату, коли його значення поля містить значення запису.",
+    "MatchingRuleTypeSet": "Поєднує кілька правил: AND додає їхні бали, OR бере бал першого правила, що спрацювало.",
+    "MatchingRuleTypeExpression": "Нараховує бал кандидату за виразом ExpressionLanguage.",
+    "BlockingRuleTypeFieldEqual": "Відбирає кандидатів, у яких значення поля рівне.",
+    "BlockingRuleTypeFieldSimilar": "Відбирає кандидатів, у яких значення поля рівне без урахування регістру та пробілів.",
+    "BlockingRuleTypeFieldContains": "Відбирає кандидатів, у яких значення поля містить значення запису.",
+    "BlockingRuleTypeSet": "Поєднує кілька правил через AND або OR.",
+    "BlockingRuleTypeExpression": "Відбирає кандидатів за виразом ExpressionLanguage."
   }
 }

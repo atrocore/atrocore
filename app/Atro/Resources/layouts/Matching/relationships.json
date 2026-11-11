@@ -1,5 +1,8 @@
 [
   {
+    "name": "blockingRules"
+  },
+  {
     "name": "matchingRules"
   },
   {

@@ -24,11 +24,11 @@ class MatchingRule extends Base
 {
     protected $entityType = "MatchingRule";
 
-    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
+    public function prepareMatchSelect(QueryBuilder $qb, Entity $stageEntity): void
     {
-        return $this->getRepository()
+        $this->getRepository()
             ->createMatchingType($this)
-            ->prepareMatchingSqlPart($qb, $stageEntity);
+            ->prepareMatchSelect($qb, $stageEntity);
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): float
@@ -36,6 +36,11 @@ class MatchingRule extends Base
         return $this->getRepository()
             ->createMatchingType($this)
             ->match($stageEntity, $masterEntityData);
+    }
+
+    public function getNestedRules(): iterable
+    {
+        return $this->get('matchingRules') ?? [];
     }
 
     public function getMatching(): ?Matching

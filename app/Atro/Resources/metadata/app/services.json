@@ -42,5 +42,15 @@
   "AttributeTypeLinkMultiple": "\\Atro\\Services\\AttributeSubtype",
   "AttributeTypeFile": "\\Atro\\Services\\AttributeSubtype",
   "AttributeTypeArray": "\\Atro\\Services\\AttributeSubtype",
-  "AttributeTypeComposite": "\\Atro\\Services\\AttributeSubtype"
+  "AttributeTypeComposite": "\\Atro\\Services\\AttributeSubtype",
+  "MatchingRuleTypeFieldEqual": "\\Atro\\Services\\MatchingRuleSubtype",
+  "MatchingRuleTypeFieldSimilar": "\\Atro\\Services\\MatchingRuleSubtype",
+  "MatchingRuleTypeFieldContains": "\\Atro\\Services\\MatchingRuleSubtype",
+  "MatchingRuleTypeSet": "\\Atro\\Services\\MatchingRuleSubtype",
+  "MatchingRuleTypeExpression": "\\Atro\\Services\\MatchingRuleSubtype",
+  "BlockingRuleTypeFieldEqual": "\\Atro\\Services\\BlockingRuleSubtype",
+  "BlockingRuleTypeFieldSimilar": "\\Atro\\Services\\BlockingRuleSubtype",
+  "BlockingRuleTypeFieldContains": "\\Atro\\Services\\BlockingRuleSubtype",
+  "BlockingRuleTypeSet": "\\Atro\\Services\\BlockingRuleSubtype",
+  "BlockingRuleTypeExpression": "\\Atro\\Services\\BlockingRuleSubtype"
 }

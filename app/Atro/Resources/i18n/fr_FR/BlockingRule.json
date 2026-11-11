@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "matching": "Appariement",
+    "blockingRuleSet": "Ensemble",
+    "blockingRules": "Règles de blocage",
+    "operator": "Opérateur",
+    "attribute": "Attribut",
+    "matchedWhereExpression": "Expression de correspondance where"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Champs",
+      "attributes": "Attributs"
+    }
+  },
+  "options": {
+    "type": {
+      "fieldEqual": "Le champ est égal",
+      "fieldSimilar": "Le champ est similaire",
+      "fieldContains": "Le champ contient",
+      "set": "Ensemble",
+      "expression": "Expression"
+    },
+    "operator": {
+      "and": "ET",
+      "or": "OU"
+    }
+  },
+  "exceptions": {
+    "notValidMatchingActivation": "La règle de blocage ne peut être modifiée que pour un appariement inactif.",
+    "notValidMatching": "L'appariement n'est pas valide",
+    "notValidMatchingRuleSet": "L'ensemble de règles de blocage n'est pas valide",
+    "notValidFieldType": "Le type de champ n'est pas pris en charge par le type de règle sélectionné.",
+    "notValidAttributeType": "Le type d'attribut n'est pas pris en charge par le type de règle sélectionné.",
+    "expressionCannotBeEmpty": "L'expression ne peut pas être vide."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Une expression ExpressionLanguage avec accès à `stageEntity` (un enregistrement complet). Doit renvoyer un tableau de condition where décrivant quels enregistrements principaux considérer comme candidats - les clés sont des noms de champs, les valeurs sont ce à quoi comparer (des opérateurs peuvent être intégrés dans la clé, par ex. `field>`, `field*`, et les groupes `OR`/`AND` peuvent être imbriqués pour des conditions plus complexes) - par ex. {nameFrFr: stageEntity.get('name')} trouve les enregistrements principaux dont le nameFrFr est égal au name de l'enregistrement source."
+  }
+}

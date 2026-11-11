@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "matching": "Übereinstimmung",
+    "blockingRuleSet": "Satz",
+    "blockingRules": "Blocking-Regeln",
+    "operator": "Operator",
+    "attribute": "Attribut",
+    "matchedWhereExpression": "Matched-Where-Ausdruck"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Felder",
+      "attributes": "Attribute"
+    }
+  },
+  "options": {
+    "type": {
+      "fieldEqual": "Feld ist gleich",
+      "fieldSimilar": "Feld ist ähnlich",
+      "fieldContains": "Feld enthält",
+      "set": "Set",
+      "expression": "Ausdruck"
+    },
+    "operator": {
+      "and": "AND",
+      "or": "OR"
+    }
+  },
+  "exceptions": {
+    "notValidMatchingActivation": "Die Blocking-Regel kann nur für eine inaktive Übereinstimmung geändert werden.",
+    "notValidMatching": "Die Übereinstimmung ist ungültig",
+    "notValidMatchingRuleSet": "Der Blocking-Regelsatz ist ungültig",
+    "notValidFieldType": "Der Feldtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
+    "notValidAttributeType": "Der Attributtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
+    "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Ein ExpressionLanguage-Ausdruck mit Zugriff auf `stageEntity` (einen hydratisierten Datensatz). Muss ein Where-Bedingungs-Array zurückgeben, das beschreibt, welche Hauptdatensätze als Kandidaten in Frage kommen - Schlüssel sind Feldnamen, Werte sind das, womit verglichen wird (Operatoren können in den Schlüssel eingebettet werden, z. B. `field>`, `field*`, und `OR`/`AND`-Gruppen lassen sich für komplexere Bedingungen verschachteln) - z. B. {nameFrFr: stageEntity.get('name')} findet Hauptdatensätze, deren nameFrFr dem name des Quelldatensatzes entspricht."
+  }
+}
