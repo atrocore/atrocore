@@ -250,6 +250,7 @@
     "ConnectionTypeCookie": "Connexion: Session de cookies",
     "ConnectionTypeSmtp": "Connexion: SMTP",
     "ConnectionTypeVertica": "Connexion: Vertica DB",
+    "ConnectionTypeOracle": "Connexion: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
     "ConnectionTypeApiKey": "Connexion: Clé d'API",
     "StorageTypeLocal": "Stockage: Local (Linux)",
@@ -921,6 +922,7 @@
     "ConnectionTypeCookie": "Connexion: Session de cookies",
     "ConnectionTypeSmtp": "Connexion: SMTP",
     "ConnectionTypeVertica": "Connexion: Vertica DB",
+    "ConnectionTypeOracle": "Connexion: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
     "ConnectionTypeApiKey": "Connexion: Clé d'API",
     "StorageTypeLocal": "Stockage: Local (Linux)",
@@ -1705,6 +1707,7 @@
     "AttributeTypeUrl": "Une adresse web qui peut avoir sa propre valeur pour chaque langue, par ex. https://example.com/fr.",
     "ConnectionTypePsql": "Une base de données relationnelle qui conserve aussi les valeurs JSON sous forme de données structurées, tables et documents peuvent ainsi être combinés dans une même requête.",
     "ConnectionTypeMsql": "Une base de données relationnelle de Microsoft, répandue dans les systèmes d'entreprise et fiable sous de fortes charges transactionnelles.",
-    "ConnectionTypeVertica": "Lit rapidement les grandes tables grâce au stockage en colonnes."
+    "ConnectionTypeVertica": "Lit rapidement les grandes tables grâce au stockage en colonnes.",
+    "ConnectionTypeOracle": "Une base de données relationnelle d'Oracle, largement utilisée pour les applications d'entreprise et les systèmes ERP."
   }
 }

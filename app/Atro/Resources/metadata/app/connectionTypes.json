@@ -12,6 +12,7 @@
   "smtp": "\\Atro\\ConnectionType\\ConnectionSmtp",
   "pdoSql": "\\Atro\\ConnectionType\\ConnectionPdoSql",
   "vertica": "\\Atro\\ConnectionType\\ConnectionVertica",
+  "oracle": "\\Atro\\ConnectionType\\ConnectionOracle",
   "tokenAuthApi": "\\Atro\\ConnectionType\\ConnectionTokenAuthApi",
   "apiKey": "\\Atro\\ConnectionType\\ConnectionApiKey"
 }

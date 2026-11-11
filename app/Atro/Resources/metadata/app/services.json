@@ -13,6 +13,7 @@
   "ConnectionTypeCookie": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeSmtp": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeVertica": "\\Atro\\Services\\ConnectionSubtype",
+  "ConnectionTypeOracle": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeTokenAuthApi": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeApiKey": "\\Atro\\Services\\ConnectionSubtype",
   "StorageTypeLocal": "\\Atro\\Services\\StorageSubtype",
