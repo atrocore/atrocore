@@ -369,6 +369,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 'ends_with',
                 'equal',
                 'not_equal',
+                'in',
+                'not_in',
                 'is_null',
                 'is_not_null'
             ];
@@ -385,6 +387,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
+                        if (this.isMultipleFilterOperator(rule.operator.type)) {
+                            if (!Array.isArray(value) || value.length === 0) {
+                                return 'bad array';
+                            }
+                            return true;
+                        }
                         if (value === null || typeof value !== 'string') {
                             return 'bad string';
                         }
