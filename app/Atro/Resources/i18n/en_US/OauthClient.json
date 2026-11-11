@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Name",
+    "description": "Description",
+    "isActive": "Active",
+    "isConfidential": "Confidential",
+    "clientCredentialsGrant": "Client Credentials",
+    "authorizationCodeGrant": "Authorization Code",
+    "refreshTokenGrant": "Refresh Token",
+    "user": "User",
+    "secretHash": "Secret Hash"
+  },
+  "links": {
+    "user": "User"
+  },
+  "labels": {
+    "Grant Types": "Grant Types"
+  },
+  "tooltips": {
+    "isConfidential": "A confidential client authenticates with its client secret. A public client, such as a browser or mobile application, cannot keep a secret.",
+    "clientCredentialsGrant": "The client obtains an access token on its own behalf with its client ID and secret, without a user. It acts as the selected user.",
+    "authorizationCodeGrant": "The client obtains an access token on behalf of a user who signs in on the AtroCore sign-in page (with PKCE).",
+    "refreshTokenGrant": "Together with the access token the client gets a refresh token, which it exchanges for a new access token without signing the user in again.",
+    "user": "The user the client acts as when it obtains an access token with its own credentials (client credentials grant)."
+  },
+  "exceptions": {
+    "userRequiredForClientCredentials": "A client with the client credentials grant needs a user to act as.",
+    "grantRequired": "Select at least one way to obtain an access token: client credentials or authorization code."
+  },
+  "actions": {
+    "generateSecret": "Generate Secret"
+  },
+  "actionConfirms": {
+    "generateSecret": "A new client secret will be generated. The current secret stops working and the tokens issued to the client are revoked. Continue?"
+  },
+  "actionResults": {
+    "generateSecret": "The client secret is shown only once, copy it now:"
+  }
+}

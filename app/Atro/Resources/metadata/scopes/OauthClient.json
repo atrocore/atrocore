@@ -1,0 +1,30 @@
+{
+  "entity": true,
+  "layouts": false,
+  "type": "Base",
+  "tab": true,
+  "acl": true,
+  "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ],
+    "edit": [
+      "all",
+      "no"
+    ],
+    "delete": [
+      "all",
+      "no"
+    ]
+  },
+  "customizable": false,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "bookmarkDisabled": true,
+  "hideFieldTypeFilters": true,
+  "matchingDisabled": true,
+  "selectionDisabled": true,
+  "valueLockDisabled": true,
+  "importable": false
+}

@@ -85,6 +85,8 @@ When `exit: true` is set, the user is redirected to the list view after the acti
 
 When `redirect: true` is set, the user is taken to the `link` that the response returns, for example to a record the action has just created. The handler adds it to its JSON response: `{ "id": "<newId>", "link": "#MyEntity/view/<newId>" }`.
 
+When `resultField` is set, the value of that property of the JSON response is shown to the user in a notification that stays until it is closed and has a copy button. Use it for a value that is returned only once, for example a generated secret: the handler returns `{ "clientSecret": "<secret>" }` and the action declares `"resultField": "clientSecret"`. The text above the value comes from the `actionResults` i18n group.
+
 The request body always contains `{ "action": "publish", "scope": "MyEntity", "id": "<recordId>" }`.
 
 ---
@@ -166,6 +168,7 @@ Key points:
 | `confirm` | bool | listActions, detailActions, relationshipPanels | Show a confirmation dialog before executing. The message comes from the `actionConfirms` i18n group. Default: `false`. For `massActions`, confirmation is triggered automatically by the presence of a `massActionConfirmMessages` entry. |
 | `refresh` | bool | all | Re-fetch the record or collection after the action completes. Default: `false`. |
 | `exit` | bool | detailActions only | Navigate back to the list page after the action completes. Use for actions that make the current record inaccessible (archive, delete). Takes precedence over `refresh`. |
+| `resultField` | string | listActions, detailActions | Property of the JSON response whose value is shown in a persistent notification with a copy button, e.g. a secret returned only once. The message above the value comes from the `actionResults` i18n group. |
 | `redirect` | bool | detailActions only | Navigate to the `link` returned in the response after the action completes, for example to the record the action has created. The response body must contain `link`, a client route such as `#MyEntity/view/<id>`; without it the flag has no effect. Takes precedence over `exit` and `refresh`. |
 | `disabled` | bool | all | Hide the action from the UI entirely. Used to suppress built-in actions — e.g. `"update": { "disabled": true }` under `massActions` removes built-in Mass Update, and `"duplicate": { "disabled": true }` under `detailActions` removes Duplicate from the detail page. |
 | `iconClass` | string | listActions, massActions, detailActions, relationshipPanels | Phosphor icon class shown next to the label. Example: `"ph ph-check"`. |
@@ -393,6 +396,9 @@ public function putAclMetaForLink(\Espo\ORM\Entity $entityFrom, string $link, \E
     "publish": "Are you sure you want to publish this record?",
     "archive": "Are you sure you want to archive this record? It will no longer be visible in the list."
   },
+  "actionResults": {
+    "generateKey": "The key is shown only once, copy it now:"
+  },
   "massActions": {
     "reject": "Reject Selected"
   },
@@ -409,6 +415,7 @@ public function putAclMetaForLink(\Espo\ORM\Entity $entityFrom, string $link, \E
 |---|---|---|
 | `actions` | Label shown in the UI for list, detail, and relationship panel actions | Always |
 | `actionConfirms` | Confirmation dialog message for `listActions`, `detailActions`, and relationship panel actions | `"confirm": true` in the action definition |
+| `actionResults` | Message above the value shown after a detail action | `"resultField"` in the action definition |
 | `massActions` | Label shown in the toolbar mass actions menu | Always |
 | `massActionConfirmMessages` | Confirmation dialog message for mass actions | Shown automatically when the key is present |
 | `massActionSuccessMessages` | Success notification after a mass action completes. Supports `{count}` placeholder | Shown automatically when the key is present |

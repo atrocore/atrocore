@@ -483,7 +483,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     id: id
                 }))
                     .then(response => {
-                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.resultField && response && response[actionDefs.resultField]) {
+                            this.showActionResult(name, scope, String(response[actionDefs.resultField]));
+                        } else {
+                            this.notify(this.translate('Done'), 'success');
+                        }
                         if (actionDefs.redirect && response && response.link) {
                             this.getRouter().navigate(response.link, {trigger: true});
                         } else if (actionDefs.exit) {
@@ -496,7 +500,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             if (actionDefs.confirm) {
                 this.confirm({
-                    message: this.translate(actionDefs.name, 'actionConfirms', scope),
+                    message: this.translate(name, 'actionConfirms', scope),
                     confirmText: this.translate('Apply')
                 }, function () {
                     runAction();
@@ -957,6 +961,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 action: actionData.action || 'universalAction',
                                 label: this.translate(actionName, 'actions', this.scope)
                             };
+                            if (actionData.iconClass) {
+                                row.iconClass = actionData.iconClass;
+                            }
                             if (actionData.singleButton) {
                                 row.style = actionData.style || 'default';
                             }

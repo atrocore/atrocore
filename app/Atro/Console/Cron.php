@@ -15,6 +15,7 @@ namespace Atro\Console;
 
 use Atro\Core\Application;
 use Atro\Core\JobManager;
+use Atro\Core\OAuth\TokenRevoker;
 use Espo\ORM\EntityManager;
 
 /**
@@ -89,6 +90,9 @@ class Cron extends AbstractConsole
 
         // check auth tokens
         $this->authTokenControl();
+
+        // remove expired OAuth tokens
+        $this->getContainer()->get(TokenRevoker::class)->deleteExpired();
 
         // find pending job to create queue file
         $this->createQueueFile();

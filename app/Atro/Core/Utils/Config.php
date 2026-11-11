@@ -13,6 +13,7 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\ModuleManager\AbstractModule;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\OAuth\Keys;
 use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 final class Config
@@ -92,6 +93,7 @@ final class Config
         $data = self::getDefaults();
         $data['encryptionKey'] = bin2hex(random_bytes(16));
         $data[PasswordHash::PEPPER_CONFIG_KEY] = PasswordHash::generatePepper();
+        $data[Keys::ENCRYPTION_KEY_CONFIG_KEY] = Keys::generateEncryptionKey();
 
         return self::writeAtomically(self::exportPhp($data));
     }

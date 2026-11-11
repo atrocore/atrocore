@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\ServiceUnavailable;
+use Atro\Core\OAuth\TokenRevoker;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
@@ -451,6 +452,8 @@ class User extends Base
             $authToken->set('isActive', false);
             $this->getEntityManager()->saveEntity($authToken);
         }
+
+        $this->getContainer()->get(TokenRevoker::class)->revokeUserTokens($userId);
     }
 
     protected function sendChangePasswordLink(

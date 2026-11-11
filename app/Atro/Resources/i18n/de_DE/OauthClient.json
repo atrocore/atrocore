@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Name",
+    "description": "Beschreibung",
+    "isActive": "Aktiv",
+    "isConfidential": "Vertraulich",
+    "clientCredentialsGrant": "Client Credentials",
+    "authorizationCodeGrant": "Authorization Code",
+    "refreshTokenGrant": "Refresh Token",
+    "user": "Benutzer",
+    "secretHash": "Secret-Hash"
+  },
+  "links": {
+    "user": "Benutzer"
+  },
+  "labels": {
+    "Grant Types": "Grant-Typen"
+  },
+  "tooltips": {
+    "isConfidential": "Ein vertraulicher Client authentifiziert sich mit seinem Client-Secret. Ein öffentlicher Client, z. B. eine Browser- oder mobile Anwendung, kann kein Secret geheim halten.",
+    "clientCredentialsGrant": "Der Client erhält ein Access Token in eigenem Namen mit seiner Client-ID und seinem Secret, ohne Benutzer. Er handelt als der ausgewählte Benutzer.",
+    "authorizationCodeGrant": "Der Client erhält ein Access Token im Namen eines Benutzers, der sich auf der AtroCore-Anmeldeseite anmeldet (mit PKCE).",
+    "refreshTokenGrant": "Zusammen mit dem Access Token erhält der Client ein Refresh Token, das er gegen ein neues Access Token tauscht, ohne dass sich der Benutzer erneut anmelden muss.",
+    "user": "Der Benutzer, in dessen Namen der Client handelt, wenn er ein Access Token mit seinen eigenen Zugangsdaten erhält (Client Credentials Grant)."
+  },
+  "exceptions": {
+    "userRequiredForClientCredentials": "Ein Client mit dem Client Credentials Grant benötigt einen Benutzer, in dessen Namen er handelt.",
+    "grantRequired": "Wählen Sie mindestens einen Weg, ein Access Token zu erhalten: Client Credentials oder Authorization Code."
+  },
+  "actions": {
+    "generateSecret": "Secret generieren"
+  },
+  "actionConfirms": {
+    "generateSecret": "Es wird ein neues Client-Secret generiert. Das aktuelle Secret funktioniert nicht mehr und die an den Client ausgegebenen Tokens werden widerrufen. Fortfahren?"
+  },
+  "actionResults": {
+    "generateSecret": "Das Client-Secret wird nur einmal angezeigt, kopieren Sie es jetzt:"
+  }
+}

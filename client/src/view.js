@@ -245,6 +245,33 @@ Espo.define('view', [], function () {
                 confirmStyle: confirmStyle
             }, callback, context);
         },
+        /**
+         * Shows the value returned by a UI action (see "resultField") until the user closes it, e.g. a secret
+         * that is returned only once.
+         */
+        showActionResult(name, scope, value) {
+            const message = this.translate(name, 'actionResults', scope);
+
+            window.Notifier.notify(message + '<br><code>' + $('<div>').text(value).html() + '</code>', {
+                type: 'success',
+                duration: -1,
+                closeButton: true,
+                actions: [{
+                    tooltip: this.translate('Copy', 'labels'),
+                    iconClass: 'ph ph-copy',
+                    callback: () => {
+                        this.copyToClipboard(value, copied => {
+                            if (copied) {
+                                this.notify(this.translate('copiedToClipboard', 'labels'), 'success');
+                            } else {
+                                this.notify('Error copying text to clipboard', 'danger');
+                            }
+                        });
+                    },
+                }],
+            });
+        },
+
         copyToClipboard(text, callback) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 // Clipboard API method

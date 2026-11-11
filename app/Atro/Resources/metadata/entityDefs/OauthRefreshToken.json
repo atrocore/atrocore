@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "identifier": {
+      "type": "varchar",
+      "len": 100,
+      "unique": true
+    },
+    "accessToken": {
+      "type": "link"
+    },
+    "expiresAt": {
+      "type": "datetime"
+    },
+    "isRevoked": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "createdAt": {
+      "type": "datetime"
+    }
+  },
+  "links": {
+    "accessToken": {
+      "type": "belongsTo",
+      "entity": "OauthAccessToken",
+      "cascadeDelete": true
+    }
+  },
+  "indexes": {
+    "expiresAt": {
+      "columns": [
+        "expiresAt"
+      ]
+    }
+  }
+}

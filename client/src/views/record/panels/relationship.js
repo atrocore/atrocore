@@ -1149,7 +1149,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (actionDefs.confirm) {
                 this.confirm({
-                    message: this.translate(actionDefs.name, 'actionConfirms', parentScope),
+                    message: this.translate(name, 'actionConfirms', parentScope),
                     confirmText: this.translate('Apply')
                 }, function () {
                     runAction();

@@ -1,0 +1,26 @@
+{
+  "controller": "controllers/record",
+  "detailActions": {
+    "generateSecret": {
+      "url": "oauth/client-secret",
+      "method": "POST",
+      "confirm": true,
+      "resultField": "clientSecret",
+      "singleButton": true,
+      "style": "default",
+      "iconClass": "ph ph-key",
+      "sortOrder": 100
+    }
+  },
+  "listActions": {
+    "generateSecret": {
+      "url": "oauth/client-secret",
+      "method": "POST",
+      "confirm": true,
+      "resultField": "clientSecret",
+      "iconClass": "ph ph-key",
+      "acl": "edit",
+      "sortOrder": 300
+    }
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "isActive": {
+      "type": "bool",
+      "default": true
+    },
+    "isConfidential": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true
+    },
+    "clientCredentialsGrant": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isConfidential"
+            }
+          ]
+        }
+      }
+    },
+    "authorizationCodeGrant": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true
+    },
+    "refreshTokenGrant": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        }
+      }
+    },
+    "user": {
+      "type": "link",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isConfidential"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "clientCredentialsGrant"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isConfidential"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "clientCredentialsGrant"
+            }
+          ]
+        }
+      }
+    },
+    "secretHash": {
+      "type": "varchar",
+      "len": 255,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
+}

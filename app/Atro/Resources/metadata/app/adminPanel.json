@@ -222,6 +222,13 @@
         "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/roles"
       },
       {
+        "url": "#OauthClient",
+        "scope": "OauthClient",
+        "label": "OAuth Clients",
+        "description": "oauthClients",
+        "icon": "ph ph-plugs-connected"
+      },
+      {
         "url": "#Admin/authTokens",
         "scope": "AuthToken",
         "label": "Auth Tokens",

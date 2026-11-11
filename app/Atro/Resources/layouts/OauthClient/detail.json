@@ -1,0 +1,50 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Details"
+  },
+  {
+    "rows": [
+      [
+        {
+          "name": "isConfidential"
+        },
+        false
+      ],
+      [
+        {
+          "name": "clientCredentialsGrant"
+        },
+        {
+          "name": "user"
+        }
+      ],
+      [
+        {
+          "name": "authorizationCodeGrant"
+        },
+        {
+          "name": "refreshTokenGrant"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Grant Types"
+  }
+]

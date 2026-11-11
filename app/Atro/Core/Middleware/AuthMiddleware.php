@@ -38,6 +38,11 @@ class AuthMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // already authenticated by the OAuth access token
+        if ($request->getAttribute('oauth_access_token_id') !== null) {
+            return $handler->handle($request);
+        }
+
         $routeResult = $request->getAttribute(RouteResult::class);
 
         if (!$routeResult || $routeResult->isFailure()) {
