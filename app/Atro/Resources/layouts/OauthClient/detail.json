@@ -11,6 +11,12 @@
       ],
       [
         {
+          "name": "isUiClient"
+        },
+        false
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }
@@ -42,6 +48,12 @@
         {
           "name": "refreshTokenGrant"
         }
+      ],
+      [
+        {
+          "name": "isConsentRequired"
+        },
+        false
       ],
       [
         {

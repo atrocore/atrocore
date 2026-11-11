@@ -110,10 +110,6 @@ class OauthAuthorizeSubmitHandler extends AbstractHandler
                 throw new BadRequest($this->getLanguage()->translate('wrongUsernamePasword', 'messages', 'User'));
             }
 
-            if ($user->needToUpdatePassword($this->getConfig()->get('passwordExpireDays', 0))) {
-                throw new BadRequest($this->getLanguage()->translate('passwordExpired', 'exceptions', 'OauthClient'));
-            }
-
             return new JsonResponse(['redirectUri' => $authorization->approve($authorizationRequest, $user->id)]);
         } catch (OAuthServerException $e) {
             throw new BadRequest($e->getHint() ?: $e->getMessage());

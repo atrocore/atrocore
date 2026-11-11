@@ -16,6 +16,10 @@ namespace Atro\Core;
 use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\OAuth\BrowserLogin;
+use Atro\Core\OAuth\BrowserSession;
+use Atro\Core\OAuth\SessionCookie;
+use Atro\Core\OAuth\TokenUser;
 use Atro\Services\SoftwarePackage;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Auth;
@@ -27,6 +31,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Atro\Core\Factories\HttpPipeline;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stratigility\MiddlewarePipe;
+use Psr\Http\Message\ResponseInterface;
 
 final class Application
 {
@@ -129,6 +134,15 @@ final class Application
                 $this->redirectToOauthAuthorizePage();
             }
 
+            // the sign-in of the user interface by OAuth
+            if ($query === 'oauth/login') {
+                $this->emit($this->getContainer()->get(BrowserLogin::class)->login(ServerRequest::fromGlobals()));
+            }
+
+            if ($query === 'oauth/callback') {
+                $this->emit($this->getContainer()->get(BrowserLogin::class)->callback(ServerRequest::fromGlobals()));
+            }
+
             // generate openapi json
             if ($query === 'apidocs/openapi.json') {
                 $this->showOpenApiJson();
@@ -195,6 +209,12 @@ final class Application
     public function getContainer(): Container
     {
         return $this->container;
+    }
+
+    protected function emit(ResponseInterface $response): void
+    {
+        (new SapiEmitter())->emit($response);
+        exit;
     }
 
     protected function redirectToOauthAuthorizePage(): void
@@ -319,6 +339,11 @@ final class Application
         $entryPointManager = new EntryPointManager($container);
 
         try {
+            if ($this->authenticateBySession()) {
+                $entryPointManager->run($entryPoint, $data);
+                return;
+            }
+
             $authRequired  = $entryPointManager->checkAuthRequired($entryPoint);
             $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
             $auth          = new Auth($container, $authNotStrict);
@@ -476,10 +501,50 @@ final class Application
     /**
      * Logout all users
      */
+    /**
+     * The session of the user interface authenticates the entry points too, e.g. the images and the downloads.
+     */
+    protected function authenticateBySession(): bool
+    {
+        $sessionId = SessionCookie::getSessionId(ServerRequest::fromGlobals());
+        if ($sessionId === null) {
+            return false;
+        }
+
+        $accessToken = $this->getContainer()->get(BrowserSession::class)->authenticate($sessionId);
+        if ($accessToken === null) {
+            return false;
+        }
+
+        $tokenUser = $this->getContainer()->get(TokenUser::class);
+
+        $user = $tokenUser->resolve($accessToken['userId'], $accessToken['clientId']);
+        if ($user === null) {
+            return false;
+        }
+
+        if ($user->needToUpdatePassword($this->getConfig()->get('passwordExpireDays', 0))) {
+            header('HTTP/1.1 401 Unauthorized');
+            header('Password-Expired: true');
+            exit;
+        }
+
+        $tokenUser->activate($user);
+
+        return true;
+    }
+
     private function logoutAll(): void
     {
         /** @var \Doctrine\DBAL\Connection $connection */
         $connection = $this->getContainer()->get('connection');
+
+        // the table is created by a migration, which runs later in the update
+        if ($connection->createSchemaManager()->tablesExist([BrowserSession::TABLE])) {
+            $connection->createQueryBuilder()
+                ->delete(BrowserSession::TABLE)
+                ->executeStatement();
+        }
 
         $connection
             ->createQueryBuilder()

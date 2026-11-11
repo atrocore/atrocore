@@ -29,14 +29,24 @@ class ClientEntity implements ClientEntityInterface
 
     private ?string $userId;
 
-    public function __construct(string $identifier, string $name, array $redirectUris, bool $isConfidential, array $grantTypes, ?string $userId)
-    {
+    private bool $isConsentRequired;
+
+    public function __construct(
+        string $identifier,
+        string $name,
+        array $redirectUris,
+        bool $isConfidential,
+        array $grantTypes,
+        ?string $userId,
+        bool $isConsentRequired
+    ) {
         $this->identifier = $identifier;
         $this->name = $name;
         $this->redirectUri = $redirectUris;
         $this->isConfidential = $isConfidential;
         $this->grantTypes = $grantTypes;
         $this->userId = $userId;
+        $this->isConsentRequired = $isConsentRequired;
     }
 
     public function supportsGrantType(string $grantType): bool
@@ -50,5 +60,13 @@ class ClientEntity implements ClientEntityInterface
     public function getUserId(): ?string
     {
         return $this->userId;
+    }
+
+    /**
+     * Whether the user confirms on the sign-in page that the client gets access to the account.
+     */
+    public function isConsentRequired(): bool
+    {
+        return $this->isConsentRequired;
     }
 }

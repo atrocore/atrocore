@@ -14,8 +14,11 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Defuse\Crypto\Key;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
+use Ramsey\Uuid\Uuid;
 
 class V3Dot0Dot5 extends Base
 {
@@ -25,7 +28,8 @@ class V3Dot0Dot5 extends Base
     }
 
     /**
-     * The OAuth 2.0 server: the table of the OauthClient entity, the tables of the issued tokens and the keys.
+     * The OAuth server: the table of the OauthClient entity, the tables of the issued tokens and of the sessions of the
+     * user interface, the keys and the OAuth client of the user interface.
      */
     public function up(): void
     {
@@ -37,6 +41,7 @@ class V3Dot0Dot5 extends Base
             $this->createTokenTable($toSchema, $tableName, true);
         }
         $this->createTokenTable($toSchema, 'oauth_refresh_token', false);
+        $this->createSessionTable($toSchema);
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->getDbal()->executeStatement($sql);
@@ -44,6 +49,7 @@ class V3Dot0Dot5 extends Base
 
         $this->createEncryptionKey();
         $this->createKeyPair();
+        $this->createUiClient();
     }
 
     protected function createClientTable(Schema $schema): void
@@ -63,6 +69,7 @@ class V3Dot0Dot5 extends Base
         $table->addColumn('authorization_code_grant', 'boolean', ['notnull' => true, 'default' => false]);
         $table->addColumn('refresh_token_grant', 'boolean', ['notnull' => true, 'default' => false]);
         $table->addColumn('redirect_uris', 'jsonArray', ['notnull' => false]);
+        $table->addColumn('is_consent_required', 'boolean', ['notnull' => true, 'default' => true]);
         $table->addColumn('secret_hash', 'string', ['length' => 255, 'notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);
         $table->addColumn('modified_at', 'datetime', ['notnull' => false]);
@@ -127,6 +134,74 @@ class V3Dot0Dot5 extends Base
         $table->addIndex([$column], $name);
     }
 
+    /**
+     * The sessions of the user interface: the browser has the session cookie, the tokens stay on the server.
+     */
+    protected function createSessionTable(Schema $schema): void
+    {
+        if ($schema->hasTable('oauth_session')) {
+            return;
+        }
+
+        $table = $schema->createTable('oauth_session');
+        $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
+        $table->addColumn('user_id', 'string', ['length' => 36, 'notnull' => false]);
+        $table->addColumn('identifier', 'string', ['length' => 100, 'notnull' => false]);
+        $table->addColumn('access_token', 'text', ['notnull' => false]);
+        $table->addColumn('access_token_expires_at', 'datetime', ['notnull' => false]);
+        $table->addColumn('refresh_token', 'text', ['notnull' => false]);
+        $table->addColumn('ip_address', 'string', ['length' => 45, 'notnull' => false]);
+        $table->addColumn('last_access_at', 'datetime', ['notnull' => false]);
+        $table->addColumn('created_at', 'datetime', ['notnull' => false]);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['identifier']);
+
+        $this->addIndex($table, 'oauth_session', 'user_id');
+        $this->addIndex($table, 'oauth_session', 'last_access_at');
+        $this->addIndex($table, 'oauth_session', 'created_at');
+        $this->addCascadeForeignKey($table, 'oauth_session', 'user_id', 'user');
+    }
+
+    /**
+     * The user interface signs in by OAuth as a public client with PKCE; the config refers to it.
+     */
+    protected function createUiClient(): void
+    {
+        if (!empty($this->getConfig()->get('oauthUiClientId'))) {
+            return;
+        }
+
+        $id = Uuid::uuid7()->toString();
+        $now = date('Y-m-d H:i:s');
+
+        $this->getDbal()->createQueryBuilder()
+            ->insert('oauth_client')
+            ->values([
+                'id'                       => ':id',
+                'name'                     => ':name',
+                'deleted'                  => ':false',
+                'is_active'                => ':true',
+                'is_confidential'          => ':false',
+                'client_credentials_grant' => ':false',
+                'authorization_code_grant' => ':true',
+                'refresh_token_grant'      => ':true',
+                'redirect_uris'            => ':redirectUris',
+                'is_consent_required'      => ':false',
+                'created_at'               => ':now',
+                'modified_at'              => ':now',
+            ])
+            ->setParameter('id', $id)
+            ->setParameter('name', 'AtroCore UI')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('redirectUris', json_encode([rtrim((string)$this->getConfig()->get('siteUrl'), '/') . '/oauth/callback']))
+            ->setParameter('now', $now)
+            ->executeStatement();
+
+        $this->getConfig()->set('oauthUiClientId', $id);
+        $this->getConfig()->save();
+    }
+
     protected function addIndex(Table $table, string $tableName, string $column): void
     {
         $table->addIndex([$column], $this->generateIndexName($tableName, $column));
@@ -151,7 +226,7 @@ class V3Dot0Dot5 extends Base
             return;
         }
 
-        $this->getConfig()->set('oauthEncryptionKey', base64_encode(random_bytes(32)));
+        $this->getConfig()->set('oauthEncryptionKey', Key::createNewRandomKey()->saveToAsciiSafeString());
         $this->getConfig()->save();
     }
 

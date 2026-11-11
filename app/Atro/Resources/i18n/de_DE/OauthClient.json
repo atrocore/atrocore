@@ -9,7 +9,9 @@
     "refreshTokenGrant": "Refresh Token",
     "user": "Benutzer",
     "secretHash": "Secret-Hash",
-    "redirectUris": "Redirect-URIs"
+    "redirectUris": "Redirect-URIs",
+    "isConsentRequired": "Zustimmung erforderlich",
+    "isUiClient": "UI-Client"
   },
   "links": {
     "user": "Benutzer"
@@ -26,14 +28,17 @@
     "authorizationCodeGrant": "Der Client erhält ein Access Token im Namen eines Benutzers, der sich auf der AtroCore-Anmeldeseite anmeldet (mit PKCE).",
     "refreshTokenGrant": "Zusammen mit dem Access Token erhält der Client ein Refresh Token, das er gegen ein neues Access Token tauscht, ohne dass sich der Benutzer erneut anmelden muss.",
     "user": "Der Benutzer, in dessen Namen der Client handelt, wenn er ein Access Token mit seinen eigenen Zugangsdaten erhält (Client Credentials Grant).",
-    "redirectUris": "Die Adressen, zu denen der Benutzer nach der Anmeldung zurückgeleitet wird. Die redirect_uri einer Autorisierungsanfrage muss genau mit einer davon übereinstimmen."
+    "redirectUris": "Die Adressen, zu denen der Benutzer nach der Anmeldung zurückgeleitet wird. Die redirect_uri einer Autorisierungsanfrage muss genau mit einer davon übereinstimmen.",
+    "isConsentRequired": "Der Benutzer bestätigt auf der Anmeldeseite, dass die Anwendung Zugriff auf das Konto erhält. Deaktivieren Sie dies nur für Anwendungen Ihrer eigenen Organisation, z. B. die AtroCore-Benutzeroberfläche.",
+    "isUiClient": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an. Er wird bei der Installation festgelegt; der Konsolenbefehl „restore ui client\" stellt ihn wieder her."
   },
   "exceptions": {
     "userRequiredForClientCredentials": "Ein Client mit dem Client Credentials Grant benötigt einen Benutzer, in dessen Namen er handelt.",
     "grantRequired": "Wählen Sie mindestens einen Weg, ein Access Token zu erhalten: Client Credentials oder Authorization Code.",
     "redirectUrisRequired": "Ein Client mit dem Authorization Code Grant benötigt mindestens eine Redirect-URI.",
     "invalidRedirectUri": "\"%s\" ist keine gültige Redirect-URI: erwartet wird eine absolute URI ohne Fragment.",
-    "passwordExpired": "Ihr Passwort ist abgelaufen. Melden Sie sich zuerst bei AtroCore an und ändern Sie es."
+    "uiClientProtected": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an: nur Name, Beschreibung und Aktivität können geändert werden.",
+    "uiClientNotRemovable": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an, er kann nicht gelöscht werden. Deaktivieren Sie ihn, um die Anmeldung an der Benutzeroberfläche abzuschalten."
   },
   "actions": {
     "generateSecret": "Secret generieren"
@@ -43,5 +48,9 @@
   },
   "actionResults": {
     "generateSecret": "Das Client-Secret wird nur einmal angezeigt, kopieren Sie es jetzt:"
+  },
+  "messages": {
+    "uiClientDisabled": "Die Anmeldung an der Benutzeroberfläche wurde vom Administrator deaktiviert.",
+    "signInFailed": "Die Anmeldung war nicht erfolgreich. Bitte melden Sie sich erneut an."
   }
 }

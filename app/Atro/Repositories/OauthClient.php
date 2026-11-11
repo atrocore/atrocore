@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\OAuth\TokenRevoker;
+use Atro\Core\OAuth\UiClient;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\PasswordHash;
 use Espo\ORM\Entity;
@@ -36,6 +37,10 @@ class OauthClient extends Base
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($this->isUiClient($entity)) {
+            $this->validateUiClient($entity);
+        }
+
         $hasClientCredentials = !empty($entity->get('isConfidential')) && !empty($entity->get('clientCredentialsGrant'));
 
         if (!$hasClientCredentials && empty($entity->get('authorizationCodeGrant'))) {
@@ -51,6 +56,34 @@ class OauthClient extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function isUiClient(Entity $entity): bool
+    {
+        return !$entity->isNew() && $entity->id === $this->getConfig()->get(UiClient::CONFIG_KEY);
+    }
+
+    /**
+     * The settings the sign-in of the user interface depends on have one right value each, any other value would only
+     * turn the sign-in off; the redirect URI follows the site URL.
+     */
+    protected function validateUiClient(Entity $entity): void
+    {
+        $redirectUris = [$this->getInjection('container')->get(UiClient::class)->getRedirectUri()];
+
+        $isValid = $entity->get('isConfidential') === false
+            && $entity->get('clientCredentialsGrant') === false
+            && $entity->get('authorizationCodeGrant') === true
+            && $entity->get('refreshTokenGrant') === true
+            && $entity->get('isConsentRequired') === false
+            && empty($entity->get('userId'))
+            && (!$entity->isAttributeChanged('redirectUris') || array_values((array)$entity->get('redirectUris')) === $redirectUris);
+
+        if (!$isValid) {
+            throw new BadRequest($this->getInjection('language')->translate('uiClientProtected', 'exceptions', 'OauthClient'));
+        }
+
+        $entity->set('redirectUris', $redirectUris);
     }
 
     /**
@@ -79,6 +112,15 @@ class OauthClient extends Base
         if (!$entity->isNew() && ($entity->isAttributeChanged('secretHash') || ($entity->isAttributeChanged('isActive') && !$entity->get('isActive')))) {
             $this->getTokenRevoker()->revokeClientTokens($entity->id);
         }
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($this->isUiClient($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate('uiClientNotRemovable', 'exceptions', 'OauthClient'));
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

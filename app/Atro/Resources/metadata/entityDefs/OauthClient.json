@@ -12,10 +12,28 @@
       "type": "bool",
       "default": true
     },
+    "isUiClient": {
+      "type": "bool",
+      "notStorable": true,
+      "protected": true,
+      "tooltip": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
     "isConfidential": {
       "type": "bool",
       "default": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
     },
     "clientCredentialsGrant": {
       "type": "bool",
@@ -29,13 +47,31 @@
               "attribute": "isConfidential"
             }
           ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
         }
       }
     },
     "authorizationCodeGrant": {
       "type": "bool",
       "default": false,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
     },
     "refreshTokenGrant": {
       "type": "bool",
@@ -47,6 +83,14 @@
             {
               "type": "isTrue",
               "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
             }
           ]
         }
@@ -69,6 +113,37 @@
             {
               "type": "isTrue",
               "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "isConsentRequired": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
             }
           ]
         }
@@ -99,6 +174,14 @@
             {
               "type": "isTrue",
               "attribute": "clientCredentialsGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
             }
           ]
         }

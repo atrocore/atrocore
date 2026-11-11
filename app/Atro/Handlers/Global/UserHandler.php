@@ -125,6 +125,13 @@ class UserHandler extends AbstractHandler
         $data = $this->getServiceFactory()->create('Global')->getUserData();
         unset($data['user']->token);
 
+        // authenticated by an OAuth access token: the data of the user only, the token is not of this endpoint
+        if ($request->getAttribute('oauth_access_token_id') !== null) {
+            unset($data['token']);
+
+            return new JsonResponse($data);
+        }
+
         $cookieHeader = $request->getHeaderLine('Authorization-Cookie');
         $isCookieMode = $request->getAttribute('isCookieAuth') || $cookieHeader === 'true' || $cookieHeader === '1';
 

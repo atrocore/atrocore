@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\OAuth;
 
 use Atro\Core\Utils\Config;
+use Defuse\Crypto\Key;
 use League\OAuth2\Server\CryptKey;
 
 /**
@@ -33,7 +34,7 @@ class Keys
 
     public static function generateEncryptionKey(): string
     {
-        return base64_encode(random_bytes(32));
+        return Key::createNewRandomKey()->saveToAsciiSafeString();
     }
 
     public function getPrivateKey(): CryptKey
@@ -46,14 +47,17 @@ class Keys
         return new CryptKey($this->getAbsolutePath(self::PUBLIC_KEY_PATH));
     }
 
-    public function getEncryptionKey(): string
+    /**
+     * A key object, not a password: a password would be stretched (PBKDF2) on every encryption and decryption.
+     */
+    public function getEncryptionKey(): Key
     {
         $key = (string)$this->config->get(self::ENCRYPTION_KEY_CONFIG_KEY);
         if ($key === '') {
             throw new \Error('Option "' . self::ENCRYPTION_KEY_CONFIG_KEY . '" does not exist in config.php');
         }
 
-        return $key;
+        return Key::loadFromAsciiSafeString($key);
     }
 
     /**

@@ -9,7 +9,9 @@
     "refreshTokenGrant": "Refresh Token",
     "user": "User",
     "secretHash": "Secret Hash",
-    "redirectUris": "Redirect URIs"
+    "redirectUris": "Redirect URIs",
+    "isConsentRequired": "Consent Required",
+    "isUiClient": "UI Client"
   },
   "links": {
     "user": "User"
@@ -26,14 +28,17 @@
     "authorizationCodeGrant": "The client obtains an access token on behalf of a user who signs in on the AtroCore sign-in page (with PKCE).",
     "refreshTokenGrant": "Together with the access token the client gets a refresh token, which it exchanges for a new access token without signing the user in again.",
     "user": "The user the client acts as when it obtains an access token with its own credentials (client credentials grant).",
-    "redirectUris": "The addresses the user is returned to after signing in. The redirect_uri of an authorization request must match one of them exactly."
+    "redirectUris": "The addresses the user is returned to after signing in. The redirect_uri of an authorization request must match one of them exactly.",
+    "isConsentRequired": "The user confirms on the sign-in page that the application gets access to the account. Turn it off only for the applications of your own organization, such as the AtroCore user interface.",
+    "isUiClient": "The AtroCore user interface signs in by this client. It is set on the installation; the console command \"restore ui client\" restores it."
   },
   "exceptions": {
     "userRequiredForClientCredentials": "A client with the client credentials grant needs a user to act as.",
     "grantRequired": "Select at least one way to obtain an access token: client credentials or authorization code.",
     "redirectUrisRequired": "A client with the authorization code grant needs at least one redirect URI.",
     "invalidRedirectUri": "\"%s\" is not a valid redirect URI: an absolute URI without a fragment is expected.",
-    "passwordExpired": "Your password has expired. Sign in to AtroCore and change it first."
+    "uiClientProtected": "The AtroCore user interface signs in by this client: only its name, description and activity can be changed.",
+    "uiClientNotRemovable": "The AtroCore user interface signs in by this client, it cannot be deleted. Deactivate it to turn off signing in to the user interface."
   },
   "actions": {
     "generateSecret": "Generate Secret"
@@ -43,5 +48,9 @@
   },
   "actionResults": {
     "generateSecret": "The client secret is shown only once, copy it now:"
+  },
+  "messages": {
+    "uiClientDisabled": "Signing in to the user interface is turned off by the administrator.",
+    "signInFailed": "The sign-in did not succeed. Please sign in again."
   }
 }

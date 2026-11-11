@@ -16,6 +16,7 @@ namespace Atro\Handlers\Global;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\OAuth\Authorization;
+use Atro\Core\OAuth\Entities\ClientEntity;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -104,8 +105,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'clientName' => [
+                            'clientName'        => [
                                 'type' => 'string',
+                            ],
+                            'isConsentRequired' => [
+                                'type'        => 'boolean',
+                                'description' => 'Whether the user confirms that the client gets access to the account.',
                             ],
                         ],
                     ],
@@ -128,8 +133,11 @@ class OauthAuthorizeHandler extends AbstractHandler
             throw new BadRequest($e->getHint() ?: $e->getMessage());
         }
 
+        $client = $authorizationRequest->getClient();
+
         return new JsonResponse([
-            'clientName' => $authorizationRequest->getClient()->getName(),
+            'clientName'        => $client->getName(),
+            'isConsentRequired' => !$client instanceof ClientEntity || $client->isConsentRequired(),
         ]);
     }
 }

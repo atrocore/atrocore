@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Atro\Core\OAuth\Repositories;
 
 use Atro\Core\OAuth\Entities\ClientEntity;
+use Atro\Core\OAuth\UiClient;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\PasswordHash;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -25,8 +27,11 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
  */
 class ClientRepository implements ClientRepositoryInterface
 {
-    public function __construct(private readonly Connection $connection, private readonly PasswordHash $passwordHash)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly PasswordHash $passwordHash,
+        private readonly Config $config
+    ) {
     }
 
     public function getClientEntity(string $clientIdentifier): ?ClientEntityInterface
@@ -39,10 +44,11 @@ class ClientRepository implements ClientRepositoryInterface
         return new ClientEntity(
             $row['id'],
             (string)$row['name'],
-            $this->decodeList($row['redirect_uris']),
+            $this->getRedirectUris($row),
             !empty($row['is_confidential']),
             $this->getGrantTypes($row),
-            $row['user_id'] ?: null
+            $row['user_id'] ?: null,
+            !empty($row['is_consent_required'])
         );
     }
 
@@ -97,7 +103,7 @@ class ClientRepository implements ClientRepositoryInterface
     private function fetchActiveClient(string $clientIdentifier): ?array
     {
         $row = $this->connection->createQueryBuilder()
-            ->select('id', 'name', 'is_confidential', 'client_credentials_grant', 'authorization_code_grant', 'refresh_token_grant', 'redirect_uris', 'user_id', 'secret_hash')
+            ->select('id', 'name', 'is_confidential', 'client_credentials_grant', 'authorization_code_grant', 'refresh_token_grant', 'redirect_uris', 'is_consent_required', 'user_id', 'secret_hash')
             ->from('oauth_client')
             ->where('id = :id')
             ->andWhere('deleted = :false')
@@ -131,6 +137,18 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         return $grantTypes;
+    }
+
+    /**
+     * The redirect URI of the client of the user interface follows the site URL.
+     */
+    private function getRedirectUris(array $row): array
+    {
+        if ($row['id'] === $this->config->get(UiClient::CONFIG_KEY)) {
+            return [rtrim($this->config->getSiteUrl(), '/') . UiClient::CALLBACK_PATH];
+        }
+
+        return $this->decodeList($row['redirect_uris']);
     }
 
     private function decodeList(?string $value): array
