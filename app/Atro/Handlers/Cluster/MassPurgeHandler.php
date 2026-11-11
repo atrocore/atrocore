@@ -112,7 +112,7 @@ class MassPurgeHandler extends AbstractHandler
         } elseif (!empty($data->idList) && is_array($data->idList)) {
             $params['ids'] = $data->idList;
         } elseif (isset($data->where) && is_array($data->where)) {
-            $params['where'] = $data->where;
+            $params['where'] = json_decode(json_encode($data->where), true);
         } else {
             throw new BadRequest('One of all, idList, or where is required.');
         }
