@@ -79,7 +79,7 @@ With such settings, entity records will be [deleted](../../../08.record-manageme
 
 ### Find matches
 
-This scheduled process automatically evaluates new and updated records against the defined [Matching Rules](../../../18.master-data-management/17.matching/index.md#matching-rules).
+This scheduled process automatically evaluates new and updated records against the [Blocking Rules](../../../18.master-data-management/17.matching/index.md#blocking-rules) and [Matching Rules](../../../18.master-data-management/17.matching/index.md#matching-rules) of the active Matchings.
 
 ![Find matches](_assets/Find-matches.png){.medium}
 

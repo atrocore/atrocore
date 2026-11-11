@@ -154,7 +154,7 @@ At the contributor level, data is prepared for consolidation into the master ent
 
 Data unification means bringing data into a consistent and standardized format. This may include, for example, representing phone numbers in a single unified format, normalizing country codes, aligning date formats, or standardizing naming conventions. Such transformations ensure that data coming from different source systems becomes comparable and consistent.
 
-Duplicate detection is performed using the [Matching](./17.matching/index.md) mechanism in PIM. In this mechanism, you can define matching rules that determine how potential duplicates are identified. These rules may be based on one or multiple fields (for example, name, email, phone number, external ID, or combinations of these) and can include exact or fuzzy matching logic.
+Duplicate detection is performed using the [Matching](./17.matching/index.md) mechanism in PIM. In this mechanism, you define blocking rules that select the candidate records and matching rules that score them to determine potential duplicates. These rules may be based on one or multiple fields (for example, name, email, phone number, external ID, or combinations of these) and can include exact or fuzzy matching logic.
 
 After unification and duplicate detection, unified and validated data is transferred to the Master Entity, where it forms a single, consolidated, and reliable version of each record.
 
