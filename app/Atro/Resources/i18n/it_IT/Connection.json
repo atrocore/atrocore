@@ -54,7 +54,7 @@
     "connectionSuccess": "La connessione è stata stabilita con successo",
     "testConnection": "Collegamento di prova",
     "sendTestEmail": "Inviare un'e-mail di prova",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "Server MySQL",
     "psql": "Server PostgreSQL",
     "msql": "Microsoft SQL Server",
@@ -83,7 +83,7 @@
       "oauth": "Oauth"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "Server MySQL",
       "psql": "Server PostgreSQL",

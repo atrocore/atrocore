@@ -68,7 +68,7 @@
     "quantities": "Кількість",
     "oauth1": "OAuth 1.0",
     "vertica": "Vertica DB",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "Сервер MySQL",
     "psql": "Сервер PostgreSQL",
     "msql": "Microsoft SQL Server",
@@ -96,7 +96,7 @@
       "oauth": "OAuth"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "Сервер MySQL",
       "psql": "Сервер PostgreSQL",

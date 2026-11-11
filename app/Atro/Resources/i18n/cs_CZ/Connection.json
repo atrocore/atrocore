@@ -54,7 +54,7 @@
     "connectionSuccess": "Spojení bylo úspěšně navázáno",
     "testConnection": "Testovací připojení",
     "sendTestEmail": "Odeslání testovacího e-mailu",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "Server MySQL",
     "psql": "Server PostgreSQL",
     "msql": "Microsoft SQL Server",
@@ -83,7 +83,7 @@
       "oauth": "Oauth"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "Server MySQL",
       "psql": "Server PostgreSQL",

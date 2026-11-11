@@ -60,7 +60,7 @@
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
     "tokenAuthApi": "Token-Authentifizierungs-API",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "MySQL-Server",
     "psql": "PostgreSQL-Server",
     "msql": "Microsoft SQL Server",
@@ -96,7 +96,7 @@
       "basic": "Grundlegend"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "MySQL-Server",
       "psql": "PostgreSQL-Server",

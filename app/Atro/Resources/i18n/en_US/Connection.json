@@ -56,7 +56,7 @@
     "connectionSuccess": "Connection is successfully established",
     "testConnection": "Test Connection",
     "sendTestEmail": "Send Test Email",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "MySQL Server",
     "psql": "PostgreSQL Server",
     "msql": "Microsoft SQL Server",
@@ -87,7 +87,7 @@
       "oauth": "Oauth"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "MySQL Server",
       "psql": "PostgreSQL Server",

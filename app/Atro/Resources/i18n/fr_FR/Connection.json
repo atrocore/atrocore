@@ -55,7 +55,7 @@
   "labels": {
     "connectionSuccess": "La connexion est établie avec succès",
     "testConnection": "Test de connexion",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "Serveur MySQL",
     "psql": "Serveur PostgreSQL",
     "msql": "Microsoft SQL Server",
@@ -96,7 +96,7 @@
       "basic": "Basic"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "Serveur MySQL",
       "psql": "Serveur PostgreSQL",
