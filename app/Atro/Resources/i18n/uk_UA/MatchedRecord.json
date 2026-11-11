@@ -1,11 +1,11 @@
 {
   "fields": {
-    "source": "Джерело",
-    "sourceEntity": "Вихідна сутність",
-    "sourceEntityId": "Ідентифікатор вихідної сутності",
-    "master": "Майстер",
-    "masterEntity": "Основна сутність",
-    "masterEntityId": "Ідентифікатор основної сутності",
+    "originalRecord": "Оригінальний запис",
+    "originalEntity": "Оригінальна сутність",
+    "originalEntityId": "Ідентифікатор оригінальної сутності",
+    "matchedRecord": "Зіставлений запис",
+    "matchedEntity": "Зіставлена сутність",
+    "matchedEntityId": "Ідентифікатор зіставленої сутності",
     "score": "Оцінка",
     "hash": "Унікальний хеш",
     "hasCluster": "Має кластер",

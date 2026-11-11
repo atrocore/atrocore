@@ -1,12 +1,6 @@
 {
   "fields": {
-    "master": "Maestro",
-    "masterEntity": "Entidad principal",
-    "masterEntityId": "ID de la entidad principal",
     "score": "Puntuación",
-    "source": "Fuente",
-    "sourceEntity": "Entidad de origen",
-    "sourceEntityId": "ID de la entidad de origen",
     "hash": "Hash único",
     "hasCluster": "Tiene Cluster",
     "clusterItems": "Partidas agrupadas"

@@ -49,7 +49,7 @@ class MatchedRecord extends Base
         $this->getDbal()->createQueryBuilder()
             ->update('matched_record')
             ->set('has_cluster', ':false')
-            ->where('(source_entity=:entityName AND source_entity_id=:entityId) OR (master_entity=:entityName AND master_entity_id=:entityId)')
+            ->where('(original_entity=:entityName AND original_entity_id=:entityId) OR (matched_entity=:entityName AND matched_entity_id=:entityId)')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('entityName', $entityName)
             ->setParameter('entityId', $entityId)
@@ -67,20 +67,20 @@ class MatchedRecord extends Base
 
         return $this->getDbal()->createQueryBuilder()
             ->select(
-                'mr.id, mr.type, mr.score, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id'
+                'mr.id, mr.type, mr.score, mr.original_entity, mr.original_entity_id, ci.cluster_id as original_cluster_id, mr.matched_entity, mr.matched_entity_id, ci1.cluster_id as matched_cluster_id'
             )
             ->from('matched_record', 'mr')
-            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false AND ci.cluster_id IS NOT NULL')
+            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.entity_name = mr.original_entity AND ci.entity_id = mr.original_entity_id AND ci.deleted=:false AND ci.cluster_id IS NOT NULL')
             ->leftJoin(
-                'mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false AND ci1.cluster_id IS NOT NULL'
+                'mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.matched_entity AND ci1.entity_id = mr.matched_entity_id AND ci1.deleted=:false AND ci1.cluster_id IS NOT NULL'
             )
-            ->where('mr.master_entity IN (:entitiesNames) OR mr.source_entity IN (:entitiesNames)')
+            ->where('mr.matched_entity IN (:entitiesNames) OR mr.original_entity IN (:entitiesNames)')
             ->andWhere('mr.deleted = :false')
             ->andWhere('mr.has_cluster = :false')
             ->setFirstResult(0)
             ->setMaxResults($limit)
-            ->addOrderBy('mr.source_entity', 'ASC')
-            ->addOrderBy('mr.source_entity_id', 'ASC')
+            ->addOrderBy('mr.original_entity', 'ASC')
+            ->addOrderBy('mr.original_entity_id', 'ASC')
             ->setParameter('entitiesNames', $entitiesNames, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
@@ -89,13 +89,13 @@ class MatchedRecord extends Base
     public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): array
     {
         $res = $this->getDbal()->createQueryBuilder()
-            ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
+            ->select('mr.id, mr.type, mr.original_entity, mr.original_entity_id, ci.cluster_id as original_cluster_id, mr.matched_entity, mr.matched_entity_id, ci1.cluster_id as matched_cluster_id')
             ->from('matched_record', 'mr')
-            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.id <> :itemId and ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false')
+            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.id <> :itemId and ci.entity_name = mr.original_entity AND ci.entity_id = mr.original_entity_id AND ci.deleted=:false')
             ->leftJoin(
-                'mr', 'cluster_item', 'ci1', 'ci1.id <> :itemId and ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false'
+                'mr', 'cluster_item', 'ci1', 'ci1.id <> :itemId and ci1.entity_name = mr.matched_entity AND ci1.entity_id = mr.matched_entity_id AND ci1.deleted=:false'
             )
-            ->where('(mr.source_entity=:entityName AND mr.source_entity_id=:entityId) or (mr.master_entity=:entityName AND mr.master_entity_id=:entityId)')
+            ->where('(mr.original_entity=:entityName AND mr.original_entity_id=:entityId) or (mr.matched_entity=:entityName AND mr.matched_entity_id=:entityId)')
             ->andWhere('(ci.cluster_id is not null or ci1.cluster_id is not null) and (ci.cluster_id is null or ci.cluster_id not in (:clusterIds)) and (ci1.cluster_id is null or ci1.cluster_id not in (:clusterIds)) and mr.deleted = :false')
             ->setParameter('entityName', $entityName)
             ->setParameter('entityId', $entityId)
@@ -127,7 +127,7 @@ class MatchedRecord extends Base
         if ($toRemove) {
             $this->getConnection()->createQueryBuilder()
                 ->delete('matched_record')
-                ->where('(source_entity=:entityName AND source_entity_id=:entityId) OR (master_entity=:entityName AND master_entity_id=:entityId)')
+                ->where('(original_entity=:entityName AND original_entity_id=:entityId) OR (matched_entity=:entityName AND matched_entity_id=:entityId)')
                 ->setParameter('entityName', $entityName)
                 ->setParameter('entityId', $entityId)
                 ->executeQuery();
@@ -136,18 +136,18 @@ class MatchedRecord extends Base
 
     public function createMatchedRecord(
         MatchingEntity $matching,
-        string         $sourceId,
-        string         $masterId,
+        string         $originalId,
+        string         $matchedId,
         int            $score,
         string         $matchedAt
     ): void
     {
-        if ($matching->get('type') === 'duplicate' && strcmp($sourceId, $masterId) > 0) {
-            [$sourceId, $masterId] = [$masterId, $sourceId];
+        if ($matching->get('type') === 'duplicate' && strcmp($originalId, $matchedId) > 0) {
+            [$originalId, $matchedId] = [$matchedId, $originalId];
         }
 
         $sql
-            = "INSERT INTO matched_record (id, type, source_entity, source_entity_id, master_entity, master_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :sourceEntity, :sourceEntityId, :masterEntity, :masterEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
+            = "INSERT INTO matched_record (id, type, original_entity, original_entity_id, matched_entity, matched_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :originalEntity, :originalEntityId, :matchedEntity, :matchedEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
         if (Converter::isPgSQL($this->getDbal())) {
             $sql .= " ON CONFLICT (deleted, hash) DO UPDATE SET has_cluster = CASE WHEN matched_record.score != EXCLUDED.score THEN :false ELSE matched_record.has_cluster END, score = EXCLUDED.score, modified_at = EXCLUDED.modified_at, modified_by_id = EXCLUDED.modified_by_id RETURNING xmax";
         } else {
@@ -155,16 +155,16 @@ class MatchedRecord extends Base
         }
 
         $userId = $this->getEntityManager()->getUser()->id;
-        $hash = md5(implode('_', [$matching->get('number'), $matching->get('entity'), $sourceId, $matching->get('masterEntity'), $masterId]));
+        $hash = md5(implode('_', [$matching->get('number'), $matching->get('entity'), $originalId, $matching->get('masterEntity'), $matchedId]));
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
 
         $stmt->bindValue(':id', IdGenerator::uuid());
         $stmt->bindValue(':type', $matching->get('type'));
-        $stmt->bindValue(':sourceEntity', $matching->get('entity'));
-        $stmt->bindValue(':sourceEntityId', $sourceId);
-        $stmt->bindValue(':masterEntity', $matching->get('masterEntity'));
-        $stmt->bindValue(':masterEntityId', $masterId);
+        $stmt->bindValue(':originalEntity', $matching->get('entity'));
+        $stmt->bindValue(':originalEntityId', $originalId);
+        $stmt->bindValue(':matchedEntity', $matching->get('masterEntity'));
+        $stmt->bindValue(':matchedEntityId', $matchedId);
         $stmt->bindValue(':score', $score);
         $stmt->bindValue(':matchingId', $matching->id);
         $stmt->bindValue(':hash', $hash);
@@ -177,11 +177,11 @@ class MatchedRecord extends Base
         $stmt->execute();
     }
 
-    public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $sourceEntityName, string $sourceEntityId): void
+    public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $entityName, string $entityId): void
     {
-        $entityCondition = 'source_entity=:sourceEntity AND source_entity_id=:sourceEntityId';
+        $entityCondition = 'original_entity=:entityName AND original_entity_id=:entityId';
         if ($matching->get('type') === 'duplicate') {
-            $entityCondition = '(' . $entityCondition . ') OR (master_entity=:sourceEntity AND master_entity_id=:sourceEntityId)';
+            $entityCondition = '(' . $entityCondition . ') OR (matched_entity=:entityName AND matched_entity_id=:entityId)';
         }
 
         $this->getDbal()->createQueryBuilder()
@@ -191,8 +191,8 @@ class MatchedRecord extends Base
             ->andWhere($entityCondition)
             ->setParameter('matchingId', $matching->id)
             ->setParameter('matchedAt', $matchedAt)
-            ->setParameter('sourceEntity', $sourceEntityName)
-            ->setParameter('sourceEntityId', $sourceEntityId)
+            ->setParameter('entityName', $entityName)
+            ->setParameter('entityId', $entityId)
             ->executeQuery();
     }
 }

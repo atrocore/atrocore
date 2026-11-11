@@ -51,41 +51,41 @@ class ClusterMatchedRecords extends AbstractClusterJob implements JobInterface
 
             $clustersIds = [];
             foreach ($items as $item) {
-                if (!empty($item['source_cluster_id'])) {
-                    $clustersIds[$item['source_entity']][$item['source_entity_id']] = $item['source_cluster_id'];
+                if (!empty($item['original_cluster_id'])) {
+                    $clustersIds[$item['original_entity']][$item['original_entity_id']] = $item['original_cluster_id'];
                 }
-                if (!empty($item['master_cluster_id'])) {
-                    $clustersIds[$item['master_entity']][$item['master_entity_id']] = $item['master_cluster_id'];
+                if (!empty($item['matched_cluster_id'])) {
+                    $clustersIds[$item['matched_entity']][$item['matched_entity_id']] = $item['matched_cluster_id'];
                 }
 
-                $sourceClusterId = $clustersIds[$item['source_entity']][$item['source_entity_id']] ?? null;
-                $masterClusterId = $clustersIds[$item['master_entity']][$item['master_entity_id']] ?? null;
+                $originalClusterId = $clustersIds[$item['original_entity']][$item['original_entity_id']] ?? null;
+                $matchedClusterId = $clustersIds[$item['matched_entity']][$item['matched_entity_id']] ?? null;
 
-                $clusterId = $masterClusterId ?? $sourceClusterId ?? $this->createCluster($masterEntity)->id;
+                $clusterId = $matchedClusterId ?? $originalClusterId ?? $this->createCluster($masterEntity)->id;
 
                 $matchedRecordRepo->markHasCluster($item['id']);
 
-                if (!empty($sourceClusterId) && !empty($masterClusterId)) {
-                    if ($sourceClusterId !== $masterClusterId) {
-                        $clusterItemRepo->moveAllToCluster($sourceClusterId, $masterClusterId);
+                if (!empty($originalClusterId) && !empty($matchedClusterId)) {
+                    if ($originalClusterId !== $matchedClusterId) {
+                        $clusterItemRepo->moveAllToCluster($originalClusterId, $matchedClusterId);
                     } else {
-                        $clusterItemRepo->updateMatchedScoresInClusters([$sourceClusterId]);
+                        $clusterItemRepo->updateMatchedScoresInClusters([$originalClusterId]);
                     }
                     continue;
                 }
 
-                if (empty($sourceClusterId)) {
-                    $clustersIds[$item['source_entity']][$item['source_entity_id']] = $clusterId;
-                    $this->createClusterItem($clusterId, $item['source_entity'], $item['source_entity_id'], $item['id'], $item['score']);
+                if (empty($originalClusterId)) {
+                    $clustersIds[$item['original_entity']][$item['original_entity_id']] = $clusterId;
+                    $this->createClusterItem($clusterId, $item['original_entity'], $item['original_entity_id'], $item['id'], $item['score']);
                 } else {
-                    $clusterItemRepo->updateMatchedScore($item['source_entity'], $item['source_entity_id'], $item['score']);
+                    $clusterItemRepo->updateMatchedScore($item['original_entity'], $item['original_entity_id'], $item['score']);
                 }
 
-                if (empty($masterClusterId)) {
-                    $clustersIds[$item['master_entity']][$item['master_entity_id']] = $clusterId;
-                    $this->createClusterItem($clusterId, $item['master_entity'], $item['master_entity_id'], $item['id'], $item['score']);
+                if (empty($matchedClusterId)) {
+                    $clustersIds[$item['matched_entity']][$item['matched_entity_id']] = $clusterId;
+                    $this->createClusterItem($clusterId, $item['matched_entity'], $item['matched_entity_id'], $item['id'], $item['score']);
                 } else {
-                    $clusterItemRepo->updateMatchedScore($item['master_entity'], $item['master_entity_id'], $item['score']);
+                    $clusterItemRepo->updateMatchedScore($item['matched_entity'], $item['matched_entity_id'], $item['score']);
                 }
             }
 

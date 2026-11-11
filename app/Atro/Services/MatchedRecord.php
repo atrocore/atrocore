@@ -19,22 +19,22 @@ use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
-    protected $mandatorySelectAttributeList = ['sourceEntity', 'sourceEntityId', 'masterEntity', 'masterEntityId'];
+    protected $mandatorySelectAttributeList = ['originalEntity', 'originalEntityId', 'matchedEntity', 'matchedEntityId'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('sourceId', $entity->get('sourceEntityId'));
-        $sourceEntity = $this->getEntityManager()->getEntity($entity->get('sourceEntity'), $entity->get('sourceEntityId'));
-        if (!empty($sourceEntity)) {
-            $entity->set('sourceName', $sourceEntity->get('name'));
+        $entity->set('originalRecordId', $entity->get('originalEntityId'));
+        $originalRecord = $this->getEntityManager()->getEntity($entity->get('originalEntity'), $entity->get('originalEntityId'));
+        if (!empty($originalRecord)) {
+            $entity->set('originalRecordName', $originalRecord->get('name'));
         }
 
-        $entity->set('masterId', $entity->get('masterEntityId'));
-        $masterEntity = $this->getEntityManager()->getEntity($entity->get('masterEntity'), $entity->get('masterEntityId'));
-        if (!empty($masterEntity)) {
-            $entity->set('masterName', $masterEntity->get('name'));
+        $entity->set('matchedRecordId', $entity->get('matchedEntityId'));
+        $matchedRecord = $this->getEntityManager()->getEntity($entity->get('matchedEntity'), $entity->get('matchedEntityId'));
+        if (!empty($matchedRecord)) {
+            $entity->set('matchedRecordName', $matchedRecord->get('name'));
         }
     }
 

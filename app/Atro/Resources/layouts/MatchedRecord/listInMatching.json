@@ -1,9 +1,9 @@
 [
   {
-    "name": "source"
+    "name": "originalRecord"
   },
   {
-    "name": "master"
+    "name": "matchedRecord"
   },
   {
     "name": "score"

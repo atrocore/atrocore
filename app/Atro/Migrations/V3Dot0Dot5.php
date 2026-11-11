@@ -17,6 +17,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Schema;
 
 class V3Dot0Dot5 extends Base
@@ -57,6 +58,8 @@ class V3Dot0Dot5 extends Base
      */
     public function up(): void
     {
+        $this->renameMatchedRecordColumns();
+
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
@@ -106,6 +109,41 @@ class V3Dot0Dot5 extends Base
         }
     }
 
+    protected function renameMatchedRecordColumns(): void
+    {
+        $conn = $this->getDbal();
+        $schemaManager = $conn->createSchemaManager();
+
+        if (!$schemaManager->tablesExist(['matched_record'])) {
+            return;
+        }
+
+        $columns = array_keys($schemaManager->listTableColumns('matched_record'));
+
+        $renames = [
+            'source_entity'    => 'original_entity',
+            'source_entity_id' => 'original_entity_id',
+            'master_entity'    => 'matched_entity',
+            'master_entity_id' => 'matched_entity_id',
+        ];
+
+        foreach ($renames as $old => $new) {
+            if (in_array($old, $columns) && !in_array($new, $columns)) {
+                $conn->executeStatement('ALTER TABLE matched_record RENAME COLUMN ' . $conn->quoteIdentifier($old) . ' TO ' . $conn->quoteIdentifier($new));
+            }
+        }
+
+        $indexes = $schemaManager->listTableIndexes('matched_record');
+        foreach (['source' => 'original', 'master' => 'matched'] as $old => $new) {
+            if (isset($indexes["idx_matched_record_{$old}_entity"])) {
+                $schemaManager->dropIndex("idx_matched_record_{$old}_entity", 'matched_record');
+            }
+            if (!isset($indexes["idx_matched_record_{$new}_entity"])) {
+                $schemaManager->createIndex(new Index("idx_matched_record_{$new}_entity", ['type', "{$new}_entity", "{$new}_entity_id"]), 'matched_record');
+            }
+        }
+    }
+
     protected function mergeMirroredMatchedRecords(): void
     {
         $conn = $this->getDbal();
@@ -120,9 +158,9 @@ class V3Dot0Dot5 extends Base
         foreach ($matchings as $matching) {
             while (true) {
                 $pairs = $conn->createQueryBuilder()
-                    ->select('a.id AS a_id, a.source_entity_id AS a_source, a.master_entity_id AS a_master, a.score AS a_score, a.has_cluster AS a_has_cluster, b.id AS b_id, b.score AS b_score, b.has_cluster AS b_has_cluster')
+                    ->select('a.id AS a_id, a.original_entity_id AS a_original, a.matched_entity_id AS a_matched, a.score AS a_score, a.has_cluster AS a_has_cluster, b.id AS b_id, b.score AS b_score, b.has_cluster AS b_has_cluster')
                     ->from('matched_record', 'a')
-                    ->innerJoin('a', 'matched_record', 'b', 'b.matching_id = a.matching_id AND b.source_entity_id = a.master_entity_id AND b.master_entity_id = a.source_entity_id AND b.deleted = a.deleted')
+                    ->innerJoin('a', 'matched_record', 'b', 'b.matching_id = a.matching_id AND b.original_entity_id = a.matched_entity_id AND b.matched_entity_id = a.original_entity_id AND b.deleted = a.deleted')
                     ->where('a.matching_id = :matchingId')
                     ->andWhere('a.deleted = :false')
                     ->andWhere('a.id < b.id')
@@ -136,7 +174,7 @@ class V3Dot0Dot5 extends Base
                 }
 
                 foreach ($pairs as $pair) {
-                    [$keepId, $removeId] = strcmp($pair['a_source'], $pair['a_master']) < 0
+                    [$keepId, $removeId] = strcmp($pair['a_original'], $pair['a_matched']) < 0
                         ? [$pair['a_id'], $pair['b_id']]
                         : [$pair['b_id'], $pair['a_id']];
 
@@ -169,7 +207,7 @@ class V3Dot0Dot5 extends Base
             $lastId = '';
             while (true) {
                 $rows = $conn->createQueryBuilder()
-                    ->select('id, source_entity_id, master_entity_id')
+                    ->select('id, original_entity_id, matched_entity_id')
                     ->from('matched_record')
                     ->where('matching_id = :matchingId')
                     ->andWhere('deleted = :false')
@@ -188,19 +226,19 @@ class V3Dot0Dot5 extends Base
                 foreach ($rows as $row) {
                     $lastId = $row['id'];
 
-                    if (strcmp($row['source_entity_id'], $row['master_entity_id']) <= 0) {
+                    if (strcmp($row['original_entity_id'], $row['matched_entity_id']) <= 0) {
                         continue;
                     }
 
                     $conn->createQueryBuilder()
                         ->update('matched_record')
-                        ->set('source_entity_id', ':sourceId')
-                        ->set('master_entity_id', ':masterId')
+                        ->set('original_entity_id', ':originalId')
+                        ->set('matched_entity_id', ':matchedId')
                         ->set('hash', ':hash')
                         ->where('id = :id')
-                        ->setParameter('sourceId', $row['master_entity_id'])
-                        ->setParameter('masterId', $row['source_entity_id'])
-                        ->setParameter('hash', md5(implode('_', [$matching['number'], $matching['entity'], $row['master_entity_id'], $matching['master_entity'], $row['source_entity_id']])))
+                        ->setParameter('originalId', $row['matched_entity_id'])
+                        ->setParameter('matchedId', $row['original_entity_id'])
+                        ->setParameter('hash', md5(implode('_', [$matching['number'], $matching['entity'], $row['matched_entity_id'], $matching['master_entity'], $row['original_entity_id']])))
                         ->setParameter('id', $row['id'])
                         ->executeStatement();
                 }

@@ -9,35 +9,35 @@
       "required": true,
       "protected": true
     },
-    "source": {
+    "originalRecord": {
       "type": "link",
       "notStorable": true,
-      "view": "views/matched-record/fields/source",
+      "view": "views/matched-record/fields/original-record",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
     },
-    "sourceEntity": {
+    "originalEntity": {
       "type": "varchar",
       "protected": true
     },
-    "sourceEntityId": {
+    "originalEntityId": {
       "type": "varchar",
       "protected": true
     },
-    "master": {
+    "matchedRecord": {
       "type": "link",
       "notStorable": true,
-      "view": "views/matched-record/fields/master",
+      "view": "views/matched-record/fields/matched-record",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
     },
-    "masterEntity": {
+    "matchedEntity": {
       "type": "varchar",
       "protected": true
     },
-    "masterEntityId": {
+    "matchedEntityId": {
       "type": "varchar",
       "protected": true
     },
@@ -107,18 +107,18 @@
     "asc": false
   },
   "indexes": {
-    "sourceEntity": {
+    "originalEntity": {
       "columns": [
         "type",
-        "sourceEntity",
-        "sourceEntityId"
+        "originalEntity",
+        "originalEntityId"
       ]
     },
-    "masterEntity": {
+    "matchedEntity": {
       "columns": [
         "type",
-        "masterEntity",
-        "masterEntityId"
+        "matchedEntity",
+        "matchedEntityId"
       ]
     },
     "hasCluster": {

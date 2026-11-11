@@ -1,11 +1,11 @@
 {
   "fields": {
-    "source": "Quelle",
-    "sourceEntity": "Quellentität",
-    "sourceEntityId": "Quelle-Entitäts-ID",
-    "master": "Stammdaten-Entität",
-    "masterEntity": "Stammdaten-Entität",
-    "masterEntityId": "Stammdaten-Entitäts-ID",
+    "originalRecord": "Ursprünglicher Datensatz",
+    "originalEntity": "Ursprüngliche Entität",
+    "originalEntityId": "ID der ursprünglichen Entität",
+    "matchedRecord": "Zugeordneter Datensatz",
+    "matchedEntity": "Zugeordnete Entität",
+    "matchedEntityId": "ID der zugeordneten Entität",
     "score": "Punktzahl",
     "hash": "Eindeutiger Hash",
     "hasCluster": "Hat Cluster",
