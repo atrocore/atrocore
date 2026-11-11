@@ -57,7 +57,7 @@ class FieldSimilar extends AbstractBlockingRule
             return empty($parts) ? '1=0' : '(' . implode(' OR ', $parts) . ')';
         }
 
-        $value = str_replace(' ', '', strtolower(trim((string)$value)));
+        $value = str_replace(' ', '', mb_strtolower(trim((string)$value)));
         if ($value === '') {
             return '1=0';
         }
@@ -110,7 +110,7 @@ class FieldSimilar extends AbstractBlockingRule
                 . " AND (" . implode(' OR ', $parts) . "))";
         }
 
-        $value = str_replace(' ', '', strtolower(trim((string)$value)));
+        $value = str_replace(' ', '', mb_strtolower(trim((string)$value)));
         if ($value === '') {
             return '1=0';
         }

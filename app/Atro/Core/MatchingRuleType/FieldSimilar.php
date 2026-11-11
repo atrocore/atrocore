@@ -54,8 +54,8 @@ class FieldSimilar extends AbstractMatchingRule
                 return $stageValue === $masterValue ? $this->getWeight() : 0.0;
             }
 
-            $stageValue  = str_replace(' ', '', strtolower(trim((string)$stageValue)));
-            $masterValue = str_replace(' ', '', strtolower(trim((string)$masterValue)));
+            $stageValue  = str_replace(' ', '', mb_strtolower(trim((string)$stageValue)));
+            $masterValue = str_replace(' ', '', mb_strtolower(trim((string)$masterValue)));
 
             if ($stageValue === '' || $masterValue === '') {
                 return 0.0;
@@ -87,8 +87,8 @@ class FieldSimilar extends AbstractMatchingRule
             return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
 
-        $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
-        $masterValue = str_replace(' ', '', strtolower(trim((string)($masterEntityData[$field] ?? ''))));
+        $stageValue = str_replace(' ', '', mb_strtolower(trim((string)$stageEntity->get($field))));
+        $masterValue = str_replace(' ', '', mb_strtolower(trim((string)($masterEntityData[$field] ?? ''))));
 
         if ($stageValue === '' || $masterValue === '') {
             return 0.0;
