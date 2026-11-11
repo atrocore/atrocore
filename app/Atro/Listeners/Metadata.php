@@ -476,6 +476,11 @@ class Metadata extends AbstractMetadataListener
             // the records of the entity cannot be created, edited or deleted, so there is no access right for such actions
             $disabledActions = [];
             foreach (['createDisabled' => 'create', 'editDisabled' => 'edit', 'deleteDisabled' => 'delete'] as $key => $action) {
+                // the subtypes have the access rights of the supertype, so the create right is needed to create the subtype records
+                if ($action === 'create' && !empty($scopeDefs['hasSubtypes'])) {
+                    continue;
+                }
+
                 if (!empty($scopeDefs[$key])) {
                     $disabledActions[] = $action;
                 }

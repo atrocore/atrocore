@@ -21,5 +21,8 @@
     "own": "Propio",
     "no": "No",
     "yes": "Si"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "La acción \"%1$s\" no se puede permitir porque está deshabilitada para la entidad \"%2$s\"."
   }
 }

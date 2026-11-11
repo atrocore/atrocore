@@ -21,5 +21,8 @@
     "own": "Own",
     "no": "No",
     "yes": "Yes"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "The action \"%1$s\" cannot be allowed, because it is disabled for the entity \"%2$s\"."
   }
 }

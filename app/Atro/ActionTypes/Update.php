@@ -46,6 +46,8 @@ class Update extends AbstractAction
 
             $searchEntityType = $action->getSubtype()?->get('searchEntity') ?? $action->getSubtype()?->get('targetEntity');
 
+            $this->validateEntityActionsEnabled($action, $searchEntityType, ['editDisabled']);
+
             /** @var \Atro\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityType);
             /** @var \Atro\Core\Templates\Repositories\Base $repository */
@@ -135,6 +137,8 @@ class Update extends AbstractAction
                 throw new BadRequest('Action can be executed only from Source Entity.');
             }
         }
+
+        $this->validateEntityActionsEnabled($action, $sourceEntity->getEntityName(), ['editDisabled']);
 
         return ActionResultDTO::done($this->updateEntity($sourceEntity, $sourceEntity, $execution, $input));
     }

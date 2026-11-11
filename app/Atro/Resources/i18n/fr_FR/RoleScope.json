@@ -21,5 +21,8 @@
     "own": "Données propres",
     "no": "Non",
     "yes": "Oui"
+  },
+  "exceptions": {
+    "roleScopeActionDisabled": "L'action \"%1$s\" ne peut pas être autorisée, car elle est désactivée pour l'entité \"%2$s\"."
   }
 }
