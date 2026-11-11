@@ -16,6 +16,7 @@ namespace Atro\Core\Factories;
 use Atro\Core\Middleware\ActionHistoryMiddleware;
 use Atro\Core\Middleware\ApiValidationMiddleware;
 use Atro\Core\Middleware\AuthMiddleware;
+use Atro\Core\Middleware\CorsMiddleware;
 use Atro\Core\Middleware\OauthMiddleware;
 use Atro\Core\Middleware\RateLimitMiddleware;
 use Atro\Core\Middleware\ErrorHandlerMiddleware;
@@ -39,6 +40,7 @@ class HttpPipeline implements FactoryInterface
         $this->registerAllRoutes($router, $container);
 
         $pipe = new MiddlewarePipe();
+        $pipe->pipe(new CorsMiddleware($container));
         $pipe->pipe(new ErrorHandlerMiddleware());
         $pipe->pipe(new RouteMiddleware($router));
         $pipe->pipe(new RateLimitMiddleware($container));

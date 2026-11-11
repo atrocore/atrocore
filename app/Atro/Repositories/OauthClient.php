@@ -46,7 +46,30 @@ class OauthClient extends Base
             throw new BadRequest($this->getInjection('language')->translate('userRequiredForClientCredentials', 'exceptions', 'OauthClient'));
         }
 
+        if (!empty($entity->get('authorizationCodeGrant'))) {
+            $this->validateRedirectUris((array)$entity->get('redirectUris'));
+        }
+
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * A redirect URI is absolute and has no fragment (RFC 6749, section 3.1.2).
+     */
+    protected function validateRedirectUris(array $redirectUris): void
+    {
+        $language = $this->getInjection('language');
+
+        if (empty($redirectUris)) {
+            throw new BadRequest($language->translate('redirectUrisRequired', 'exceptions', 'OauthClient'));
+        }
+
+        foreach ($redirectUris as $redirectUri) {
+            $parts = parse_url((string)$redirectUri);
+            if ($parts === false || empty($parts['scheme']) || isset($parts['fragment'])) {
+                throw new BadRequest(sprintf($language->translate('invalidRedirectUri', 'exceptions', 'OauthClient'), $redirectUri));
+            }
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = [])

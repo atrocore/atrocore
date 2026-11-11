@@ -42,6 +42,12 @@
         {
           "name": "refreshTokenGrant"
         }
+      ],
+      [
+        {
+          "name": "redirectUris",
+          "fullWidth": true
+        }
       ]
     ],
     "style": "default",

@@ -39,7 +39,7 @@ class ClientRepository implements ClientRepositoryInterface
         return new ClientEntity(
             $row['id'],
             (string)$row['name'],
-            [],
+            $this->decodeList($row['redirect_uris']),
             !empty($row['is_confidential']),
             $this->getGrantTypes($row),
             $row['user_id'] ?: null
@@ -64,10 +64,40 @@ class ClientRepository implements ClientRepositoryInterface
         return $clientSecret !== null && $this->passwordHash->verify($clientSecret, $row['secret_hash']);
     }
 
+    /**
+     * The origins of the redirect URIs of the active public clients with the authorization code grant: the browser-based
+     * applications that call the API from another origin (CORS).
+     */
+    public function getPublicClientOrigins(): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('redirect_uris')
+            ->from('oauth_client')
+            ->where('deleted = :false')
+            ->andWhere('is_active = :true')
+            ->andWhere('is_confidential = :false')
+            ->andWhere('authorization_code_grant = :true')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+
+        $origins = [];
+        foreach ($rows as $redirectUris) {
+            foreach ($this->decodeList($redirectUris) as $redirectUri) {
+                $parts = parse_url((string)$redirectUri);
+                if (!empty($parts['scheme']) && !empty($parts['host'])) {
+                    $origins[] = strtolower($parts['scheme'] . '://' . $parts['host']) . (isset($parts['port']) ? ':' . $parts['port'] : '');
+                }
+            }
+        }
+
+        return array_values(array_unique($origins));
+    }
+
     private function fetchActiveClient(string $clientIdentifier): ?array
     {
         $row = $this->connection->createQueryBuilder()
-            ->select('id', 'name', 'is_confidential', 'client_credentials_grant', 'authorization_code_grant', 'refresh_token_grant', 'user_id', 'secret_hash')
+            ->select('id', 'name', 'is_confidential', 'client_credentials_grant', 'authorization_code_grant', 'refresh_token_grant', 'redirect_uris', 'user_id', 'secret_hash')
             ->from('oauth_client')
             ->where('id = :id')
             ->andWhere('deleted = :false')
@@ -101,5 +131,12 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         return $grantTypes;
+    }
+
+    private function decodeList(?string $value): array
+    {
+        $list = json_decode((string)$value, true);
+
+        return is_array($list) ? array_values($list) : [];
     }
 }

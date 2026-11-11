@@ -541,6 +541,12 @@ class OpenApiGenerator
                     'oauth2'              => [
                         'type'  => 'oauth2',
                         'flows' => [
+                            'authorizationCode' => [
+                                'authorizationUrl' => '/oauth/authorize',
+                                'tokenUrl'         => '/api/oauth/token',
+                                'refreshUrl'       => '/api/oauth/token',
+                                'scopes'           => new \stdClass(),
+                            ],
                             'clientCredentials' => [
                                 'tokenUrl' => '/api/oauth/token',
                                 'scopes'   => new \stdClass(),

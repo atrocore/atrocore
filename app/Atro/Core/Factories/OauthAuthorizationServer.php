@@ -16,10 +16,12 @@ namespace Atro\Core\Factories;
 use Atro\Core\Container;
 use Atro\Core\OAuth\Keys;
 use Atro\Core\OAuth\Repositories\AccessTokenRepository;
+use Atro\Core\OAuth\Repositories\AuthCodeRepository;
 use Atro\Core\OAuth\Repositories\ClientRepository;
 use Atro\Core\OAuth\Repositories\RefreshTokenRepository;
 use Atro\Core\OAuth\Repositories\ScopeRepository;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
@@ -27,9 +29,11 @@ class OauthAuthorizationServer implements FactoryInterface
 {
     public const ACCESS_TOKEN_TTL_CONFIG_KEY = 'oauthAccessTokenTtl';
     public const REFRESH_TOKEN_TTL_CONFIG_KEY = 'oauthRefreshTokenTtl';
+    public const AUTH_CODE_TTL_CONFIG_KEY = 'oauthAuthCodeTtl';
 
     public const DEFAULT_ACCESS_TOKEN_TTL = 'PT1H';
     public const DEFAULT_REFRESH_TOKEN_TTL = 'P1M';
+    public const DEFAULT_AUTH_CODE_TTL = 'PT10M';
 
     public function create(Container $container)
     {
@@ -46,10 +50,20 @@ class OauthAuthorizationServer implements FactoryInterface
 
         $accessTokenTtl = new \DateInterval($config->get(self::ACCESS_TOKEN_TTL_CONFIG_KEY, self::DEFAULT_ACCESS_TOKEN_TTL));
 
+        $refreshTokenTtl = new \DateInterval($config->get(self::REFRESH_TOKEN_TTL_CONFIG_KEY, self::DEFAULT_REFRESH_TOKEN_TTL));
+
         $server->enableGrantType(new ClientCredentialsGrant(), $accessTokenTtl);
 
+        $authCodeGrant = new AuthCodeGrant(
+            $container->get(AuthCodeRepository::class),
+            $container->get(RefreshTokenRepository::class),
+            new \DateInterval($config->get(self::AUTH_CODE_TTL_CONFIG_KEY, self::DEFAULT_AUTH_CODE_TTL))
+        );
+        $authCodeGrant->setRefreshTokenTTL($refreshTokenTtl);
+        $server->enableGrantType($authCodeGrant, $accessTokenTtl);
+
         $refreshTokenGrant = new RefreshTokenGrant($container->get(RefreshTokenRepository::class));
-        $refreshTokenGrant->setRefreshTokenTTL(new \DateInterval($config->get(self::REFRESH_TOKEN_TTL_CONFIG_KEY, self::DEFAULT_REFRESH_TOKEN_TTL)));
+        $refreshTokenGrant->setRefreshTokenTTL($refreshTokenTtl);
         $server->enableGrantType($refreshTokenGrant, $accessTokenTtl);
 
         return $server;

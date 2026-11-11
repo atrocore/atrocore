@@ -44,6 +44,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'grant_type'    => [
                             'type' => 'string',
                             'enum' => [
+                                'authorization_code',
                                 'client_credentials',
                                 'refresh_token',
                             ],
@@ -55,6 +56,15 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'type' => 'string',
                         ],
                         'refresh_token' => [
+                            'type' => 'string',
+                        ],
+                        'code'          => [
+                            'type' => 'string',
+                        ],
+                        'redirect_uri'  => [
+                            'type' => 'string',
+                        ],
+                        'code_verifier' => [
                             'type' => 'string',
                         ],
                         'scope'         => [
@@ -113,6 +123,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
     skipActionHistory: true,
+    rateLimit: [],
 )]
 class OauthTokenHandler extends AbstractHandler
 {

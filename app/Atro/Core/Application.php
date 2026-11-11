@@ -124,6 +124,11 @@ final class Application
                 $this->runApi($query);
             }
 
+            // the authorization endpoint of the OAuth server: the sign-in page is a route of the UI
+            if ($query === 'oauth/authorize') {
+                $this->redirectToOauthAuthorizePage();
+            }
+
             // generate openapi json
             if ($query === 'apidocs/openapi.json') {
                 $this->showOpenApiJson();
@@ -192,6 +197,16 @@ final class Application
         return $this->container;
     }
 
+    protected function redirectToOauthAuthorizePage(): void
+    {
+        $params = $_GET;
+        unset($params['atroq'], $params['treoq']);
+        $params['entryPoint'] = 'oauthAuthorize';
+
+        header('Location: ' . rtrim($this->getConfig()->getSiteUrl(), '/') . '/?' . http_build_query($params));
+        exit;
+    }
+
     protected function showOpenApiJson(): void
     {
         header('Cache-Control: no-store');
@@ -257,11 +272,6 @@ final class Application
     {
         if (self::isSystemUpdating()) {
             $this->logoutAll();
-        }
-
-        if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header('HTTP/1.1 200 OK');
-            exit;
         }
 
         $request  = ServerRequest::fromGlobals();

@@ -62,6 +62,7 @@ class V3Dot0Dot5 extends Base
         $table->addColumn('client_credentials_grant', 'boolean', ['notnull' => true, 'default' => true]);
         $table->addColumn('authorization_code_grant', 'boolean', ['notnull' => true, 'default' => false]);
         $table->addColumn('refresh_token_grant', 'boolean', ['notnull' => true, 'default' => false]);
+        $table->addColumn('redirect_uris', 'jsonArray', ['notnull' => false]);
         $table->addColumn('secret_hash', 'string', ['length' => 255, 'notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);
         $table->addColumn('modified_at', 'datetime', ['notnull' => false]);

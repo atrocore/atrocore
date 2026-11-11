@@ -52,6 +52,28 @@
         }
       }
     },
+    "redirectUris": {
+      "type": "array",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        }
+      }
+    },
     "user": {
       "type": "link",
       "tooltip": true,
