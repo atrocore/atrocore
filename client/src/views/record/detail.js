@@ -392,7 +392,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
             Espo.ui.notify(this.translate('loading', 'messages'))
-            this.ajaxPostRequest(`Action/${data.id}/suggestValue`, {
+            this.ajaxPostRequest(data.url || `Action/${data.id}/suggestValue`, {
                 entityId: this.model.get('id'),
                 uiRecord: this.model.attributes,
                 uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,

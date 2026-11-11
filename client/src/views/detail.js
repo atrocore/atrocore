@@ -780,20 +780,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
 
         getWhereAdditional(link) {
-            let res = this.model.getFieldParam(link, 'where');
-
-            if (res && JSON.stringify(res).includes('{{')) {
-                const entityFieldId = this.model.name + '_' + link;
-                const recordId = this.model.id || '';
-                // the filter is defined by the field of the relation, a link or a multiple link
-                const subtype = this.model.getFieldParam(link, 'type') === 'link' ? 'EntityFieldTypeLink' : 'EntityFieldTypeLinkMultiple';
-                const url = subtype + '/' + entityFieldId + '/where' + (recordId ? '?recordId=' + recordId : '');
-                this.ajaxGetRequest(url, null, {async: false}).success(response => {
-                    res = response?.where || res;
-                });
-            }
-
-            return res || undefined
+            return this.model.getLinkWhere(link);
         },
 
         getPanelView(name) {
