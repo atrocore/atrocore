@@ -20,7 +20,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Schema;
 
-class V3Dot0Dot6 extends Base
+class V3Dot0Dot7 extends Base
 {
     protected const string COMPILED_DIR = 'data/custom-code/Compiled';
 
