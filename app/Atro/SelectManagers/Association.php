@@ -11,6 +11,7 @@
 
 namespace Atro\SelectManagers;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\SelectManagers\Base;
@@ -30,6 +31,10 @@ class Association extends Base
      */
     public function getAssociatedRecordAssociations(string $scope, string $mainRecordId, ?string $relatedRecordId = null): array
     {
+        if (empty($this->getMetadata()->get(['scopes', $scope]))) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('filterContainsUnknownScope', 'exceptions', 'Global'), $scope));
+        }
+
         $connection = $this->getEntityManager()->getConnection();
 
         $qb = $connection->createQueryBuilder()
@@ -51,6 +56,10 @@ class Association extends Base
 
     public function getRelatedRecordAssociations(string $scope, string $relatedRecordId): array
     {
+        if (empty($this->getMetadata()->get(['scopes', $scope]))) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('filterContainsUnknownScope', 'exceptions', 'Global'), $scope));
+        }
+
         $connection = $this->getEntityManager()->getConnection();
 
         $qb = $connection->createQueryBuilder()
