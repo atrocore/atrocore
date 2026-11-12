@@ -17,6 +17,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\ConditionChecker;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Services\Interfaces\DeletableInterface;
 use Atro\Core\Services\Interfaces\EditableInterface;
 use Atro\Core\Services\Interfaces\MassActionsInterface;

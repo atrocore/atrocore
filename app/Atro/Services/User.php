@@ -511,6 +511,7 @@ class User extends Base
             || array_key_exists('isEntityAdmin', $data)
             || array_key_exists('isRoleAdmin', $data)
             || array_key_exists('isUserAdmin', $data)
+            || array_key_exists('isDataPrivacyAdmin', $data)
         ) {
             $this->clearRoleCache($entity->id);
         }
