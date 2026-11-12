@@ -8,22 +8,23 @@ Rate limiting slows down automated abuse of the endpoints that anyone can reach 
 
 | Endpoint | Limit |
 | --- | --- |
-| `GET /api/userSession` (login and session check) | per IP address, and per user name |
+| `POST /api/oauth/authorize` (sign-in) | per IP address, and per user name |
+| `POST /api/oauth/token` (OAuth token request) | per IP address |
 | `POST /api/User/passwordChangeRequest` (password reset request) | per IP address |
 
 Everything else, including all regular authenticated API calls, is **not** rate limited.
 
 ### Per IP Address ###
 
-One IP address may send at most **3 requests per second** to each limited endpoint. Every request counts, whether the login succeeded or not. A rejected request is not counted, so a client that backs off is accepted again as soon as its earlier requests are older than the period.
+One IP address may send at most **3 requests per second** to each limited endpoint. Every request counts, whether the sign-in succeeded or not. A rejected request is not counted, so a client that backs off is accepted again as soon as its earlier requests are older than the period.
 
-### Per User Name (Login Only) ###
+### Per User Name (Sign-in Only) ###
 
-The login endpoint is also limited per user name: once requests for the same user name came from **more than 5 different IP addresses within 60 seconds**, further requests for that user name are rejected until older ones fall out of the window.
+The sign-in endpoint is also limited per user name: once requests for the same user name came from **more than 5 different IP addresses within 60 seconds**, further requests for that user name are rejected until older ones fall out of the window.
 
 The limit counts *different addresses*, not attempts. A person who mistypes a password a few times from a laptop and a phone is never affected, while an attack on one account spread over many addresses, which a plain per-IP limit cannot see, is stopped.
 
-> **Note:** Opening the application also calls the login endpoint once (the browser checks its session), so that request counts like any other. The default is meant for normal use, but many users behind one shared address (for example an office network) who open the application at the very same moment can be rejected; raise **Rate Limit: Requests** in that case.
+> **Note:** Many users behind one shared address (for example an office network) who sign in at the very same moment can be rejected; raise **Rate Limit: Requests** in that case.
 
 ## Settings ##
 
@@ -33,7 +34,7 @@ The values are set in `Administration / Authentication`, panel *Rate Limit* (see
 | --- | --- | --- |
 | Rate Limit: Requests | `3` | Requests one IP address may send to a limited endpoint within the period. |
 | Rate Limit: Period (seconds) | `1` | Length of the period. Fractions are allowed, e.g. `0.5`. |
-| Max Source IPs Per User | `5` | Different IP addresses allowed for the same user name on the login endpoint within the user period. |
+| Max Source IPs Per User | `5` | Different IP addresses allowed for the same user name on the sign-in endpoint within the user period. |
 
 The window of the per-user rule is 60 seconds. It is not shown in the interface; to change it, add `rateLimitUserPeriod` (seconds) to `data/config.php`.
 

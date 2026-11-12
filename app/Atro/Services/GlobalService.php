@@ -180,7 +180,6 @@ class GlobalService extends AbstractService
             'user'        => $userData,
             'acl'         => $this->getAcl()->getMap(),
             'preferences' => $this->getPreferencesData(),
-            'token'       => $user->get('token'),
             'settings'    => $settings,
             'appParams'   => [
                 'maxUploadSize'        => $this->getMaxUploadSize() / 1024.0 / 1024.0,

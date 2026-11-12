@@ -20,11 +20,11 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Ramsey\Uuid\Uuid;
 
-class V3Dot0Dot5 extends Base
+class V3Dot0Dot8 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-11-11 12:00:00');
+        return new \DateTime('2026-11-12 20:00:00');
     }
 
     /**
@@ -50,6 +50,31 @@ class V3Dot0Dot5 extends Base
         $this->createEncryptionKey();
         $this->createKeyPair();
         $this->createUiClient();
+        $this->renameSessionSettings();
+    }
+
+    /**
+     * The settings of the auth tokens are the settings of the sessions of the user interface.
+     */
+    protected function renameSessionSettings(): void
+    {
+        $names = [
+            'authTokenLifetime'          => 'sessionLifetime',
+            'authTokenMaxIdleTime'       => 'sessionMaxIdleTime',
+            'authTokenPreventConcurrent' => 'sessionPreventConcurrent',
+        ];
+
+        $config = $this->getConfig();
+        foreach ($names as $oldName => $newName) {
+            if ($config->has($oldName)) {
+                if (!$config->has($newName)) {
+                    $config->set($newName, $config->get($oldName));
+                }
+                $config->remove($oldName);
+            }
+        }
+
+        $config->save();
     }
 
     protected function createClientTable(Schema $schema): void

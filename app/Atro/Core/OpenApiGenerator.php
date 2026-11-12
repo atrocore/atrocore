@@ -26,7 +26,7 @@ class OpenApiGenerator
     /**
      * The security requirement of a route that requires authentication.
      */
-    public const AUTH_SECURITY = [['oauth2' => []], ['Authorization-Token' => []], ['basicAuth' => []]];
+    public const AUTH_SECURITY = [['oauth2' => []]];
 
     private Container $container;
 
@@ -541,27 +541,12 @@ class OpenApiGenerator
                     'oauth2'              => [
                         'type'  => 'oauth2',
                         'flows' => [
-                            'authorizationCode' => [
-                                'authorizationUrl' => '/oauth/authorize',
-                                'tokenUrl'         => '/api/oauth/token',
-                                'refreshUrl'       => '/api/oauth/token',
-                                'scopes'           => new \stdClass(),
-                            ],
                             'clientCredentials' => [
                                 'tokenUrl' => '/api/oauth/token',
                                 'scopes'   => new \stdClass(),
                             ],
                         ],
                     ],
-                    'basicAuth'           => [
-                        'type'   => 'http',
-                        'scheme' => 'basic',
-                    ],
-                    'Authorization-Token' => [
-                        'type' => 'apiKey',
-                        'name' => 'Authorization-Token',
-                        'in'   => 'header'
-                    ]
                 ]
             ]
         ];

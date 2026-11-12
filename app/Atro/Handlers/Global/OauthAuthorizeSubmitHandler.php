@@ -83,7 +83,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
     skipActionHistory: true,
-    rateLimit: [],
+    rateLimit: [
+        'userNameField' => 'username',
+    ],
 )]
 class OauthAuthorizeSubmitHandler extends AbstractHandler
 {

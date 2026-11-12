@@ -1,8 +1,7 @@
 {
   "controller": "controllers/record",
   "recordViews": {
-    "list": "views/admin/auth-token/record/list",
-    "edit": "views/admin/auth-token/record/edit"
+    "list": "views/admin/auth-token/record/list"
   },
   "modalViews": {
     "detail": "views/admin/auth-token/modals/detail"

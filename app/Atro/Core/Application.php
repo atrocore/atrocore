@@ -477,20 +477,11 @@ final class Application
         return $query;
     }
 
+    /**
+     * The credentials of the legacy session cookies, which only the single sign-on still sets.
+     */
     private function extractAuthCredentials(): array
     {
-        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-            return explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)), 2);
-        }
-
-        if (!empty($_SERVER['HTTP_AUTHORIZATION_TOKEN'])) {
-            return explode(':', base64_decode($_SERVER['HTTP_AUTHORIZATION_TOKEN']), 2);
-        }
-
-        if (!empty($_SERVER['PHP_AUTH_USER'])) {
-            return [$_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ?? ''];
-        }
-
         if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
             return [$_COOKIE['auth-username'], $_COOKIE['auth-token']];
         }
@@ -498,9 +489,6 @@ final class Application
         return [null, null];
     }
 
-    /**
-     * Logout all users
-     */
     /**
      * The session of the user interface authenticates the entry points too, e.g. the images and the downloads.
      */

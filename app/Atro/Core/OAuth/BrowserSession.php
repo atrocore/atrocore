@@ -119,7 +119,7 @@ class BrowserSession
             return null;
         }
 
-        if (!empty($this->config->get('authTokenPreventConcurrent'))) {
+        if (!empty($this->config->get('sessionPreventConcurrent'))) {
             $this->endUserSessions($accessToken['userId']);
         }
 
@@ -221,8 +221,8 @@ class BrowserSession
      */
     public function deleteExpired(): void
     {
-        $lifetime = (int)$this->config->get('authTokenLifetime', 0);
-        $idleTime = (int)$this->config->get('authTokenMaxIdleTime', 0);
+        $lifetime = (float)$this->config->get('sessionLifetime', 0);
+        $idleTime = (float)$this->config->get('sessionMaxIdleTime', 0);
 
         if ($lifetime <= 0 && $idleTime <= 0) {
             return;
@@ -235,11 +235,11 @@ class BrowserSession
         $conditions = [];
         if ($lifetime > 0) {
             $conditions[] = 'created_at < :createdBefore';
-            $queryBuilder->setParameter('createdBefore', date('Y-m-d H:i:s', time() - $lifetime * 3600));
+            $queryBuilder->setParameter('createdBefore', date('Y-m-d H:i:s', time() - (int)round($lifetime * 3600)));
         }
         if ($idleTime > 0) {
             $conditions[] = 'last_access_at < :accessedBefore';
-            $queryBuilder->setParameter('accessedBefore', date('Y-m-d H:i:s', time() - $idleTime * 3600));
+            $queryBuilder->setParameter('accessedBefore', date('Y-m-d H:i:s', time() - (int)round($idleTime * 3600)));
         }
 
         $queryBuilder->where($queryBuilder->expr()->or(...$conditions));
@@ -259,7 +259,7 @@ class BrowserSession
 
         try {
             $select = $this->connection->createQueryBuilder()
-                ->select('id', 'access_token', 'access_token_expires_at', 'refresh_token')
+                ->select('id', 'access_token', 'access_token_expires_at', 'refresh_token', 'last_access_at')
                 ->from(self::TABLE)
                 ->where('id = :id');
 
@@ -321,14 +321,14 @@ class BrowserSession
 
     private function isOver(array $session): bool
     {
-        $lifetime = (int)$this->config->get('authTokenLifetime', 0);
-        if ($lifetime > 0 && strtotime((string)$session['created_at']) + $lifetime * 3600 < time()) {
+        $lifetime = (float)$this->config->get('sessionLifetime', 0);
+        if ($lifetime > 0 && strtotime((string)$session['created_at']) + (int)round($lifetime * 3600) < time()) {
             return true;
         }
 
-        $idleTime = (int)$this->config->get('authTokenMaxIdleTime', 0);
+        $idleTime = (float)$this->config->get('sessionMaxIdleTime', 0);
 
-        return $idleTime > 0 && strtotime((string)$session['last_access_at']) + $idleTime * 3600 < time();
+        return $idleTime > 0 && strtotime((string)$session['last_access_at']) + (int)round($idleTime * 3600) < time();
     }
 
     private function endUserSessions(string $userId): void

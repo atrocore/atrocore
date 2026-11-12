@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\AuthCookie;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -28,84 +26,34 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Get authorized user data',
-    description: 'Generate authorization token and return authorized user data.',
+    description: 'Returns the data of the authenticated user: the user record, the access control, the preferences, the settings and the application parameters. The user interface loads it after signing in.',
     tag: 'Global',
     auth: true,
-    parameters: [
-        [
-            'name'     => 'Authorization-Token-Only',
-            'in'       => 'header',
-            'required' => false,
-            'schema'   => [
-                'type'    => 'boolean',
-                'example' => true,
-            ],
-        ],
-        [
-            'name'        => 'Authorization-Cookie',
-            'in'          => 'header',
-            'required'    => false,
-            'description' => 'When true, the auth token is set as an HttpOnly cookie and is not returned in the response body. Used by the UI.',
-            'schema'      => [
-                'type'    => 'boolean',
-                'example' => true,
-            ],
-        ],
-        [
-            'name'        => 'Authorization-Token-Lifetime',
-            'in'          => 'header',
-            'required'    => false,
-            'description' => 'Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.',
-            'schema'      => [
-                'type'    => 'integer',
-                'example' => 0,
-            ],
-        ],
-        [
-            'name'        => 'Authorization-Token-Idletime',
-            'in'          => 'header',
-            'required'    => false,
-            'description' => 'Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.',
-            'schema'      => [
-                'type'    => 'integer',
-                'example' => 0,
-            ],
-        ],
-    ],
     responses: [
         200 => [
-            'description' => 'Authorized user data. When Authorization-Token-Only is true, only authorizationToken is returned. authorizationToken and token are omitted when the request is authenticated by the auth cookie or Authorization-Cookie is true.',
+            'description' => 'Authorized user data.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'authorizationToken' => [
-                                'type'        => 'string',
-                                'description' => 'Base64-encoded "username:token" credential string.',
-                                'example'     => 'YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk=',
+                            'user'        => [
+                                'type'        => 'object',
+                                'description' => 'Authenticated user record.'
                             ],
-                            'token'              => [
-                                'type'        => 'string',
-                                'description' => 'Raw authorization token.',
+                            'acl'         => [
+                                'type'        => 'object',
+                                'description' => 'ACL scope-permission map for the authenticated user.'
                             ],
-                            'user'               => [
-                                'type'                 => 'object',
-                                'description'          => 'Authenticated user record.'
-                            ],
-                            'acl'                => [
-                                'type'                 => 'object',
-                                'description'          => 'ACL scope-permission map for the authenticated user.'
-                            ],
-                            'preferences'        => [
+                            'preferences' => [
                                 'type'        => 'object',
                                 'description' => 'User UI preferences.'
                             ],
-                            'settings'           => [
-                                'type'                 => 'object',
-                                'description'          => 'Application settings visible to the authenticated user.'
+                            'settings'    => [
+                                'type'        => 'object',
+                                'description' => 'Application settings visible to the authenticated user.'
                             ],
-                            'appParams'          => [
+                            'appParams'   => [
                                 'type'        => 'object',
                                 'description' => 'Runtime application parameters.'
                             ],
@@ -116,7 +64,6 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
     skipActionHistory: true,
-    rateLimit: []
 )]
 class UserHandler extends AbstractHandler
 {
@@ -125,37 +72,6 @@ class UserHandler extends AbstractHandler
         $data = $this->getServiceFactory()->create('Global')->getUserData();
         unset($data['user']->token);
 
-        // authenticated by an OAuth access token: the data of the user only, the token is not of this endpoint
-        if ($request->getAttribute('oauth_access_token_id') !== null) {
-            unset($data['token']);
-
-            return new JsonResponse($data);
-        }
-
-        $cookieHeader = $request->getHeaderLine('Authorization-Cookie');
-        $isCookieMode = $request->getAttribute('isCookieAuth') || $cookieHeader === 'true' || $cookieHeader === '1';
-
-        $tokenOnly = $request->getHeaderLine('Authorization-Token-Only');
-        if ($tokenOnly === 'true' || $tokenOnly === '1') {
-            if ($isCookieMode) {
-                throw new Forbidden('Authorization-Token-Only is not available in cookie mode');
-            }
-            return new JsonResponse(['authorizationToken' => base64_encode("{$data['user']->userName}:{$data['token']}")]);
-        }
-
-        if (!$isCookieMode) {
-            $data['authorizationToken'] = base64_encode("{$data['user']->userName}:{$data['token']}");
-            return new JsonResponse($data);
-        }
-
-        $cookieHeaders = AuthCookie::buildSetHeaders(
-            $request,
-            $this->getConfig()->getSiteUrl(),
-            $data['user']->userName,
-            $data['token']
-        );
-        unset($data['token']);
-
-        return (new JsonResponse($data))->withHeader('Set-Cookie', $cookieHeaders);
+        return new JsonResponse($data);
     }
 }

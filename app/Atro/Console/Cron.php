@@ -184,14 +184,14 @@ class Cron extends AbstractConsole
             ->find();
 
         foreach ($tokenList as $token) {
-            $authTokenLifetime = $token->get('lifetime') !== null ? $token->get('lifetime') : $this->getConfig()->get('authTokenLifetime');
+            $authTokenLifetime = $token->get('lifetime') !== null ? $token->get('lifetime') : $this->getConfig()->get('sessionLifetime');
             if ($authTokenLifetime && new \DateTime($token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenLifetime . ' hours')) {
                 $token->set('isActive', false);
                 $em->saveEntity($token);
                 continue 1;
             }
 
-            $authTokenMaxIdleTime = $token->get('idleTime') !== null ? $token->get('idleTime') : $this->getConfig()->get('authTokenMaxIdleTime');
+            $authTokenMaxIdleTime = $token->get('idleTime') !== null ? $token->get('idleTime') : $this->getConfig()->get('sessionMaxIdleTime');
             if ($authTokenMaxIdleTime && new \DateTime($token->get('lastAccess') ?? $token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenMaxIdleTime . ' hours')) {
                 $token->set('isActive', false);
                 $em->saveEntity($token);

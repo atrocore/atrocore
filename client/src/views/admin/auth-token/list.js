@@ -34,6 +34,9 @@ Espo.define('views/admin/auth-token/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
+        // the API is authenticated by OAuth, the auth tokens are the sessions of the single sign-on only
+        createButton: false,
+
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Auth Tokens', 'labels', 'Admin'));
         },

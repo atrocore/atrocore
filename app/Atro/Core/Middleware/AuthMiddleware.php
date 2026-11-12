@@ -53,7 +53,7 @@ class AuthMiddleware implements MiddlewareInterface
         $authRequired = !isset($options['conditions']['auth']) || $options['conditions']['auth'] !== false;
 
         [$username, $password] = self::extractCredentials($request);
-        $isCookieAuth = $this->isCookieAuth($request);
+        $isCookieAuth = $username !== null;
 
         if ($isCookieAuth && !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']) && !$this->isRequestFromOwnOrigin($request)) {
             if ($authRequired) {
@@ -118,39 +118,17 @@ class AuthMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 
+    /**
+     * The credentials of the legacy session cookies, which only the single sign-on still sets.
+     */
     public static function extractCredentials(ServerRequestInterface $request): array
     {
-        $token = $request->getHeaderLine('Authorization-Token');
-        if ($token !== '') {
-            return explode(':', base64_decode($token), 2);
-        }
-
-        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-            return explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)), 2);
-        }
-
-        $params = $request->getServerParams();
-        if (!empty($params['PHP_AUTH_USER'])) {
-            return [$params['PHP_AUTH_USER'], $params['PHP_AUTH_PW'] ?? ''];
-        }
-
         $cookies = $request->getCookieParams();
         if (!empty($cookies[AuthCookie::USERNAME]) && !empty($cookies[AuthCookie::TOKEN])) {
             return [$cookies[AuthCookie::USERNAME], $cookies[AuthCookie::TOKEN]];
         }
 
         return [null, null];
-    }
-
-    private function isCookieAuth(ServerRequestInterface $request): bool
-    {
-        $cookies = $request->getCookieParams();
-
-        return $request->getHeaderLine('Authorization-Token') === ''
-            && empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])
-            && empty($request->getServerParams()['PHP_AUTH_USER'])
-            && !empty($cookies[AuthCookie::USERNAME])
-            && !empty($cookies[AuthCookie::TOKEN]);
     }
 
     private function isRequestFromOwnOrigin(ServerRequestInterface $request): bool

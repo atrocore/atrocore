@@ -34,7 +34,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class RateLimitMiddleware implements MiddlewareInterface
 {
-    private const USER_SESSION_ROUTE = '/api/userSession';
     private const DEFAULT_USER_NAME_LENGTH = 255;
     private const DEFAULT_LIMIT = 3;
     private const DEFAULT_PERIOD = 1.0;
@@ -62,14 +61,10 @@ class RateLimitMiddleware implements MiddlewareInterface
         $method = $request->getMethod();
         $ipAddress = $request->getServerParams()['REMOTE_ADDR'] ?? '';
 
+        // a sign-in route names the field of the user name: the requests for one user name are limited as well
         $userName = null;
-        if ($route === self::USER_SESSION_ROUTE) {
-            [$rawUserName] = AuthMiddleware::extractCredentials($request);
-            // logging out sends no credentials worth limiting
-            if ($rawUserName === '**logout') {
-                return $handler->handle($request);
-            }
-            $userName = $this->normalizeUserName($rawUserName);
+        if (!empty($options['userNameField'])) {
+            $userName = $this->normalizeUserName($this->getBodyValue($request, (string)$options['userNameField']));
         }
 
         $limit = max(1, (int)($options['limit'] ?? $this->getConfig()->get('rateLimitLimit', self::DEFAULT_LIMIT)));
@@ -171,6 +166,21 @@ class RateLimitMiddleware implements MiddlewareInterface
         }
 
         return null;
+    }
+
+    /**
+     * A value of the form or JSON body of the request.
+     */
+    private function getBodyValue(ServerRequestInterface $request, string $field): ?string
+    {
+        $body = $request->getParsedBody();
+        if (!is_array($body) || $body === []) {
+            $body = json_decode((string)$request->getBody(), true);
+        }
+
+        $value = is_array($body) ? ($body[$field] ?? null) : null;
+
+        return is_scalar($value) ? (string)$value : null;
     }
 
     /**

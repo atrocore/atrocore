@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Http;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\OpenApiGenerator;
 use Atro\Core\Routing\Route as RouteAttribute;
 use League\OpenAPIValidation\PSR7\OperationAddress;
@@ -107,7 +108,7 @@ class Validator
     {
         $schema['components']['securitySchemes']['cookieAuth'] = [
             'type' => 'apiKey',
-            'name' => 'auth-token',
+            'name' => SessionCookie::SESSION,
             'in'   => 'cookie',
         ];
 
