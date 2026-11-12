@@ -1472,6 +1472,7 @@
     "dateIsInvalid": "Datum für das Feld '%s' ist ungültig.",
     "datetimeIsInvalid": "Datum-Uhrzeit für das Feld '%s' ist ungültig.",
     "filterContainsUnknownField": "Der Filter enthält eine Regel, die auf ein nicht vorhandenes Feld \"%s\" verweist.",
+    "filterContainsUnknownScope": "Der Filter enthält eine Regel, die auf eine nicht vorhandene Entität \"%s\" verweist.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",
     "noSuchOptions": "Der Wert '%s' für das Feld '%s' ist ungültig.",
     "noOptionsDefined": "Optionen für das Feld '%s' sind nicht definiert.",
