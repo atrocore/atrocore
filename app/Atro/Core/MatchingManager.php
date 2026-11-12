@@ -12,16 +12,17 @@
 
 namespace Atro\Core;
 
+use Atro\Core\BlockingRuleType\AbstractBlockingRule;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\Entities\BlockingRule;
 use Atro\Entities\Matching as MatchingEntity;
 use Atro\Entities\MatchingRule;
 use Atro\Repositories\MatchedRecord;
 use Atro\Repositories\Matching;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 
 class MatchingManager
@@ -47,11 +48,25 @@ class MatchingManager
         return $ruleType;
     }
 
-    public function collectAllMatchingFields(?EntityCollection $matchingRules, array &$fields, string $entityName): void
+    public function createBlockingType(BlockingRule $rule): AbstractBlockingRule
+    {
+        $type = $rule->get('type');
+        $className = $this->getMetadata()->get(['app', 'blockingRuleTypes', $type, 'className']);
+        if (!$className || !class_exists($className)) {
+            throw new \Exception("BlockingRule type '$type' is not registered");
+        }
+
+        $ruleType = $this->container->get($className);
+        $ruleType->setRule($rule);
+
+        return $ruleType;
+    }
+
+    public function collectAllMatchingFields(?iterable $matchingRules, array &$fields, string $entityName): void
     {
         foreach ($matchingRules ?? [] as $rule) {
-            if (!empty($rule->get('field'))) {
-                $field     = $rule->get('field');
+            $field = ($rule->getSubtype() ?? $rule)->get('field');
+            if (!empty($field)) {
                 $fieldType = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$field}.type");
 
                 if ($fieldType === 'link') {
@@ -64,7 +79,7 @@ class MatchingManager
                     $fields[] = $field;
                 }
             }
-            $this->collectAllMatchingFields($rule->get('matchingRules'), $fields, $entityName);
+            $this->collectAllMatchingFields($rule->getNestedRules(), $fields, $entityName);
         }
     }
 
@@ -85,6 +100,7 @@ class MatchingManager
 
             if ($matching->get('masterEntity') === $entity->getEntityName()) {
                 $fields = [];
+                $this->collectAllMatchingFields($matching->get('blockingRules'), $fields, $matching->get('masterEntity'));
                 $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $matching->get('masterEntity'));
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
@@ -94,6 +110,7 @@ class MatchingManager
                 }
             } elseif ($matching->get('entity') === $entity->getEntityName()) {
                 $fields = [];
+                $this->collectAllMatchingFields($matching->get('blockingRules'), $fields, $matching->get('entity'));
                 $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $matching->get('entity'));
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
@@ -119,6 +136,16 @@ class MatchingManager
         // Find possible matches
         $possibleMatches = $this->getMatchingRepository()->findPossibleMatchesForEntity($matching, $entity);
 
+        $entityData = null;
+        if ($matching->get('type') === 'duplicate') {
+            foreach ($matchingRules as $rule) {
+                if (!$rule->isSymmetric()) {
+                    $entityData = $this->getMatchingRepository()->getRecordData($matching, $entity->id);
+                    break;
+                }
+            }
+        }
+
         $matchedRecordsRows = [];
 
         // Find actual matches
@@ -128,6 +155,17 @@ class MatchingManager
             foreach ($matchingRules as $rule) {
                 $maxMatchingScore += $rule->get('weight');
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
+            }
+
+            if ($entityData !== null) {
+                $candidate = $this->getEntityManager()->getRepository($entity->getEntityName())->get($row['id']);
+                if (!empty($candidate)) {
+                    $reverseScore = 0;
+                    foreach ($matchingRules as $rule) {
+                        $reverseScore += $rule->match($candidate, $entityData);
+                    }
+                    $matchingScore = max($matchingScore, $reverseScore);
+                }
             }
 
             $row['percentageScore'] = $maxMatchingScore > 0 ? $matchingScore / $maxMatchingScore * 100 : 0;

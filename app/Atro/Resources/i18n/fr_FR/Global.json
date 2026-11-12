@@ -279,7 +279,18 @@
     "AttributeTypeLinkMultiple": "Attribut: Lien multiple",
     "AttributeTypeFile": "Attribut: Fichier",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Composite"
+    "AttributeTypeComposite": "Attribut: Composite",
+    "BlockingRule": "Règle de blocage",
+    "MatchingRuleTypeFieldEqual": "Règle d'appariement: Le champ est égal",
+    "MatchingRuleTypeFieldSimilar": "Règle d'appariement: Le champ est similaire",
+    "MatchingRuleTypeFieldContains": "Règle d'appariement: Le champ contient",
+    "MatchingRuleTypeSet": "Règle d'appariement: Ensemble",
+    "MatchingRuleTypeExpression": "Règle d'appariement: Expression",
+    "BlockingRuleTypeFieldEqual": "Règle de blocage: Le champ est égal",
+    "BlockingRuleTypeFieldSimilar": "Règle de blocage: Le champ est similaire",
+    "BlockingRuleTypeFieldContains": "Règle de blocage: Le champ contient",
+    "BlockingRuleTypeSet": "Règle de blocage: Ensemble",
+    "BlockingRuleTypeExpression": "Règle de blocage: Expression"
   },
   "labels": {
     "dataLineage": "Traçabilité des données",
@@ -953,7 +964,18 @@
     "AttributeTypeLinkMultiple": "Attribut: Lien multiple",
     "AttributeTypeFile": "Attribut: Fichier",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Composite"
+    "AttributeTypeComposite": "Attribut: Composite",
+    "BlockingRule": "Règles de blocage",
+    "MatchingRuleTypeFieldEqual": "Règle d'appariement: Le champ est égal",
+    "MatchingRuleTypeFieldSimilar": "Règle d'appariement: Le champ est similaire",
+    "MatchingRuleTypeFieldContains": "Règle d'appariement: Le champ contient",
+    "MatchingRuleTypeSet": "Règle d'appariement: Ensemble",
+    "MatchingRuleTypeExpression": "Règle d'appariement: Expression",
+    "BlockingRuleTypeFieldEqual": "Règle de blocage: Le champ est égal",
+    "BlockingRuleTypeFieldSimilar": "Règle de blocage: Le champ est similaire",
+    "BlockingRuleTypeFieldContains": "Règle de blocage: Le champ contient",
+    "BlockingRuleTypeSet": "Règle de blocage: Ensemble",
+    "BlockingRuleTypeExpression": "Règle de blocage: Expression"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
@@ -1717,6 +1739,16 @@
     "ConnectionTypePsql": "Une base de données relationnelle qui conserve aussi les valeurs JSON sous forme de données structurées, tables et documents peuvent ainsi être combinés dans une même requête.",
     "ConnectionTypeMsql": "Une base de données relationnelle de Microsoft, répandue dans les systèmes d'entreprise et fiable sous de fortes charges transactionnelles.",
     "ConnectionTypeVertica": "Lit rapidement les grandes tables grâce au stockage en colonnes.",
-    "ConnectionTypeOracle": "Une base de données relationnelle d'Oracle, largement utilisée pour les applications d'entreprise et les systèmes ERP."
+    "ConnectionTypeOracle": "Une base de données relationnelle d'Oracle, largement utilisée pour les applications d'entreprise et les systèmes ERP.",
+    "MatchingRuleTypeFieldEqual": "Note le candidat lorsque les valeurs du champ sont égales.",
+    "MatchingRuleTypeFieldSimilar": "Note le candidat lorsque les valeurs du champ sont égales sans tenir compte de la casse et des espaces.",
+    "MatchingRuleTypeFieldContains": "Note le candidat lorsque sa valeur du champ contient la valeur de l'enregistrement.",
+    "MatchingRuleTypeSet": "Combine plusieurs règles : ET additionne leurs scores, OU prend le score de la première règle satisfaite.",
+    "MatchingRuleTypeExpression": "Note le candidat par une expression ExpressionLanguage.",
+    "BlockingRuleTypeFieldEqual": "Sélectionne les candidats dont la valeur du champ est égale.",
+    "BlockingRuleTypeFieldSimilar": "Sélectionne les candidats dont la valeur du champ est égale sans tenir compte de la casse et des espaces.",
+    "BlockingRuleTypeFieldContains": "Sélectionne les candidats dont la valeur du champ contient la valeur de l'enregistrement.",
+    "BlockingRuleTypeSet": "Combine plusieurs règles avec ET ou OU.",
+    "BlockingRuleTypeExpression": "Sélectionne les candidats par une expression ExpressionLanguage."
   }
 }

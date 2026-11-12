@@ -171,6 +171,9 @@ class GlobalService extends AbstractService
         $settings['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
             ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
             ->find()->toArray();
+        $settings['blockingRules'] = $this->getEntityManager()->getRepository('BlockingRule')
+            ->select(['id', 'type', 'blockingRuleSetId', 'matchingId'])
+            ->find()->toArray();
         $settings = (object)$settings;
 
         unset($userData->authTokenId);

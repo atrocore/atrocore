@@ -2,7 +2,7 @@
 title: Clusters
 ---
 
-A Cluster is a system entity that virtually groups one or more records based on the [Matching Rules](../17.matching/index.md#matching-rules) defined for a given entity. Unlike standard relationships, the connection between records within a cluster exists on a virtual level – no physical link is created between them at this stage.
+A Cluster is a system entity that virtually groups one or more records based on the [Matched Records](../17.matching/index.md#viewing-matched-records) found by the Matchings of a given entity. Unlike standard relationships, the connection between records within a cluster exists on a virtual level – no physical link is created between them at this stage.
 
 Clusters are used as part of the duplicate detection workflow. When duplicate search is enabled for an entity – within the master data, within the contributor data, or between master and contributor – the system automatically groups the detected duplicates into clusters to facilitate review and processing.
 
@@ -10,7 +10,7 @@ A correctly formed cluster contains one master record and one or more contributo
 
 ## Creating and Deleting Clusters
 
-Clusters are created automatically by a [scheduled job](../../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/index.md#create-clusters) based on the Matching Rules configured for the entity. Users cannot create clusters manually, nor can they add or remove cluster items manually.
+Clusters are created automatically by a [scheduled job](../../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/index.md#create-clusters) based on the Matched Records of the entity. Users cannot create clusters manually, nor can they add or remove cluster items manually.
 
 Regardless of the cluster's current status, items may be added to or removed from it on each subsequent job run.
 
@@ -65,13 +65,13 @@ Confirming and consolidating a cluster item are different steps. Confirmation me
 
 ## Cluster Items
 
-Cluster Items panel lists all master and contributor records that the system has linked to the current cluster based on the entity's Matching Rules. Each item displays the Entity Name, the linked Record, and its Matched Score.
+Cluster Items panel lists all master and contributor records that the system has linked to the current cluster based on the entity's Matched Records. Each item displays the Entity Name, the linked Record, and its Matched Score.
 
 Cluster items cannot be added or removed manually. If a Matched Record is deleted, the corresponding Cluster Item is not removed – instead, it is reassigned to another cluster (existing or newly created).
 
 Every contributor record must belong to a cluster. If the system detects no duplicates for a given record, a cluster with a single item is created and that item is consolidated automatically.
 
-Cluster items are created, populated, and automatically consolidated by the Create Clusters scheduled job. If matching rules change, or a record is created or updated causing a Matched Records pair to be added, removed, or have its Matched Score changed, the cluster is not updated immediately – changes take effect on the next job run.
+Cluster items are created, populated, and automatically consolidated by the Create Clusters scheduled job. If the rules of a Matching change, or a record is created or updated causing a Matched Records pair to be added, removed, or have its Matched Score changed, the cluster is not updated immediately – changes take effect on the next job run.
 
 ## Cluster View Modes
 

@@ -14,32 +14,8 @@
           "name": "type"
         },
         {
-          "name": "field"
-        }
-      ],
-      [
-        {
-          "name": "attribute"
-        },
-        false
-      ],
-      [
-        {
           "name": "operator"
-        },
-        false
-      ],
-      [
-        {
-          "name": "matchedWhereExpression"
-        },
-        false
-      ],
-      [
-        {
-          "name": "matchScoreExpression"
-        },
-        false
+        }
       ],
       [
         {

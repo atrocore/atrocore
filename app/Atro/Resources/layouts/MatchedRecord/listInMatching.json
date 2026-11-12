@@ -1,9 +1,9 @@
 [
   {
-    "name": "source"
+    "name": "matchSubject"
   },
   {
-    "name": "master"
+    "name": "matchCandidate"
   },
   {
     "name": "score"

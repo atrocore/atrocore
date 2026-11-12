@@ -163,7 +163,18 @@
     "AttributeTypeLinkMultiple": "Attribut: Link mit Mehrfachauswahl",
     "AttributeTypeFile": "Attribut: Datei",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Komposit"
+    "AttributeTypeComposite": "Attribut: Komposit",
+    "BlockingRule": "Blocking-Regel",
+    "MatchingRuleTypeFieldEqual": "Übereinstimmungs-Regel: Feld ist gleich",
+    "MatchingRuleTypeFieldSimilar": "Übereinstimmungs-Regel: Feld ist ähnlich",
+    "MatchingRuleTypeFieldContains": "Übereinstimmungs-Regel: Feld enthält",
+    "MatchingRuleTypeSet": "Übereinstimmungs-Regel: Set",
+    "MatchingRuleTypeExpression": "Übereinstimmungs-Regel: Ausdruck",
+    "BlockingRuleTypeFieldEqual": "Blocking-Regel: Feld ist gleich",
+    "BlockingRuleTypeFieldSimilar": "Blocking-Regel: Feld ist ähnlich",
+    "BlockingRuleTypeFieldContains": "Blocking-Regel: Feld enthält",
+    "BlockingRuleTypeSet": "Blocking-Regel: Set",
+    "BlockingRuleTypeExpression": "Blocking-Regel: Ausdruck"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarepakete",
@@ -316,7 +327,18 @@
     "AttributeTypeLinkMultiple": "Attribut: Link mit Mehrfachauswahl",
     "AttributeTypeFile": "Attribut: Datei",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Komposit"
+    "AttributeTypeComposite": "Attribut: Komposit",
+    "BlockingRule": "Blocking-Regeln",
+    "MatchingRuleTypeFieldEqual": "Übereinstimmungs-Regel: Feld ist gleich",
+    "MatchingRuleTypeFieldSimilar": "Übereinstimmungs-Regel: Feld ist ähnlich",
+    "MatchingRuleTypeFieldContains": "Übereinstimmungs-Regel: Feld enthält",
+    "MatchingRuleTypeSet": "Übereinstimmungs-Regel: Set",
+    "MatchingRuleTypeExpression": "Übereinstimmungs-Regel: Ausdruck",
+    "BlockingRuleTypeFieldEqual": "Blocking-Regel: Feld ist gleich",
+    "BlockingRuleTypeFieldSimilar": "Blocking-Regel: Feld ist ähnlich",
+    "BlockingRuleTypeFieldContains": "Blocking-Regel: Feld enthält",
+    "BlockingRuleTypeSet": "Blocking-Regel: Set",
+    "BlockingRuleTypeExpression": "Blocking-Regel: Ausdruck"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -1724,6 +1746,16 @@
     "ConnectionTypePsql": "Eine relationale Datenbank, die auch JSON-Werte als strukturierte Daten speichert, sodass Tabellen und Dokumente in einer Abfrage kombiniert werden können.",
     "ConnectionTypeMsql": "Eine relationale Datenbank von Microsoft, verbreitet in Unternehmenssystemen und zuverlässig bei großen Transaktionslasten.",
     "ConnectionTypeVertica": "Liest große Tabellen dank spaltenorientierter Speicherung schnell.",
-    "ConnectionTypeOracle": "Eine relationale Datenbank von Oracle, weit verbreitet in Unternehmensanwendungen und ERP-Systemen."
+    "ConnectionTypeOracle": "Eine relationale Datenbank von Oracle, weit verbreitet in Unternehmensanwendungen und ERP-Systemen.",
+    "MatchingRuleTypeFieldEqual": "Bewertet den Kandidaten, wenn die Werte des Feldes gleich sind.",
+    "MatchingRuleTypeFieldSimilar": "Bewertet den Kandidaten, wenn die Werte des Feldes ohne Berücksichtigung von Groß- und Kleinschreibung und Leerzeichen gleich sind.",
+    "MatchingRuleTypeFieldContains": "Bewertet den Kandidaten, wenn sein Feldwert den Wert des Datensatzes enthält.",
+    "MatchingRuleTypeSet": "Kombiniert mehrere Regeln: AND summiert ihre Werte, OR nimmt den Wert der ersten zutreffenden Regel.",
+    "MatchingRuleTypeExpression": "Bewertet den Kandidaten mit einem ExpressionLanguage-Ausdruck.",
+    "BlockingRuleTypeFieldEqual": "Wählt die Kandidaten, deren Feldwert gleich ist.",
+    "BlockingRuleTypeFieldSimilar": "Wählt die Kandidaten, deren Feldwert ohne Berücksichtigung von Groß- und Kleinschreibung und Leerzeichen gleich ist.",
+    "BlockingRuleTypeFieldContains": "Wählt die Kandidaten, deren Feldwert den Wert des Datensatzes enthält.",
+    "BlockingRuleTypeSet": "Kombiniert mehrere Regeln mit AND oder OR.",
+    "BlockingRuleTypeExpression": "Wählt die Kandidaten mit einem ExpressionLanguage-Ausdruck."
   }
 }

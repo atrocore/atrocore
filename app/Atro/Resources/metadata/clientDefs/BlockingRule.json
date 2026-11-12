@@ -1,0 +1,17 @@
+{
+  "iconClass": "funnel",
+  "controller": "controllers/record",
+  "acl": "acl/matching-rule",
+  "relationshipPanels": {
+    "blockingRules": {
+      "select": false,
+      "limit": 2000,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
+      "hideShowFullList": true
+    }
+  }
+}

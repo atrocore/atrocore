@@ -1,3 +1,5 @@
+<?php
+
 /**
  * AtroCore Software
  *
@@ -8,15 +10,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matched-record/fields/source', 'views/fields/link', Dep => {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Atro\Acl;
 
-        setup() {
-            this.options.foreignScope = this.model.get('sourceEntity');
-
-            Dep.prototype.setup.call(this);
-        },
-
-    });
-});
+class BlockingRule extends MatchingRule
+{
+}

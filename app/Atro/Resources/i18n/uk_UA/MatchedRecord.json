@@ -1,11 +1,11 @@
 {
   "fields": {
-    "source": "Джерело",
-    "sourceEntity": "Вихідна сутність",
-    "sourceEntityId": "Ідентифікатор вихідної сутності",
-    "master": "Майстер",
-    "masterEntity": "Основна сутність",
-    "masterEntityId": "Ідентифікатор основної сутності",
+    "matchSubject": "Об'єкт зіставлення",
+    "matchSubjectEntity": "Сутність об'єкта зіставлення",
+    "matchSubjectEntityId": "Ідентифікатор сутності об'єкта зіставлення",
+    "matchCandidate": "Кандидат зіставлення",
+    "matchCandidateEntity": "Сутність кандидата зіставлення",
+    "matchCandidateEntityId": "Ідентифікатор сутності кандидата зіставлення",
     "score": "Оцінка",
     "hash": "Унікальний хеш",
     "hasCluster": "Має кластер",

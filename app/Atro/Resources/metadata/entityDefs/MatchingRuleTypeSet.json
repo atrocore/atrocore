@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "operator": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "and",
+        "or"
+      ]
+    }
+  }
+}

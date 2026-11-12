@@ -1,0 +1,34 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "number"
+        },
+        false
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "matchScoreExpression",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "weight"
+        },
+        {
+          "name": "matching"
+        }
+      ]
+    ]
+  }
+]

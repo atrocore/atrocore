@@ -21,7 +21,9 @@
         {
           "name": "minimumScore"
         },
-        false
+        {
+          "name": "blockingOperator"
+        }
       ],
       [
         {

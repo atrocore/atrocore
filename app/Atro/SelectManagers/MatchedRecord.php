@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\SelectManagers;
 
 use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\Util;
 use Atro\Core\SelectManagers\Base;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -35,7 +34,7 @@ class MatchedRecord extends Base
         foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
             $where = [];
             foreach (['entity', 'masterEntity'] as $field) {
-                $column = $field === 'entity' ? 'source_entity' : Util::toUnderScore($field);
+                $column = $field === 'entity' ? 'match_subject_entity' : 'match_candidate_entity';
                 $repository = $this->getEntityManager()->getRepository($matching->get($field));
                 $sp = $this->createSelectManager($matching->get($field))->getSelectParams([], true, true);
                 $sp['select'] = ['id'];

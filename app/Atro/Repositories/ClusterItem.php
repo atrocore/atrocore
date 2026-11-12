@@ -191,12 +191,12 @@ class ClusterItem extends Base
                     '(SELECT MAX(mr.score)
                   FROM matched_record mr
                   WHERE (
-                      (mr.source_entity = ci.entity_name AND mr.source_entity_id = ci.entity_id)
+                      (mr.match_subject_entity = ci.entity_name AND mr.match_subject_entity_id = ci.entity_id)
                       OR
-                      (mr.master_entity = ci.entity_name AND mr.master_entity_id = ci.entity_id)
+                      (mr.match_candidate_entity = ci.entity_name AND mr.match_candidate_entity_id = ci.entity_id)
                   )
-                  AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
-                  AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
+                  AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.match_subject_entity AND ci2.entity_id = mr.match_subject_entity_id)
+                  AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.match_candidate_entity AND ci3.entity_id = mr.match_candidate_entity_id)
                   AND mr.deleted = :false
                   AND mr.has_cluster = :true
                 )'
@@ -219,12 +219,12 @@ class ClusterItem extends Base
                         ON mr.deleted = 0
                         AND mr.has_cluster = 1
                         AND (
-                            (mr.source_entity = ci_inner.entity_name AND mr.source_entity_id = ci_inner.entity_id)
+                            (mr.match_subject_entity = ci_inner.entity_name AND mr.match_subject_entity_id = ci_inner.entity_id)
                             OR
-                            (mr.master_entity = ci_inner.entity_name AND mr.master_entity_id = ci_inner.entity_id)
+                            (mr.match_candidate_entity = ci_inner.entity_name AND mr.match_candidate_entity_id = ci_inner.entity_id)
                         )
-                        AND ci_inner.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
-                        AND ci_inner.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
+                        AND ci_inner.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.match_subject_entity AND ci2.entity_id = mr.match_subject_entity_id)
+                        AND ci_inner.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.match_candidate_entity AND ci3.entity_id = mr.match_candidate_entity_id)
                     WHERE ci_inner.cluster_id IN ($placeholders) AND ci_inner.deleted = 0
                     GROUP BY ci_inner.id
                 ) AS scores ON scores.id = ci.id
@@ -256,10 +256,10 @@ class ClusterItem extends Base
             ->from('cluster_item', 'ci')
             ->leftJoin('ci', 'matched_record', 'mr', 'mr.id = ci.matched_record_id AND mr.deleted = :false')
             ->leftJoin('ci', 'matched_record', 'mr2', '
-                ((mr2.source_entity = ci.entity_name AND mr2.source_entity_id = ci.entity_id)
-                OR (mr2.master_entity = ci.entity_name AND mr2.master_entity_id = ci.entity_id))
-                AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr2.source_entity AND ci2.entity_id = mr2.source_entity_id AND ci2.deleted = :false)
-                AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr2.master_entity AND ci3.entity_id = mr2.master_entity_id AND ci3.deleted = :false)
+                ((mr2.match_subject_entity = ci.entity_name AND mr2.match_subject_entity_id = ci.entity_id)
+                OR (mr2.match_candidate_entity = ci.entity_name AND mr2.match_candidate_entity_id = ci.entity_id))
+                AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr2.match_subject_entity AND ci2.entity_id = mr2.match_subject_entity_id AND ci2.deleted = :false)
+                AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr2.match_candidate_entity AND ci3.entity_id = mr2.match_candidate_entity_id AND ci3.deleted = :false)
                 AND mr2.deleted = :false
                 AND mr2.has_cluster = :true')
             ->where('ci.matched_record_id IS NOT NULL')
@@ -387,12 +387,12 @@ class ClusterItem extends Base
                 $qb->leftJoin($tableAlias, 'matched_record', 'mr', "mr.id = $tableAlias.matched_record_id and mr.deleted = :false")
                     ->leftJoin($tableAlias, 'matched_record', 'mr2', "
                 (
-                    (mr2.source_entity = $tableAlias.entity_name AND mr2.source_entity_id = $tableAlias.entity_id) 
+                    (mr2.match_subject_entity = $tableAlias.entity_name AND mr2.match_subject_entity_id = $tableAlias.entity_id) 
                     OR 
-                    (mr2.master_entity = $tableAlias.entity_name AND mr2.master_entity_id = $tableAlias.entity_id)
+                    (mr2.match_candidate_entity = $tableAlias.entity_name AND mr2.match_candidate_entity_id = $tableAlias.entity_id)
                 )
-                AND $tableAlias.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr2.source_entity AND ci2.entity_id = mr2.source_entity_id)
-                AND $tableAlias.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr2.master_entity AND ci3.entity_id = mr2.master_entity_id)
+                AND $tableAlias.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr2.match_subject_entity AND ci2.entity_id = mr2.match_subject_entity_id)
+                AND $tableAlias.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr2.match_candidate_entity AND ci3.entity_id = mr2.match_candidate_entity_id)
                 AND mr2.deleted = :false 
                 AND mr2.has_cluster = :true")
                     ->addSelect("MIN(mr2.id) AS other_matched_record_id")

@@ -5,22 +5,30 @@
     "masterEntity": "Entité de référence",
     "matchingRules": "Règles d'appariements",
     "matchedRecords": "Enregistrements appariés",
-    "matchedRecordsMax": "Nombre maximal d'enregistrements appariés"
+    "matchedRecordsMax": "Nombre maximal d'enregistrements appariés",
+    "blockingRules": "Règles de blocage",
+    "blockingOperator": "Opérateur de blocage"
   },
   "options": {
     "type": {
       "duplicate": "Doublon - Doublon",
       "masterRecord": "Contributeur - Maître"
+    },
+    "blockingOperator": {
+      "or": "OU",
+      "and": "ET"
     }
   },
   "labels": {
     "configureMatching": "Configurer l'appariement"
   },
   "tooltips": {
-    "matchedRecordsMax": "Si le nombre d'enregistrements correspondant à un enregistrement dépasse cette valeur, l'appariement sera désactivé. Laissez ce champ vide pour autoriser un nombre illimité d'enregistrements correspondants. "
+    "matchedRecordsMax": "Si le nombre d'enregistrements correspondant à un enregistrement dépasse cette valeur, l'appariement sera désactivé. Laissez ce champ vide pour autoriser un nombre illimité d'enregistrements correspondants. ",
+    "blockingOperator": "Comment les règles de blocage de premier niveau sont combinées pour sélectionner les candidats. Avec ET, une règle dont la valeur est vide dans l'enregistrement ne trouve rien, et l'enregistrement n'obtient aucun candidat."
   },
   "exceptions": {
     "noRules": "L'activation est bloquée. Aucune règle de correspondance n'a été définie pour cette correspondance.",
-    "masterRecordEntityInvalid": "L'entité %s ne peut pas être utilisée pour un appariement de type Enregistrement de référence. Seule une entité dérivée avec le rôle Staging est autorisée."
+    "masterRecordEntityInvalid": "L'entité %s ne peut pas être utilisée pour un appariement de type Enregistrement de référence. Seule une entité dérivée avec le rôle Staging est autorisée.",
+    "noBlockingRules": "L'activation est bloquée. Aucune règle de blocage n'a été définie pour cet appariement."
   }
 }

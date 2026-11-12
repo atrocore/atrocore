@@ -2,6 +2,16 @@
   "iconClass": "shuffle",
   "controller": "controllers/record",
   "relationshipPanels": {
+    "blockingRules": {
+      "select": false,
+      "limit": 2000,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
+      "hideShowFullList": true
+    },
     "matchingRules": {
       "select": false,
       "limit": 2000,

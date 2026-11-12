@@ -1,12 +1,6 @@
 {
   "fields": {
-    "master": "Mistr",
-    "masterEntity": "Hlavní subjekt",
-    "masterEntityId": "ID hlavního subjektu",
     "score": "Skóre",
-    "source": "Zdroj:",
-    "sourceEntity": "Zdrojová entita",
-    "sourceEntityId": "ID zdrojového subjektu",
     "hash": "Jedinečný kód Hash",
     "hasCluster": "Má cluster",
     "clusterItems": "Položky klastru"
