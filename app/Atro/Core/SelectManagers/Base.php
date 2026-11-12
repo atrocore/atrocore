@@ -1027,6 +1027,7 @@ class Base
         }
 
         if (!empty($params['where']) && is_array($params['where'])) {
+            $params['where'] = $this->sanitizeWhereCondition($params['where']);
             $this->mutateWhereQuery($params['where'], $result);
             if ($checkWherePermission) {
                 $this->checkWhere($params['where']);
@@ -1181,6 +1182,31 @@ class Base
         ];
 
         return $params;
+    }
+
+    protected function sanitizeWhereCondition(array $where): array
+    {
+        $clean = [];
+        foreach ($where as $key => $item) {
+            if (!is_array($item)) {
+                $clean[$key] = $item;
+                continue;
+            }
+            if (isset($item['type']) && is_string($item['type']) && strtolower($item['type']) === 'innersql') {
+                continue;
+            }
+            unset($item['innerSql']);
+            if (isset($item['rules']) && is_array($item['rules'])) {
+                $item['rules'] = $this->sanitizeWhereCondition($item['rules']);
+            }
+            if (isset($item['value']) && is_array($item['value'])) {
+                unset($item['value']['innerSql']);
+                $item['value'] = $this->sanitizeWhereCondition($item['value']);
+            }
+            $clean[$key] = $item;
+        }
+
+        return $clean;
     }
 
     protected function checkWhere($where)
