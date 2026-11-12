@@ -2006,6 +2006,9 @@ class Base
                     }
 
                 default:
+                    if (in_array($type, ['similar', 'wordSimilar'], true) && !$this->isKnownField((string)$attribute)) {
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('filterContainsUnknownField', 'exceptions', 'Global'), $attribute));
+                    }
                     if ($this->getColumnWhereConverter()->isSupported($type)) {
                         $part = $this->getColumnWhereConverter()->convert((string)$attribute, $type, $value);
                     }
