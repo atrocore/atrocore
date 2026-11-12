@@ -47,7 +47,7 @@ class V3Dot0Dot7 extends Base
 
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-11-10 12:00:00');
+        return new \DateTime('2026-11-12 09:00:00');
     }
 
     /**
