@@ -296,9 +296,22 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 searchManager.setBool(d);
             }
 
+            // the filter that the caller applies (for example the filter of a link field) is part of the filter of the
+            // dialog: it is shown as rules that the user cannot change, and the user can add rules of their own
+            let preset = this.options.whereAdditional || [];
+            let lockedGroups = preset.filter(item => item && item.condition && Array.isArray(item.rules));
+            if (lockedGroups.length) {
+                searchManager.setLockedWhere(lockedGroups);
+                searchManager.update({
+                    queryBuilder: searchManager.mergeLockedRules(searchManager.getQueryBuilder()),
+                    queryBuilderApplied: true
+                });
+            }
+
             this.collection.where = searchManager.getWhere();
 
-            this.collection.whereAdditional = this.options.whereAdditional || [];
+            // the items that are no groups of rules stay a hidden addition to the filter
+            this.collection.whereAdditional = preset.filter(item => !lockedGroups.includes(item));
 
             this.listenTo(this, 'change-view', e => {
                 this.getView('list')?.svelteFilter?.reset();

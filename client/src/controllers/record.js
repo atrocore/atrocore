@@ -257,14 +257,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         beforeCreate: function () {
-            // the records of a supertype are created via its subtypes, so any subtype has to be allowed to be created
-            if (this.hasSubtypes()) {
-                const subtypes = Object.values(this.getMetadata().get(['scopes', this.name, 'subtypeScopes']) || {});
-                if (subtypes.some(subtype => this.getAcl().check(subtype, 'create'))) {
-                    return;
-                }
-            }
-
             this.handleCheckAccess('create');
         },
 

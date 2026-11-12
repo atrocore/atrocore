@@ -506,39 +506,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 return this.options.whereAdditional;
             }
 
-            let res = this.model.getFieldParam(this.name, 'where');
-
-            if (res && JSON.stringify(res).includes('{{')) {
-                const entityFieldId = this.model.name + '_' + this.name;
-                const recordId = this.model.id || '';
-                const url = 'EntityFieldTypeLinkMultiple/' + entityFieldId + '/where' + (recordId ? '?recordId=' + recordId : '');
-                this.ajaxGetRequest(url, null, { async: false }).success(response => {
-                    res = response?.where || res;
-                });
-            }
-
-            res = this.addForeignFilterFieldsWhere(res);
-
-            return res || undefined
-        },
-
-        /**
-         * The records are filtered by the fields of the record: "foreignFilterFields" maps the attributes of the
-         * foreign records to the attributes of the record.
-         */
-        addForeignFilterFieldsWhere(where) {
-            const filterFields = this.model.getFieldParam(this.name, 'foreignFilterFields') || {};
-
-            Object.keys(filterFields).forEach(foreignAttribute => {
-                const value = this.model.get(filterFields[foreignAttribute]);
-                if (value === null || value === undefined || value === '') {
-                    return;
-                }
-
-                where = (where || []).concat([{type: 'equals', attribute: foreignAttribute, value: value}]);
-            });
-
-            return where;
+            return this.model.getLinkWhere(this.name, 'linkMultiple');
         },
 
         uploadLink: function () {

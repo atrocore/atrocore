@@ -68,6 +68,7 @@
     "quantities": "Кількість",
     "oauth1": "OAuth 1.0",
     "vertica": "Vertica DB",
+    "oracle": "Oracle Database",
     "atrocore": "AtroCore",
     "mysql": "Сервер MySQL",
     "psql": "Сервер PostgreSQL",
@@ -83,6 +84,7 @@
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
     "pdoMysqlMissing": "PHP PDO MySQL extension не встановлено.",
+    "pdoOciMissing": "PHP-розширення PDO OCI (Oracle) не встановлено.",
     "connectionFailed": "З'єднання не встановлено: %s",
     "noSuchType": "Тип з'єднання не підтримується.",
     "notificationConnectionCannotBeDeleted": "Це з’єднання використовується для сповіщень електронною поштою та не може бути видалено",
@@ -109,6 +111,7 @@
       "cookie": "Сесія cookie",
       "smtp": "SMTP",
       "vertica": "Vertica DB",
+      "oracle": "Oracle Database",
       "tokenAuthApi": "API автентифікації токенів",
       "apiKey": "Ключ API"
     }

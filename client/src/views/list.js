@@ -320,7 +320,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     style: 'primary',
                     iconClass: 'ph ph-plus-circle',
                     acl: 'create',
-                    aclScope: this.getCreateAclScope()
+                    aclScope: this.entityType || this.scope
                 });
             } else {
                 this.menu.buttons.unshift({
@@ -330,22 +330,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     style: 'primary',
                     iconClass: 'ph ph-plus-circle',
                     acl: 'create',
-                    aclScope: this.getCreateAclScope()
+                    aclScope: this.entityType || this.scope
                 });
             }
-        },
-
-        getCreateAclScope: function () {
-            const scope = this.entityType || this.scope;
-
-            // the records of a supertype are created via its subtypes, so the button is shown if any subtype can be created
-            if (this.getMetadata().get(['scopes', scope, 'hasSubtypes'])) {
-                const subtypes = Object.values(this.getMetadata().get(['scopes', scope, 'subtypeScopes']) || {});
-
-                return subtypes.find(subtype => this.getAcl().check(subtype, 'create')) || scope;
-            }
-
-            return scope;
         },
 
         setupSearchPanel: function () {
