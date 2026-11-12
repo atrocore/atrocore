@@ -43,6 +43,8 @@ Espo.define('search-manager', [], function () {
         this.savedSearchList = [];
         this.isFilterSetValue = null;
         this.additionalBoolFilterList = [];
+        this.lockedWhere = [];
+        this.lockedRules = [];
 
         this.emptyData = {
             textFilter: '',
@@ -161,7 +163,11 @@ Espo.define('search-manager', [], function () {
             }
 
             if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
-                where.push(Espo.Utils.clone(this.data.queryBuilder));
+                // the locked rules are applied separately below, they are not part of the rules of the user
+                var userRules = this.stripLockedRules(this.data.queryBuilder);
+                if (userRules) {
+                    where.push(userRules);
+                }
             }
 
             // to remove when switching to querybuilder everywhere
@@ -169,7 +175,110 @@ Espo.define('search-manager', [], function () {
                 where = where.concat(this.getAdvancedWhere(this.data.advanced))
             }
 
+            // the locked rules are always applied, whatever the user does with the filter
+            this.lockedWhere.forEach(function (item) {
+                where.push(JSON.parse(JSON.stringify(item)));
+            });
+
             return where;
+        },
+
+        /**
+         * Rules that the user can see but cannot change or remove, for example the filter of a link field in the
+         * selection dialog. The locked where is always sent with the request, the locked rules are the same filter as
+         * rules of the query builder (their data has the key _locked), so that the user sees them in the filter.
+         */
+        setLockedWhere: function (groups) {
+            this.lockedWhere = JSON.parse(JSON.stringify(groups || []));
+            this.lockedRules = [];
+
+            var markLocked = function (rule) {
+                rule.data = rule.data || {};
+                rule.data._locked = true;
+            };
+
+            this.lockedWhere.forEach(function (group) {
+                var copy = JSON.parse(JSON.stringify(group));
+                if ((copy.condition || 'AND').toUpperCase() === 'AND') {
+                    // the rules of an AND group are rules of the root group of the filter
+                    (copy.rules || []).forEach(function (rule) {
+                        markLocked(rule);
+                        this.lockedRules.push(rule);
+                    }, this);
+                } else {
+                    markLocked(copy);
+                    this.lockedRules.push(copy);
+                }
+            }, this);
+        },
+
+        hasLockedRules: function () {
+            return this.lockedRules.length > 0;
+        },
+
+        isLockedRule: function (rule) {
+            return !!(rule && rule.data && rule.data._locked);
+        },
+
+        /**
+         * The query builder rules without the locked ones, null if no rule of the user is left.
+         */
+        stripLockedRules: function (queryBuilder) {
+            var res = this.removeLockedRules(queryBuilder);
+
+            return res && Array.isArray(res.rules) && res.rules.length ? res : null;
+        },
+
+        removeLockedRules: function (queryBuilder) {
+            if (!queryBuilder || !Array.isArray(queryBuilder.rules)) {
+                return queryBuilder;
+            }
+
+            var self = this;
+            var strip = function (group) {
+                group.rules = (group.rules || [])
+                    .filter(function (rule) {
+                        return !self.isLockedRule(rule);
+                    })
+                    .map(function (rule) {
+                        return Array.isArray(rule.rules) ? strip(rule) : rule;
+                    })
+                    .filter(function (rule) {
+                        return !Array.isArray(rule.rules) || rule.rules.length;
+                    });
+
+                return group;
+            };
+
+            return strip(JSON.parse(JSON.stringify(queryBuilder)));
+        },
+
+        /**
+         * The query builder rules with the locked rules in front, in the root group that combines its rules with AND.
+         * The locked rules whose field is not among availableFilterIds cannot be shown, they are still applied.
+         */
+        mergeLockedRules: function (queryBuilder, availableFilterIds) {
+            if (!this.hasLockedRules()) {
+                return queryBuilder;
+            }
+
+            var root = this.removeLockedRules(queryBuilder);
+            if (!root || !Array.isArray(root.rules)) {
+                root = {condition: 'AND', rules: [], valid: true};
+            }
+
+            if (root.condition !== 'AND' && root.rules.length) {
+                root = {condition: 'AND', rules: [root], valid: true};
+            }
+            root.condition = 'AND';
+
+            var locked = JSON.parse(JSON.stringify(this.lockedRules)).filter(function (rule) {
+                return !availableFilterIds || !rule.id || availableFilterIds.indexOf(rule.id) !== -1;
+            });
+
+            root.rules = locked.concat(root.rules);
+
+            return root;
         },
 
         getWherePart: function (name, defs) {
@@ -277,6 +386,10 @@ Espo.define('search-manager', [], function () {
 
         empty: function () {
             this.data = Espo.Utils.clone(this.emptyData);
+            this.data.queryBuilder = this.mergeLockedRules(this.data.queryBuilder);
+            if (this.hasLockedRules()) {
+                this.data.queryBuilderApplied = true;
+            }
             if (this.storage) {
                 this.storage.clear(this.type + 'QueryBuilder', this.scope);
             }
@@ -288,6 +401,10 @@ Espo.define('search-manager', [], function () {
                 return;
             }
             this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
+            this.data.queryBuilder = this.mergeLockedRules(this.data.queryBuilder);
+            if (this.hasLockedRules()) {
+                this.data.queryBuilderApplied = true;
+            }
             if (this.storage) {
                 this.storage.clear(this.type + 'QueryBuilder', this.scope);
             }
@@ -334,7 +451,7 @@ Espo.define('search-manager', [], function () {
                 return true;
             }
 
-            let queryBuilder = this.data.queryBuilder;
+            let queryBuilder = this.stripLockedRules(this.data.queryBuilder) || [];
 
             if (this.data.queryBuilderApplied) {
                 filterIsSet = queryBuilder.condition && Array.isArray(queryBuilder.rules) && queryBuilder.rules.length > 0;
