@@ -1,11 +1,11 @@
 {
   "fields": {
-    "originalRecord": "Ursprünglicher Datensatz",
-    "originalEntity": "Ursprüngliche Entität",
-    "originalEntityId": "ID der ursprünglichen Entität",
-    "matchedRecord": "Zugeordneter Datensatz",
-    "matchedEntity": "Zugeordnete Entität",
-    "matchedEntityId": "ID der zugeordneten Entität",
+    "matchSubject": "Abgleichsobjekt",
+    "matchSubjectEntity": "Entität des Abgleichsobjekts",
+    "matchSubjectEntityId": "ID der Entität des Abgleichsobjekts",
+    "matchCandidate": "Abgleichskandidat",
+    "matchCandidateEntity": "Entität des Abgleichskandidaten",
+    "matchCandidateEntityId": "ID der Entität des Abgleichskandidaten",
     "score": "Punktzahl",
     "hash": "Eindeutiger Hash",
     "hasCluster": "Hat Cluster",

@@ -1,13 +1,13 @@
 {
   "fields": {
-    "matchedRecord": "Enregistrement apparié",
-    "matchedEntity": "Entité appariée",
-    "matchedEntityId": "ID de l'entité appariée",
+    "matchCandidate": "Candidat de l'appariement",
+    "matchCandidateEntity": "Entité du candidat de l'appariement",
+    "matchCandidateEntityId": "ID de l'entité du candidat de l'appariement",
     "score": "Score",
-    "originalRecord": "Enregistrement d'origine",
-    "originalEntityId": "ID de l'entité d'origine",
+    "matchSubject": "Sujet de l'appariement",
+    "matchSubjectEntityId": "ID de l'entité du sujet de l'appariement",
     "hash": "Hash unique",
-    "originalEntity": "Entité d'origine",
+    "matchSubjectEntity": "Entité du sujet de l'appariement",
     "hasCluster": "A la grappe",
     "clusterItems": "Éléments de la grappe"
   },

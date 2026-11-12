@@ -121,22 +121,27 @@ class V3Dot0Dot6 extends Base
         $columns = array_keys($schemaManager->listTableColumns('matched_record'));
 
         $renames = [
-            'source_entity'    => 'original_entity',
-            'source_entity_id' => 'original_entity_id',
-            'master_entity'    => 'matched_entity',
-            'master_entity_id' => 'matched_entity_id',
+            'match_subject_entity'      => ['source_entity', 'original_entity'],
+            'match_subject_entity_id'   => ['source_entity_id', 'original_entity_id'],
+            'match_candidate_entity'    => ['master_entity', 'matched_entity'],
+            'match_candidate_entity_id' => ['master_entity_id', 'matched_entity_id'],
         ];
 
-        foreach ($renames as $old => $new) {
-            if (in_array($old, $columns) && !in_array($new, $columns)) {
-                $conn->executeStatement('ALTER TABLE matched_record RENAME COLUMN ' . $conn->quoteIdentifier($old) . ' TO ' . $conn->quoteIdentifier($new));
+        foreach ($renames as $new => $olds) {
+            foreach ($olds as $old) {
+                if (in_array($old, $columns) && !in_array($new, $columns)) {
+                    $conn->executeStatement('ALTER TABLE matched_record RENAME COLUMN ' . $conn->quoteIdentifier($old) . ' TO ' . $conn->quoteIdentifier($new));
+                    $columns[] = $new;
+                }
             }
         }
 
         $indexes = $schemaManager->listTableIndexes('matched_record');
-        foreach (['source' => 'original', 'master' => 'matched'] as $old => $new) {
-            if (isset($indexes["idx_matched_record_{$old}_entity"])) {
-                $schemaManager->dropIndex("idx_matched_record_{$old}_entity", 'matched_record');
+        foreach (['match_subject' => ['source', 'original'], 'match_candidate' => ['master', 'matched']] as $new => $olds) {
+            foreach ($olds as $old) {
+                if (isset($indexes["idx_matched_record_{$old}_entity"])) {
+                    $schemaManager->dropIndex("idx_matched_record_{$old}_entity", 'matched_record');
+                }
             }
             if (!isset($indexes["idx_matched_record_{$new}_entity"])) {
                 $schemaManager->createIndex(new Index("idx_matched_record_{$new}_entity", ['type', "{$new}_entity", "{$new}_entity_id"]), 'matched_record');
@@ -158,9 +163,9 @@ class V3Dot0Dot6 extends Base
         foreach ($matchings as $matching) {
             while (true) {
                 $pairs = $conn->createQueryBuilder()
-                    ->select('a.id AS a_id, a.original_entity_id AS a_original, a.matched_entity_id AS a_matched, a.score AS a_score, a.has_cluster AS a_has_cluster, b.id AS b_id, b.score AS b_score, b.has_cluster AS b_has_cluster')
+                    ->select('a.id AS a_id, a.match_subject_entity_id AS a_match_subject, a.match_candidate_entity_id AS a_match_candidate, a.score AS a_score, a.has_cluster AS a_has_cluster, b.id AS b_id, b.score AS b_score, b.has_cluster AS b_has_cluster')
                     ->from('matched_record', 'a')
-                    ->innerJoin('a', 'matched_record', 'b', 'b.matching_id = a.matching_id AND b.original_entity_id = a.matched_entity_id AND b.matched_entity_id = a.original_entity_id AND b.deleted = a.deleted')
+                    ->innerJoin('a', 'matched_record', 'b', 'b.matching_id = a.matching_id AND b.match_subject_entity_id = a.match_candidate_entity_id AND b.match_candidate_entity_id = a.match_subject_entity_id AND b.deleted = a.deleted')
                     ->where('a.matching_id = :matchingId')
                     ->andWhere('a.deleted = :false')
                     ->andWhere('a.id < b.id')
@@ -174,7 +179,7 @@ class V3Dot0Dot6 extends Base
                 }
 
                 foreach ($pairs as $pair) {
-                    [$keepId, $removeId] = strcmp($pair['a_original'], $pair['a_matched']) < 0
+                    [$keepId, $removeId] = strcmp($pair['a_match_subject'], $pair['a_match_candidate']) < 0
                         ? [$pair['a_id'], $pair['b_id']]
                         : [$pair['b_id'], $pair['a_id']];
 
@@ -207,7 +212,7 @@ class V3Dot0Dot6 extends Base
             $lastId = '';
             while (true) {
                 $rows = $conn->createQueryBuilder()
-                    ->select('id, original_entity_id, matched_entity_id')
+                    ->select('id, match_subject_entity_id, match_candidate_entity_id')
                     ->from('matched_record')
                     ->where('matching_id = :matchingId')
                     ->andWhere('deleted = :false')
@@ -226,19 +231,19 @@ class V3Dot0Dot6 extends Base
                 foreach ($rows as $row) {
                     $lastId = $row['id'];
 
-                    if (strcmp($row['original_entity_id'], $row['matched_entity_id']) <= 0) {
+                    if (strcmp($row['match_subject_entity_id'], $row['match_candidate_entity_id']) <= 0) {
                         continue;
                     }
 
                     $conn->createQueryBuilder()
                         ->update('matched_record')
-                        ->set('original_entity_id', ':originalId')
-                        ->set('matched_entity_id', ':matchedId')
+                        ->set('match_subject_entity_id', ':matchSubjectId')
+                        ->set('match_candidate_entity_id', ':matchCandidateId')
                         ->set('hash', ':hash')
                         ->where('id = :id')
-                        ->setParameter('originalId', $row['matched_entity_id'])
-                        ->setParameter('matchedId', $row['original_entity_id'])
-                        ->setParameter('hash', md5(implode('_', [$matching['number'], $matching['entity'], $row['matched_entity_id'], $matching['master_entity'], $row['original_entity_id']])))
+                        ->setParameter('matchSubjectId', $row['match_candidate_entity_id'])
+                        ->setParameter('matchCandidateId', $row['match_subject_entity_id'])
+                        ->setParameter('hash', md5(implode('_', [$matching['number'], $matching['entity'], $row['match_candidate_entity_id'], $matching['master_entity'], $row['match_subject_entity_id']])))
                         ->setParameter('id', $row['id'])
                         ->executeStatement();
                 }

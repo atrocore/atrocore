@@ -1,11 +1,11 @@
 {
   "fields": {
-    "originalRecord": "Original Record",
-    "originalEntity": "Original Entity",
-    "originalEntityId": "Original Entity ID",
-    "matchedRecord": "Matched Record",
-    "matchedEntity": "Matched Entity",
-    "matchedEntityId": "Matched Entity ID",
+    "matchSubject": "Match Subject",
+    "matchSubjectEntity": "Match Subject Entity",
+    "matchSubjectEntityId": "Match Subject Entity ID",
+    "matchCandidate": "Match Candidate",
+    "matchCandidateEntity": "Match Candidate Entity",
+    "matchCandidateEntityId": "Match Candidate Entity ID",
     "score": "Score",
     "hash": "Unique Hash",
     "hasCluster": "Has Cluster",

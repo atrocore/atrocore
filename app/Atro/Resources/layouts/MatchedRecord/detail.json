@@ -13,10 +13,10 @@
       ],
       [
         {
-          "name": "originalRecord"
+          "name": "matchSubject"
         },
         {
-          "name": "matchedRecord"
+          "name": "matchCandidate"
         }
       ]
     ]

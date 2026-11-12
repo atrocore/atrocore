@@ -28,28 +28,28 @@ class MatchedRecord extends Base
             return true;
         }
 
-        $originalRecord = $this
+        $matchSubject = $this
             ->getEntityManager()
-            ->getRepository($entity->get('originalEntity'))
-            ->get($entity->get('originalEntityId'));
+            ->getRepository($entity->get('matchSubjectEntity'))
+            ->get($entity->get('matchSubjectEntityId'));
 
-        if (empty($originalRecord)) {
+        if (empty($matchSubject)) {
             return false;
         }
 
-        $matchedRecord = $this
+        $matchCandidate = $this
             ->getEntityManager()
-            ->getRepository($entity->get('matchedEntity'))
-            ->get($entity->get('matchedEntityId'));
+            ->getRepository($entity->get('matchCandidateEntity'))
+            ->get($entity->get('matchCandidateEntityId'));
 
-        if (empty($matchedRecord)) {
+        if (empty($matchCandidate)) {
             return false;
         }
 
         return
             $this->checkEntity($user, $entity, $data, 'read')
-            && $this->getAclManager()->checkEntity($user, $originalRecord, 'read')
-            && $this->getAclManager()->checkEntity($user, $matchedRecord, 'read');
+            && $this->getAclManager()->checkEntity($user, $matchSubject, 'read')
+            && $this->getAclManager()->checkEntity($user, $matchCandidate, 'read');
     }
 
     public function checkEntityEdit(User $user, Entity $entity, $data)

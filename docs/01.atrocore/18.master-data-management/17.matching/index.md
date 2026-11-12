@@ -113,7 +113,7 @@ For Duplicate - Duplicate matchings, the score of a pair does not depend on whic
 
 ## Viewing Matched Records
 
-Each Matched Record contains the Original Record, the Matched Record and the Score of the match in percent. For Duplicate - Duplicate matchings, one Matched Record is stored per pair of records, regardless of which of the two records was checked.
+Each Matched Record contains the Match Subject, the Match Candidate and the Score of the match in percent. For Contributor - Master matchings, the Match Subject is the contributor record and the Match Candidate is the master record. For Duplicate - Duplicate matchings, one Matched Record is stored per pair of records, regardless of which of the two records was checked, so the Match Subject is not necessarily the record for which the matches were searched.
 
 All matched records can be reviewed in the following ways:
 

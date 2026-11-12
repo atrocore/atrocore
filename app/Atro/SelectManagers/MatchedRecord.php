@@ -34,7 +34,7 @@ class MatchedRecord extends Base
         foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
             $where = [];
             foreach (['entity', 'masterEntity'] as $field) {
-                $column = $field === 'entity' ? 'original_entity' : 'matched_entity';
+                $column = $field === 'entity' ? 'match_subject_entity' : 'match_candidate_entity';
                 $repository = $this->getEntityManager()->getRepository($matching->get($field));
                 $sp = $this->createSelectManager($matching->get($field))->getSelectParams([], true, true);
                 $sp['select'] = ['id'];

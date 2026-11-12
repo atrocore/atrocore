@@ -271,10 +271,10 @@ class ClusterItem extends Base
             ->getForEntityRecord($entity->get('entityName'), $entity->get('entityId'), $entity->get('id'), $rejectedClusterIds);
 
         if (!empty($item)) {
-            if ($item['original_entity'] === $entity->get('entityName') && $item['original_entity_id'] === $entity->get('entityId')) {
-                $newClusterId = $item['matched_cluster_id'];
+            if ($item['match_subject_entity'] === $entity->get('entityName') && $item['match_subject_entity_id'] === $entity->get('entityId')) {
+                $newClusterId = $item['match_candidate_cluster_id'];
             } else {
-                $newClusterId = $item['original_cluster_id'];
+                $newClusterId = $item['match_subject_cluster_id'];
             }
 
             $entity->set('matchedRecordId', $item['id']);

@@ -1,11 +1,11 @@
 {
   "fields": {
-    "originalRecord": "Оригінальний запис",
-    "originalEntity": "Оригінальна сутність",
-    "originalEntityId": "Ідентифікатор оригінальної сутності",
-    "matchedRecord": "Зіставлений запис",
-    "matchedEntity": "Зіставлена сутність",
-    "matchedEntityId": "Ідентифікатор зіставленої сутності",
+    "matchSubject": "Об'єкт зіставлення",
+    "matchSubjectEntity": "Сутність об'єкта зіставлення",
+    "matchSubjectEntityId": "Ідентифікатор сутності об'єкта зіставлення",
+    "matchCandidate": "Кандидат зіставлення",
+    "matchCandidateEntity": "Сутність кандидата зіставлення",
+    "matchCandidateEntityId": "Ідентифікатор сутності кандидата зіставлення",
     "score": "Оцінка",
     "hash": "Унікальний хеш",
     "hasCluster": "Має кластер",
