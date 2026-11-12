@@ -44,13 +44,6 @@
         "docsUrl": "https://help.atrocore.com/atrocore/administration/locales"
       },
       {
-        "url": "#Admin/authentication",
-        "label": "Authentication",
-        "description": "authentication",
-        "icon": "ph ph-lock-key-open",
-        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/authentication"
-      },
-      {
         "url": "#Connection",
         "scope": "Connection",
         "label": "Connection",
@@ -194,6 +187,33 @@
       }
     ]
   },
+  "authentication": {
+    "label": "Authentication",
+    "itemList": [
+      {
+        "url": "#Admin/authentication",
+        "label": "Settings",
+        "description": "authentication",
+        "icon": "ph ph-lock-key-open",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/authentication"
+      },
+      {
+        "url": "#OauthClient",
+        "scope": "OauthClient",
+        "label": "OAuth Clients",
+        "description": "oauthClients",
+        "icon": "ph ph-plugs-connected"
+      },
+      {
+        "url": "#Admin/authTokens",
+        "scope": "AuthToken",
+        "label": "Auth Tokens",
+        "description": "authTokens",
+        "icon": "ph ph-key"
+      }
+    ],
+    "order": 9
+  },
   "users": {
     "label": "AccessManagement",
     "itemList": [
@@ -220,21 +240,13 @@
         "description": "roles",
         "icon": "ph ph-user-gear",
         "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/roles"
-      },
-      {
-        "url": "#OauthClient",
-        "scope": "OauthClient",
-        "label": "OAuth Clients",
-        "description": "oauthClients",
-        "icon": "ph ph-plugs-connected"
-      },
-      {
-        "url": "#Admin/authTokens",
-        "scope": "AuthToken",
-        "label": "Auth Tokens",
-        "description": "authTokens",
-        "icon": "ph ph-key"
-      },
+      }
+    ],
+    "order": 10
+  },
+  "audit": {
+    "label": "Audit",
+    "itemList": [
       {
         "url": "#ActionHistoryRecord",
         "scope": "ActionHistoryRecord",
@@ -244,7 +256,7 @@
         "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/action-history"
       }
     ],
-    "order": 10
+    "order": 12
   },
   "customization": {
     "label": "Customization",

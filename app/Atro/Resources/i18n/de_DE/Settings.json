@@ -70,6 +70,7 @@
     "favicon": "Verfügbarer Dateityp: image/svg+xml"
   },
   "labels": {
+    "Sessions": "Sitzungen",
     "Password Reset": "Passwort zurücksetzen",
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
     "Admin Notifications": "Admin Notifications",

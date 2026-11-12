@@ -19,6 +19,7 @@
     "System": "System",
     "FileManagement": "File Management",
     "AccessManagement": "Access Management",
+    "Audit": "Audit",
     "Users": "Users",
     "Email": "Email",
     "Data": "Data",

@@ -80,6 +80,7 @@
     "favicon": "Available file type: image/svg+xml"
   },
   "labels": {
+    "Sessions": "Sessions",
     "API Documentation": "API Documentation",
     "Password Reset": "Password Reset",
     "Rate Limit": "Rate Limit",
