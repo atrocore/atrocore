@@ -96,6 +96,8 @@ The following parameters are available when defining a Matching Rule:
     - Operator: AND – the Set scores the sum of the scores of its sub-rules.
     - Operator: OR – the Set scores the score of the sub-rule with the highest weight that evaluates as true.
   - Expression – scores a candidate by a custom [Expression Language](../../../10.developer-guide/85.expression-language/index.md#matching-rule-expressions) expression in the Score Expression field. The expression returns a number from 0 to 1, which is multiplied by the rule's Weight.
+  - Fields are Similar – compares all fields of the records without configuration, see [Fields are Similar](#fields-are-similar).
+  - Attributes are Similar – compares all attributes of the records without configuration, see [Attributes are Similar](#attributes-are-similar).
 
   The [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module provides additional rule types for approximate matching: Field is Similar (Fuzzy) and Field is Similar (Levenshtein).
 - Matching – references the parent Matching configuration. Immutable after creation.
@@ -108,6 +110,38 @@ The following parameters are available when defining a Matching Rule:
 > If the value is empty in either compared record, the rule scores `0`.
 
 For Duplicate - Duplicate matchings, the score of a pair does not depend on which of the two records is checked. If the Matching has a rule whose result depends on the direction of the comparison, i.e. Field Contains or Expression, the pair is scored in both directions and gets the higher score.
+
+### Fields are Similar
+
+A Fields are Similar rule compares every field of the Master Entity that has an identically named field of the same type in the Entity, and scores the candidate by the average similarity of these fields multiplied by the rule's Weight. The similarity of a field is a number from 0 to 1:
+
+| Field types | Similarity |
+|---|---|
+| Varchar, text, WYSIWYG, markdown, URL, email | The share of common three-character sequences (trigrams) of the values, regardless of case. For example, "Jonathan Smith" and "Jonathon Smith" have a similarity of about 0.8. |
+| Array, multi-value list | The share of common elements of both values. |
+| Other types | 1 if the values are equal, otherwise 0. |
+
+A field that is empty in both compared records is skipped. A field that is empty in one record only has a similarity of 0.
+
+The following fields are not compared:
+
+- the fields used by other Matching Rules of the Matching, so that their own weights apply to them;
+- the Created At, Modified At, Created By, Modified By, Owner and Assigned User fields;
+- data lineage fields, i.e. the link to the master record and the links created by data pipelines;
+- not stored, disabled, hidden and auto-increment fields, multiple links, links to a parent of any type, JSON and password fields;
+- the [Non Comparable Fields](../../03.administration/11.entity-management/index.md) of the Entity and the Master Entity.
+
+A Fields are Similar rule has no Field parameter. It can't select candidates, so it is available as a Matching Rule only.
+
+### Attributes are Similar
+
+An Attributes are Similar rule compares the [attributes](../../03.administration/12.attribute-management/index.md) of the records in the same way as a [Fields are Similar](#fields-are-similar) rule compares the fields: it scores the candidate by the average similarity of the attributes multiplied by the rule's Weight. Each language of a multilingual attribute is compared separately. For a numeric attribute with a unit or a prefix, the unit and the prefix must be equal as well.
+
+An attribute that is linked to only one of the compared records has a similarity of 0. If the Ignore Unavailable Attributes checkbox is enabled, such an attribute is skipped.
+
+The attributes used by other Matching Rules of the Matching, composite attributes, script attributes and multiple link attributes are not compared.
+
+The rule is available only if both the Entity and the Master Entity of the Matching support attributes.
 
 > Each Blocking Rule and Matching Rule belongs to one Matching only.
 

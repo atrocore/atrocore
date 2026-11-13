@@ -6,7 +6,8 @@
     "matchingRules": "Übereinstimmungs-Regeln",
     "operator": "Operator",
     "attribute": "Attribut",
-    "matchScoreExpression": "Score-Ausdruck"
+    "matchScoreExpression": "Score-Ausdruck",
+    "ignoreUnavailableAttributes": "Nicht verfügbare Attribute ignorieren"
   },
   "groupOptions": {
     "field": {
@@ -20,7 +21,9 @@
       "fieldSimilar": "Feld ist ähnlich",
       "fieldContains": "Feld enthält",
       "set": "Set",
-      "expression": "Ausdruck"
+      "expression": "Ausdruck",
+      "fieldsSimilar": "Felder sind ähnlich",
+      "attributesSimilar": "Attribute sind ähnlich"
     },
     "operator": {
       "and": "AND",
@@ -34,9 +37,11 @@
     "notValidMatchingRuleSet": "Der übereinstimmende Regelsatz ist ungültig",
     "notValidFieldType": "Der Feldtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
     "notValidAttributeType": "Der Attributtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
-    "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein."
+    "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein.",
+    "notValidAttributesSimilar": "Die Entitäten der Übereinstimmung haben keine Attribute."
   },
   "tooltips": {
-    "matchScoreExpression": "Ein ExpressionLanguage-Ausdruck mit Zugriff auf `stageEntity` (einen hydratisierten Datensatz) und `masterEntity` (die rohen Feldwerte des Kandidaten als Array - z. B. masterEntity['name']). Muss eine Zahl zwischen 0 und 1 zurückgeben, die mit dem Gewicht der Regel multipliziert den Übereinstimmungswert ergibt - z. B. bewertet stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 eine exakte Übereinstimmung mit 1 und alles andere mit 0."
+    "matchScoreExpression": "Ein ExpressionLanguage-Ausdruck mit Zugriff auf `stageEntity` (einen hydratisierten Datensatz) und `masterEntity` (die rohen Feldwerte des Kandidaten als Array - z. B. masterEntity['name']). Muss eine Zahl zwischen 0 und 1 zurückgeben, die mit dem Gewicht der Regel multipliziert den Übereinstimmungswert ergibt - z. B. bewertet stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 eine exakte Übereinstimmung mit 1 und alles andere mit 0.",
+    "ignoreUnavailableAttributes": "Wenn aktiviert, wird ein Attribut, das nur mit einem der verglichenen Datensätze verknüpft ist, nicht verglichen. Andernfalls hat ein solches Attribut eine Ähnlichkeit von 0."
   }
 }
