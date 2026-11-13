@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Validate an OAuth authorization request',
-    description: 'Returns the client that requests the access by the authorization request kept in its cookie by the authorization endpoint GET /api/oauth/authorize. Called by the sign-in form of the authorization request.',
+    description: 'Returns the client that requests the access by the authorization request kept in its cookie by the authorization page /oauth/authorize. Called by the login form of the authorization request.',
     tag: 'Global',
     auth: false,
     responses: [

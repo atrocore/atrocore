@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Approve or deny an OAuth authorization request',
-    description: 'Completes the authorization request kept in its cookie by the authorization endpoint GET /api/oauth/authorize. To approve it the user signs in with the username and password; denying needs no credentials. Returns the redirect URI of the client with the authorization code or with the "access_denied" error (RFC 6749, section 4.1.2). Called by the sign-in form of the authorization request.',
+    description: 'Completes the authorization request kept in its cookie by the authorization page /oauth/authorize. To approve it the user signs in with the username and password; denying needs no credentials. Returns the redirect URI of the client with the authorization code or with the "access_denied" error (RFC 6749, section 4.1.2). Called by the login form of the authorization request.',
     tag: 'Global',
     auth: false,
     requestBody: [

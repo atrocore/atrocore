@@ -17,6 +17,7 @@ use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
 use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\OAuth\Authorization;
 use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\OAuth\TokenUser;
@@ -27,6 +28,7 @@ use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Http\Message\ResponseInterface;
 use Atro\Core\Factories\HttpPipeline;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -127,6 +129,11 @@ final class Application
                 $this->runApi($query);
             }
 
+            // the authorization page of the OAuth server leads to the user interface, which shows the login form
+            if ($query === 'oauth/authorize') {
+                $this->emit($this->getContainer()->get(Authorization::class)->handleAuthorizationPage(ServerRequest::fromGlobals()));
+            }
+
             // generate openapi json
             if ($query === 'apidocs/openapi.json') {
                 $this->showOpenApiJson();
@@ -193,6 +200,12 @@ final class Application
     public function getContainer(): Container
     {
         return $this->container;
+    }
+
+    protected function emit(ResponseInterface $response): void
+    {
+        (new SapiEmitter())->emit($response);
+        exit;
     }
 
     protected function showOpenApiJson(): void

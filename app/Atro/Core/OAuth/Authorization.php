@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Atro\Core\OAuth;
 
 use Atro\Core\OAuth\Entities\UserEntity;
+use Atro\Core\Utils\Config;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -44,9 +46,40 @@ class Authorization
      */
     public const REQUEST_TTL = 600;
 
-    public function __construct(private readonly AuthorizationServer $authorizationServer, Keys $keys)
-    {
+    public function __construct(
+        private readonly AuthorizationServer $authorizationServer,
+        private readonly Config $config,
+        Keys $keys
+    ) {
         $this->setEncryptionKey($keys->getEncryptionKey());
+    }
+
+    /**
+     * The authorization page /oauth/authorize, where the client leads the user agent: the authorization request is
+     * validated, kept in an encrypted cookie and the user agent goes on to the user interface, which shows its login
+     * form; the URL of the user interface carries no parameters of the request. An error is returned to the redirect
+     * URI of the client, or, when the client cannot be trusted with it, shown by the login form.
+     */
+    public function handleAuthorizationPage(ServerRequestInterface $request): ResponseInterface
+    {
+        $siteUrl = $this->config->getSiteUrl();
+        $query = http_build_query($request->getQueryParams());
+
+        try {
+            $this->validateQuery($query);
+        } catch (OAuthServerException $e) {
+            if ($e->hasRedirect()) {
+                return $e->generateHttpResponse(new Response());
+            }
+
+            return (new Response(302))
+                ->withHeader('Location', rtrim($siteUrl, '/') . '/')
+                ->withHeader('Set-Cookie', SessionCookie::buildSignInErrorHeader($request, $siteUrl, $e->getHint() ?: $e->getMessage()));
+        }
+
+        return (new Response(302))
+            ->withHeader('Location', rtrim($siteUrl, '/') . '/')
+            ->withHeader('Set-Cookie', SessionCookie::buildAuthorizationRequestHeaders($request, $siteUrl, $this->encryptRequest($query)));
     }
 
     /**
@@ -114,7 +147,7 @@ class Authorization
     {
         parse_str($query, $queryParams);
 
-        return $this->validate((new ServerRequest('GET', '/api/oauth/authorize'))->withQueryParams($queryParams));
+        return $this->validate((new ServerRequest('GET', '/oauth/authorize'))->withQueryParams($queryParams));
     }
 
     /**
