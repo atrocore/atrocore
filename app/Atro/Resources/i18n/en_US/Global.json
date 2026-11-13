@@ -1486,6 +1486,7 @@
     "dateIsInvalid": "Date for the field '%s' is not valid.",
     "datetimeIsInvalid": "Date-time for the field '%s' is not valid.",
     "filterContainsUnknownField": "Filter contains a rule that refers to a non-existent field \"%s\".",
+    "filterContainsUnknownScope": "Filter contains a rule that refers to a non-existent entity \"%s\".",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",
     "noSuchOptions": "Value '%s' for the field '%s' is not valid.",
     "noOptionsDefined": "Options for the field '%s' are not defined.",
