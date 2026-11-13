@@ -163,30 +163,6 @@ class Authorization
     }
 
     /**
-     * The identifier of the authorization code in a redirect URI returned by approve(), null when there is none.
-     */
-    public function getAuthorizationId(string $redirectUri): ?string
-    {
-        parse_str((string)parse_url($redirectUri, PHP_URL_QUERY), $params);
-
-        return $this->getAuthCodeId((string)($params['code'] ?? ''));
-    }
-
-    /**
-     * The identifier of an authorization code: the code is the payload encrypted by the authorization server.
-     */
-    public function getAuthCodeId(string $code): ?string
-    {
-        try {
-            $payload = json_decode($this->decrypt($code), true);
-        } catch (\Throwable $e) {
-            return null;
-        }
-
-        return is_array($payload) && !empty($payload['auth_code_id']) ? (string)$payload['auth_code_id'] : null;
-    }
-
-    /**
      * Returns the URI the user agent is redirected to: the redirect URI of the client with the "access_denied" error
      * (RFC 6749, section 4.1.2.1).
      */

@@ -19,13 +19,16 @@ use Espo\ORM\EntityManager;
 
 /**
  * The OAuth client of the user interface: an ordinary public client with PKCE, the config refers to it. The user
- * interface signs in by it, so it is created on the installation and can be restored from the console.
+ * interface logs in by it, so it is created on the installation and can be restored from the console.
+ *
+ * The server is this client (backend for frontend): it requests and exchanges the authorization code itself, the code
+ * never reaches the browser. The redirect URI is the user interface, the site URL.
  */
 class UiClient
 {
     public const CONFIG_KEY = 'oauthUiClientId';
     public const NAME = 'AtroCore UI';
-    public const CALLBACK_PATH = '/api/oauth/callback';
+    public const REDIRECT_PATH = '/';
 
     public function __construct(private readonly EntityManager $entityManager, private readonly Config $config)
     {
@@ -38,7 +41,7 @@ class UiClient
 
     public function getRedirectUri(): string
     {
-        return rtrim($this->config->getSiteUrl(), '/') . self::CALLBACK_PATH;
+        return rtrim($this->config->getSiteUrl(), '/') . self::REDIRECT_PATH;
     }
 
     /**

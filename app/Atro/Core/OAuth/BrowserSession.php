@@ -45,8 +45,6 @@ class BrowserSession
      */
     private const LAST_ACCESS_INTERVAL = 60;
 
-    private const LOGIN_TTL = 600;
-
     public function __construct(
         private readonly Connection $connection,
         private readonly Container $container,
@@ -60,86 +58,38 @@ class BrowserSession
     }
 
     /**
-     * Signs the user in to the user interface: the server, the OAuth client of the user interface, runs the
-     * authorization code grant with PKCE for the user and opens the session. Returns the ID of the session for the
-     * session cookie.
+     * Logs the user in to the user interface: the server, the OAuth client of the user interface, runs the
+     * authorization code grant with PKCE for the user and opens the session. The authorization code does not leave
+     * the server. Returns the ID of the session record and the ID of the session for the session cookie.
      *
+     * @return array{id: string, sessionId: string}
      * @throws OAuthServerException When the client of the user interface is turned off.
      */
-    public function signIn(string $userId, string $ipAddress): string
-    {
-        $login = $this->startLogin('');
-
-        $authorization = $this->container->get(Authorization::class);
-        $redirectUri = $authorization->approve($authorization->validateQuery($login['query']), $userId);
-
-        parse_str((string)parse_url($redirectUri, PHP_URL_QUERY), $params);
-
-        $result = $this->completeLogin((string)($params['code'] ?? ''), (string)($params['state'] ?? ''), $login['loginCookie'], $ipAddress);
-        if ($result === null) {
-            throw OAuthServerException::serverError('The session of the user interface cannot be opened');
-        }
-
-        return $result['sessionId'];
-    }
-
-    /**
-     * The query string of the authorization request of the user interface (with PKCE) and the encrypted value of the
-     * login cookie that keeps its state and code verifier until the callback /api/oauth/callback.
-     *
-     * @return array{query: string, loginCookie: string}
-     */
-    public function startLogin(string $returnHash): array
+    public function login(string $userId, string $ipAddress): array
     {
         $codeVerifier = $this->base64UrlEncode(random_bytes(48));
-        $state = bin2hex(random_bytes(16));
 
-        return [
-            'query'       => http_build_query([
-                'response_type'         => Authorization::RESPONSE_TYPE,
-                'client_id'             => $this->uiClient->getId(),
-                'redirect_uri'          => $this->uiClient->getRedirectUri(),
-                'state'                 => $state,
-                'code_challenge'        => $this->base64UrlEncode(hash('sha256', $codeVerifier, true)),
-                'code_challenge_method' => Authorization::CODE_CHALLENGE_METHOD,
-            ]),
-            'loginCookie' => $this->encrypt(json_encode([
-                'state'        => $state,
-                'codeVerifier' => $codeVerifier,
-                'returnHash'   => $returnHash,
-                'expireTime'   => time() + self::LOGIN_TTL,
-            ])),
-        ];
-    }
+        $authorization = $this->container->get(Authorization::class);
+        $authorizationRequest = $authorization->validateQuery(http_build_query([
+            'response_type'         => Authorization::RESPONSE_TYPE,
+            'client_id'             => $this->uiClient->getId(),
+            'redirect_uri'          => $this->uiClient->getRedirectUri(),
+            'code_challenge'        => $this->base64UrlEncode(hash('sha256', $codeVerifier, true)),
+            'code_challenge_method' => Authorization::CODE_CHALLENGE_METHOD,
+        ]));
 
-    /**
-     * Exchanges the authorization code for the tokens and opens the session.
-     *
-     * @return array{sessionId: string, returnHash: string}|null Null when the callback does not belong to the login.
-     * @throws OAuthServerException
-     */
-    public function completeLogin(string $code, string $state, string $loginCookie, string $ipAddress): ?array
-    {
-        try {
-            $login = json_decode($this->decrypt($loginCookie), true);
-        } catch (\Throwable $e) {
-            return null;
-        }
-
-        if (!is_array($login) || ($login['expireTime'] ?? 0) < time() || !hash_equals((string)($login['state'] ?? ''), $state)) {
-            return null;
-        }
+        parse_str((string)parse_url($authorization->approve($authorizationRequest, $userId), PHP_URL_QUERY), $params);
 
         $tokens = $this->requestTokens([
             'grant_type'    => 'authorization_code',
-            'code'          => $code,
+            'code'          => (string)($params['code'] ?? ''),
             'redirect_uri'  => $this->uiClient->getRedirectUri(),
-            'code_verifier' => (string)$login['codeVerifier'],
+            'code_verifier' => $codeVerifier,
         ]);
 
         $accessToken = $this->tokenReader->readAccessToken((string)$tokens['access_token']);
         if ($accessToken === null) {
-            return null;
+            throw OAuthServerException::serverError('The session of the user interface cannot be opened');
         }
 
         if (!empty($this->config->get('sessionPreventConcurrent'))) {
@@ -175,16 +125,9 @@ class BrowserSession
 
         $this->updateUserLastAccess($accessToken['userId'], $now);
 
-        // a module of an external sign-in links its data, e.g. the tokens of the provider, to the session
-        $this->container->get('eventManager')->dispatch('OauthSession', 'afterCreate', new Event([
-            'sessionId'       => $id,
-            'authorizationId' => $this->container->get(Authorization::class)->getAuthCodeId($code),
-            'userId'          => $accessToken['userId'],
-        ]));
-
         return [
-            'sessionId'  => $sessionId,
-            'returnHash' => (string)($login['returnHash'] ?? ''),
+            'id'        => $id,
+            'sessionId' => $sessionId,
         ];
     }
 

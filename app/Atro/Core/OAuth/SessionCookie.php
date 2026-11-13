@@ -25,7 +25,6 @@ class SessionCookie
 {
     public const SESSION = 'atro-session';
     public const INDICATOR = 'auth-session';
-    public const LOGIN = 'atro-oauth-login';
     public const EXTERNAL_SIGN_IN = 'atro-external-sign-in';
     public const AUTHORIZATION_REQUEST = 'atro-authorization-request';
     public const AUTHORIZATION_REQUEST_INDICATOR = 'auth-request';
@@ -52,7 +51,6 @@ class SessionCookie
         return [
             self::build(self::SESSION, $sessionId, self::MAX_AGE, $secure, true),
             self::build(self::INDICATOR, '1', self::MAX_AGE, $secure, false),
-            self::build(self::LOGIN, '', 0, $secure, true, 'Lax'),
         ];
     }
 
@@ -67,15 +65,6 @@ class SessionCookie
             self::build(self::SESSION, '', 0, $secure, true),
             self::build(self::INDICATOR, '', 0, $secure, false),
         ];
-    }
-
-    /**
-     * The login cookie has to reach /api/oauth/callback after the sign-in at an external identity provider, a cross-site
-     * navigation, so it is "Lax".
-     */
-    public static function buildLoginHeader(ServerRequestInterface $request, string $siteUrl, string $value): string
-    {
-        return self::build(self::LOGIN, $value, self::LOGIN_MAX_AGE, self::isSecure($request, $siteUrl), true, 'Lax');
     }
 
     /**

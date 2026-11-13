@@ -2,7 +2,7 @@
   "controller": "controllers/record",
   "detailActions": {
     "generateSecret": {
-      "url": "oauth/client-secret",
+      "url": "OauthClient/{{id}}/generateSecret",
       "method": "POST",
       "confirm": true,
       "resultField": "clientSecret",
@@ -14,7 +14,7 @@
   },
   "listActions": {
     "generateSecret": {
-      "url": "oauth/client-secret",
+      "url": "OauthClient/{{id}}/generateSecret",
       "method": "POST",
       "confirm": true,
       "resultField": "clientSecret",

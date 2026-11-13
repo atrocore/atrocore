@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Global;
+namespace Atro\Handlers\OauthClient;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -21,29 +21,21 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/oauth/client-secret',
+    path: '/OauthClient/{id}/generateSecret',
     methods: [
         'POST',
     ],
     summary: 'Generate a new OAuth client secret',
     description: 'Generates a new secret of the OAuth client and returns it. Only the hash of the secret is stored, so it is returned only once; the previous secret stops working and the tokens issued to the client are revoked.',
-    tag: 'Global',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'id',
-                    ],
-                    'properties' => [
-                        'id' => [
-                            'type'        => 'string',
-                            'description' => 'OauthClient record ID',
-                        ],
-                    ],
-                ],
+    tag: 'OauthClient',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the OAuth client.',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
@@ -75,11 +67,11 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     skipActionHistory: true,
 )]
-class OauthClientSecretHandler extends AbstractHandler
+class GenerateSecretHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id = (string)$this->getRequestBody($request)->id;
+        $id = (string)$request->getAttribute('id');
 
         return new JsonResponse([
             'clientId'     => $id,

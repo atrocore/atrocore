@@ -26,12 +26,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/oauth/signIn',
+    path: '/oauth/login',
     methods: [
         'POST',
     ],
-    summary: 'Sign in to the user interface',
-    description: 'Signs the user in with the username and password and opens the session of the user interface: the server, the OAuth client of the user interface, gets the tokens by the authorization code grant with PKCE and sets the session cookies. Called by the sign-in form of the user interface.',
+    summary: 'Log in to the user interface',
+    description: 'Logs the user in with the username and password and opens the session of the user interface: the server, the OAuth client of the user interface, gets the tokens by the authorization code grant with PKCE and sets the session cookies. Called by the login form of the user interface.',
     tag: 'Global',
     auth: false,
     requestBody: [
@@ -79,7 +79,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'userNameField' => 'username',
     ],
 )]
-class OauthSignInHandler extends AbstractHandler
+class OauthLoginHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -93,13 +93,13 @@ class OauthSignInHandler extends AbstractHandler
         }
 
         try {
-            $sessionId = $this->container->get(BrowserSession::class)
-                ->signIn($user->id, (string)($request->getServerParams()['REMOTE_ADDR'] ?? ''));
+            $session = $this->container->get(BrowserSession::class)
+                ->login($user->id, (string)($request->getServerParams()['REMOTE_ADDR'] ?? ''));
         } catch (OAuthServerException $e) {
             throw new BadRequest($this->getLanguage()->translate('uiClientDisabled', 'messages', 'OauthClient'));
         }
 
         return (new BoolResponse(true))
-            ->withHeader('Set-Cookie', SessionCookie::buildSessionHeaders($request, $this->getConfig()->getSiteUrl(), $sessionId));
+            ->withHeader('Set-Cookie', SessionCookie::buildSessionHeaders($request, $this->getConfig()->getSiteUrl(), $session['sessionId']));
     }
 }

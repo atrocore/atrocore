@@ -145,7 +145,7 @@ class ClientRepository implements ClientRepositoryInterface
     private function getRedirectUris(array $row): array
     {
         if ($row['id'] === $this->config->get(UiClient::CONFIG_KEY)) {
-            return [rtrim($this->config->getSiteUrl(), '/') . UiClient::CALLBACK_PATH];
+            return [rtrim($this->config->getSiteUrl(), '/') . UiClient::REDIRECT_PATH];
         }
 
         return $this->decodeList($row['redirect_uris']);

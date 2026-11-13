@@ -21,16 +21,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * The sign-in by an external identity provider, e.g. single sign-on: the user leaves the sign-in form for the provider
+ * The sign-in by an external identity provider, e.g. single sign-on: the user leaves the login form for the provider
  * and comes back signed in. That approves the authorization request the form was shown for, kept in its cookie
- * (SessionCookie::AUTHORIZATION_REQUEST) meanwhile; without one the user signs in to the user interface and returns to
- * the route the sign-in started from.
+ * (SessionCookie::AUTHORIZATION_REQUEST) meanwhile; without one the user is logged in to the user interface and
+ * returns to the route the sign-in started from.
  *
  * start() keeps the data of the provider, e.g. a nonce, in the cookie SessionCookie::EXTERNAL_SIGN_IN under a random
- * state, read() takes it back when the provider returns, complete() signs the user in, fail() returns to the sign-in
+ * state, read() takes it back when the provider returns, complete() logs the user in, fail() returns to the login
  * form with the error. A module that keeps data of the sign-in, e.g. the tokens of the provider, stores it in its own
- * table and links it to the session of the user interface by the events "OauthSession.afterCreate" and
- * "OauthSession.beforeRefresh".
+ * table by the ID of the session of the user interface returned by complete(); the event
+ * "OauthSession.beforeRefresh" lets it check the sign-in on every refresh of the session.
  */
 class ExternalSignIn
 {
@@ -83,15 +83,13 @@ class ExternalSignIn
     }
 
     /**
-     * Signs in the user who came back from the provider (the request has the cookies of the sign-in): approves the
-     * authorization request of the sign-in form, or, when there is none, the one of the user interface, whose session
-     * the callback /api/oauth/callback opens. The identifier of the issued authorization code links the data of the
-     * sign-in kept by the module to that session: the event "OauthSession.afterCreate" passes it with the ID of the
-     * session.
+     * Logs in the user who came back from the provider (the request has the cookies of the sign-in): approves the
+     * authorization request of the login form, the response leads the user agent to the redirect URI of its client.
+     * Without one the user is logged in to the user interface: the response sets the session cookies and returns to
+     * the route the sign-in started from, "sessionId" is the ID of the session (record), to keep the data of the
+     * sign-in with.
      *
-     * The response leads the user agent to the redirect URI of the client.
-     *
-     * @return array{response: ResponseInterface, authorizationId: string|null}
+     * @return array{response: ResponseInterface, sessionId: string|null}
      * @throws OAuthServerException
      */
     public function complete(ServerRequestInterface $request, string $userId): array
@@ -102,25 +100,28 @@ class ExternalSignIn
         $query = $this->authorization->decryptRequest((string)($cookies[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
         if ($query !== null) {
             $redirectUri = $this->authorization->approve($this->authorization->validateQuery($query), $userId);
-            $setCookie = SessionCookie::buildAuthorizationRequestClearHeaders($request, $siteUrl);
-        } else {
-            $signIn = $this->decryptCookie((string)($cookies[SessionCookie::EXTERNAL_SIGN_IN] ?? ''));
-            $login = $this->browserSession->startLogin((string)($signIn['returnHash'] ?? ''));
 
-            $redirectUri = $this->authorization->approve($this->authorization->validateQuery($login['query']), $userId);
-            $setCookie = SessionCookie::buildLoginHeader($request, $siteUrl, $login['loginCookie']);
+            return [
+                'response'  => (new Response(302))
+                    ->withHeader('Location', $redirectUri)
+                    ->withHeader('Set-Cookie', SessionCookie::buildAuthorizationRequestClearHeaders($request, $siteUrl)),
+                'sessionId' => null,
+            ];
         }
 
+        $signIn = $this->decryptCookie((string)($cookies[SessionCookie::EXTERNAL_SIGN_IN] ?? ''));
+        $session = $this->browserSession->login($userId, (string)($request->getServerParams()['REMOTE_ADDR'] ?? ''));
+
         return [
-            'response'        => (new Response(302))
-                ->withHeader('Location', $redirectUri)
-                ->withHeader('Set-Cookie', $setCookie),
-            'authorizationId' => $this->authorization->getAuthorizationId($redirectUri),
+            'response'  => (new Response(302))
+                ->withHeader('Location', rtrim($siteUrl, '/') . '/' . (string)($signIn['returnHash'] ?? ''))
+                ->withHeader('Set-Cookie', SessionCookie::buildSessionHeaders($request, $siteUrl, $session['sessionId'])),
+            'sessionId' => $session['id'],
         ];
     }
 
     /**
-     * Returns to the user interface, whose sign-in form shows the error.
+     * Returns to the user interface, whose login form shows the error.
      */
     public function fail(ServerRequestInterface $request, string $message): ResponseInterface
     {

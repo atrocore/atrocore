@@ -8,7 +8,7 @@ Rate limiting slows down automated abuse of the endpoints that anyone can reach 
 
 | Endpoint | Limit |
 | --- | --- |
-| `POST /api/oauth/signIn` (sign-in to the user interface) | failed attempts: 10 per minute per IP address, and per user name |
+| `POST /api/oauth/login` (sign-in to the user interface) | failed attempts: 10 per minute per IP address, and per user name |
 | `POST /api/oauth/authorizationRequest` (sign-in for an OAuth client) | failed attempts: 10 per minute per IP address, and per user name |
 | `POST /api/oauth/token` (OAuth token request) | failed requests: 10 per minute per IP address |
 | `POST /api/User/passwordChangeRequest` (password reset request) | all requests, per IP address |
