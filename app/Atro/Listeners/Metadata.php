@@ -2580,7 +2580,7 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs'][$scope]['model'] = 'models/subtype';
             // a subtype can define its own detail view, it has to extend views/subtype/detail
             $data['clientDefs'][$scope]['views']['detail'] ??= 'views/subtype/detail';
-            $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
+            $data['clientDefs'][$scope]['views']['edit'] ??= 'views/subtype/edit';
             // a subtype can define its own record view, it has to extend views/subtype/record/detail
             $data['clientDefs'][$scope]['recordViews']['detail'] ??= 'views/subtype/record/detail';
 
