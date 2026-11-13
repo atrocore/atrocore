@@ -23,7 +23,9 @@ use League\OAuth2\Server\Exception\OAuthServerException;
  * authorization request for the provider and comes back signed in, which approves the authorization request.
  *
  * start() keeps the authorization request in the cookie SessionCookie::EXTERNAL_SIGN_IN under a random state, read()
- * takes it back when the provider returns, complete() approves it for the user.
+ * takes it back when the provider returns, complete() approves it for the user. A module that keeps data of the sign-in,
+ * e.g. the tokens of the provider, stores it in its own table and links it to the session of the user interface by the
+ * events "OauthSession.afterCreate" and "OauthSession.beforeRefresh".
  */
 class ExternalSignIn
 {
@@ -82,20 +84,26 @@ class ExternalSignIn
     }
 
     /**
-     * Approves the authorization request for the signed-in user and returns the URI to redirect the user agent to.
+     * Approves the authorization request for the signed-in user. The identifier of the issued authorization code links
+     * the data of the sign-in kept by the module, e.g. the tokens of the provider, to the session of the user interface
+     * opened by the code: the event "OauthSession.afterCreate" passes it with the ID of the session.
      *
-     * @param array|null $signInData The data the session of the user interface depends on, e.g. the tokens of the
-     *                               provider, checked on every refresh of the session (event "OauthSession.beforeRefresh").
-     *
+     * @return array{redirectUri: string, authorizationId: string|null} The URI to redirect the user agent to and the
+     *                                                                    identifier of the authorization code.
      * @throws OAuthServerException
      */
-    public function complete(string $authorizationQuery, string $userId, ?array $signInData = null): string
+    public function complete(string $authorizationQuery, string $userId): array
     {
         parse_str($authorizationQuery, $queryParams);
 
         $request = (new ServerRequest('GET', '/oauth/authorize'))->withQueryParams($queryParams);
 
-        return $this->authorization->approve($this->authorization->validate($request), $userId, $signInData);
+        $redirectUri = $this->authorization->approve($this->authorization->validate($request), $userId);
+
+        return [
+            'redirectUri'     => $redirectUri,
+            'authorizationId' => $this->authorization->getAuthorizationId($redirectUri),
+        ];
     }
 
     /**

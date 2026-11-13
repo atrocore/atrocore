@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\OAuth;
 
 use Atro\Core\OAuth\Entities\UserEntity;
-use Atro\Core\OAuth\Repositories\AuthCodeRepository;
-use Doctrine\DBAL\Connection;
 use GuzzleHttp\Psr7\Response;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptTrait;
@@ -33,11 +31,8 @@ class Authorization
 
     public const CODE_CHALLENGE_METHOD = 'S256';
 
-    public function __construct(
-        private readonly AuthorizationServer $authorizationServer,
-        private readonly Connection $connection,
-        Keys $keys
-    ) {
+    public function __construct(private readonly AuthorizationServer $authorizationServer, Keys $keys)
+    {
         $this->setEncryptionKey($keys->getEncryptionKey());
     }
 
@@ -61,72 +56,32 @@ class Authorization
     /**
      * Returns the URI the user agent is redirected to: the redirect URI of the client with the authorization code.
      *
-     * @param array|null $signInData The data of the sign-in the session of the user interface depends on, e.g. the
-     *                               tokens of an external identity provider (see BrowserSession).
-     *
      * @throws OAuthServerException
      */
-    public function approve(AuthorizationRequestInterface $authorizationRequest, string $userId, ?array $signInData = null): string
+    public function approve(AuthorizationRequestInterface $authorizationRequest, string $userId): string
     {
         $authorizationRequest->setUser(new UserEntity($userId));
         $authorizationRequest->setAuthorizationApproved(true);
 
-        $location = $this->authorizationServer
+        return $this->authorizationServer
             ->completeAuthorizationRequest($authorizationRequest, new Response())
             ->getHeaderLine('Location');
-
-        if ($signInData !== null) {
-            $this->storeSignInData($location, $signInData);
-        }
-
-        return $location;
     }
 
     /**
-     * The data of the sign-in of the authorization code, null when there is none (see approve()).
+     * The identifier of the authorization code in a redirect URI returned by approve(), null when there is none.
      */
-    public function getSignInData(string $code): ?string
+    public function getAuthorizationId(string $redirectUri): ?string
     {
-        $authCodeId = $this->getAuthCodeId($code);
-        if ($authCodeId === null) {
-            return null;
-        }
+        parse_str((string)parse_url($redirectUri, PHP_URL_QUERY), $params);
 
-        $signInData = $this->connection->createQueryBuilder()
-            ->select('sign_in_data')
-            ->from(AuthCodeRepository::TABLE)
-            ->where('identifier = :identifier')
-            ->setParameter('identifier', $authCodeId)
-            ->fetchOne();
-
-        return $signInData ?: null;
+        return $this->getAuthCodeId((string)($params['code'] ?? ''));
     }
 
     /**
-     * The sign-in data is stored encrypted with the authorization code issued in the redirect URI.
+     * The identifier of an authorization code: the code is the payload encrypted by the authorization server.
      */
-    private function storeSignInData(string $location, array $signInData): void
-    {
-        parse_str((string)parse_url($location, PHP_URL_QUERY), $params);
-
-        $authCodeId = $this->getAuthCodeId((string)($params['code'] ?? ''));
-        if ($authCodeId === null) {
-            return;
-        }
-
-        $this->connection->createQueryBuilder()
-            ->update(AuthCodeRepository::TABLE)
-            ->set('sign_in_data', ':signInData')
-            ->where('identifier = :identifier')
-            ->setParameter('signInData', $this->encrypt(json_encode($signInData)))
-            ->setParameter('identifier', $authCodeId)
-            ->executeStatement();
-    }
-
-    /**
-     * An authorization code is the payload encrypted by the authorization server.
-     */
-    private function getAuthCodeId(string $code): ?string
+    public function getAuthCodeId(string $code): ?string
     {
         try {
             $payload = json_decode($this->decrypt($code), true);

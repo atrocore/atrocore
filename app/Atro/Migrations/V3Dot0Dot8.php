@@ -145,9 +145,6 @@ class V3Dot0Dot8 extends Base
         $table->addColumn('expires_at', 'datetime', ['notnull' => false]);
         $table->addColumn('is_revoked', 'boolean', ['notnull' => true, 'default' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);
-        if ($tableName === 'oauth_auth_code') {
-            $table->addColumn('sign_in_data', 'text', ['notnull' => false]);
-        }
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['identifier']);
 
@@ -241,7 +238,6 @@ class V3Dot0Dot8 extends Base
         $table->addColumn('ip_address', 'string', ['length' => 45, 'notnull' => false]);
         $table->addColumn('last_access_at', 'datetime', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);
-        $table->addColumn('sign_in_data', 'text', ['notnull' => false]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['identifier']);
 
