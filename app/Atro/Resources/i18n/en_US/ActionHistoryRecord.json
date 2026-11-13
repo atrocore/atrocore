@@ -4,12 +4,14 @@
     "action": "Action",
     "createdAt": "Date",
     "controllerName": "Controller Name",
-    "authToken": "Auth Token",
     "ipAddress": "IP Address",
-    "authLogRecord": "Auth Log Record",
     "target": "Target",
     "targetName": "Target Name",
     "targetId": "Target ID",
-    "data": "Data"
+    "data": "Data",
+    "oauthClient": "OAuth Client"
+  },
+  "links": {
+    "oauthClient": "OAuth Client"
   }
 }

@@ -15,6 +15,7 @@ namespace Atro\Core;
 
 use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\OAuth\BrowserLogin;
 use Atro\Core\OAuth\BrowserSession;
@@ -22,7 +23,6 @@ use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\OAuth\TokenUser;
 use Atro\Services\SoftwarePackage;
 use Espo\Core\EntryPointManager;
-use Espo\Core\Utils\Auth;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
@@ -344,41 +344,12 @@ final class Application
                 return;
             }
 
-            $authRequired  = $entryPointManager->checkAuthRequired($entryPoint);
-            $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
-            $auth          = new Auth($container, $authNotStrict);
-
-            [$username, $password] = $this->extractAuthCredentials();
-
-            if (!$authRequired) {
-                if ($username && $password) {
-                    try {
-                        $auth->login($username, $password);
-                    } catch (\Exception $e) {
-                        // optional auth — ignore
-                    }
-                } else {
-                    $auth->useNoAuth();
-                }
-            } elseif ($username && $password) {
-                try {
-                    $ok = $auth->login($username, $password);
-                    if (!$ok) {
-                        header('HTTP/1.1 401 Unauthorized');
-                        exit;
-                    }
-                } catch (\Atro\Core\Exceptions\Unauthorized $e) {
-                    header('HTTP/1.1 401 Unauthorized');
-                    header('Password-Expired: true');
-                    exit;
-                } catch (\Exception $e) {
-                    header('HTTP/1.0 ' . ($e->getCode() ?: 500) . ' Error');
-                    exit;
-                }
-            } else {
+            if ($entryPointManager->checkAuthRequired($entryPoint)) {
                 header('HTTP/1.1 401 Unauthorized');
                 exit;
             }
+
+            $container->get(CurrentUser::class)->setSystemUser();
 
             $entryPointManager->run($entryPoint, $data);
         } catch (\Exception $e) {
@@ -478,18 +449,6 @@ final class Application
     }
 
     /**
-     * The credentials of the legacy session cookies, which only the single sign-on still sets.
-     */
-    private function extractAuthCredentials(): array
-    {
-        if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
-            return [$_COOKIE['auth-username'], $_COOKIE['auth-token']];
-        }
-
-        return [null, null];
-    }
-
-    /**
      * The session of the user interface authenticates the entry points too, e.g. the images and the downloads.
      */
     protected function authenticateBySession(): bool
@@ -517,7 +476,7 @@ final class Application
             exit;
         }
 
-        $tokenUser->activate($user);
+        $this->getContainer()->get(CurrentUser::class)->set($user);
 
         return true;
     }
@@ -533,12 +492,5 @@ final class Application
                 ->delete(BrowserSession::TABLE)
                 ->executeStatement();
         }
-
-        $connection
-            ->createQueryBuilder()
-            ->delete('auth_token')
-            ->andwhere('lifetime IS NULL')
-            ->andWhere('idle_time IS NULL')
-            ->executeQuery();
     }
 }

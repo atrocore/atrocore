@@ -84,6 +84,9 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     skipActionHistory: true,
     rateLimit: [
+        'limit'         => 10,
+        'period'        => 60,
+        'failuresOnly'  => true,
         'userNameField' => 'username',
     ],
 )]

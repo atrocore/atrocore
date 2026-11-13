@@ -155,6 +155,8 @@ class BrowserSession
             ->setParameter('signInData', $signInData)
             ->executeStatement();
 
+        $this->updateUserLastAccess($accessToken['userId'], $now);
+
         return [
             'sessionId'  => $sessionId,
             'returnHash' => (string)($login['returnHash'] ?? ''),
@@ -196,13 +198,17 @@ class BrowserSession
         }
 
         if (strtotime((string)$session['last_access_at']) + self::LAST_ACCESS_INTERVAL <= time()) {
+            $now = date('Y-m-d H:i:s');
+
             $this->connection->createQueryBuilder()
                 ->update(self::TABLE)
                 ->set('last_access_at', ':now')
                 ->where('id = :id')
-                ->setParameter('now', date('Y-m-d H:i:s'))
+                ->setParameter('now', $now)
                 ->setParameter('id', $session['id'])
                 ->executeStatement();
+
+            $this->updateUserLastAccess($accessToken['userId'], $now);
         }
 
         return $accessToken;
@@ -376,7 +382,10 @@ class BrowserSession
         return $idleTime > 0 && strtotime((string)$session['last_access_at']) + (int)round($idleTime * 3600) < time();
     }
 
-    private function endUserSessions(string $userId): void
+    /**
+     * Ends all sessions of the user, e.g. when the user is deactivated.
+     */
+    public function endUserSessions(string $userId): void
     {
         $sessions = $this->connection->createQueryBuilder()
             ->select('id', 'refresh_token')
@@ -388,6 +397,20 @@ class BrowserSession
         foreach ($sessions as $session) {
             $this->endSession($session);
         }
+    }
+
+    /**
+     * The last access of the user is kept after the session ends.
+     */
+    private function updateUserLastAccess(string $userId, string $now): void
+    {
+        $this->connection->createQueryBuilder()
+            ->update($this->connection->quoteIdentifier('user'))
+            ->set('last_access', ':now')
+            ->where('id = :id')
+            ->setParameter('now', $now)
+            ->setParameter('id', $userId)
+            ->executeStatement();
     }
 
     /**

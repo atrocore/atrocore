@@ -73,7 +73,7 @@ use Atro\Core\Services\AbstractRecordService;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData', 'Subtype'], excludeEntities: ['MatchedRecord', 'AuthToken'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData', 'Subtype'], excludeEntities: ['MatchedRecord'])]
 class ReadHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

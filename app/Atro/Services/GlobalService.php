@@ -173,7 +173,6 @@ class GlobalService extends AbstractService
             ->find()->toArray();
         $settings = (object)$settings;
 
-        unset($userData->authTokenId);
         unset($userData->password);
 
         return [

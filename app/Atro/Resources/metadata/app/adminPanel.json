@@ -203,13 +203,6 @@
         "label": "OAuth Clients",
         "description": "oauthClients",
         "icon": "ph ph-plugs-connected"
-      },
-      {
-        "url": "#Admin/authTokens",
-        "scope": "AuthToken",
-        "label": "Auth Tokens",
-        "description": "authTokens",
-        "icon": "ph ph-key"
       }
     ],
     "order": 9

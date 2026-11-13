@@ -13,20 +13,36 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
-use Atro\Core\Exceptions\Unauthorized;
-use Atro\Core\Http\AuthCookie;
-use Psr\Container\ContainerInterface;
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\Http\Response\ErrorResponse;
-use Espo\Core\Utils\Auth;
+use Atro\Core\OAuth\BrowserSession;
+use Atro\Core\OAuth\SessionCookie;
+use Atro\Core\OAuth\TokenUser;
+use Atro\Entities\User;
+use GuzzleHttp\Psr7\Response;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\ResourceServer;
 use Mezzio\Router\RouteResult;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Authenticates a request by an OAuth access token: the one in the "Authorization: Bearer" header, or the one of the
+ * session of the user interface (session cookie). The data of the token is put into the request attributes
+ * (oauth_access_token_id, oauth_client_id, oauth_user_id, oauth_scopes); its user becomes the current user.
+ *
+ * A route that needs authentication rejects a request without a valid token; a route that does not need it acts as
+ * the system user.
+ */
 class AuthMiddleware implements MiddlewareInterface
 {
-    private const ALLOWED_URI_WITH_EXPIRED_PASSWORD = [
+    /**
+     * The requests a user with an expired password may still send: changing the password.
+     */
+    private const ALLOWED_PATHS_WITH_EXPIRED_PASSWORD = [
         '/api/',
         '/api/User/changeExpiredPassword',
         '/api/userSession',
@@ -38,97 +54,81 @@ class AuthMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // already authenticated by the OAuth access token
-        if ($request->getAttribute('oauth_access_token_id') !== null) {
-            return $handler->handle($request);
-        }
-
-        $routeResult = $request->getAttribute(RouteResult::class);
-
-        if (!$routeResult || $routeResult->isFailure()) {
-            return $handler->handle($request);
-        }
-
-        $options      = $routeResult->getMatchedRoute()->getOptions();
-        $authRequired = !isset($options['conditions']['auth']) || $options['conditions']['auth'] !== false;
-
-        [$username, $password] = self::extractCredentials($request);
-        $isCookieAuth = $username !== null;
-
-        if ($isCookieAuth && !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']) && !$this->isRequestFromOwnOrigin($request)) {
-            if ($authRequired) {
-                return new ErrorResponse(403, 'Cross-origin request is not allowed', ['X-Status-Reason' => 'Cross-origin request is not allowed']);
-            }
-            [$username, $password] = [null, null];
-            $isCookieAuth = false;
-        }
-
-        $request = $request->withAttribute('isCookieAuth', $isCookieAuth);
-
-        $auth = new Auth($this->container, false, $request);
-
-        if (!$authRequired) {
-            if ($username && $password) {
-                try {
-                    if (!$auth->login($username, $password)) {
-                        $auth->useNoAuth();
-                    }
-                } catch (\Exception $e) {
-                    // optional auth — silently ignore failure
-                    $auth->useNoAuth();
-                }
-            } else {
-                $auth->useNoAuth();
+        if (preg_match('/^\s*Bearer\s/i', $request->getHeaderLine('Authorization'))) {
+            try {
+                $request = $this->container->get(ResourceServer::class)->validateAuthenticatedRequest($request);
+            } catch (OAuthServerException $e) {
+                return $e->generateHttpResponse(new Response());
             }
 
-            return $handler->handle($request);
+            return $this->handleAuthenticated($request, $handler);
         }
 
-        if (!$username || !$password) {
-            return $this->unauthorizedResponse();
+        $sessionId = SessionCookie::getSessionId($request);
+        if ($sessionId === null) {
+            return $this->handleUnauthenticated($request, $handler);
         }
 
-        try {
-            $isAuthenticated = $auth->login($username, $password);
-        } catch (Unauthorized $e) {
-            $uri = $request->getUri()->getPath();
-            if (in_array($uri, self::ALLOWED_URI_WITH_EXPIRED_PASSWORD)) {
-                return $handler->handle($request->withAttribute('passwordExpired', true));
-            }
-
-            return $this->unauthorizedResponse(['Password-Expired' => 'true']);
-        } catch (\Exception $e) {
-            $code = $e->getCode();
-            if (!is_int($code) || $code < 100 || $code >= 600) {
-                $code = 500;
-            }
-            return new ErrorResponse($code, $e->getMessage(), ['X-Status-Reason' => $e->getMessage()]);
+        if (!in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']) && !$this->isRequestFromOwnOrigin($request)) {
+            return new ErrorResponse(403, 'Cross-origin request is not allowed');
         }
 
+        $accessToken = $this->container->get(BrowserSession::class)->authenticate($sessionId);
+        if ($accessToken === null) {
+            // the session is over
+            return $this->handleUnauthenticated($request, $handler);
+        }
 
-        if (!$isAuthenticated) {
-            $response = $this->unauthorizedResponse();
-            if ($isCookieAuth) {
-                $siteUrl = $this->container->get('config')->getSiteUrl();
-                $response = $response->withHeader('Set-Cookie', AuthCookie::buildClearHeaders($request, $siteUrl));
+        $request = $request
+            ->withAttribute('oauth_access_token_id', $accessToken['identifier'])
+            ->withAttribute('oauth_client_id', $accessToken['clientId'])
+            ->withAttribute('oauth_user_id', $accessToken['userId'])
+            ->withAttribute('oauth_scopes', []);
+
+        return $this->handleAuthenticated($request, $handler);
+    }
+
+    private function handleAuthenticated(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $tokenUser = $this->container->get(TokenUser::class);
+
+        $user = $tokenUser->resolve((string)$request->getAttribute('oauth_user_id'), (string)$request->getAttribute('oauth_client_id'));
+        if ($user === null) {
+            return OAuthServerException::accessDenied('The user of the access token is not available')->generateHttpResponse(new Response());
+        }
+
+        $this->container->get(CurrentUser::class)->set($user);
+
+        if ($this->isPasswordExpired($user)) {
+            if (!in_array($request->getUri()->getPath(), self::ALLOWED_PATHS_WITH_EXPIRED_PASSWORD)) {
+                return new ErrorResponse(401, 'Unauthorized', ['Password-Expired' => 'true']);
             }
-            return $response;
+            $request = $request->withAttribute('passwordExpired', true);
         }
 
         return $handler->handle($request);
     }
 
-    /**
-     * The credentials of the legacy session cookies, which only the single sign-on still sets.
-     */
-    public static function extractCredentials(ServerRequestInterface $request): array
+    private function handleUnauthenticated(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $cookies = $request->getCookieParams();
-        if (!empty($cookies[AuthCookie::USERNAME]) && !empty($cookies[AuthCookie::TOKEN])) {
-            return [$cookies[AuthCookie::USERNAME], $cookies[AuthCookie::TOKEN]];
+        $routeResult = $request->getAttribute(RouteResult::class);
+        if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
+            return $handler->handle($request);
         }
 
-        return [null, null];
+        $options = $routeResult->getMatchedRoute()->getOptions();
+        if (($options['conditions']['auth'] ?? true) !== false) {
+            return new ErrorResponse(401, 'Unauthorized');
+        }
+
+        $this->container->get(CurrentUser::class)->setSystemUser();
+
+        return $handler->handle($request);
+    }
+
+    private function isPasswordExpired(User $user): bool
+    {
+        return $user->needToUpdatePassword($this->container->get('config')->get('passwordExpireDays', 0));
     }
 
     private function isRequestFromOwnOrigin(ServerRequestInterface $request): bool
@@ -151,10 +151,5 @@ class AuthMiddleware implements MiddlewareInterface
         $sitePort = parse_url($siteUrl, PHP_URL_PORT);
 
         return !empty($siteHost) && $sourceAuthority === strtolower($siteHost . ($sitePort ? ':' . $sitePort : ''));
-    }
-
-    private function unauthorizedResponse(array $extraHeaders = []): ResponseInterface
-    {
-        return new ErrorResponse(401, 'Unauthorized', $extraHeaders);
     }
 }

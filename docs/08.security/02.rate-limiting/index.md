@@ -8,23 +8,24 @@ Rate limiting slows down automated abuse of the endpoints that anyone can reach 
 
 | Endpoint | Limit |
 | --- | --- |
-| `POST /api/oauth/authorize` (sign-in) | per IP address, and per user name |
-| `POST /api/oauth/token` (OAuth token request) | per IP address |
-| `POST /api/User/passwordChangeRequest` (password reset request) | per IP address |
+| `POST /api/oauth/authorize` (sign-in) | failed attempts: 10 per minute per IP address, and per user name |
+| `POST /api/oauth/token` (OAuth token request) | failed requests: 10 per minute per IP address |
+| `POST /api/User/passwordChangeRequest` (password reset request) | all requests, per IP address |
 
 Everything else, including all regular authenticated API calls, is **not** rate limited.
 
 ### Per IP Address ###
 
-One IP address may send at most **3 requests per second** to each limited endpoint. Every request counts, whether the sign-in succeeded or not. A rejected request is not counted, so a client that backs off is accepted again as soon as its earlier requests are older than the period.
+**Sign-in and token requests:** only the failed attempts count, e.g. a wrong password or a wrong client secret. After **10 failed attempts within a minute** from one IP address, further attempts from it are rejected until the earlier failures are older than a minute. A successful sign-in is not counted, so many users behind one shared address (for example an office network) are not affected by each other.
+
+**Other limited endpoints:** one IP address may send at most **3 requests per second**, and every request counts. A rejected request is not counted, so a client that backs off is accepted again as soon as its earlier requests are older than the period.
 
 ### Per User Name (Sign-in Only) ###
 
-The sign-in endpoint is also limited per user name: once requests for the same user name came from **more than 5 different IP addresses within 60 seconds**, further requests for that user name are rejected until older ones fall out of the window.
+The sign-in endpoint is also limited per user name: once failed attempts for the same user name came from **more than 5 different IP addresses within 60 seconds**, further attempts for that user name are rejected until older ones fall out of the window.
 
 The limit counts *different addresses*, not attempts. A person who mistypes a password a few times from a laptop and a phone is never affected, while an attack on one account spread over many addresses, which a plain per-IP limit cannot see, is stopped.
 
-> **Note:** Many users behind one shared address (for example an office network) who sign in at the very same moment can be rejected; raise **Rate Limit: Requests** in that case.
 
 ## Settings ##
 
@@ -32,7 +33,7 @@ The values are set in `Administration / Authentication`, panel *Rate Limit* (see
 
 | Setting | Default | Description |
 | --- | --- | --- |
-| Rate Limit: Requests | `3` | Requests one IP address may send to a limited endpoint within the period. |
+| Rate Limit: Requests | `3` | Requests one IP address may send to a limited endpoint within the period, for the endpoints without their own limit. |
 | Rate Limit: Period (seconds) | `1` | Length of the period. Fractions are allowed, e.g. `0.5`. |
 | Max Source IPs Per User | `5` | Different IP addresses allowed for the same user name on the sign-in endpoint within the user period. |
 

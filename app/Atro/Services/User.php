@@ -443,16 +443,6 @@ class User extends Base
 
     private function invalidateUserTokens(string $userId): void
     {
-        $authTokens = $this->getEntityManager()->getRepository('AuthToken')
-            ->select(['id', 'lastAccess'])
-            ->where(['userId' => $userId])
-            ->find();
-
-        foreach ($authTokens as $authToken) {
-            $authToken->set('isActive', false);
-            $this->getEntityManager()->saveEntity($authToken);
-        }
-
         $this->getContainer()->get(TokenRevoker::class)->revokeUserTokens($userId);
     }
 
@@ -522,65 +512,6 @@ class User extends Base
     protected function clearRoleCache($id)
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
-    }
-
-    public function loadAdditionalFields(Entity $entity, bool $skipLinkMultiple = false)
-    {
-        parent::loadAdditionalFields($entity, $skipLinkMultiple);
-
-        $this->loadLastAccessField($entity);
-    }
-
-    public function loadLastAccessField(Entity $entity)
-    {
-        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
-        if (in_array('lastAccess', $forbiddenFieldList)) {
-            return;
-        }
-
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')
-            ->select(['id', 'lastAccess'])
-            ->where([
-                'userId' => $entity->id
-            ])
-            ->order('lastAccess', true)
-            ->findOne();
-
-        $lastAccess = null;
-
-        if ($authToken) {
-            $lastAccess = $authToken->get('lastAccess');
-        }
-
-        $dt = null;
-
-        if ($lastAccess) {
-            try {
-                $dt = new \DateTime($lastAccess);
-            } catch (\Exception $e) {
-            }
-        }
-
-        $where = [
-            'userId'   => $entity->id,
-            'isDenied' => false
-        ];
-
-        if ($dt) {
-            $where['requestTime>'] = $dt->format('U');
-        }
-
-        $authLogRecord = $this->getEntityManager()->getRepository('AuthLogRecord')
-            ->select(['id', 'createdAt'])
-            ->where($where)
-            ->order('requestTime', true)
-            ->findOne();
-
-        if ($authLogRecord) {
-            $lastAccess = $authLogRecord->get('createdAt');
-        }
-
-        $entity->set('lastAccess', $lastAccess);
     }
 
     /**

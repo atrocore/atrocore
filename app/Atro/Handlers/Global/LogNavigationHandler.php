@@ -75,9 +75,8 @@ class LogNavigationHandler extends AbstractHandler
         $record->set('action', 'GET');
         $record->set('targetId', $data->name);
         $record->set('userId', $this->getUser()->id);
-        $record->set('authTokenId', $this->getUser()->get('authTokenId'));
+        $record->set('oauthClientId', $request->getAttribute('oauth_client_id'));
         $record->set('ipAddress', $this->getUser()->get('ipAddress'));
-        $record->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
         $record->set('data', [
             'request' => [
                 'headers' => ['Entity-History' => [$request->getHeaderLine('Entity-History')]],

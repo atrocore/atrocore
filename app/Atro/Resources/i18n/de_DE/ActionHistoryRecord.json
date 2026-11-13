@@ -3,13 +3,15 @@
     "action": "Aktion",
     "target": "Ziel",
     "ipAddress": "IP-Adresse",
-    "authLogRecord": "Auth Log-Datensatz",
     "user": "Benutzer",
     "createdAt": "Datum",
     "controllerName": "Controller Name",
-    "authToken": "Authentifizierungstoken",
     "targetName": "Ziel-Name",
     "targetId": "Ziel-ID",
-    "data": "Daten"
+    "data": "Daten",
+    "oauthClient": "OAuth-Client"
+  },
+  "links": {
+    "oauthClient": "OAuth-Client"
   }
 }

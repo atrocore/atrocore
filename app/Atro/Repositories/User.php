@@ -11,6 +11,8 @@
 
 namespace Atro\Repositories;
 
+use Atro\Core\OAuth\BrowserSession;
+use Atro\Core\OAuth\TokenRevoker;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
@@ -331,12 +333,11 @@ class User extends RDB
             $this->getInjection('container')->get('dataManager')->clearCache(true);
         }
 
+        // a deactivated user loses the sessions and the OAuth tokens
         if ($entity->isAttributeChanged('isActive') && empty($entity->get('isActive'))) {
-            $this->getDbal()->createQueryBuilder()
-                ->delete('auth_token')
-                ->where('user_id = :userId')
-                ->setParameter('userId', $entity->get('id'))
-                ->executeQuery();
+            $container = $this->getInjection('container');
+            $container->get(BrowserSession::class)->endUserSessions($entity->id);
+            $container->get(TokenRevoker::class)->revokeUserTokens($entity->id);
         }
     }
 

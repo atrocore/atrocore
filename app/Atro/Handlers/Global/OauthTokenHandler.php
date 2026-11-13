@@ -123,7 +123,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
     skipActionHistory: true,
-    rateLimit: [],
+    rateLimit: [
+        'limit'        => 10,
+        'period'       => 60,
+        'failuresOnly' => true,
+    ],
 )]
 class OauthTokenHandler extends AbstractHandler
 {

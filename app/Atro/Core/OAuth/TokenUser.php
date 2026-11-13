@@ -16,11 +16,10 @@ namespace Atro\Core\OAuth;
 use Atro\Core\Container;
 use Atro\Core\OAuth\Entities\ClientEntity;
 use Atro\Core\OAuth\Repositories\ClientRepository;
-use Atro\Core\UserContext;
 use Atro\Entities\User;
 
 /**
- * The user a validated access token acts for, and making that user the current one.
+ * The user a validated access token acts for.
  */
 class TokenUser
 {
@@ -42,14 +41,5 @@ class TokenUser
         $user = $userId !== '' ? $this->container->get('entityManager')->getEntity('User', $userId) : null;
 
         return $user instanceof User && $user->isActive() ? $user : null;
-    }
-
-    public function activate(User $user): void
-    {
-        $user->loadLinkMultipleField('teams');
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? '');
-
-        $this->container->get(UserContext::class)->set($user);
-        $this->container->get('entityManager')->setUser($user);
     }
 }

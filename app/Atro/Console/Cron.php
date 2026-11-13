@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\OAuth\BrowserSession;
@@ -86,11 +87,7 @@ class Cron extends AbstractConsole
             exec("$php console.php daemon job-manager $id >/dev/null 2>&1 &");
         }
 
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        $auth->useNoAuth();
-
-        // check auth tokens
-        $this->authTokenControl();
+        $this->getContainer()->get(CurrentUser::class)->setSystemUser();
 
         // end the expired sessions of the user interface and remove the expired OAuth tokens
         $this->getContainer()->get(BrowserSession::class)->deleteExpired();
@@ -170,33 +167,6 @@ class Cron extends AbstractConsole
         }
 
         return true;
-    }
-
-    private function authTokenControl(): void
-    {
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('entityManager');
-
-        $tokenList = $em
-            ->getRepository('AuthToken')
-            ->select(['id', 'lifetime', 'idleTime', 'createdAt', 'lastAccess'])
-            ->where(['isActive' => true])
-            ->find();
-
-        foreach ($tokenList as $token) {
-            $authTokenLifetime = $token->get('lifetime') !== null ? $token->get('lifetime') : $this->getConfig()->get('sessionLifetime');
-            if ($authTokenLifetime && new \DateTime($token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenLifetime . ' hours')) {
-                $token->set('isActive', false);
-                $em->saveEntity($token);
-                continue 1;
-            }
-
-            $authTokenMaxIdleTime = $token->get('idleTime') !== null ? $token->get('idleTime') : $this->getConfig()->get('sessionMaxIdleTime');
-            if ($authTokenMaxIdleTime && new \DateTime($token->get('lastAccess') ?? $token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenMaxIdleTime . ' hours')) {
-                $token->set('isActive', false);
-                $em->saveEntity($token);
-            }
-        }
     }
 
     private function createQueueFile(): void

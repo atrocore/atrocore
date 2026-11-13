@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Atro\Core\Authentication;
 
 use Atro\Core\Container;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Entities\User;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Verifies the credentials of a user by the authentication methods registered in the metadata
- * ("app.authentication.types"), e.g. the local password or LDAP. Every attempt is logged.
+ * ("app.authentication.types"), e.g. the local password or LDAP. Every attempt is logged; guessing is limited by the
+ * rate limit of the sign-in route.
  */
 class UserAuthenticator
 {
@@ -28,13 +28,8 @@ class UserAuthenticator
     {
     }
 
-    /**
-     * @throws Forbidden When the IP address has made too many failed attempts.
-     */
     public function authenticate(string $username, string $password, ServerRequestInterface $request): ?User
     {
-        $this->signInLog->checkFailedAttemptsLimit((string)($request->getServerParams()['REMOTE_ADDR'] ?? ''));
-
         $user = $this->findUser($username, $password);
 
         $denialReason = null;

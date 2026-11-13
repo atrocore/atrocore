@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
-use Atro\Core\Http\AuthCookie;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Espo\Core\Utils\Auth;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -58,15 +56,6 @@ class OauthLogoutHandler extends AbstractHandler
             $this->container->get(BrowserSession::class)->logout($sessionId);
         }
 
-        $cookieHeaders = SessionCookie::buildClearHeaders($request, $siteUrl);
-
-        // the single sign-on still signs in by the legacy authentication, its session ends as well
-        $legacyToken = (string)$this->getUser()->get('token');
-        if ($legacyToken !== '') {
-            (new Auth($this->container))->destroyAuthToken($legacyToken);
-            $cookieHeaders = array_merge($cookieHeaders, AuthCookie::buildClearHeaders($request, $siteUrl));
-        }
-
-        return (new BoolResponse(true))->withHeader('Set-Cookie', $cookieHeaders);
+        return (new BoolResponse(true))->withHeader('Set-Cookie', SessionCookie::buildClearHeaders($request, $siteUrl));
     }
 }

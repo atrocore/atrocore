@@ -42,6 +42,7 @@ class V3Dot0Dot8 extends Base
         }
         $this->createTokenTable($toSchema, 'oauth_refresh_token', false);
         $this->createSessionTable($toSchema);
+        $this->removeLegacyAuthentication($toSchema);
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->getDbal()->executeStatement($sql);
@@ -175,6 +176,50 @@ class V3Dot0Dot8 extends Base
 
         $table->addForeignKeyConstraint($foreignTableName, [$column], ['id'], ['onDelete' => 'CASCADE'], $name);
         $table->addIndex([$column], $name);
+    }
+
+    /**
+     * The auth tokens and the log of the sign-ins are removed: the history of the actions refers to the OAuth client,
+     * the last access is a column of the user.
+     */
+    protected function removeLegacyAuthentication(Schema $schema): void
+    {
+        foreach (['auth_token', 'auth_log_record'] as $tableName) {
+            if ($schema->hasTable($tableName)) {
+                $schema->dropTable($tableName);
+            }
+        }
+
+        if ($schema->hasTable('action_history_record')) {
+            $table = $schema->getTable('action_history_record');
+
+            foreach (['auth_token_id', 'auth_log_record_id'] as $column) {
+                if (!$table->hasColumn($column)) {
+                    continue;
+                }
+                foreach ($table->getIndexes() as $index) {
+                    if (in_array($column, $index->getColumns(), true)) {
+                        $table->dropIndex($index->getName());
+                    }
+                }
+                $table->dropColumn($column);
+            }
+
+            if (!$table->hasColumn('oauth_client_id')) {
+                $table->addColumn('oauth_client_id', 'string', ['length' => 36, 'notnull' => false]);
+                $table->addIndex(['oauth_client_id', 'deleted'], $this->generateIndexName('action_history_record', 'oauth_client_id'));
+            }
+        }
+
+        $userTable = $schema->getTable('user');
+        if (!$userTable->hasColumn('last_access')) {
+            $userTable->addColumn('last_access', 'datetime', ['notnull' => false]);
+        }
+
+        // the users who sign in with a local password have the type "Password", see renameUserType()
+        if ($userTable->hasColumn('type')) {
+            $userTable->getColumn('type')->setDefault('Password');
+        }
     }
 
     /**

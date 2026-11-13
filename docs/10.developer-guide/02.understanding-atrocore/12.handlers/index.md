@@ -241,13 +241,14 @@ An empty array (`rateLimit: []`) uses the defaults from the settings.
 |---|---|---|---|
 | `limit` | `int` | setting *Rate Limit: Requests* (3) | Requests one IP may send within `period`. |
 | `period` | `float` | setting *Rate Limit: Period* (1) | Length of the period in seconds. May be fractional. |
+| `failuresOnly` | `bool` | `false` | Counts only the failed requests: a response with a status of 400 or higher, or an exception. A successful request is not counted. For a sign-in endpoint, where the limit stops guessing and must not hit the users who sign in successfully. |
 | `userNameField` | `string` | — | Field of the request body (form or JSON) that holds the user name of a sign-in endpoint. The requests for one user name are limited as well: from at most *Max Source IPs Per User* different addresses within 60 seconds. |
 
 - The check runs before authentication, so a rejected request never reaches the handler.
-- Every accepted request counts, whatever its outcome. A rejected request is answered with `429 Too Many Requests` and a `Retry-After` header, and does not count.
+- Every accepted request counts, whatever its outcome, unless the route sets `failuresOnly`. A rejected request is answered with `429 Too Many Requests` and a `Retry-After` header, and does not count.
 - Responses of a limited endpoint carry the `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers.
 - `GET` and `POST` on the same path are limited separately.
-- The sign-in endpoint `POST /api/oauth/authorize` declares `userNameField` and is limited per user name, see [Rate Limiting](../../../08.security/02.rate-limiting).
+- The sign-in endpoints `POST /api/oauth/authorize` and `POST /api/oauth/token` count only the failures (`failuresOnly`); the sign-in page is also limited per user name (`userNameField`), see [Rate Limiting](../../../08.security/02.rate-limiting).
 
 ---
 
