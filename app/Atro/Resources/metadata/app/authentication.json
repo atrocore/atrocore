@@ -1,6 +1,6 @@
 {
   "types": [
-    "\\Espo\\Core\\Utils\\Authentication\\Token"
+    "\\Atro\\Core\\Authentication\\PasswordAuthentication"
   ],
   "relationshipPanels": []
 }

@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
+use Atro\Core\Authentication\UserAuthenticator;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\OAuth\Authorization;
-use Atro\Core\OAuth\UserAuthenticator;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use League\OAuth2\Server\Exception\OAuthServerException;

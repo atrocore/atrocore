@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\OAuth;
 
 use Atro\Core\Container;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
@@ -119,6 +120,9 @@ class BrowserSession
             return null;
         }
 
+        // e.g. the tokens of the identity provider of the single sign-on, the session depends on them
+        $signInData = $this->container->get(Authorization::class)->getSignInData($code);
+
         if (!empty($this->config->get('sessionPreventConcurrent'))) {
             $this->endUserSessions($accessToken['userId']);
         }
@@ -138,6 +142,7 @@ class BrowserSession
                 'ip_address'              => ':ipAddress',
                 'last_access_at'          => ':now',
                 'created_at'              => ':now',
+                'sign_in_data'            => ':signInData',
             ])
             ->setParameter('id', IdGenerator::uuid())
             ->setParameter('identifier', $this->hashSessionId($sessionId))
@@ -147,6 +152,7 @@ class BrowserSession
             ->setParameter('refreshToken', $this->encrypt((string)($tokens['refresh_token'] ?? '')))
             ->setParameter('ipAddress', $ipAddress)
             ->setParameter('now', $now)
+            ->setParameter('signInData', $signInData)
             ->executeStatement();
 
         return [
@@ -259,7 +265,7 @@ class BrowserSession
 
         try {
             $select = $this->connection->createQueryBuilder()
-                ->select('id', 'access_token', 'access_token_expires_at', 'refresh_token', 'last_access_at')
+                ->select('id', 'access_token', 'access_token_expires_at', 'refresh_token', 'last_access_at', 'sign_in_data')
                 ->from(self::TABLE)
                 ->where('id = :id');
 
@@ -268,6 +274,13 @@ class BrowserSession
             if (empty($session) || strtotime((string)$session['access_token_expires_at']) - self::REFRESH_MARGIN > time()) {
                 $this->connection->commit();
                 return $session ?: null;
+            }
+
+            if (!$this->isSignInValid($session)) {
+                $this->connection->rollBack();
+                $this->endSession($session);
+
+                return null;
             }
 
             $tokens = $this->requestTokens([
@@ -284,10 +297,12 @@ class BrowserSession
                 ->set('access_token', ':accessToken')
                 ->set('access_token_expires_at', ':accessTokenExpiresAt')
                 ->set('refresh_token', ':refreshToken')
+                ->set('sign_in_data', ':signInData')
                 ->where('id = :id')
                 ->setParameter('accessToken', $session['access_token'])
                 ->setParameter('accessTokenExpiresAt', $session['access_token_expires_at'])
                 ->setParameter('refreshToken', $session['refresh_token'])
+                ->setParameter('signInData', $session['sign_in_data'])
                 ->setParameter('id', $id)
                 ->executeStatement();
 
@@ -304,6 +319,36 @@ class BrowserSession
             $this->connection->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * A session opened by an external sign-in lasts while the sign-in is valid: the module of the sign-in checks it in
+     * the listener of "OauthSession.beforeRefresh" (e.g. refreshes the tokens of the identity provider), sets
+     * "isValid" to false to end the session and may update "signInData".
+     */
+    private function isSignInValid(array &$session): bool
+    {
+        if (empty($session['sign_in_data'])) {
+            return true;
+        }
+
+        $signInData = json_decode($this->decryptToken($session['sign_in_data']), true);
+        if (!is_array($signInData)) {
+            return false;
+        }
+
+        $event = $this->container->get('eventManager')->dispatch('OauthSession', 'beforeRefresh', new Event([
+            'signInData' => $signInData,
+            'isValid'    => true,
+        ]));
+
+        if (empty($event->getArgument('isValid'))) {
+            return false;
+        }
+
+        $session['sign_in_data'] = $this->encrypt(json_encode($event->getArgument('signInData')));
+
+        return true;
     }
 
     /**

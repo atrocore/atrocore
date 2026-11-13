@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Authentication\PasswordAuthentication;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\RegexUtil;
@@ -580,8 +581,8 @@ class EntityField extends ReferenceData
 
                     if ($entity->get('entityId') == 'User') {
                         $qb
-                            ->andWhere('type = :token')
-                            ->setParameter('token', 'Token');
+                            ->andWhere('type = :type')
+                            ->setParameter('type', PasswordAuthentication::USER_TYPE);
                     }
 
                     $res = $qb->fetchOne();

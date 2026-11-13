@@ -51,6 +51,21 @@ class V3Dot0Dot8 extends Base
         $this->createKeyPair();
         $this->createUiClient();
         $this->renameSessionSettings();
+        $this->renameUserType();
+    }
+
+    /**
+     * The users who sign in with a local password have the type "Password", it was "Token".
+     */
+    protected function renameUserType(): void
+    {
+        $this->getDbal()->createQueryBuilder()
+            ->update($this->getDbal()->quoteIdentifier('user'))
+            ->set('type', ':password')
+            ->where('type = :token')
+            ->setParameter('password', 'Password')
+            ->setParameter('token', 'Token')
+            ->executeStatement();
     }
 
     /**
@@ -129,6 +144,9 @@ class V3Dot0Dot8 extends Base
         $table->addColumn('expires_at', 'datetime', ['notnull' => false]);
         $table->addColumn('is_revoked', 'boolean', ['notnull' => true, 'default' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);
+        if ($tableName === 'oauth_auth_code') {
+            $table->addColumn('sign_in_data', 'text', ['notnull' => false]);
+        }
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['identifier']);
 
@@ -178,6 +196,7 @@ class V3Dot0Dot8 extends Base
         $table->addColumn('ip_address', 'string', ['length' => 45, 'notnull' => false]);
         $table->addColumn('last_access_at', 'datetime', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);
+        $table->addColumn('sign_in_data', 'text', ['notnull' => false]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['identifier']);
 

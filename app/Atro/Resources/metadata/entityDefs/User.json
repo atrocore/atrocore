@@ -2,9 +2,9 @@
   "fields": {
     "type": {
       "type": "enum",
-      "default": "Token",
+      "default": "Password",
       "options": [
-        "Token",
+        "Password",
         "System"
       ]
     },

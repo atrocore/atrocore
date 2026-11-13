@@ -24,6 +24,7 @@ class SessionCookie
     public const SESSION = 'atro-session';
     public const INDICATOR = 'auth-session';
     public const LOGIN = 'atro-oauth-login';
+    public const EXTERNAL_SIGN_IN = 'atro-external-sign-in';
 
     private const MAX_AGE = 1000 * 24 * 60 * 60;
     private const LOGIN_MAX_AGE = 10 * 60;
@@ -45,7 +46,7 @@ class SessionCookie
         return [
             self::build(self::SESSION, $sessionId, self::MAX_AGE, $secure, true),
             self::build(self::INDICATOR, '1', self::MAX_AGE, $secure, false),
-            self::build(self::LOGIN, '', 0, $secure, true),
+            self::build(self::LOGIN, '', 0, $secure, true, 'Lax'),
         ];
     }
 
@@ -62,9 +63,27 @@ class SessionCookie
         ];
     }
 
+    /**
+     * The login cookie has to reach /oauth/callback also when the sign-in went through an external identity provider,
+     * a cross-site navigation, so it is "Lax".
+     */
     public static function buildLoginHeader(ServerRequestInterface $request, string $siteUrl, string $value): string
     {
-        return self::build(self::LOGIN, $value, self::LOGIN_MAX_AGE, self::isSecure($request, $siteUrl), true);
+        return self::build(self::LOGIN, $value, self::LOGIN_MAX_AGE, self::isSecure($request, $siteUrl), true, 'Lax');
+    }
+
+    /**
+     * The cookie that keeps the authorization request while the user signs in at an external identity provider. The
+     * provider returns by a cross-site navigation, so it is "Lax".
+     */
+    public static function buildExternalSignInHeader(ServerRequestInterface $request, string $siteUrl, string $value): string
+    {
+        return self::build(self::EXTERNAL_SIGN_IN, $value, self::LOGIN_MAX_AGE, self::isSecure($request, $siteUrl), true, 'Lax');
+    }
+
+    public static function buildExternalSignInClearHeader(ServerRequestInterface $request, string $siteUrl): string
+    {
+        return self::build(self::EXTERNAL_SIGN_IN, '', 0, self::isSecure($request, $siteUrl), true, 'Lax');
     }
 
     private static function isSecure(ServerRequestInterface $request, string $siteUrl): bool
@@ -72,14 +91,14 @@ class SessionCookie
         return $request->getUri()->getScheme() === 'https' || str_starts_with($siteUrl, 'https://');
     }
 
-    private static function build(string $name, string $value, int $maxAge, bool $secure, bool $httpOnly): string
+    private static function build(string $name, string $value, int $maxAge, bool $secure, bool $httpOnly, string $sameSite = 'Strict'): string
     {
         $parts = [
             $name . '=' . rawurlencode($value),
             'Expires=' . gmdate('D, d M Y H:i:s \G\M\T', $maxAge > 0 ? time() + $maxAge : 0),
             'Max-Age=' . $maxAge,
             'Path=/',
-            'SameSite=Strict',
+            'SameSite=' . $sameSite,
         ];
 
         if ($httpOnly) {

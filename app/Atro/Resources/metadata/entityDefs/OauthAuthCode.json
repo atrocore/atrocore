@@ -25,6 +25,9 @@
     },
     "createdAt": {
       "type": "datetime"
+    },
+    "signInData": {
+      "type": "text"
     }
   },
   "links": {

@@ -14,8 +14,11 @@ declare(strict_types=1);
 namespace Atro\Core\OAuth;
 
 use Atro\Core\OAuth\Entities\UserEntity;
+use Atro\Core\OAuth\Repositories\AuthCodeRepository;
+use Doctrine\DBAL\Connection;
 use GuzzleHttp\Psr7\Response;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,10 +29,16 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Authorization
 {
+    use CryptTrait;
+
     public const CODE_CHALLENGE_METHOD = 'S256';
 
-    public function __construct(private readonly AuthorizationServer $authorizationServer)
-    {
+    public function __construct(
+        private readonly AuthorizationServer $authorizationServer,
+        private readonly Connection $connection,
+        Keys $keys
+    ) {
+        $this->setEncryptionKey($keys->getEncryptionKey());
     }
 
     /**
@@ -52,16 +61,80 @@ class Authorization
     /**
      * Returns the URI the user agent is redirected to: the redirect URI of the client with the authorization code.
      *
+     * @param array|null $signInData The data of the sign-in the session of the user interface depends on, e.g. the
+     *                               tokens of an external identity provider (see BrowserSession).
+     *
      * @throws OAuthServerException
      */
-    public function approve(AuthorizationRequestInterface $authorizationRequest, string $userId): string
+    public function approve(AuthorizationRequestInterface $authorizationRequest, string $userId, ?array $signInData = null): string
     {
         $authorizationRequest->setUser(new UserEntity($userId));
         $authorizationRequest->setAuthorizationApproved(true);
 
-        return $this->authorizationServer
+        $location = $this->authorizationServer
             ->completeAuthorizationRequest($authorizationRequest, new Response())
             ->getHeaderLine('Location');
+
+        if ($signInData !== null) {
+            $this->storeSignInData($location, $signInData);
+        }
+
+        return $location;
+    }
+
+    /**
+     * The data of the sign-in of the authorization code, null when there is none (see approve()).
+     */
+    public function getSignInData(string $code): ?string
+    {
+        $authCodeId = $this->getAuthCodeId($code);
+        if ($authCodeId === null) {
+            return null;
+        }
+
+        $signInData = $this->connection->createQueryBuilder()
+            ->select('sign_in_data')
+            ->from(AuthCodeRepository::TABLE)
+            ->where('identifier = :identifier')
+            ->setParameter('identifier', $authCodeId)
+            ->fetchOne();
+
+        return $signInData ?: null;
+    }
+
+    /**
+     * The sign-in data is stored encrypted with the authorization code issued in the redirect URI.
+     */
+    private function storeSignInData(string $location, array $signInData): void
+    {
+        parse_str((string)parse_url($location, PHP_URL_QUERY), $params);
+
+        $authCodeId = $this->getAuthCodeId((string)($params['code'] ?? ''));
+        if ($authCodeId === null) {
+            return;
+        }
+
+        $this->connection->createQueryBuilder()
+            ->update(AuthCodeRepository::TABLE)
+            ->set('sign_in_data', ':signInData')
+            ->where('identifier = :identifier')
+            ->setParameter('signInData', $this->encrypt(json_encode($signInData)))
+            ->setParameter('identifier', $authCodeId)
+            ->executeStatement();
+    }
+
+    /**
+     * An authorization code is the payload encrypted by the authorization server.
+     */
+    private function getAuthCodeId(string $code): ?string
+    {
+        try {
+            $payload = json_decode($this->decrypt($code), true);
+        } catch (\Throwable $e) {
+            return null;
+        }
+
+        return is_array($payload) && !empty($payload['auth_code_id']) ? (string)$payload['auth_code_id'] : null;
     }
 
     /**
