@@ -5,7 +5,8 @@
     "matchingRuleSet": "Ensemble",
     "matchingRules": "Règles d'appariements",
     "operator": "Opérateur",
-    "matchScoreExpression": "Expression de score"
+    "matchScoreExpression": "Expression de score",
+    "ignoreUnavailableAttributes": "Ignorer les attributs indisponibles"
   },
   "options": {
     "type": {
@@ -13,7 +14,9 @@
       "fieldSimilar": "Le champ est similaire",
       "fieldContains": "Le champ contient",
       "set": "Ensemble",
-      "expression": "Expression"
+      "expression": "Expression",
+      "fieldsSimilar": "Les champs sont similaires",
+      "attributesSimilar": "Les attributs sont similaires"
     },
     "operator": {
       "and": "ET",
@@ -25,9 +28,11 @@
     "notValidMatchingActivation": "La règle de correspondance ne peut être modifiée que pour une correspondance inactive.",
     "notValidMatching": "La correspondance n'est pas valide",
     "notValidMatchingRuleSet": "L'ensemble de règles de correspondance n'est pas valide",
-    "expressionCannotBeEmpty": "L'expression ne peut pas être vide."
+    "expressionCannotBeEmpty": "L'expression ne peut pas être vide.",
+    "notValidAttributesSimilar": "Les entités de l'appariement n'ont pas d'attributs."
   },
   "tooltips": {
-    "matchScoreExpression": "Une expression ExpressionLanguage avec accès à `stageEntity` (un enregistrement complet) et `masterEntity` (les valeurs brutes des champs du candidat, sous forme de tableau - par ex. masterEntity['name']). Doit renvoyer un nombre compris entre 0 et 1, multiplié par le poids de la règle pour produire le score de correspondance - par ex. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 attribue le score 1 à une correspondance exacte et 0 à tout le reste."
+    "matchScoreExpression": "Une expression ExpressionLanguage avec accès à `stageEntity` (un enregistrement complet) et `masterEntity` (les valeurs brutes des champs du candidat, sous forme de tableau - par ex. masterEntity['name']). Doit renvoyer un nombre compris entre 0 et 1, multiplié par le poids de la règle pour produire le score de correspondance - par ex. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 attribue le score 1 à une correspondance exacte et 0 à tout le reste.",
+    "ignoreUnavailableAttributes": "Si activé, un attribut lié à un seul des enregistrements comparés n'est pas comparé. Sinon, un tel attribut a une similarité de 0."
   }
 }

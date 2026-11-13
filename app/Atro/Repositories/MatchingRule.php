@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\ExpressionLanguage\Compiled\CompiledMatchingRuleScoreExpression;
 use Atro\Core\ExpressionLanguage\Compiled\MatchingRuleScoreContext;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
@@ -42,6 +43,20 @@ class MatchingRule extends AbstractRule
     public function createMatchingType(MatchingRuleEntity $rule): AbstractMatchingRule
     {
         return $this->getInjection('matchingManager')->createMatchingType($rule);
+    }
+
+    protected function beforeSave(OrmEntity $entity, array $options = [])
+    {
+        if ($entity->get('type') === 'attributesSimilar') {
+            $matching = $this->getMatching($entity);
+            foreach (empty($matching) ? [] : [$matching->get('entity'), $matching->get('masterEntity')] as $entityName) {
+                if (empty($this->getInjection('metadata')->get("scopes.{$entityName}.hasAttribute"))) {
+                    throw new BadRequest($this->getInjection('language')->translate('notValidAttributesSimilar', 'exceptions', $this->entityType));
+                }
+            }
+        }
+
+        parent::beforeSave($entity, $options);
     }
 
     protected function afterSave(OrmEntity $entity, array $options = []): void

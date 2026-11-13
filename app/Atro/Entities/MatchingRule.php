@@ -45,6 +45,20 @@ class MatchingRule extends Base
             ->isSymmetric();
     }
 
+    public function getComparedFields(): array
+    {
+        return $this->getRepository()
+            ->createMatchingType($this)
+            ->getComparedFields();
+    }
+
+    public function getComparedAttributes(): array
+    {
+        return $this->getRepository()
+            ->createMatchingType($this)
+            ->getComparedAttributes();
+    }
+
     public function getNestedRules(): iterable
     {
         return $this->get('matchingRules') ?? [];

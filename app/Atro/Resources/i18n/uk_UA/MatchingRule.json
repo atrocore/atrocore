@@ -6,7 +6,8 @@
     "matchingRules": "Правила зіставлення",
     "operator": "Оператор",
     "attribute": "Атрибут",
-    "matchScoreExpression": "Вираз оцінки"
+    "matchScoreExpression": "Вираз оцінки",
+    "ignoreUnavailableAttributes": "Ігнорувати недоступні атрибути"
   },
   "groupOptions": {
     "field": {
@@ -20,7 +21,9 @@
       "fieldSimilar": "Поле схоже",
       "fieldContains": "Поле містить",
       "set": "Набір",
-      "expression": "Вираз"
+      "expression": "Вираз",
+      "fieldsSimilar": "Поля схожі",
+      "attributesSimilar": "Атрибути схожі"
     },
     "operator": {
       "and": "AND",
@@ -34,9 +37,11 @@
     "notValidMatchingRuleSet": "Набір правил зіставлення недійсний",
     "notValidFieldType": "Тип поля не підтримується обраним типом правила.",
     "notValidAttributeType": "Тип атрибута не підтримується обраним типом правила.",
-    "expressionCannotBeEmpty": "Вираз не може бути порожнім."
+    "expressionCannotBeEmpty": "Вираз не може бути порожнім.",
+    "notValidAttributesSimilar": "Сутності зіставлення не мають атрибутів."
   },
   "tooltips": {
-    "matchScoreExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису) та `masterEntity` (необроблених значень полів кандидата у вигляді масиву - напр. masterEntity['name']). Повинен повертати число від 0 до 1, яке множиться на вагу правила для отримання оцінки відповідності - напр. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 оцінює точний збіг як 1, а все інше як 0."
+    "matchScoreExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису) та `masterEntity` (необроблених значень полів кандидата у вигляді масиву - напр. masterEntity['name']). Повинен повертати число від 0 до 1, яке множиться на вагу правила для отримання оцінки відповідності - напр. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 оцінює точний збіг як 1, а все інше як 0.",
+    "ignoreUnavailableAttributes": "Якщо увімкнено, атрибут, прив'язаний лише до одного з порівнюваних записів, не порівнюється. Інакше такий атрибут має схожість 0."
   }
 }
