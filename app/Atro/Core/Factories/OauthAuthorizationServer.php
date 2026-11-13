@@ -60,6 +60,8 @@ class OauthAuthorizationServer implements FactoryInterface
             new \DateInterval($config->get(self::AUTH_CODE_TTL_CONFIG_KEY, self::DEFAULT_AUTH_CODE_TTL))
         );
         $authCodeGrant->setRefreshTokenTTL($refreshTokenTtl);
+        // PKCE is required from every client and validated by Atro\Core\OAuth\Authorization
+        $authCodeGrant->disableRequireCodeChallengeForPublicClients();
         $server->enableGrantType($authCodeGrant, $accessTokenTtl);
 
         $refreshTokenGrant = new RefreshTokenGrant($container->get(RefreshTokenRepository::class));

@@ -248,7 +248,7 @@ An empty array (`rateLimit: []`) uses the defaults from the settings.
 - Every accepted request counts, whatever its outcome, unless the route sets `failuresOnly`. A rejected request is answered with `429 Too Many Requests` and a `Retry-After` header, and does not count.
 - Responses of a limited endpoint carry the `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers.
 - `GET` and `POST` on the same path are limited separately.
-- The sign-in endpoints `POST /api/oauth/authorize` and `POST /api/oauth/token` count only the failures (`failuresOnly`); the sign-in page is also limited per user name (`userNameField`), see [Rate Limiting](../../../08.security/02.rate-limiting).
+- The sign-in endpoints `POST /api/oauth/signIn`, `POST /api/oauth/authorizationRequest` and `POST /api/oauth/token` count only the failures (`failuresOnly`); the sign-in form is also limited per user name (`userNameField`), see [Rate Limiting](../../../08.security/02.rate-limiting).
 
 ---
 

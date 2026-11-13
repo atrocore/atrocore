@@ -25,7 +25,7 @@ class UiClient
 {
     public const CONFIG_KEY = 'oauthUiClientId';
     public const NAME = 'AtroCore UI';
-    public const CALLBACK_PATH = '/oauth/callback';
+    public const CALLBACK_PATH = '/api/oauth/callback';
 
     public function __construct(private readonly EntityManager $entityManager, private readonly Config $config)
     {

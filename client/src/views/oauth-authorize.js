@@ -17,15 +17,9 @@ Espo.define('views/oauth-authorize', 'view', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            // the query string of the authorization request, without the parameter of the entry point
-            const params = new URLSearchParams(window.location.search);
-            params.delete('entryPoint');
-
+            // the authorization request of an OAuth client is kept in its cookie
             this.svelteComponent = new Svelte.OauthAuthorize({
-                target: this.el,
-                props: {
-                    query: params.toString()
-                }
+                target: this.el
             });
         },
 

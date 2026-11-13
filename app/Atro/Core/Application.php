@@ -17,7 +17,6 @@ use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
 use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Core\OAuth\BrowserLogin;
 use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\OAuth\TokenUser;
@@ -31,7 +30,6 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Atro\Core\Factories\HttpPipeline;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stratigility\MiddlewarePipe;
-use Psr\Http\Message\ResponseInterface;
 
 final class Application
 {
@@ -129,20 +127,6 @@ final class Application
                 $this->runApi($query);
             }
 
-            // the authorization endpoint of the OAuth server: the sign-in page is a route of the UI
-            if ($query === 'oauth/authorize') {
-                $this->redirectToOauthAuthorizePage();
-            }
-
-            // the sign-in of the user interface by OAuth
-            if ($query === 'oauth/login') {
-                $this->emit($this->getContainer()->get(BrowserLogin::class)->login(ServerRequest::fromGlobals()));
-            }
-
-            if ($query === 'oauth/callback') {
-                $this->emit($this->getContainer()->get(BrowserLogin::class)->callback(ServerRequest::fromGlobals()));
-            }
-
             // generate openapi json
             if ($query === 'apidocs/openapi.json') {
                 $this->showOpenApiJson();
@@ -209,22 +193,6 @@ final class Application
     public function getContainer(): Container
     {
         return $this->container;
-    }
-
-    protected function emit(ResponseInterface $response): void
-    {
-        (new SapiEmitter())->emit($response);
-        exit;
-    }
-
-    protected function redirectToOauthAuthorizePage(): void
-    {
-        $params = $_GET;
-        unset($params['atroq'], $params['treoq']);
-        $params['entryPoint'] = 'oauthAuthorize';
-
-        header('Location: ' . rtrim($this->getConfig()->getSiteUrl(), '/') . '/?' . http_build_query($params));
-        exit;
     }
 
     protected function showOpenApiJson(): void

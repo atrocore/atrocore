@@ -51,6 +51,7 @@
   },
   "messages": {
     "uiClientDisabled": "Die Anmeldung an der Benutzeroberfläche wurde vom Administrator deaktiviert.",
-    "signInFailed": "Die Anmeldung war nicht erfolgreich. Bitte melden Sie sich erneut an."
+    "signInFailed": "Die Anmeldung war nicht erfolgreich. Bitte melden Sie sich erneut an.",
+    "signInExpired": "Die Anmeldung ist abgelaufen. Starten Sie sie in der Anwendung erneut."
   }
 }

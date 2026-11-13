@@ -279,7 +279,7 @@ class V3Dot0Dot8 extends Base
             ->setParameter('name', 'AtroCore UI')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('redirectUris', json_encode([rtrim((string)$this->getConfig()->get('siteUrl'), '/') . '/oauth/callback']))
+            ->setParameter('redirectUris', json_encode([rtrim((string)$this->getConfig()->get('siteUrl'), '/') . '/api/oauth/callback']))
             ->setParameter('now', $now)
             ->executeStatement();
 

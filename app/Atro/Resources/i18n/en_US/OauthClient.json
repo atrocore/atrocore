@@ -51,6 +51,7 @@
   },
   "messages": {
     "uiClientDisabled": "Signing in to the user interface is turned off by the administrator.",
-    "signInFailed": "The sign-in did not succeed. Please sign in again."
+    "signInFailed": "The sign-in did not succeed. Please sign in again.",
+    "signInExpired": "The sign-in has expired. Start it again in the application."
   }
 }
