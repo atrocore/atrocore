@@ -172,7 +172,7 @@ class Base
                 }
             } else {
                 if ($item['type'] == 'textFilter') {
-                    if (isset($item['value']) || $item['value'] !== '') {
+                    if (isset($item['value']) && $item['value'] !== '') {
                         $this->textFilter($item['value'], $result);
                     }
                 } else {
@@ -977,6 +977,48 @@ class Base
         return $this->getMetadata()->getEventManager()->dispatch($scope, $action, $event);
     }
 
+    protected function prepareSortBy(array &$params, bool $withAcl = false): void
+    {
+        if (empty($params['sortBy']) || !$withAcl) {
+            return;
+        }
+
+        $sortBy = (string)$params['sortBy'];
+        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType(), 'read');
+
+        // composite values like "t1.column" are converted by the QueryConverter into raw "alias.column" paths and would bypass field level ACL
+        $isComposite = str_contains($sortBy, '.');
+
+        $isExists = false;
+        if (!$isComposite) {
+            if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy])) {
+                $isExists = true;
+            } elseif (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute']))) {
+                // attribute fields are sorted by "{name}", "{name}Unit", "{name}From" or "{name}To"
+                $candidates = array_values(array_unique([$sortBy, preg_replace('/(Unit|From|To)$/', '', $sortBy)]));
+                $conn = $this->getEntityManager()->getDbal();
+                $isExists = $conn->createQueryBuilder()
+                        ->select('a.id')
+                        ->from($conn->quoteIdentifier('attribute'), 'a')
+                        ->where('a.system_name IN (:systemNames)')
+                        ->andWhere('a.entity_id = :entityName')
+                        ->andWhere('a.deleted = :false')
+                        ->setParameter('systemNames', $candidates, Connection::PARAM_STR_ARRAY)
+                        ->setParameter('entityName', $this->getEntityType())
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->setMaxResults(1)
+                        ->fetchOne() !== false;
+            }
+        }
+
+        if (!$isComposite && $isExists && !in_array($sortBy, $forbiddenAttributeList)) {
+            return;
+        }
+
+        $defaultSortBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy'], 'id');
+        $params['sortBy'] = !in_array($defaultSortBy, $forbiddenAttributeList) ? $defaultSortBy : 'id';
+    }
+
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         $params = $this
@@ -988,6 +1030,7 @@ class Base
         $this->selectParameters = $params;
 
         $this->prepareForExtensibleEnumOption($params);
+        $this->prepareSortBy($params, $withAcl);
 
         $result = array();
         $this->prepareResult($result);
@@ -2226,6 +2269,12 @@ class Base
         $type      = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']);
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType(), 'read');
+        if (!empty($forbiddenFieldList)) {
+            $fieldList = array_values(array_filter($fieldList, function ($field) use ($forbiddenFieldList) {
+                return $field === 'id' || !in_array($field, $forbiddenFieldList);
+            }));
+        }
         $group     = [];
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
