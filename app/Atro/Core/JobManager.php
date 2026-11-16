@@ -11,6 +11,7 @@
 
 namespace Atro\Core;
 
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Jobs\JobInterface;
 use Atro\Core\Utils\Metadata;
 use Espo\Core\Utils\System;
@@ -43,8 +44,7 @@ class JobManager
     {
         $userId = $job->get('ownerUserId');
         if (empty($userId) || $userId == $this->container->get('config')->get('systemUserId')) {
-            $auth = new \Espo\Core\Utils\Auth($this->container);
-            $auth->useNoAuth();
+            $this->container->get(CurrentUser::class)->setSystemUser();
         } else {
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (empty($user)) {

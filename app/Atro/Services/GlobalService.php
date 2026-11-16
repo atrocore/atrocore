@@ -176,14 +176,12 @@ class GlobalService extends AbstractService
             ->find()->toArray();
         $settings = (object)$settings;
 
-        unset($userData->authTokenId);
         unset($userData->password);
 
         return [
             'user'        => $userData,
             'acl'         => $this->getAcl()->getMap(),
             'preferences' => $this->getPreferencesData(),
-            'token'       => $user->get('token'),
             'settings'    => $settings,
             'appParams'   => [
                 'maxUploadSize'        => $this->getMaxUploadSize() / 1024.0 / 1024.0,

@@ -77,7 +77,7 @@
       "type": "bool",
       "tooltip": true
     },
-    "authTokenLifetime": {
+    "sessionLifetime": {
       "type": "float",
       "min": 0,
       "default": 0,
@@ -123,13 +123,13 @@
       "required": true,
       "tooltip": true
     },
-    "authTokenMaxIdleTime": {
+    "sessionMaxIdleTime": {
       "type": "float",
       "min": 0,
       "default": 0,
       "tooltip": true
     },
-    "authTokenPreventConcurrent": {
+    "sessionPreventConcurrent": {
       "type": "bool",
       "tooltip": true
     },

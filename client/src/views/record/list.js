@@ -3968,7 +3968,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 const data = Object.assign({ action: name, scope: scope, id: id }, extraData || {});
                 this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                     .then(response => {
-                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.resultField && response && response[actionDefs.resultField]) {
+                            this.showActionResult(name, scope, String(response[actionDefs.resultField]));
+                        } else {
+                            this.notify(this.translate('Done'), 'success');
+                        }
                         if (actionDefs.refresh) {
                             this.collection.fetch();
                         }
@@ -4010,7 +4014,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (actionDefs.confirm) {
                 this.confirm({
-                    message: this.translate(actionDefs.name, 'actionConfirms', scope),
+                    message: this.translate(name, 'actionConfirms', scope),
                     confirmText: this.translate('Apply')
                 }, function () {
                     proceed();

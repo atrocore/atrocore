@@ -71,7 +71,7 @@
     "pdoSql": "PDO SQL",
     "vertica": "Vertica DB",
     "tokenAuthApi": "API Token Auth",
-    "atrocore": "AtroCore",
+    "atrocore": "AtroCore 2.x",
     "mysql": "Сервер MySQL",
     "psql": "Сервер PostgreSQL",
     "products": "Продукты",
@@ -90,7 +90,7 @@
       "oauth": "Oauth"
     },
     "type": {
-      "atrocore": "AtroCore",
+      "atrocore": "AtroCore 2.x",
       "pdoSql": "PDO SQL",
       "mysql": "Сервер MySQL",
       "psql": "Сервер PostgreSQL",

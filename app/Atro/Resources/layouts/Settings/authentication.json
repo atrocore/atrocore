@@ -1,19 +1,19 @@
 [
   {
-    "label": "Token",
+    "label": "Sessions",
     "rows": [
       [
         {
-          "name": "authTokenPreventConcurrent"
+          "name": "sessionPreventConcurrent"
         },
         {
-          "name": "authTokenLifetime"
+          "name": "sessionLifetime"
         }
       ],
       [
         false,
         {
-          "name": "authTokenMaxIdleTime"
+          "name": "sessionMaxIdleTime"
         }
       ]
     ]

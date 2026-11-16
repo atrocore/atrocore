@@ -96,7 +96,8 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
 
     private function postToken(Entity $connectionEntity, array $body, bool $useBasicAuth): array
     {
-        $headers = ['Content-Type: application/json'];
+        // the token request is form-encoded (RFC 6749, section 4.4.2)
+        $headers = ['Content-Type: application/x-www-form-urlencoded'];
         $useClientAuth = $useBasicAuth && $connectionEntity->get('oauthClientId');
         if (!$useClientAuth) {
             // the client credentials of the grant already use the Authorization header, otherwise the Basic protection is added
@@ -108,7 +109,7 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         if ($useClientAuth) {

@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
+use Atro\Core\OAuth\BrowserSession;
+use Atro\Core\OAuth\TokenRevoker;
 use Espo\ORM\EntityManager;
 
 /**
@@ -84,11 +87,11 @@ class Cron extends AbstractConsole
             exec("$php console.php daemon job-manager $id >/dev/null 2>&1 &");
         }
 
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        $auth->useNoAuth();
+        $this->getContainer()->get(CurrentUser::class)->setSystemUser();
 
-        // check auth tokens
-        $this->authTokenControl();
+        // end the expired sessions of the user interface and remove the expired OAuth tokens
+        $this->getContainer()->get(BrowserSession::class)->deleteExpired();
+        $this->getContainer()->get(TokenRevoker::class)->deleteExpired();
 
         // find pending job to create queue file
         $this->createQueueFile();
@@ -164,33 +167,6 @@ class Cron extends AbstractConsole
         }
 
         return true;
-    }
-
-    private function authTokenControl(): void
-    {
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('entityManager');
-
-        $tokenList = $em
-            ->getRepository('AuthToken')
-            ->select(['id', 'lifetime', 'idleTime', 'createdAt', 'lastAccess'])
-            ->where(['isActive' => true])
-            ->find();
-
-        foreach ($tokenList as $token) {
-            $authTokenLifetime = $token->get('lifetime') !== null ? $token->get('lifetime') : $this->getConfig()->get('authTokenLifetime');
-            if ($authTokenLifetime && new \DateTime($token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenLifetime . ' hours')) {
-                $token->set('isActive', false);
-                $em->saveEntity($token);
-                continue 1;
-            }
-
-            $authTokenMaxIdleTime = $token->get('idleTime') !== null ? $token->get('idleTime') : $this->getConfig()->get('authTokenMaxIdleTime');
-            if ($authTokenMaxIdleTime && new \DateTime($token->get('lastAccess') ?? $token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenMaxIdleTime . ' hours')) {
-                $token->set('isActive', false);
-                $em->saveEntity($token);
-            }
-        }
     }
 
     private function createQueueFile(): void

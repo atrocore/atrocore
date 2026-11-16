@@ -319,8 +319,6 @@ class Metadata extends AbstractMetadataListener
             'password',
             'passwordConfirm',
             'token',
-            'authTokenId',
-            'authLogRecordId',
             'ipAddress',
             'defaultTeam',
             'acceptanceStatus',

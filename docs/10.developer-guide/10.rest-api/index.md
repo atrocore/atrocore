@@ -6,7 +6,7 @@ AtroCore is an **API-centric** application where the frontend communicates with 
 
 Every action you perform in the UI can be replicated through an API request. A good way to learn how the API works is to monitor the **network tab** in your browser's developer console (`F12`).
 
-All API requests must include the header `Content-Type: application/json`. Requests with a body and any other content type are rejected with `415 Unsupported Media Type`. The base path for all API requests is `/api/`.
+All API requests must include the header `Content-Type: application/json`. Requests with a body and any other content type are rejected with `415 Unsupported Media Type`; the OAuth endpoints take form-encoded parameters, see [Authentication](#authentication). The base path for all API requests is `/api/`.
 
 !!! **Best Practice**: We recommend creating a separate API user with a specific role and limited permissions for all API calls.
 
@@ -16,55 +16,118 @@ The REST API documentation is automatically generated for each AtroCore project 
 
 The OpenAPI schema is always protected by HTTP Basic authentication with its own credentials, independent of AtroCore users; the browser asks for them when the documentation page loads the schema. Set them in `Administration / Authentication`, panel **API Documentation**. The schema is not accessible until both username and password are set. The password is stored as a hash and cannot be read back.
 
-To call the routes from Swagger, use the login and password of an AtroCore user in the basic authentication of the Swagger UI.
+To call the routes from Swagger, click **Authorize** and enter the client ID and the client secret of an [OAuth client](#integrations-client-credentials) with the **Client Credentials** grant: Swagger requests the access token itself.
 
 ## Authentication
 
-To use the AtroCore API, you must first obtain an access token. Use the `/api/userSession` endpoint with **Basic Authentication** to get your token.
-
-**Step 1: Encode Basic Token**
-
-First, create a Base64-encoded string of your username and password in the format `{username}:{password}`.
-
-For example in `Javascript`:
-
-```js
-let basicToken = btoa('admin:admin');
-// result => YWRtaW46YWRtaW4=
-```
-
-**Step 2: Get the Authorization Token**
-
-Use the encoded token to make a GET request to the `/userSession` endpoint with the `Authorization-Token-Only` header set to `true`.
-
-```http request
-GET /api/userSession HTTP/1.1
-Host: demo.atropim.com
-Authorization: Basic YWRtaW46YWRtaW4=
-Accept: application/json
-Authorization-Token-Only: true
-```
-
-The response will contain your authorization token:
-
-```json
-{
-    "authorizationToken": "*******************"
-}
-```
-
-Now, include the header `Authorization-Token: *******************` in all subsequent requests to authorize your calls.
-
-> The AtroCore UI does not use the `Authorization-Token` header – it authenticates with an `HttpOnly` auth cookie. See [Session Cookie](../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie).
-
-For example, to get the instance [generated metadata](../02.understanding-atrocore/02.metadata/index.md):
+AtroCore is an OAuth 2.0 authorization server. The API accepts OAuth access tokens in the `Authorization` header:
 
 ```http request
 GET /api/metadata HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: *******************
+Authorization: Bearer *******************
 Accept: application/json
 ```
+
+Every application that calls the API is registered as an [OAuth client](../../01.atrocore/03.administration/14.access-management/06.oauth-clients/index.md) in `Administration / Authentication / OAuth Clients`. An access token acts with the permissions of its user.
+
+| Endpoint | Purpose |
+| --- | --- |
+| `/oauth/authorize` | Authorization endpoint: the page the application sends the user to (authorization code grant). |
+| `POST /api/oauth/token` | Token endpoint: issues access tokens and refresh tokens. |
+| `POST /api/oauth/revoke` | Revokes an access token or a refresh token ([RFC 7009](https://datatracker.ietf.org/doc/html/rfc7009)). |
+
+The token and revocation endpoints take the parameters form-encoded (`Content-Type: application/x-www-form-urlencoded`). A confidential client authenticates with its client ID and secret, either in the request body (`client_id`, `client_secret`) or by HTTP Basic authentication.
+
+| Token | Lifetime | Option in `data/config.php` |
+| --- | --- | --- |
+| Access token | 1 hour | `oauthAccessTokenTtl` |
+| Refresh token | 1 month | `oauthRefreshTokenTtl` |
+| Authorization code | 10 minutes | `oauthAuthCodeTtl` |
+
+The lifetimes are ISO 8601 durations, e.g. `'oauthAccessTokenTtl' => 'PT30M'`.
+
+> The AtroCore UI does not keep tokens in the browser: the server holds them and the browser has only an `HttpOnly` session cookie. See [Session Cookie](../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie).
+
+### Integrations: Client Credentials
+
+An integration that works without a user signing in, e.g. a synchronization script or another system, uses the **Client Credentials** grant.
+
+1. Create an OAuth client with **Confidential** and **Client Credentials** enabled, and select the **User** the integration acts as. Give this user a role with only the permissions the integration needs.
+2. Click **Generate Secret** and copy the secret: it is shown only once.
+3. Request an access token:
+
+```http request
+POST /api/oauth/token HTTP/1.1
+Host: demo.atropim.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+```
+
+```json
+{
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "access_token": "*******************"
+}
+```
+
+4. Send the token in the `Authorization: Bearer` header. When the API answers `401 Unauthorized`, the token has expired: request a new one.
+
+### Applications: Authorization Code with PKCE
+
+An application that acts on behalf of a user, e.g. a web or mobile application or a tool like Postman, uses the **Authorization Code** grant. The user logs in to AtroCore and allows the access; the application never sees the password.
+
+1. Create an OAuth client with **Authorization Code** enabled and enter its **Redirect URIs**. Enable **Confidential** for an application with a server that keeps the client secret; leave it disabled for a browser or mobile application. Enable **Refresh Token** to let the application renew the access token without a new login.
+2. Send the user to the authorization endpoint. PKCE with the `S256` method is required from every client:
+
+```
+https://demo.atropim.com/oauth/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&state=STATE&code_challenge=CODE_CHALLENGE&code_challenge_method=S256
+```
+
+The `redirect_uri` must match one of the **Redirect URIs** of the client exactly. The user logs in on the AtroCore login form and, when **Consent Required** is enabled, allows the access. AtroCore then redirects to the `redirect_uri` with the authorization code and the `state`, or with an `error`.
+
+3. Exchange the code for the tokens:
+
+```http request
+POST /api/oauth/token HTTP/1.1
+Host: demo.atropim.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=CODE&redirect_uri=REDIRECT_URI&code_verifier=CODE_VERIFIER&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+```
+
+A public client sends no `client_secret`. The response contains the `access_token` and, with **Refresh Token** enabled, the `refresh_token`.
+
+4. Renew the access token with the refresh token:
+
+```http request
+POST /api/oauth/token HTTP/1.1
+Host: demo.atropim.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=REFRESH_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+```
+
+Every refresh returns a new refresh token, the previous one stops working.
+
+A browser application calls the API directly from the origins of the **Redirect URIs** of its public client: AtroCore allows them by CORS.
+
+### Revoking Tokens
+
+An application revokes a token it no longer needs, e.g. on logout:
+
+```http request
+POST /api/oauth/revoke HTTP/1.1
+Host: demo.atropim.com
+Content-Type: application/x-www-form-urlencoded
+
+token=REFRESH_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+```
+
+Revoking a refresh token also revokes its access token. Generating a new secret, deactivating or deleting the client revokes all tokens issued to it.
+
 ## Retrieving records list
 When retrieving a list of records from the API, you can control the data returned using several query parameters. These parameters are combined in the URL to build complex queries for selecting, paginating, and filtering data.
 
@@ -78,7 +141,7 @@ To retrieve only the fields you need, use the `select` parameter with a comma-se
 GET /api/Product?select=id,name,isActive HTTP/1.1
 Host: demo.atropim.com
 Accept: application/json
-Authorization-Token: ***************
+Authorization: Bearer ***************
 ```
 
 > **Note:** The API may still return some additional fields, even if they aren't included in your `select` list. These are typically mandatory fields required by the backend or automatically included virtual fields.
@@ -100,7 +163,7 @@ You can paginate through large record sets using the `offset` and `maxSize` para
 GET /api/Product?select=id,name,isActive&offset=0&maxSize=2 HTTP/1.1
 Host: demo.atropim.com
 Accept: application/json
-Authorization-Token: ***************
+Authorization: Bearer ***************
 ```
 
 -----
@@ -118,7 +181,7 @@ To sort the records, use the `sortBy` and `asc` parameters.
 GET /api/Product?select=id,name,isActive&offset=0&maxSize=2&sortBy=name&asc=false HTTP/1.1
 Host: demo.atropim.com
 Accept: application/json
-Authorization-Token: ***************
+Authorization: Bearer ***************
 ```
 
 A relation with a manual order returns its records in this order when `sortBy` is not given, and the order is changed
@@ -140,7 +203,7 @@ To filter records, use the **`where`** query parameter. This parameter uses an *
 ```http
 GET /api/Product?where[0][attribute]=name&where[0][type]=like&where[0][value]=%test%&where[0][isAttribute]=false HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ****************
+Authorization: Bearer ****************
 ```
 
 This request filters the `Product` records to find those where the `name` field contains the string `test`.
@@ -452,7 +515,7 @@ This method is suitable for smaller files. The file's content is encoded in Base
 ```http request
 POST /api/File HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ****************************
+Authorization: Bearer ****************************
 Content-Type: application/json
 :
 {
@@ -478,7 +541,7 @@ This method is useful for uploading files that are already hosted elsewhere. The
 ```http request
 POST /api/File HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ****************************
+Authorization: Bearer ****************************
 Content-Type: application/json
 :
 {
@@ -507,7 +570,7 @@ For very large files, you must split the file into smaller pieces (chunks) and u
 ```http request
 POST /api/File HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: *******************
+Authorization: Bearer *******************
 Content-Type: application/json
 :
 {
@@ -607,7 +670,7 @@ function upload() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization-Token': '***************************' // Replace with your actual token
+                    'Authorization': 'Bearer ***************************' // Replace with your actual access token
                 },
                 body: JSON.stringify(uploadPayload)
             })
@@ -639,7 +702,7 @@ To create a publicly accessible URL for a file, you must create a **Sharing** en
     ```http
     POST /api/Sharing HTTP/1.1
     Host: your-instance.com
-    Authorization-Token: ***************
+    Authorization: Bearer ***************
     Content-Type: application/json
     Content-Length: 47
 
@@ -708,7 +771,7 @@ Returns all attribute values assigned to a record.
 ```http
 GET /api/Product/{id}/attributeValues HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 ```
 
 Response:
@@ -744,7 +807,7 @@ Assigns one or more attributes to a record without setting values.
 ```http
 POST /api/Product/{id}/addAttributes HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Content-Type: application/json
 
 {
@@ -764,7 +827,7 @@ Creates or updates attribute values for a record. Only the attributes specified 
 ```http
 POST /api/Product/{id}/upsertAttributeValues HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Content-Type: application/json
 
 [
@@ -792,7 +855,7 @@ Removes one or more attribute assignments from a record.
 ```http
 DELETE /api/Product/{id}/attributeValues HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Content-Type: application/json
 
 {
@@ -829,7 +892,7 @@ Use the `Flatten-Attributes: true` header to flatten all attribute values direct
 ```http
 GET /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Flatten-Attributes: true
 ```
 
@@ -868,7 +931,7 @@ Use `allAttributes=true` to include all attributes for each item:
 ```http
 GET /api/Product?select=name&maxSize=1&allAttributes=true HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Flatten-Attributes: true
 ```
 
@@ -877,7 +940,7 @@ Use the `attributes` parameter to load only specific attributes by ID:
 ```http
 GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j,a01jz83qe81ebwsq2rfhpfvc2sp HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Flatten-Attributes: true
 ```
 
@@ -888,7 +951,7 @@ Update attributes like regular fields in a PATCH request:
 ```http
 PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Flatten-Attributes: true
 
 {
@@ -904,7 +967,7 @@ Use `__attributes` with an array of attribute IDs or codes to assign attributes 
 ```http
 PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Flatten-Attributes: true
 
 {
@@ -957,7 +1020,7 @@ The header is accepted on the following endpoints:
 ```http
 GET /api/Product HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 With-Meta: true
 ```
 
@@ -970,7 +1033,7 @@ With-Meta: true
 ```http
 GET /api/Product HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 With-Meta-Groups: availableActions, linkOptions
 ```
 
@@ -989,7 +1052,7 @@ Without `select`, a link field returns only the ID and the name of the linked re
 ```http
 GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 Flatten-Attributes: true
 With-Meta-Groups: linkedRecords
 Meta-Linked-Fields: brand, measuringTube
@@ -1082,7 +1145,7 @@ The keys are action names. The base ones are listed below, entities and modules 
 ```http
 GET /api/Product?select=id,name&maxSize=2 HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 With-Meta: true
 ```
 
@@ -1285,7 +1348,7 @@ This simplifies client-side handling — instead of selecting a specific languag
 ```http
 GET /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
-Authorization-Token: ***************
+Authorization: Bearer ***************
 language: de_DE
 ```
 

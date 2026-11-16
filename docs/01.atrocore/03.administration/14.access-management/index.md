@@ -25,3 +25,6 @@ Each user can belong to one or more teams. Each team can contain several users.
 - **[Users](01.users/index.md)** - User accounts and their management
 - **[Teams](02.teams/index.md)** - Team creation and assignment
 - **[Roles](03.roles/index.md)** - Role configuration and permissions
+- **[Action History](04.action-history/index.md)** - History of the actions and the OAuth clients that made them
+- **[Authentication](05.authentication/index.md)** - Sessions, password reset, rate limiting and API documentation access
+- **[OAuth Clients](06.oauth-clients/index.md)** - Applications that access the REST API

@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "identifier": {
+      "type": "varchar",
+      "len": 100,
+      "unique": true
+    },
+    "client": {
+      "type": "link"
+    },
+    "userId": {
+      "type": "varchar",
+      "len": 36
+    },
+    "scopes": {
+      "type": "jsonArray"
+    },
+    "expiresAt": {
+      "type": "datetime"
+    },
+    "isRevoked": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "createdAt": {
+      "type": "datetime"
+    }
+  },
+  "links": {
+    "client": {
+      "type": "belongsTo",
+      "entity": "OauthClient",
+      "cascadeDelete": true
+    }
+  },
+  "indexes": {
+    "userId": {
+      "columns": [
+        "userId"
+      ]
+    },
+    "expiresAt": {
+      "columns": [
+        "expiresAt"
+      ]
+    }
+  }
+}

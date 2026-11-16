@@ -15,15 +15,20 @@ namespace Atro\Core;
 
 use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\OAuth\Authorization;
+use Atro\Core\OAuth\BrowserSession;
+use Atro\Core\OAuth\SessionCookie;
+use Atro\Core\OAuth\TokenUser;
 use Atro\Services\SoftwarePackage;
 use Espo\Core\EntryPointManager;
-use Espo\Core\Utils\Auth;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Http\Message\ResponseInterface;
 use Atro\Core\Factories\HttpPipeline;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -124,6 +129,11 @@ final class Application
                 $this->runApi($query);
             }
 
+            // the authorization page of the OAuth server leads to the user interface, which shows the login form
+            if ($query === 'oauth/authorize') {
+                $this->emit($this->getContainer()->get(Authorization::class)->handleAuthorizationPage(ServerRequest::fromGlobals()));
+            }
+
             // generate openapi json
             if ($query === 'apidocs/openapi.json') {
                 $this->showOpenApiJson();
@@ -190,6 +200,12 @@ final class Application
     public function getContainer(): Container
     {
         return $this->container;
+    }
+
+    protected function emit(ResponseInterface $response): void
+    {
+        (new SapiEmitter())->emit($response);
+        exit;
     }
 
     protected function showOpenApiJson(): void
@@ -259,11 +275,6 @@ final class Application
             $this->logoutAll();
         }
 
-        if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header('HTTP/1.1 200 OK');
-            exit;
-        }
-
         $request  = ServerRequest::fromGlobals();
         $pipeline = $this->getContainer()->get(MiddlewarePipe::class);
         $response = $pipeline->handle($request);
@@ -309,41 +320,17 @@ final class Application
         $entryPointManager = new EntryPointManager($container);
 
         try {
-            $authRequired  = $entryPointManager->checkAuthRequired($entryPoint);
-            $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
-            $auth          = new Auth($container, $authNotStrict);
+            if ($this->authenticateBySession()) {
+                $entryPointManager->run($entryPoint, $data);
+                return;
+            }
 
-            [$username, $password] = $this->extractAuthCredentials();
-
-            if (!$authRequired) {
-                if ($username && $password) {
-                    try {
-                        $auth->login($username, $password);
-                    } catch (\Exception $e) {
-                        // optional auth — ignore
-                    }
-                } else {
-                    $auth->useNoAuth();
-                }
-            } elseif ($username && $password) {
-                try {
-                    $ok = $auth->login($username, $password);
-                    if (!$ok) {
-                        header('HTTP/1.1 401 Unauthorized');
-                        exit;
-                    }
-                } catch (\Atro\Core\Exceptions\Unauthorized $e) {
-                    header('HTTP/1.1 401 Unauthorized');
-                    header('Password-Expired: true');
-                    exit;
-                } catch (\Exception $e) {
-                    header('HTTP/1.0 ' . ($e->getCode() ?: 500) . ' Error');
-                    exit;
-                }
-            } else {
+            if ($entryPointManager->checkAuthRequired($entryPoint)) {
                 header('HTTP/1.1 401 Unauthorized');
                 exit;
             }
+
+            $container->get(CurrentUser::class)->setSystemUser();
 
             $entryPointManager->run($entryPoint, $data);
         } catch (\Exception $e) {
@@ -442,40 +429,49 @@ final class Application
         return $query;
     }
 
-    private function extractAuthCredentials(): array
+    /**
+     * The session of the user interface authenticates the entry points too, e.g. the images and the downloads.
+     */
+    protected function authenticateBySession(): bool
     {
-        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-            return explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)), 2);
+        $sessionId = SessionCookie::getSessionId(ServerRequest::fromGlobals());
+        if ($sessionId === null) {
+            return false;
         }
 
-        if (!empty($_SERVER['HTTP_AUTHORIZATION_TOKEN'])) {
-            return explode(':', base64_decode($_SERVER['HTTP_AUTHORIZATION_TOKEN']), 2);
+        $accessToken = $this->getContainer()->get(BrowserSession::class)->authenticate($sessionId);
+        if ($accessToken === null) {
+            return false;
         }
 
-        if (!empty($_SERVER['PHP_AUTH_USER'])) {
-            return [$_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ?? ''];
+        $tokenUser = $this->getContainer()->get(TokenUser::class);
+
+        $user = $tokenUser->resolve($accessToken['userId'], $accessToken['clientId']);
+        if ($user === null) {
+            return false;
         }
 
-        if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
-            return [$_COOKIE['auth-username'], $_COOKIE['auth-token']];
+        if ($user->needToUpdatePassword($this->getConfig()->get('passwordExpireDays', 0))) {
+            header('HTTP/1.1 401 Unauthorized');
+            header('Password-Expired: true');
+            exit;
         }
 
-        return [null, null];
+        $this->getContainer()->get(CurrentUser::class)->set($user);
+
+        return true;
     }
 
-    /**
-     * Logout all users
-     */
     private function logoutAll(): void
     {
         /** @var \Doctrine\DBAL\Connection $connection */
         $connection = $this->getContainer()->get('connection');
 
-        $connection
-            ->createQueryBuilder()
-            ->delete('auth_token')
-            ->andwhere('lifetime IS NULL')
-            ->andWhere('idle_time IS NULL')
-            ->executeQuery();
+        // the table is created by a migration, which runs later in the update
+        if ($connection->createSchemaManager()->tablesExist([BrowserSession::TABLE])) {
+            $connection->createQueryBuilder()
+                ->delete(BrowserSession::TABLE)
+                ->executeStatement();
+        }
     }
 }

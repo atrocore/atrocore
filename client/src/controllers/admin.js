@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
+Espo.define('controllers/admin', 'controller', function (Dep) {
 
     return Dep.extend({
 
@@ -97,21 +97,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main(view, Object.assign({}, options, {model: model}));
             }, this);
             model.fetch();
-        },
-
-        authTokens: function () {
-            this.collectionFactory.create('AuthToken', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
-                searchManager.loadStored();
-                collection.where = searchManager.getWhere();
-                collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-
-                this.main('views/admin/auth-token/list', {
-                    scope: 'AuthToken',
-                    collection: collection,
-                    searchManager: searchManager
-                });
-            }, this);
         },
 
         userInterface: function () {

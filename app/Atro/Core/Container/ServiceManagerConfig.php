@@ -68,6 +68,8 @@ class ServiceManagerConfig
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
         'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
+        \League\OAuth2\Server\AuthorizationServer::class => \Atro\Core\Factories\OauthAuthorizationServer::class,
+        \League\OAuth2\Server\ResourceServer::class      => \Atro\Core\Factories\OauthResourceServer::class,
     ];
 
     private array $aliases = [
@@ -81,7 +83,6 @@ class ServiceManagerConfig
         \Atro\Core\Utils\Metadata::class                => 'metadata',
         \Atro\Core\Utils\Language::class                => 'language',
         \Atro\Core\Utils\UniqueIndexDescriber::class    => 'uniqueIndexDescriber',
-        \Atro\Core\Utils\Metadata::class                => 'metadata',
         \Atro\Core\Utils\FileManager::class             => 'fileManager',
         \Espo\Core\Utils\File\Manager::class            => 'fileManager',
         \Atro\Core\DataManager::class                   => 'dataManager',

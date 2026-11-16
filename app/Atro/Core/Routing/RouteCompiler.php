@@ -19,6 +19,7 @@ use Atro\Core\EntityTypeHandlers\DeleteHandler;
 use Atro\Core\EntityTypeHandlers\ListKanbanHandler;
 use Atro\Core\EntityTypeHandlers\UpdateHandler;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\OpenApiGenerator;
 use Atro\Core\Utils\Metadata;
 
 /**
@@ -221,7 +222,7 @@ class RouteCompiler
             'operationId' => md5(($expanded ? $entityName : '') . $routeAttr->path . implode(',', (array) $routeAttr->methods)),
             'responses'   => $responses,
             'security'    => $routeAttr->auth
-                ? [['Authorization-Token' => []], ['basicAuth' => []]]
+                ? OpenApiGenerator::AUTH_SECURITY
                 : [],
         ];
 

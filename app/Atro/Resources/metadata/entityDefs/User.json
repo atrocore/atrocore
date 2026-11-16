@@ -2,9 +2,9 @@
   "fields": {
     "type": {
       "type": "enum",
-      "default": "Token",
+      "default": "Password",
       "options": [
-        "Token",
+        "Password",
         "System"
       ]
     },
@@ -167,16 +167,6 @@
       "notStorable": true,
       "disabled": true
     },
-    "authTokenId": {
-      "type": "varchar",
-      "notStorable": true,
-      "disabled": true
-    },
-    "authLogRecordId": {
-      "type": "varchar",
-      "notStorable": true,
-      "disabled": true
-    },
     "ipAddress": {
       "type": "varchar",
       "notStorable": true,
@@ -227,7 +217,6 @@
     },
     "lastAccess": {
       "type": "datetime",
-      "notStorable": true,
       "readOnly": true,
       "layoutListDisabled": true,
       "filterDisabled": true,

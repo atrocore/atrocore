@@ -1,0 +1,68 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "isUiClient"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Details"
+  },
+  {
+    "rows": [
+      [
+        {
+          "name": "isConfidential"
+        },
+        false
+      ],
+      [
+        {
+          "name": "clientCredentialsGrant"
+        },
+        {
+          "name": "user"
+        }
+      ],
+      [
+        {
+          "name": "authorizationCodeGrant"
+        },
+        {
+          "name": "refreshTokenGrant"
+        }
+      ],
+      [
+        {
+          "name": "isConsentRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "redirectUris",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Grant Types"
+  }
+]

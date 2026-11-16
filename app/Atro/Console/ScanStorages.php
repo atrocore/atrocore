@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\Authentication\CurrentUser;
 use Espo\ORM\EntityManager;
 
 class ScanStorages extends AbstractConsole
@@ -24,8 +25,7 @@ class ScanStorages extends AbstractConsole
 
     public function run(array $data): void
     {
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        $auth->useNoAuth();
+        $this->getContainer()->get(CurrentUser::class)->setSystemUser();
 
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');

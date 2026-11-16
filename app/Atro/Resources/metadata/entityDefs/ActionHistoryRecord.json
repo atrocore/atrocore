@@ -50,11 +50,7 @@
       "len": 42,
       "maxLength": "39"
     },
-    "authToken": {
-      "type": "link",
-      "protected": true
-    },
-    "authLogRecord": {
+    "oauthClient": {
       "type": "link",
       "protected": true
     }
@@ -64,17 +60,9 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "authToken": {
+    "oauthClient": {
       "type": "belongsTo",
-      "entity": "AuthToken",
-      "foreignName": "id",
-      "foreign": "actionHistoryRecords"
-    },
-    "authLogRecord": {
-      "type": "belongsTo",
-      "entity": "AuthLogRecord",
-      "foreignName": "id",
-      "foreign": "actionHistoryRecords"
+      "entity": "OauthClient"
     }
   },
   "collection": {

@@ -39,10 +39,16 @@ Espo.define('controllers/base', 'controller', function (Dep) {
             var viewName = this.getMetadata().get(['clientDefs', 'App', 'loginView']) || 'views/login';
             this.entire(viewName, {}, function (login) {
                 login.render();
-                login.on('login', function (data) {
-                    this.trigger('login', data);
+                login.on('login', function () {
+                    this.trigger('login');
                 }.bind(this));
             }.bind(this));
+        },
+
+        authorize: function () {
+            this.entire('views/oauth-authorize', {}, function (view) {
+                view.render();
+            });
         },
 
         logout: function () {

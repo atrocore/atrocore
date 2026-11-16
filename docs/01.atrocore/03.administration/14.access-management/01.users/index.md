@@ -156,7 +156,7 @@ Every administrator has the `Administration` item in the user menu and can open 
 
 - A Global Administrator sees all items.
 - Any other administrator sees an item only if it refers to an entity they are allowed to read – Entity Manager for an Entity Administrator, Roles for a Role Administrator, Users for a User Administrator. Items covered by the assigned [roles](../03.roles/index.md), such as Jobs, Storages or Import Feeds, are shown as well.
-- Items that refer to no entity stay available to the Global Administrator only: System Settings, Authentication, User Interface, Layout Manager, Auth Tokens, API Request, Composer, module settings, Clear Cache and Rebuild Database.
+- Items that refer to no entity stay available to the Global Administrator only: System Settings, Authentication Settings, User Interface, Layout Manager, API Request, Composer, module settings, Clear Cache and Rebuild Database.
 
 Groups without available items are hidden, so a limited administrator gets a short panel holding their own tasks only. The navigation tree on the left of the panel follows the same rule.
 

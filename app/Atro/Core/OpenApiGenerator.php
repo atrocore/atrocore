@@ -23,6 +23,11 @@ class OpenApiGenerator
 {
     public const ROUTE_PARAM_REGEX_PATTERN = '/\{(\w+):[^}]+\}/';
 
+    /**
+     * The security requirement of a route that requires authentication.
+     */
+    public const AUTH_SECURITY = [['oauth2' => []]];
+
     private Container $container;
 
     public function __construct(Container $container)
@@ -533,15 +538,15 @@ class OpenApiGenerator
             'paths'      => [],
             'components' => [
                 'securitySchemes' => [
-                    'basicAuth'           => [
-                        'type'   => 'http',
-                        'scheme' => 'basic',
+                    'oauth2'              => [
+                        'type'  => 'oauth2',
+                        'flows' => [
+                            'clientCredentials' => [
+                                'tokenUrl' => '/api/oauth/token',
+                                'scopes'   => new \stdClass(),
+                            ],
+                        ],
                     ],
-                    'Authorization-Token' => [
-                        'type' => 'apiKey',
-                        'name' => 'Authorization-Token',
-                        'in'   => 'header'
-                    ]
                 ]
             ]
         ];
@@ -560,7 +565,7 @@ class OpenApiGenerator
             ];
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
-                $row['security'] = [['Authorization-Token' => []], ['basicAuth' => []]];
+                $row['security'] = self::AUTH_SECURITY;
             } else {
                 $row['security'] = [];
             }
@@ -606,7 +611,7 @@ class OpenApiGenerator
                 'description' => $routeAttr->description,
                 'operationId' => md5($routeAttr->path . '_' . $method),
                 'responses'   => $responses,
-                'security'    => $routeAttr->auth ? [['Authorization-Token' => []], ['basicAuth' => []]] : [],
+                'security'    => $routeAttr->auth ? self::AUTH_SECURITY : [],
             ];
 
             if (!empty($routeAttr->parameters)) {

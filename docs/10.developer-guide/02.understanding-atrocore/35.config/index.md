@@ -189,8 +189,8 @@ Every key a module contributes automatically becomes read-only.
 | Parameter                      | Type      | Description                                                                                                                                                      |
 |:-------------------------------|:----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `passwordPepper`               | `string`  | A unique secret key mixed into every user password hash. Without it, no user can log in, so keep it in every backup of the configuration file.                   |
-| `authTokenLifetime`            | `integer` | Defines the total lifetime of an authentication token in seconds. A value of `0` means the token never expires.                                                  |
-| `authTokenMaxIdleTime`         | `integer` | Defines the maximum duration in seconds that an authentication token can be inactive before it expires. A value of `0` means it never expires due to inactivity. |
+| `sessionLifetime`              | `float`   | The lifetime of a session of the user interface in hours, since signing in. A value of `0` means no limit.                                                       |
+| `sessionMaxIdleTime`           | `float`   | The time in hours a session of the user interface lasts since its last use. A value of `0` means no limit.                                                       |
 | `userNameRegularExpression`    | `string`  | A regular expression used to validate usernames during new user creation in the administration panel.                                                            |
 | `aclStrictMode`                | `boolean` | If `true`, access to a scope is forbidden unless explicitly granted in a role. If `false`, access is allowed unless explicitly denied.                           |
 | `noteDeleteThresholdPeriod`    | `string`  | A time-based duration (e.g., `-1 day`) after which an entity can no longer be deleted by its owner. This prevents short-term deletion of content.                |

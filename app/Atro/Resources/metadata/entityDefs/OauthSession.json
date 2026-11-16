@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "identifier": {
+      "type": "varchar",
+      "len": 100,
+      "unique": true
+    },
+    "user": {
+      "type": "link"
+    },
+    "accessToken": {
+      "type": "text"
+    },
+    "accessTokenExpiresAt": {
+      "type": "datetime"
+    },
+    "refreshToken": {
+      "type": "text"
+    },
+    "ipAddress": {
+      "type": "varchar",
+      "len": 45
+    },
+    "lastAccessAt": {
+      "type": "datetime"
+    },
+    "createdAt": {
+      "type": "datetime"
+    }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User",
+      "cascadeDelete": true
+    }
+  },
+  "indexes": {
+    "lastAccessAt": {
+      "columns": [
+        "lastAccessAt"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt"
+      ]
+    }
+  }
+}

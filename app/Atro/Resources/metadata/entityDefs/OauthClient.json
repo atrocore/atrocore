@@ -1,0 +1,235 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "isActive": {
+      "type": "bool",
+      "default": true
+    },
+    "isUiClient": {
+      "type": "bool",
+      "notStorable": true,
+      "protected": true,
+      "tooltip": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "isConfidential": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "clientCredentialsGrant": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isConfidential"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "authorizationCodeGrant": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "refreshTokenGrant": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "redirectUris": {
+      "type": "array",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "isConsentRequired": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "authorizationCodeGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "user": {
+      "type": "link",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isConfidential"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "clientCredentialsGrant"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isConfidential"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "clientCredentialsGrant"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "secretHash": {
+      "type": "varchar",
+      "len": 255,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
+}

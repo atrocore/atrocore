@@ -8,10 +8,11 @@ Action History provides a comprehensive audit trail of all user activities withi
 - **Action**: The type of action (GET, POST, etc.)
 - **Controller Name**: The system component or entity accessed
 - **IP Address**: The IP address from which the action was performed
+- **OAuth Client**: The [OAuth client](../06.oauth-clients/index.md) that sent the request, e.g. *AtroCore UI* for the user interface or the client of an integration
 - **Date**: The date and time when the action occurred
 - **Data**: Additional action-specific data (if available)
 
-Access Action History via `Administration > Access Management > Action History`.
+Access Action History via `Administration > Audit > Action History`.
 
 The Action History list displays all recorded actions:
 

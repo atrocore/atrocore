@@ -48,9 +48,8 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             $historyRecord->set('controllerName', $entityName);
             $historyRecord->set('action', $method);
             $historyRecord->set('userId', $user->id);
-            $historyRecord->set('authTokenId', $user->get('authTokenId'));
+            $historyRecord->set('oauthClientId', $request->getAttribute('oauth_client_id'));
             $historyRecord->set('ipAddress', $user->get('ipAddress'));
-            $historyRecord->set('authLogRecordId', $user->get('authLogRecordId'));
 
             $id = (string) $request->getAttribute('id');
             if ($id !== '') {

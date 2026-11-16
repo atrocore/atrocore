@@ -43,7 +43,8 @@
     "symfony/html-sanitizer": "^6.4.13@stable",
     "twig/twig": "^3.4@stable",
     "laminas/laminas-servicemanager": "^4.5@stable",
-    "symfony/expression-language": "^8.1@stable"
+    "symfony/expression-language": "^8.1@stable",
+    "league/oauth2-server": "^9.4@stable"
   },
   "conflict": {
     "atrocore/pim": "<1.15.8",
