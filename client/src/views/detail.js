@@ -759,6 +759,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                     field: 'id',
                                     value: selectObj.map(item => item.id)
                                 }];
+                            } else if (isMassRelate) {
+                                postData.massRelate = true;
+                                postData.where = selectObj.where;
                             } else {
                                 postData.ids = [selectObj.id];
                             }
