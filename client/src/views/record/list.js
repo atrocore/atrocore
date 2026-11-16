@@ -282,8 +282,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 const dragDropDisabled = this.getMetadata().get(['clientDefs', mainScope, 'relationshipPanels', this.relationName, 'dragDropDisabled']);
                 if (sortField && !dragDropDisabled && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {
                     this.dragableListRows = true;
-                    // the records of the relation are returned in their order when no other order is requested
-                    this.dragableSortBy = null;
+                    // the sort field of a many-to-many relation is a field of the relation entity
+                    const relationName = this.getMetadata().get(['entityDefs', mainScope, 'links', this.relationName, 'relationName']);
+                    this.dragableSortBy = relationName
+                        ? relationName.replace(/(?!^)[A-Z]/g, '_$&').toLowerCase() + '_mm.' + sortField
+                        : sortField;
                     this.sortOrderRequest = {
                         url: 'entityRelationSortOrder',
                         data: {entityName: mainScope, id: params.get('id'), link: this.relationName}
