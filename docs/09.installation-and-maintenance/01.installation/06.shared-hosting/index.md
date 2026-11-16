@@ -64,9 +64,9 @@ The installation itself follows the [main installation guide](../../01.installat
 
 * All commands are executed **without `sudo`**, under your hosting account user (via SSH).
 * Skip the `chown` step — the files already belong to your account user.
-* Upload the project files into your web directory via git, SSH or SFTP, then run over SSH:
+* Upload the project files into your web directory via git, SSH or SFTP, then run the installer over SSH (for its options, see [Run the installer](../../01.installation#5-run-the-installer)):
   ```
-  php atrocore-installer.phar self-update && php atrocore-installer.phar update
+  php atrocore-installer.phar self-update && php atrocore-installer.phar install-atrocore
   ```
 * Set the permissions to directories `755` and files `644`:
   ```
