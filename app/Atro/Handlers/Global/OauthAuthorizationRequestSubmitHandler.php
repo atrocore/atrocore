@@ -78,6 +78,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'The authorization request is invalid or the credentials are wrong.',
         ],
     ],
+    hidden: true,
     skipActionHistory: true,
     rateLimit: [
         'limit'         => 10,

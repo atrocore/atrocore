@@ -71,6 +71,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'The credentials are wrong or signing in to the user interface is turned off.',
         ],
     ],
+    hidden: true,
     skipActionHistory: true,
     rateLimit: [
         'limit'         => 10,

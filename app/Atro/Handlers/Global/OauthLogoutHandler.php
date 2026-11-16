@@ -43,6 +43,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    hidden: true,
     skipActionHistory: true,
 )]
 class OauthLogoutHandler extends AbstractHandler

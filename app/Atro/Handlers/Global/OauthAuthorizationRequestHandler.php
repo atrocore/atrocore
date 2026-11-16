@@ -58,6 +58,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'The authorization request is invalid.',
         ],
     ],
+    hidden: true,
     skipActionHistory: true,
 )]
 class OauthAuthorizationRequestHandler extends AbstractHandler
