@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Variable;
 
-use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -89,10 +87,6 @@ class CreateVariableHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
         $data = $this->getRequestBody($request);
 
         /** @var \Atro\Services\Variable $service */

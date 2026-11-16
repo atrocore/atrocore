@@ -64,6 +64,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class ListVariableHandler extends AbstractHandler
