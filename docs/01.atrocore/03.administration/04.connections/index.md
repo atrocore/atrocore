@@ -13,7 +13,7 @@ The system provides a "Test Connection" feature to verify that your connection c
 When creating a connection, you need to configure the following required fields:
 
 - **Name**: A unique identifier for your connection
-- **Type**: The connection type - set to "AtroCore" for this connection type
+- **Type**: The connection type
 
 Other fields depends on the connection type.
 
@@ -155,14 +155,16 @@ Token-based API authentication that obtains a session token by POSTing credentia
 
 #### OAuth 2.0
 
-Modern OAuth 2.0 authentication protocol for secure API access and user authorization. This connection type supports various OAuth flows including authorization code, client credentials, and implicit grant types.
+Connection to an API protected by OAuth 2.0 with the client credentials grant: AtroCore requests the access token from the token endpoint and sends it in the `Authorization: Bearer` header. The token request is sent form-encoded, as RFC 6749 requires.
 
 ![oauth-2-0](./_assets/oauth-2-0.png)
 
-- **OAuth URL** (required): The OAuth provider's authorization server URL
+- **OAuth URL** (required): The token endpoint of the authorization server
 - **OAuth Grant Type** (required): The OAuth grant type to use (Client Credentials)
 - **OAuth Client ID** (required): The OAuth client identifier provided by the service
 - **OAuth Client Secret** (required): The OAuth client secret provided by the service
+
+To connect another AtroCore instance, create an [OAuth client](../14.access-management/06.oauth-clients/index.md) with the **Client Credentials** grant on that instance, generate its secret and enter `https://TARGET_INSTANCE_URL/api/oauth/token` as **OAuth URL** together with the client ID and the secret.
 
 #### OAuth 1.0
 
@@ -255,13 +257,11 @@ Integration with Scope Visio business intelligence and analytics platform for da
 
 ### AtroCore Integration
 
-#### AtroCore
+#### AtroCore 2.x
 
-Native AtroCore connection type for internal system integration, data synchronization, etc. between different AtroCore instances.
+Connection to an AtroCore instance of a version before 3.0, authenticated by its API token. An instance of AtroCore 3.0 or later does not accept API tokens: connect it by the [OAuth 2.0](#oauth-20) connection type.
 
 ![AtroCore](./_assets/atrocore.png){.large}
 
 - **URL** (required): The URL of the target AtroCore instance you want to connect to
-- **Authorization Token** (required): The authentication token used to authorize the connection to the target AtroCore instance
-<!-- TODO: which module enables 'Use for instance comparison'? -->
-- **Use for instance comparison**: A checkbox option that enables this connection to be used for comparing data between different AtroCore instances. Only one instance can be used for comparison.
+- **Authorization Token** (required): The API token of the target AtroCore instance

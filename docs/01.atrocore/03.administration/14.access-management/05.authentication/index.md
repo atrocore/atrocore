@@ -2,16 +2,24 @@
 title: Authentication
 --- 
 
-The Authentication page allows you to configure security settings related to user authentication tokens, session management, password reset, rate limiting and access to the REST API documentation.
-To set them go to `Administration / Authentication`.
+The Authentication page allows you to configure the sessions of the user interface, the password reset, the rate limiting and the access to the REST API documentation.
+To set them go to `Administration / Authentication / Settings`. The applications that call the REST API are registered in `Administration / Authentication / OAuth Clients`, see [OAuth Clients](../06.oauth-clients/index.md).
 
 ![authentication](./_assets/authentication.png){.medium}
 
-- **Only one auth token per user**: when enabled, users won't be able to be logged in on multiple devices simultaneously.
-- **Auth Token Lifetime (hours)**: defines the lifetime period for authentication tokens. Set to 0 (no expiration) by default.
-- **Auth Token Max Idle Time (hours)**: defines how long since the last access tokens can exist. Set to 120 hours (5 days) by default.
+## Sessions
 
-For LDAP authentication, see [LDAP authentication](https://store.atrocore.com/en/ldap/20164).
+A user who logs in to the user interface gets a session. The server keeps its OAuth tokens and renews them, the browser has only a session cookie (see [Session Cookie](../../../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie)).
+
+- **Only one session per user**: logging in ends the other sessions of the user, so a user cannot be logged in on several devices at the same time.
+- **Session Lifetime (hours)**: how long a session lasts since the login. Set to 0 (no limit) by default.
+- **Session Max Idle Time (hours)**: how long a session lasts since its last use. Set to 120 hours (5 days) by default.
+
+The settings apply to the user interface only. The access tokens of the OAuth clients have their own lifetimes, see [REST API Authentication](../../../../10.developer-guide/10.rest-api/index.md#authentication).
+
+Deactivating a user ends all sessions of the user and revokes the OAuth tokens issued for the user.
+
+For LDAP authentication, see [LDAP authentication](https://store.atrocore.com/en/ldap/20164). For single sign-on, see [Single Sign-On](https://store.atrocore.com/en/microsoft-entra-id-sso/20107).
 
 ## Password Reset
 

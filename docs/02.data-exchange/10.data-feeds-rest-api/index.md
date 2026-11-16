@@ -12,16 +12,10 @@ title: Import/Export Feeds REST API
 
 > **Note:** All endpoint paths are case-sensitive. Use entity and action names exactly as shown (e.g. `ExportFeed`, `ImportFeed`, `exportData`, `runImport`).
 
-All requests require an `Authorization-Token` header. To obtain a token, send a `GET` request to `/api/App/user` with HTTP Basic authentication:
+All requests require an OAuth access token in the `Authorization` header. Register the integration as an OAuth client with the **Client Credentials** grant and request the token from `POST /api/oauth/token`, see [Authentication](../../10.developer-guide/10.rest-api/index.md#authentication):
 
 ```http
-Authorization: Basic <base64(username:password)>
-```
-
-The response contains `authorizationToken`. Include this value as a header in all subsequent requests:
-
-```http
-Authorization-Token: <authorizationToken>
+Authorization: Bearer <access_token>
 ```
 
 ## Export Feed REST API
@@ -34,7 +28,7 @@ Retrieves paginated export data from a configured Export Feed by its code. Use t
 
 ```http
 GET /api/ExportFeed/exportData?code=<ExportFeedCode>&offset=<offset>
-Authorization-Token: <authorizationToken>
+Authorization: Bearer <access_token>
 ```
 
 **Query parameters:**
@@ -64,7 +58,7 @@ Schedules an asynchronous export job based on an existing Export Feed configurat
 
 ```http
 POST /api/ExportFeed/<ExportFeedId>/exportFile
-Authorization-Token: <authorizationToken>
+Authorization: Bearer <access_token>
 ```
 
 - `ExportFeedId` – ID of the Export Feed record
@@ -77,7 +71,7 @@ Generates an export file directly for selected records and fields, without requi
 
 ```http
 POST /api/ExportFeed/directExportFile
-Authorization-Token: <authorizationToken>
+Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
 
@@ -116,7 +110,7 @@ Checks that the Export Feed identified by its code is correctly configured and c
 
 ```http
 GET /api/ExportFeed/verifyFeedByCode?code=<ExportFeedCode>
-Authorization-Token: <authorizationToken>
+Authorization: Bearer <access_token>
 ```
 
 **Query parameters:**
@@ -135,7 +129,7 @@ Schedules an asynchronous import job based on an existing Import Feed configurat
 
 ```http
 POST /api/ImportFeed/action/runImport
-Authorization-Token: <authorizationToken>
+Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
 

@@ -1,0 +1,45 @@
+---
+title: OAuth Clients
+---
+
+AtroCore is an OAuth 2.0 authorization server. Every application that calls the REST API – an integration, a web or mobile application, a tool like Postman – is registered as an OAuth client and receives access tokens for it. How applications request and use the tokens is described in [REST API Authentication](../../../../10.developer-guide/10.rest-api/index.md#authentication).
+
+To manage the clients go to `Administration / Authentication / OAuth Clients`. Administrators and users whose role grants access to the entity *OAuth Client* can manage them.
+
+<!-- To Do: add screenshot of the OAuth Client detail view -->
+
+## Fields
+
+- **Name**, **Description**: shown in the list of clients and, for **Consent Required**, to the user who allows the access.
+- **Active**: an inactive client gets no tokens. Deactivating a client revokes all tokens issued to it.
+- **Confidential**: the client authenticates with its client secret. Enable it for an integration or an application with a server; disable it for a browser or mobile application, which cannot keep a secret.
+- **Client Credentials**: the client obtains access tokens on its own behalf, without a user signing in. Requires **Confidential** and a **User**.
+- **User**: the user a client with **Client Credentials** acts as. Its tokens have the permissions of this user, so give the user a role with only the permissions the integration needs.
+- **Authorization Code**: the client obtains access tokens on behalf of a user who logs in on the AtroCore login form. PKCE with the `S256` method is required.
+- **Refresh Token**: together with the access token the client gets a refresh token and renews the access token without a new login. Available with **Authorization Code**.
+- **Redirect URIs**: the addresses AtroCore returns the user to after the login, required for **Authorization Code**. Each one is an absolute URI without a fragment; the `redirect_uri` of an authorization request has to match one of them exactly.
+- **Consent Required**: the user confirms that the application gets access to the account. Disable it only for the applications of your own organization.
+
+A client needs at least one grant: **Client Credentials** or **Authorization Code**.
+
+The **ID** of the client is its client ID.
+
+## Client Secret
+
+A confidential client needs a secret. Use the action **Generate Secret** in the list or on the detail view of the client and copy the secret: AtroCore stores only its hash and shows the secret only once. Generating a new secret makes the previous one invalid and revokes all tokens issued to the client.
+
+## Deleting a Client
+
+Deleting a client revokes all tokens issued to it: the application loses access immediately.
+
+## AtroCore UI Client
+
+The AtroCore user interface logs in by the OAuth client **AtroCore UI**, marked with **UI Client**. It is created on the installation. The server acts as this client: it requests and keeps the tokens, the browser has only a session cookie (see [Session Cookie](../../../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie)).
+
+Only the name, the description and **Active** of this client can be changed, and it cannot be deleted. Deactivating it turns off the login to the user interface for all users. To turn it on again, run:
+
+```
+php console.php restore ui client
+```
+
+The command also recreates the client if it is missing.

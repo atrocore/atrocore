@@ -20,11 +20,11 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Ramsey\Uuid\Uuid;
 
-class V3Dot0Dot8 extends Base
+class V3Dot0Dot9 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-11-12 20:00:00');
+        return new \DateTime('2026-11-16 20:00:00');
     }
 
     /**

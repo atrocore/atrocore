@@ -25,11 +25,11 @@
   "tooltips": {
     "isConfidential": "A confidential client authenticates with its client secret. A public client, such as a browser or mobile application, cannot keep a secret.",
     "clientCredentialsGrant": "The client obtains an access token on its own behalf with its client ID and secret, without a user. It acts as the selected user.",
-    "authorizationCodeGrant": "The client obtains an access token on behalf of a user who signs in on the AtroCore sign-in page (with PKCE).",
+    "authorizationCodeGrant": "The client obtains an access token on behalf of a user who logs in on the AtroCore login form (with PKCE).",
     "refreshTokenGrant": "Together with the access token the client gets a refresh token, which it exchanges for a new access token without signing the user in again.",
     "user": "The user the client acts as when it obtains an access token with its own credentials (client credentials grant).",
     "redirectUris": "The addresses the user is returned to after signing in. The redirect_uri of an authorization request must match one of them exactly.",
-    "isConsentRequired": "The user confirms on the sign-in page that the application gets access to the account. Turn it off only for the applications of your own organization, such as the AtroCore user interface.",
+    "isConsentRequired": "The user confirms on the AtroCore login form that the application gets access to the account. Turn it off only for the applications of your own organization, such as the AtroCore user interface.",
     "isUiClient": "The AtroCore user interface signs in by this client. It is set on the installation; the console command \"restore ui client\" restores it."
   },
   "exceptions": {

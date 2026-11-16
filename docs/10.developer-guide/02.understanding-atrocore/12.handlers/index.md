@@ -50,9 +50,11 @@ All AtroCore handlers implement `MiddlewareInterface` (method `process`).
 > These rules apply equally to custom module handlers and core handlers. A handler that violates PSR-15 is considered a defect, not a style issue.
 
 ```
+CorsMiddleware                  ← answers the CORS requests of the browser applications of the public OAuth clients
 ErrorHandlerMiddleware          ← catches all unexpected exceptions
 RouteMiddleware                 ← matches the request path via FastRoute
-AuthMiddleware                  ← validates the Authorization-Token or the auth cookie
+RateLimitMiddleware             ← applies the rate limit of the route
+AuthMiddleware                  ← validates the OAuth access token (Authorization: Bearer) or the session cookie of the UI
 ActionHistoryMiddleware         ← logs the action to ActionHistoryRecord
 ApiValidationMiddleware         ← validates request input and response output
 [module middlewares]            ← optional, registered via Module.php
@@ -211,7 +213,7 @@ This rule applies to **all** arrays inside `#[Route]` without exception: `method
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `auth` | `bool` | `true` | Whether the endpoint requires authentication. Set to `false` only for explicitly public endpoints. |
+| `auth` | `bool` | `true` | Whether the endpoint requires authentication. Set to `false` only for explicitly public endpoints: a request without a token then acts as the system user, a request with a token as its user. |
 | `parameters` | `array` | `[]` | OpenAPI-format query/path/header parameters. |
 | `requestBody` | `array` | `[]` | OpenAPI-format request body definition. Use `['schema' => ['x-entity-post' => true]]` or `['schema' => ['x-entity-patch' => true]]` as the schema sentinel to automatically substitute the entity's Post/Patch schema (see [Read, Post and Patch Schemas](#read-post-and-patch-schemas)). |
 | `hidden` | `bool` | `false` | Excludes the endpoint from the generated OpenAPI documentation (`/apidocs/`). The route is still registered and fully functional — it just does not appear in Swagger UI. Use this for internal endpoints that are only called by the AtroCore UI and are not part of the public API contract. |

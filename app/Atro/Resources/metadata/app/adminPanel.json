@@ -202,7 +202,8 @@
         "scope": "OauthClient",
         "label": "OAuth Clients",
         "description": "oauthClients",
-        "icon": "ph ph-plugs-connected"
+        "icon": "ph ph-plugs-connected",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/oauth-clients"
       }
     ],
     "order": 9
