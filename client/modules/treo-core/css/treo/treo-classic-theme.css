@@ -13839,6 +13839,10 @@ ul.dropdown-menu > li.checkbox {
     background-color: #f6fafd;
 }
 
+.table > tbody > tr.active-dropdown {
+    z-index: 2;
+}
+
 .table > tbody > tr.active-dropdown > td[data-name=buttons] {
     z-index: 2001;
 }
