@@ -120,7 +120,7 @@ The installation is done from the command line in the project directory:
 sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar install-atrocore
 ```
 
-The installer installs the system files, checks the PHP of the command line and of the web server, prepares the database, creates the administrator and fills the system with its default data. A skeleton with demo data also gets its demo data loaded. It asks for the database access, the URL of the site, the administrator and the initial settings. When the installation is done, it shows the URL of the site (if given), the username and the password of the administrator. If no administrator password is given, a strong one is generated.
+The installer installs the system files, checks the PHP of the command line and of the web server, prepares the database, creates the administrator and fills the system with its default data. A skeleton with demo data also gets its demo data loaded. It asks for the database access, the URL of the site, the administrator and the initial settings. When the installation is done, it shows the URL, the username and the password of the administrator. If no administrator password is given, a strong one is generated.
 
 The installation can also be done by one command, without any question. Every parameter is given as an option or as an environment variable:
 ```
@@ -137,10 +137,10 @@ sudo php atrocore-installer.phar install-atrocore --no-interaction \
 | `--db-name` | `ATRO_DB_NAME` | required |
 | `--db-user` | `ATRO_DB_USER` | required |
 | `--db-password` | `ATRO_DB_PASSWORD` | required |
-| `--site-url` | `ATRO_SITE_URL` | empty — the web server is not checked |
+| `--site-url` | `ATRO_SITE_URL` | required |
 | `--admin-username` | `ATRO_ADMIN_USERNAME` | `admin` |
 | `--admin-password` | `ATRO_ADMIN_PASSWORD` | generated |
-| `--language` | `ATRO_LANGUAGE` | `en_US` |
+| `--language` | `ATRO_LANGUAGE` | `en_US` — one of the languages the interface is translated to, the installer lists them |
 | `--timezone` | `ATRO_TIMEZONE` | `UTC` |
 | `--reporting` | `ATRO_REPORTING` | `no` — send anonymous error reports to AtroCore |
 | `--clear-database` | `ATRO_CLEAR_DATABASE=yes` | not set — delete everything from a database that is not empty, without asking |
@@ -149,9 +149,9 @@ Pass the passwords as environment variables rather than as options: an option is
 
 With `--json` the result is printed to the standard output as JSON (`status`, `siteUrl`, `admin.username`, `admin.password`, `webUser`, `warnings`), everything else goes to the standard error output.
 
-The installation runs only while the system is not installed (`isInstalled` in `data/config.php` is not `true`). If the database is not empty, for example after a failed installation, the installer asks whether to delete everything from it: its tables, views and sequences. They are deleted only if they belong to the database user of the installation. Without `--clear-database` the installer never clears the database in the non-interactive mode.
+The installation runs only while the system is not installed (`isInstalled` in `data/config.php` is not `true`). If the database is not empty, for example after a failed installation, the installer asks whether to delete everything from it: its tables, views and sequences. They are deleted only if they belong to the database user of the installation. Without `--clear-database` the installer never clears the database in the non-interactive mode. The reference data in `data/reference-data` is restored as it was before the first attempt, so an installation can be repeated after a failure.
 
-The installer checks the web server via the URL of the site: its PHP, by requesting a temporary script in `public/`, and the URL rewriting, by requesting a path under `/api/` that has to reach `index.php`. If the site is not reachable from the server yet, skip the check with `--skip-web-check` or give no URL of the site.
+Before the database is touched, the installer checks that the URL of the site is reachable from the server and leads to this project. Then it checks the web server via this URL: its PHP, by requesting a temporary script in `public/`, and the URL rewriting, by requesting a path under `/api/` that has to reach `index.php`. These two checks can be skipped with `--skip-web-check`, the URL of the site is checked anyway.
 
 The exit code of the installer tells what happened:
 
@@ -163,7 +163,7 @@ The exit code of the installer tells what happened:
 | 3 | The PHP of the command line or of the web server does not meet the requirements. |
 | 4 | The database cannot be connected to, created or cleared, or the user cannot create tables in it. |
 | 5 | The system is already installed, or the database is not empty and clearing it was not allowed. The database is not touched. |
-| 6 | The web server cannot be checked via the URL of the site, or the URL rewriting is not configured. |
+| 6 | The URL of the site is not reachable or does not lead to this project, the web server cannot be checked via it, or the URL rewriting is not configured. |
 
 ### 6. Change recursively the user and group ownership for your project files
 
