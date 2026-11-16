@@ -31,6 +31,16 @@ abstract class AbstractMatchingRule extends AbstractRuleType
         return true;
     }
 
+    public function getComparedFields(): array
+    {
+        return empty($this->settings->get('field')) ? [] : [$this->settings->get('field')];
+    }
+
+    public function getComparedAttributes(): array
+    {
+        return empty($this->settings->get('attributeId')) ? [] : [$this->settings->get('attributeId')];
+    }
+
     public function setRule(MatchingRuleEntity $rule): void
     {
         $this->rule = $rule;

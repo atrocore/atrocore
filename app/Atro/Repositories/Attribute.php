@@ -509,6 +509,22 @@ class Attribute extends Base
         return !empty($res);
     }
 
+    public function getAttributeValues(string $entityName, string $entityId): array
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $rows = $this->getDbal()->createQueryBuilder()
+            ->select('av.*, a.type AS attribute_type')
+            ->from("{$name}_attribute_value", 'av')
+            ->innerJoin('av', 'attribute', 'a', 'a.id = av.attribute_id AND a.deleted = :false')
+            ->where("av.{$name}_id = :entityId")
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($rows, null, 'attribute_id');
+    }
+
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
         $attribute = $this->get($attributeId);

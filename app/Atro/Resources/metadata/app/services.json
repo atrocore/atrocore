@@ -49,6 +49,8 @@
   "MatchingRuleTypeFieldContains": "\\Atro\\Services\\MatchingRuleSubtype",
   "MatchingRuleTypeSet": "\\Atro\\Services\\MatchingRuleSubtype",
   "MatchingRuleTypeExpression": "\\Atro\\Services\\MatchingRuleSubtype",
+  "MatchingRuleTypeFieldsSimilar": "\\Atro\\Services\\MatchingRuleSubtype",
+  "MatchingRuleTypeAttributesSimilar": "\\Atro\\Services\\MatchingRuleSubtype",
   "BlockingRuleTypeFieldEqual": "\\Atro\\Services\\BlockingRuleSubtype",
   "BlockingRuleTypeFieldSimilar": "\\Atro\\Services\\BlockingRuleSubtype",
   "BlockingRuleTypeFieldContains": "\\Atro\\Services\\BlockingRuleSubtype",

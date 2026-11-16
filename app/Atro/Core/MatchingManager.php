@@ -62,11 +62,23 @@ class MatchingManager
         return $ruleType;
     }
 
-    public function collectAllMatchingFields(?iterable $matchingRules, array &$fields, string $entityName): void
+    public function collectAllMatchingFields(?iterable $matchingRules, array &$fields, string $entityName, array &$attributeIds = []): void
     {
         foreach ($matchingRules ?? [] as $rule) {
-            $field = ($rule->getSubtype() ?? $rule)->get('field');
-            if (!empty($field)) {
+            if ($rule instanceof MatchingRule) {
+                $ruleFields = $rule->getComparedFields();
+                $ruleAttributeIds = $rule->getComparedAttributes();
+            } else {
+                $settings = $rule->getSubtype() ?? $rule;
+                $ruleFields = [$settings->get('field')];
+                $ruleAttributeIds = empty($settings->get('attributeId')) ? [] : [$settings->get('attributeId')];
+            }
+
+            foreach ($ruleFields as $field) {
+                if (empty($field)) {
+                    continue;
+                }
+
                 $fieldType = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$field}.type");
 
                 if ($fieldType === 'link') {
@@ -79,7 +91,10 @@ class MatchingManager
                     $fields[] = $field;
                 }
             }
-            $this->collectAllMatchingFields($rule->getNestedRules(), $fields, $entityName);
+
+            $attributeIds = array_values(array_unique(array_merge($attributeIds, $ruleAttributeIds)));
+
+            $this->collectAllMatchingFields($rule->getNestedRules(), $fields, $entityName, $attributeIds);
         }
     }
 
@@ -98,25 +113,32 @@ class MatchingManager
                 continue;
             }
 
-            if ($matching->get('masterEntity') === $entity->getEntityName()) {
-                $fields = [];
-                $this->collectAllMatchingFields($matching->get('blockingRules'), $fields, $matching->get('masterEntity'));
-                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $matching->get('masterEntity'));
-                foreach ($fields as $field) {
-                    if ($entity->isAttributeChanged($field)) {
-                        $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
-                        break;
-                    }
+            if (!in_array($entity->getEntityName(), [$matching->get('masterEntity'), $matching->get('entity')])) {
+                continue;
+            }
+
+            $isMaster = $matching->get('masterEntity') === $entity->getEntityName();
+            $entityName = $isMaster ? $matching->get('masterEntity') : $matching->get('entity');
+
+            $fields = [];
+            $attributeIds = [];
+            $this->collectAllMatchingFields($matching->get('blockingRules'), $fields, $entityName, $attributeIds);
+            $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $entityName, $attributeIds);
+
+            foreach ($entity->getFields() as $field => $defs) {
+                if (!empty($defs['attributeId']) && in_array($defs['attributeId'], $attributeIds)) {
+                    $fields[] = $field;
                 }
-            } elseif ($matching->get('entity') === $entity->getEntityName()) {
-                $fields = [];
-                $this->collectAllMatchingFields($matching->get('blockingRules'), $fields, $matching->get('entity'));
-                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $matching->get('entity'));
-                foreach ($fields as $field) {
-                    if ($entity->isAttributeChanged($field)) {
+            }
+
+            foreach ($fields as $field) {
+                if ($entity->isAttributeChanged($field)) {
+                    if ($isMaster) {
+                        $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+                    } else {
                         $this->getMatchingRepository()->unmarkMatchingSearchedForEntity($matching, $entity);
-                        break;
                     }
+                    break;
                 }
             }
         }

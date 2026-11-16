@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "number"
+        },
+        false
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "ignoreUnavailableAttributes"
+        }
+      ],
+      [
+        {
+          "name": "weight"
+        },
+        {
+          "name": "matching"
+        }
+      ]
+    ]
+  }
+]

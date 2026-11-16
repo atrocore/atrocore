@@ -35,7 +35,7 @@ class FieldSimilar extends AbstractMatchingRule
             $attributeId = $this->settings->get('attributeId');
             $entityName  = $stageEntity->getEntityName();
             $stageValue  = $this->loadAttributeRawValue($entityName, $stageEntity->id, $attributeId);
-            $masterValue = $this->loadAttributeRawValue($entityName, $masterEntityData['id'], $attributeId);
+            $masterValue = $this->loadAttributeRawValue($this->rule->getMatching()?->get('masterEntity') ?? $entityName, $masterEntityData['id'], $attributeId);
 
             if ($stageValue === false || $masterValue === false) {
                 return 0.0;
