@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\OAuth\Repositories\ClientRepository;
 use Atro\Core\OAuth\TokenRevoker;
 use Atro\Core\OAuth\UiClient;
 use Atro\Core\Templates\Repositories\Base;
@@ -51,7 +52,8 @@ class OauthClient extends Base
             throw new BadRequest($this->getInjection('language')->translate('userRequiredForClientCredentials', 'exceptions', 'OauthClient'));
         }
 
-        if (!empty($entity->get('authorizationCodeGrant'))) {
+        // the redirect URI of the client of the user interface is the site URL
+        if (!empty($entity->get('authorizationCodeGrant')) && !$this->isUiClient($entity)) {
             $this->validateRedirectUris((array)$entity->get('redirectUris'));
         }
 
@@ -87,7 +89,7 @@ class OauthClient extends Base
     }
 
     /**
-     * A redirect URI is absolute and has no fragment (RFC 6749, section 3.1.2).
+     * See ClientRepository::isAllowedRedirectUri() for the allowed redirect URIs.
      */
     protected function validateRedirectUris(array $redirectUris): void
     {
@@ -98,8 +100,7 @@ class OauthClient extends Base
         }
 
         foreach ($redirectUris as $redirectUri) {
-            $parts = parse_url((string)$redirectUri);
-            if ($parts === false || empty($parts['scheme']) || isset($parts['fragment'])) {
+            if (!ClientRepository::isAllowedRedirectUri((string)$redirectUri)) {
                 throw new BadRequest(sprintf($language->translate('invalidRedirectUri', 'exceptions', 'OauthClient'), $redirectUri));
             }
         }

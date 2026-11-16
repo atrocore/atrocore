@@ -34,6 +34,26 @@ class ClientRepository implements ClientRepositoryInterface
     ) {
     }
 
+    /**
+     * A redirect URI returns the user agent to the client: an http or https URI, or a private-use URI scheme in
+     * reverse domain notation of a native application (RFC 8252, section 7.1). Other schemes, such as "javascript:"
+     * or "data:", would run in the context of AtroCore. A fragment is not allowed (RFC 6749, section 3.1.2).
+     */
+    public static function isAllowedRedirectUri(string $redirectUri): bool
+    {
+        $parts = parse_url($redirectUri);
+        if ($parts === false || empty($parts['scheme']) || isset($parts['fragment'])) {
+            return false;
+        }
+
+        $scheme = strtolower($parts['scheme']);
+        if ($scheme === 'http' || $scheme === 'https') {
+            return !empty($parts['host']);
+        }
+
+        return str_contains($scheme, '.') && preg_match('/^[a-z][a-z0-9+.-]*$/', $scheme) === 1;
+    }
+
     public function getClientEntity(string $clientIdentifier): ?ClientEntityInterface
     {
         $row = $this->fetchActiveClient($clientIdentifier);
@@ -148,7 +168,8 @@ class ClientRepository implements ClientRepositoryInterface
             return [rtrim($this->config->getSiteUrl(), '/') . UiClient::REDIRECT_PATH];
         }
 
-        return $this->decodeList($row['redirect_uris']);
+        // a redirect URI saved before the rules applied is not used
+        return array_values(array_filter($this->decodeList($row['redirect_uris']), [self::class, 'isAllowedRedirectUri']));
     }
 
     private function decodeList(?string $value): array

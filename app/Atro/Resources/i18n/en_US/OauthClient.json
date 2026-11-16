@@ -36,7 +36,7 @@
     "userRequiredForClientCredentials": "A client with the client credentials grant needs a user to act as.",
     "grantRequired": "Select at least one way to obtain an access token: client credentials or authorization code.",
     "redirectUrisRequired": "A client with the authorization code grant needs at least one redirect URI.",
-    "invalidRedirectUri": "\"%s\" is not a valid redirect URI: an absolute URI without a fragment is expected.",
+    "invalidRedirectUri": "\"%s\" is not a valid redirect URI: an http or https URI, or a custom scheme of a native application in reverse domain notation (e.g. com.example.app:/callback), without a fragment is expected.",
     "uiClientProtected": "The AtroCore user interface signs in by this client: only its name, description and activity can be changed.",
     "uiClientNotRemovable": "The AtroCore user interface signs in by this client, it cannot be deleted. Deactivate it to turn off signing in to the user interface."
   },

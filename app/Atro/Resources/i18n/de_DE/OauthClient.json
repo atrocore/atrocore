@@ -36,7 +36,7 @@
     "userRequiredForClientCredentials": "Ein Client mit dem Client Credentials Grant benötigt einen Benutzer, in dessen Namen er handelt.",
     "grantRequired": "Wählen Sie mindestens einen Weg, ein Access Token zu erhalten: Client Credentials oder Authorization Code.",
     "redirectUrisRequired": "Ein Client mit dem Authorization Code Grant benötigt mindestens eine Redirect-URI.",
-    "invalidRedirectUri": "\"%s\" ist keine gültige Redirect-URI: erwartet wird eine absolute URI ohne Fragment.",
+    "invalidRedirectUri": "\"%s\" ist keine gültige Redirect-URI: erwartet wird eine http- oder https-URI oder ein eigenes Schema einer nativen Anwendung in umgekehrter Domain-Notation (z. B. com.example.app:/callback), ohne Fragment.",
     "uiClientProtected": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an: nur Name, Beschreibung und Aktivität können geändert werden.",
     "uiClientNotRemovable": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an, er kann nicht gelöscht werden. Deaktivieren Sie ihn, um die Anmeldung an der Benutzeroberfläche abzuschalten."
   },
