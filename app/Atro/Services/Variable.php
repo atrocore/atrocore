@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
 
@@ -59,6 +60,8 @@ class Variable extends Base
 
     public function findEntities(array $params): array
     {
+        $this->checkAdmin();
+
         $variables = [];
         foreach (self::loadAll() as $key => $value) {
             $variables[] = $this->prepareRow($key, $value) + [
@@ -79,6 +82,8 @@ class Variable extends Base
 
     public function createEntity(\stdClass $attachment): array
     {
+        $this->checkAdmin();
+
         $key = $attachment->key;
 
         if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $key)) {
@@ -110,6 +115,8 @@ class Variable extends Base
 
     public function updateEntity(string $id, \stdClass $data): array
     {
+        $this->checkAdmin();
+
         $variables = self::loadAll();
 
         if (!array_key_exists($id, $variables)) {
@@ -126,6 +133,8 @@ class Variable extends Base
 
     public function readEntity(string $id): array
     {
+        $this->checkAdmin();
+
         $variables = self::loadAll();
 
         if (!array_key_exists($id, $variables)) {
@@ -137,6 +146,8 @@ class Variable extends Base
 
     public function deleteEntity(string $id): bool
     {
+        $this->checkAdmin();
+
         $variables = self::loadAll();
 
         if (!array_key_exists($id, $variables)) {
@@ -147,6 +158,13 @@ class Variable extends Base
         $this->saveAll($variables);
 
         return true;
+    }
+
+    protected function checkAdmin(): void
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 
     private function prepareRow(string $key, $value): array
