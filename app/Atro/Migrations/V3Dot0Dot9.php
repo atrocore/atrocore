@@ -53,6 +53,19 @@ class V3Dot0Dot9 extends Base
         $this->createUiClient();
         $this->renameSessionSettings();
         $this->renameUserType();
+        $this->copyApiDocsPage();
+    }
+
+    /**
+     * The page of the REST API documentation searches the operations by path, method, summary and description.
+     */
+    protected function copyApiDocsPage(): void
+    {
+        if (!is_dir('public/apidocs')) {
+            mkdir('public/apidocs', 0755, true);
+        }
+
+        copy('vendor/atrocore/core/copy/public/apidocs/index.html', 'public/apidocs/index.html');
     }
 
     /**

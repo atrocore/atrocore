@@ -11,13 +11,66 @@
 <div id="swagger-ui"></div>
 <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
 <script>
+    /**
+     * The filter of the operations: a tag that matches shows all its operations, otherwise an operation is shown when
+     * its path, method, summary, operation ID or description matches.
+     */
+    function containsPhrase(value, phrase) {
+        return typeof value === 'string' && value.toLowerCase().includes(phrase);
+    }
+
+    function operationMatches(operation, phrase) {
+        return [
+            operation.get('path'),
+            operation.get('method'),
+            operation.getIn(['operation', 'summary']),
+            operation.getIn(['operation', 'operationId']),
+            operation.getIn(['operation', 'description'])
+        ].some(function (value) {
+            return containsPhrase(value, phrase);
+        });
+    }
+
+    function filterOperations(taggedOperations, phrase) {
+        phrase = (phrase || '').trim().toLowerCase();
+        if (phrase === '') {
+            return taggedOperations;
+        }
+
+        return taggedOperations
+            .map(function (tagObject, tag) {
+                if (containsPhrase(tag, phrase)) {
+                    return tagObject;
+                }
+
+                return tagObject.set('operations', tagObject.get('operations').filter(function (operation) {
+                    return operationMatches(operation, phrase);
+                }));
+            })
+            .filter(function (tagObject) {
+                return tagObject.get('operations').size > 0;
+            });
+    }
+
+    function OperationFilterPlugin() {
+        return {
+            fn: {
+                opsFilter: filterOperations
+            }
+        };
+    }
+
     window.onload = function () {
         SwaggerUIBundle({
             url: 'openapi.json',
             dom_id: '#swagger-ui',
             deepLinking: true,
+            filter: true,
             presets: [
                 SwaggerUIBundle.presets.apis,
+            ],
+            plugins: [
+                OperationFilterPlugin
             ],
             layout: "BaseLayout"
         })
