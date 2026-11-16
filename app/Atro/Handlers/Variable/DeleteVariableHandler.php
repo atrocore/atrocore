@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Variable;
 
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -63,10 +62,6 @@ class DeleteVariableHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
         $id = $request->getAttribute(RouteResult::class)?->getMatchedParams()['id'] ?? '';
 
         /** @var \Atro\Services\Variable $service */
