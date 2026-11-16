@@ -122,6 +122,13 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
+            // a new record that is created from a link with a filter gets the options that the filter allows as its
+            // original option list; the options that are disabled by conditions are taken off it as usual
+            const presetOptions = this.model.isNew() ? this.model.get('_presetOptions')?.[this.name] : null;
+            if (Array.isArray(presetOptions) && presetOptions.length && this.params.options) {
+                this.params.options = this.params.options.filter(option => presetOptions.includes(option));
+            }
+
             // prepare default
             if (this.mode === 'edit' && this.model.isNew() && this.params.default && this.params.options) {
                 let index = this.params.options.indexOf(this.params.default);

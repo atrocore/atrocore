@@ -82,6 +82,25 @@
         }
       }
     },
+    "blockingOperator": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "or",
+        "and"
+      ],
+      "default": "or",
+      "tooltip": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true
+    },
+    "blockingRules": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "customizable": false
+    },
     "matchingRules": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -116,6 +135,11 @@
     }
   },
   "links": {
+    "blockingRules": {
+      "type": "hasMany",
+      "foreign": "matching",
+      "entity": "BlockingRule"
+    },
     "matchingRules": {
       "type": "hasMany",
       "foreign": "matching",

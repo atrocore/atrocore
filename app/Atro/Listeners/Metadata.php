@@ -431,6 +431,19 @@ class Metadata extends AbstractMetadataListener
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'containsPersonalData';
             }
 
+            if (!in_array('erased', $data['clientDefs'][$scope]['boolFilterList'] ?? [])) {
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'erased';
+            }
+
+            $data['entityDefs'][$scope]['fields']['erasedAt'] = [
+                'type' => 'datetime',
+                'readOnly' => true,
+            ];
+
+            if (!in_array('erasePersonalData', $data['clientDefs'][$scope]['massActionList'] ?? [])) {
+                $data['clientDefs'][$scope]['massActionList'][] = 'erasePersonalData';
+            }
+
             $data['entityDefs'][$scope . 'PersonalData'] = [
                 'fields'        => [
                     'field'  => [
@@ -2565,7 +2578,7 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs'][$scope]['model'] = 'models/subtype';
             // a subtype can define its own detail view, it has to extend views/subtype/detail
             $data['clientDefs'][$scope]['views']['detail'] ??= 'views/subtype/detail';
-            $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
+            $data['clientDefs'][$scope]['views']['edit'] ??= 'views/subtype/edit';
             // a subtype can define its own record view, it has to extend views/subtype/record/detail
             $data['clientDefs'][$scope]['recordViews']['detail'] ??= 'views/subtype/record/detail';
 
@@ -3088,6 +3101,17 @@ class Metadata extends AbstractMetadataListener
             }
 
             $data['app']['matchingRules'][$type] = [
+                'fieldTypes' => $className::getSupportedFieldTypes(),
+            ];
+        }
+
+        foreach ($data['app']['blockingRuleTypes'] ?? [] as $type => $typeDefs) {
+            $className = $typeDefs['className'] ?? null;
+            if (!$className || !class_exists($className)) {
+                continue;
+            }
+
+            $data['app']['blockingRules'][$type] = [
                 'fieldTypes' => $className::getSupportedFieldTypes(),
             ];
         }

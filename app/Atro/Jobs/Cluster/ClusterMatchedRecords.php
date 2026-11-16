@@ -51,41 +51,41 @@ class ClusterMatchedRecords extends AbstractClusterJob implements JobInterface
 
             $clustersIds = [];
             foreach ($items as $item) {
-                if (!empty($item['source_cluster_id'])) {
-                    $clustersIds[$item['source_entity']][$item['source_entity_id']] = $item['source_cluster_id'];
+                if (!empty($item['match_subject_cluster_id'])) {
+                    $clustersIds[$item['match_subject_entity']][$item['match_subject_entity_id']] = $item['match_subject_cluster_id'];
                 }
-                if (!empty($item['master_cluster_id'])) {
-                    $clustersIds[$item['master_entity']][$item['master_entity_id']] = $item['master_cluster_id'];
+                if (!empty($item['match_candidate_cluster_id'])) {
+                    $clustersIds[$item['match_candidate_entity']][$item['match_candidate_entity_id']] = $item['match_candidate_cluster_id'];
                 }
 
-                $sourceClusterId = $clustersIds[$item['source_entity']][$item['source_entity_id']] ?? null;
-                $masterClusterId = $clustersIds[$item['master_entity']][$item['master_entity_id']] ?? null;
+                $matchSubjectClusterId = $clustersIds[$item['match_subject_entity']][$item['match_subject_entity_id']] ?? null;
+                $matchCandidateClusterId = $clustersIds[$item['match_candidate_entity']][$item['match_candidate_entity_id']] ?? null;
 
-                $clusterId = $masterClusterId ?? $sourceClusterId ?? $this->createCluster($masterEntity)->id;
+                $clusterId = $matchCandidateClusterId ?? $matchSubjectClusterId ?? $this->createCluster($masterEntity)->id;
 
                 $matchedRecordRepo->markHasCluster($item['id']);
 
-                if (!empty($sourceClusterId) && !empty($masterClusterId)) {
-                    if ($sourceClusterId !== $masterClusterId) {
-                        $clusterItemRepo->moveAllToCluster($sourceClusterId, $masterClusterId);
+                if (!empty($matchSubjectClusterId) && !empty($matchCandidateClusterId)) {
+                    if ($matchSubjectClusterId !== $matchCandidateClusterId) {
+                        $clusterItemRepo->moveAllToCluster($matchSubjectClusterId, $matchCandidateClusterId);
                     } else {
-                        $clusterItemRepo->updateMatchedScoresInClusters([$sourceClusterId]);
+                        $clusterItemRepo->updateMatchedScoresInClusters([$matchSubjectClusterId]);
                     }
                     continue;
                 }
 
-                if (empty($sourceClusterId)) {
-                    $clustersIds[$item['source_entity']][$item['source_entity_id']] = $clusterId;
-                    $this->createClusterItem($clusterId, $item['source_entity'], $item['source_entity_id'], $item['id'], $item['score']);
+                if (empty($matchSubjectClusterId)) {
+                    $clustersIds[$item['match_subject_entity']][$item['match_subject_entity_id']] = $clusterId;
+                    $this->createClusterItem($clusterId, $item['match_subject_entity'], $item['match_subject_entity_id'], $item['id'], $item['score']);
                 } else {
-                    $clusterItemRepo->updateMatchedScore($item['source_entity'], $item['source_entity_id'], $item['score']);
+                    $clusterItemRepo->updateMatchedScore($item['match_subject_entity'], $item['match_subject_entity_id'], $item['score']);
                 }
 
-                if (empty($masterClusterId)) {
-                    $clustersIds[$item['master_entity']][$item['master_entity_id']] = $clusterId;
-                    $this->createClusterItem($clusterId, $item['master_entity'], $item['master_entity_id'], $item['id'], $item['score']);
+                if (empty($matchCandidateClusterId)) {
+                    $clustersIds[$item['match_candidate_entity']][$item['match_candidate_entity_id']] = $clusterId;
+                    $this->createClusterItem($clusterId, $item['match_candidate_entity'], $item['match_candidate_entity_id'], $item['id'], $item['score']);
                 } else {
-                    $clusterItemRepo->updateMatchedScore($item['master_entity'], $item['master_entity_id'], $item['score']);
+                    $clusterItemRepo->updateMatchedScore($item['match_candidate_entity'], $item['match_candidate_entity_id'], $item['score']);
                 }
             }
 

@@ -1,11 +1,5 @@
 {
   "fields": {
-    "source": "Источник",
-    "sourceEntity": "Исходная сущность",
-    "sourceEntityId": "Идентификатор источника",
-    "master": "Мастер",
-    "masterEntity": "Мастер сущность",
-    "masterEntityId": "Идентификатор мастер сущности",
     "score": "Оценка",
     "hash": "Уникальный хэш",
     "hasCluster": "Имеет кластер",

@@ -53,6 +53,10 @@ Espo.define('models/user', 'model', function (Dep) {
             return !!this.get('isUserAdmin');
         },
 
+        isDataPrivacyAdmin: function () {
+            return !!this.get('isDataPrivacyAdmin');
+        },
+
         hasAdminAccess: function () {
             return !!this.isAdmin() || this.isEntityAdmin() || this.isRoleAdmin() || this.isUserAdmin();
         }

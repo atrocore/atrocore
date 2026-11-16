@@ -75,6 +75,7 @@
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
     "vertica": "Vertica DB",
+    "oracle": "Oracle Database",
     "tokenAuthApi": "Token Auth API"
   },
   "options": {
@@ -96,12 +97,14 @@
       "cookie": "Relace souborů cookie",
       "smtp": "SMTP",
       "vertica": "Vertica DB",
+      "oracle": "Oracle Database",
       "tokenAuthApi": "Token Auth API"
     }
   },
   "exceptions": {
     "sqlsrvMissing": "Není nainstalováno rozšíření PHP MSSQL.",
     "pdoMysqlMissing": "Není nainstalováno rozšíření PHP PDO MySQL.",
+    "pdoOciMissing": "PHP rozšíření PDO OCI (Oracle) není nainstalováno.",
     "connectionFailed": "Spojení se nepodařilo navázat: %s",
     "noSuchType": "Žádný takový typ připojení.",
     "notificationConnectionCannotBeDeleted": "Toto připojení se používá pro e-mailová oznámení a nelze jej odstranit.",

@@ -257,14 +257,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         beforeCreate: function () {
-            // the records of a supertype are created via its subtypes, so any subtype has to be allowed to be created
-            if (this.hasSubtypes()) {
-                const subtypes = Object.values(this.getMetadata().get(['scopes', this.name, 'subtypeScopes']) || {});
-                if (subtypes.some(subtype => this.getAcl().check(subtype, 'create'))) {
-                    return;
-                }
-            }
-
             this.handleCheckAccess('create');
         },
 
@@ -415,10 +407,10 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
                     if (mode === 'edit') {
                         this.listenToOnce(model, 'sync', () => {
-                            this.main('views/subtype/edit', viewOptions);
+                            this.main(this.getMetadata().get(['clientDefs', subtype.entityName, 'views', 'edit']) || 'views/subtype/edit', viewOptions);
                         });
                     } else {
-                        this.main('views/subtype/detail', viewOptions);
+                        this.main(this.getMetadata().get(['clientDefs', subtype.entityName, 'views', 'detail']) || 'views/subtype/detail', viewOptions);
                     }
 
                     this._fetchWithLayout(model, subtype.entityName, {

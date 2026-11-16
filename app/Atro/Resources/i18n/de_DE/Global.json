@@ -134,6 +134,7 @@
     "ConnectionTypeCookie": "Verbindung: Cookie-Sitzung",
     "ConnectionTypeSmtp": "Verbindung: SMTP",
     "ConnectionTypeVertica": "Verbindung: Vertica DB",
+    "ConnectionTypeOracle": "Verbindung: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
     "ConnectionTypeApiKey": "Verbindung: API-Schlüssel",
     "StorageTypeLocal": "Dateiablage: Lokal (Linux)",
@@ -161,7 +162,20 @@
     "AttributeTypeLinkMultiple": "Attribut: Link mit Mehrfachauswahl",
     "AttributeTypeFile": "Attribut: Datei",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Komposit"
+    "AttributeTypeComposite": "Attribut: Komposit",
+    "BlockingRule": "Blocking-Regel",
+    "MatchingRuleTypeFieldEqual": "Übereinstimmungs-Regel: Feld ist gleich",
+    "MatchingRuleTypeFieldSimilar": "Übereinstimmungs-Regel: Feld ist ähnlich",
+    "MatchingRuleTypeFieldContains": "Übereinstimmungs-Regel: Feld enthält",
+    "MatchingRuleTypeSet": "Übereinstimmungs-Regel: Set",
+    "MatchingRuleTypeExpression": "Übereinstimmungs-Regel: Ausdruck",
+    "MatchingRuleTypeFieldsSimilar": "Übereinstimmungs-Regel: Felder sind ähnlich",
+    "MatchingRuleTypeAttributesSimilar": "Übereinstimmungs-Regel: Attribute sind ähnlich",
+    "BlockingRuleTypeFieldEqual": "Blocking-Regel: Feld ist gleich",
+    "BlockingRuleTypeFieldSimilar": "Blocking-Regel: Feld ist ähnlich",
+    "BlockingRuleTypeFieldContains": "Blocking-Regel: Feld enthält",
+    "BlockingRuleTypeSet": "Blocking-Regel: Set",
+    "BlockingRuleTypeExpression": "Blocking-Regel: Ausdruck"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarepakete",
@@ -285,6 +299,7 @@
     "ConnectionTypeCookie": "Verbindung: Cookie-Sitzung",
     "ConnectionTypeSmtp": "Verbindung: SMTP",
     "ConnectionTypeVertica": "Verbindung: Vertica DB",
+    "ConnectionTypeOracle": "Verbindung: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
     "ConnectionTypeApiKey": "Verbindung: API-Schlüssel",
     "StorageTypeLocal": "Dateiablage: Lokal (Linux)",
@@ -312,7 +327,20 @@
     "AttributeTypeLinkMultiple": "Attribut: Link mit Mehrfachauswahl",
     "AttributeTypeFile": "Attribut: Datei",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Komposit"
+    "AttributeTypeComposite": "Attribut: Komposit",
+    "BlockingRule": "Blocking-Regeln",
+    "MatchingRuleTypeFieldEqual": "Übereinstimmungs-Regel: Feld ist gleich",
+    "MatchingRuleTypeFieldSimilar": "Übereinstimmungs-Regel: Feld ist ähnlich",
+    "MatchingRuleTypeFieldContains": "Übereinstimmungs-Regel: Feld enthält",
+    "MatchingRuleTypeSet": "Übereinstimmungs-Regel: Set",
+    "MatchingRuleTypeExpression": "Übereinstimmungs-Regel: Ausdruck",
+    "MatchingRuleTypeFieldsSimilar": "Übereinstimmungs-Regel: Felder sind ähnlich",
+    "MatchingRuleTypeAttributesSimilar": "Übereinstimmungs-Regel: Attribute sind ähnlich",
+    "BlockingRuleTypeFieldEqual": "Blocking-Regel: Feld ist gleich",
+    "BlockingRuleTypeFieldSimilar": "Blocking-Regel: Feld ist ähnlich",
+    "BlockingRuleTypeFieldContains": "Blocking-Regel: Feld enthält",
+    "BlockingRuleTypeSet": "Blocking-Regel: Set",
+    "BlockingRuleTypeExpression": "Blocking-Regel: Ausdruck"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -821,6 +849,8 @@
     "fieldShouldBeLess": "{field} muss kleiner als {value} sein",
     "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
+    "erasePersonalDataRecordConfirmation": "Die personenbezogenen Daten dieses Datensatzes werden gemäß dem Löschmodus jedes Feldes endgültig gelöscht. Sind Sie sicher?",
+    "erasePersonalDataRecordsConfirmation": "Die personenbezogenen Daten der ausgewählten Datensätze werden gemäß dem Löschmodus jedes Feldes endgültig gelöscht. Sind Sie sicher?",
     "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden.",
     "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
     "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft.",
@@ -886,6 +916,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Enthält personenbezogene Daten",
+    "erased": "Gelöscht",
     "onlyMy": "Mein",
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
@@ -903,6 +934,7 @@
     "all": "Alle"
   },
   "massActions": {
+    "erasePersonalData": "Löschen",
     "dataPipelineTransformSource": "Transformation der Quelldatensätze",
     "dataPipelineUpdateFromSource": "Aus Quelle aktualisieren",
     "updateFromSource": "Transformieren",
@@ -1000,6 +1032,7 @@
     "assignedUserName": "Zugewiesener Benutzername",
     "createdAt": "Erstellt am",
     "modifiedAt": "Geändert am",
+    "erasedAt": "Gelöscht am",
     "createdBy": "Erstellt von",
     "modifiedBy": "Geändert von",
     "description": "Beschreibung",
@@ -1061,6 +1094,8 @@
     "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
   },
   "streamMessages": {
+    "eraseThis": "{user} hat am {datetime} personenbezogene Daten dieses Datensatzes gelöscht.",
+    "erase": "{user} hat am {datetime} personenbezogene Daten von {entityType} {entity} gelöscht.",
     "composerUpdate": "{user} hat die installierten Softwarepakete geändert",
     "createRecordAssociationThis": "{user} hat {relatedRecord} als {association} assoziiert",
     "deleteRecordAssociationThis": "{user} hat die Assoziation zu {relatedRecord} als {association} entfernt",
@@ -1439,6 +1474,7 @@
     "dateIsInvalid": "Datum für das Feld '%s' ist ungültig.",
     "datetimeIsInvalid": "Datum-Uhrzeit für das Feld '%s' ist ungültig.",
     "filterContainsUnknownField": "Der Filter enthält eine Regel, die auf ein nicht vorhandenes Feld \"%s\" verweist.",
+    "filterContainsUnknownScope": "Der Filter enthält eine Regel, die auf eine nicht vorhandene Entität \"%s\" verweist.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",
     "noSuchOptions": "Der Wert '%s' für das Feld '%s' ist ungültig.",
     "noOptionsDefined": "Optionen für das Feld '%s' sind nicht definiert.",
@@ -1466,6 +1502,8 @@
     "massRestoreNoRecordProceed": "No wurde der Datensatz wiederhergestellt.",
     "massUpdateSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich aktualisiert werden.",
     "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
+    "massErasePersonalDataNoRecordProceed": "Es wurde kein Datensatz gelöscht.",
+    "massErasePersonalDataSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich gelöscht werden.",
     "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
     "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
     "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen.",
@@ -1710,6 +1748,19 @@
     "AttributeTypeUrl": "Eine Webadresse, die für jede Sprache einen eigenen Wert haben kann, z. B. https://example.com/de.",
     "ConnectionTypePsql": "Eine relationale Datenbank, die auch JSON-Werte als strukturierte Daten speichert, sodass Tabellen und Dokumente in einer Abfrage kombiniert werden können.",
     "ConnectionTypeMsql": "Eine relationale Datenbank von Microsoft, verbreitet in Unternehmenssystemen und zuverlässig bei großen Transaktionslasten.",
-    "ConnectionTypeVertica": "Liest große Tabellen dank spaltenorientierter Speicherung schnell."
+    "ConnectionTypeVertica": "Liest große Tabellen dank spaltenorientierter Speicherung schnell.",
+    "ConnectionTypeOracle": "Eine relationale Datenbank von Oracle, weit verbreitet in Unternehmensanwendungen und ERP-Systemen.",
+    "MatchingRuleTypeFieldEqual": "Bewertet den Kandidaten, wenn die Werte des Feldes gleich sind.",
+    "MatchingRuleTypeFieldSimilar": "Bewertet den Kandidaten, wenn die Werte des Feldes ohne Berücksichtigung von Groß- und Kleinschreibung und Leerzeichen gleich sind.",
+    "MatchingRuleTypeFieldContains": "Bewertet den Kandidaten, wenn sein Feldwert den Wert des Datensatzes enthält.",
+    "MatchingRuleTypeSet": "Kombiniert mehrere Regeln: AND summiert ihre Werte, OR nimmt den Wert der ersten zutreffenden Regel.",
+    "MatchingRuleTypeExpression": "Bewertet den Kandidaten mit einem ExpressionLanguage-Ausdruck.",
+    "MatchingRuleTypeFieldsSimilar": "Bewertet den Kandidaten nach der Ähnlichkeit aller Felder, die nicht von anderen Übereinstimmungs-Regeln verwendet werden.",
+    "MatchingRuleTypeAttributesSimilar": "Bewertet den Kandidaten nach der Ähnlichkeit aller Attribute, die nicht von anderen Übereinstimmungs-Regeln verwendet werden.",
+    "BlockingRuleTypeFieldEqual": "Wählt die Kandidaten, deren Feldwert gleich ist.",
+    "BlockingRuleTypeFieldSimilar": "Wählt die Kandidaten, deren Feldwert ohne Berücksichtigung von Groß- und Kleinschreibung und Leerzeichen gleich ist.",
+    "BlockingRuleTypeFieldContains": "Wählt die Kandidaten, deren Feldwert den Wert des Datensatzes enthält.",
+    "BlockingRuleTypeSet": "Kombiniert mehrere Regeln mit AND oder OR.",
+    "BlockingRuleTypeExpression": "Wählt die Kandidaten mit einem ExpressionLanguage-Ausdruck."
   }
 }

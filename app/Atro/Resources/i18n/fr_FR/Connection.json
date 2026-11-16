@@ -78,11 +78,13 @@
     "tokenAuthApi": "API d'authentification par jeton",
     "pdoSql": "PDO SQL",
     "vertica": "Vertica DB",
+    "oracle": "Oracle Database",
     "apiKey": "Clé d'API"
   },
   "exceptions": {
     "sqlsrvMissing": "L'extension PHP MSSQL n'est pas installée.",
     "pdoMysqlMissing": "L'extension PHP PDO MySQL n'est pas installée.",
+    "pdoOciMissing": "L'extension PHP PDO OCI (Oracle) n'est pas installée.",
     "connectionFailed": "La connexion n'a pas pu être établie : %s",
     "noSuchType": "Aucun type de connexion de ce type.",
     "notificationConnectionCannotBeDeleted": "Cette connexion est utilisée pour les notifications par e‑mail et ne peut pas être supprimée.",
@@ -109,6 +111,7 @@
       "cookie": "Session de cookies",
       "smtp": "SMTP",
       "vertica": "Vertica DB",
+      "oracle": "Oracle Database",
       "tokenAuthApi": "API d'authentification par jeton",
       "apiKey": "Clé d'API"
     }

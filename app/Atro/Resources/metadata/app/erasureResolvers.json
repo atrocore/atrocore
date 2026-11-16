@@ -1,0 +1,20 @@
+{
+  "anonymize": {
+    "className": "\\Atro\\Core\\ErasureResolver\\Anonymize"
+  },
+  "nullify": {
+    "className": "\\Atro\\Core\\ErasureResolver\\Nullify"
+  },
+  "delete": {
+    "className": "\\Atro\\Core\\ErasureResolver\\Delete"
+  },
+  "retain": {
+    "className": "\\Atro\\Core\\ErasureResolver\\Retain"
+  },
+  "cascade": {
+    "className": "\\Atro\\Core\\ErasureResolver\\Cascade"
+  },
+  "unlink": {
+    "className": "\\Atro\\Core\\ErasureResolver\\Unlink"
+  }
+}

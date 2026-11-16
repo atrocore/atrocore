@@ -108,9 +108,18 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
         },
 
         checkScope: function (scope, action, precise) {
-            // the records of the entity cannot be created by anybody
-            if (action === 'create' && this.metadata.get(['scopes', scope, 'createDisabled'])) {
-                return false;
+            if (action === 'create') {
+                // the records of a supertype are created via its subtypes, so it can be created if any subtype can be
+                if (this.metadata.get(['scopes', scope, 'hasSubtypes'])) {
+                    const subtypes = Object.values(this.metadata.get(['scopes', scope, 'subtypeScopes']) || {});
+
+                    return subtypes.some(subtype => this.checkScope(subtype, 'create', precise));
+                }
+
+                // the records of the entity cannot be created by anybody
+                if (this.metadata.get(['scopes', scope, 'createDisabled'])) {
+                    return false;
+                }
             }
 
             // the records of the entity cannot be edited by anybody

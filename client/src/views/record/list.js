@@ -1185,6 +1185,48 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }.bind(this));
         },
 
+        canErasePersonalData() {
+            return !!this.getMetadata().get(['scopes', this.entityType, 'containsPersonalData'])
+                && (this.getUser().isAdmin() || this.getUser().isDataPrivacyAdmin());
+        },
+
+        actionErasePersonalData: function (data) {
+            const id = (data || {}).id;
+            if (!id) return;
+
+            this.confirm({
+                message: this.translate('erasePersonalDataRecordConfirmation', 'messages'),
+                confirmText: this.translate('Erase')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(`${this.entityType}/${id}/erasePersonalData`, {}).then(() => {
+                    this.notify('Done', 'success');
+                    this.collection.get(id)?.fetch();
+                });
+            });
+        },
+
+        massActionErasePersonalData: function () {
+            const threshold = this.getConfig().get('massErasePersonalDataMaxCountWithoutJob') || 200;
+            const isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
+            const url = `${this.entityType}/massErasePersonalData` + (isAsync ? 'Async' : '');
+            const payload = isAsync
+                ? {where: this.collection.getWhereForCheckedRecords()}
+                : {ids: this.checkedList.map(id => String(id))};
+
+            this.confirm({
+                message: this.translate('erasePersonalDataRecordsConfirmation', 'messages'),
+                confirmText: this.translate('Erase')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(url, payload).then(result => {
+                    result.sync = !isAsync;
+                    this.processMassActionResult(result);
+                    this.collection.fetch();
+                });
+            });
+        },
+
         massActionUpdateFromSource: function (data) {
             this.massActionTransform(data);
         },
@@ -1371,6 +1413,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 if (['dataPipelineTransformSource', 'dataPipelineUpdateFromSource'].includes(item)) {
                     this.addDataPipelineMassAction(item);
+                    return;
+                }
+                if (item === 'erasePersonalData') {
+                    if (this.canErasePersonalData()) {
+                        this.massActionList.push(item);
+                        this.checkAllResultMassActionList.push(item);
+                    }
                     return;
                 }
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};

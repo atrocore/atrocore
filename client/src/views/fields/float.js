@@ -140,6 +140,8 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 operators: [
                     'equal',
                     'not_equal',
+                    'in',
+                    'not_in',
                     'less',
                     'less_or_equal',
                     'greater',
@@ -160,6 +162,13 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                     if (rule.operator.type === 'between') {
                         if ((!Array.isArray(value) || value.length !== 2)) {
                             return 'bad between';
+                        }
+                        return true;
+                    }
+
+                    if (this.isMultipleFilterOperator(rule.operator.type)) {
+                        if (!Array.isArray(value) || value.length === 0 || value.some(v => v === null || isNaN(v))) {
+                            return 'bad float';
                         }
                         return true;
                     }

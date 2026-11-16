@@ -133,6 +133,7 @@
     "ConnectionTypeCookie": "З'єднання: Сесія cookie",
     "ConnectionTypeSmtp": "З'єднання: SMTP",
     "ConnectionTypeVertica": "З'єднання: Vertica DB",
+    "ConnectionTypeOracle": "З'єднання: Oracle Database",
     "ConnectionTypeTokenAuthApi": "З'єднання: API автентифікації токенів",
     "ConnectionTypeApiKey": "З'єднання: Ключ API",
     "StorageTypeLocal": "Сховище: Локальне (Linux)",
@@ -160,7 +161,20 @@
     "AttributeTypeLinkMultiple": "Атрибут: Кілька посилань",
     "AttributeTypeFile": "Атрибут: Файл",
     "AttributeTypeArray": "Атрибут: Масив",
-    "AttributeTypeComposite": "Атрибут: Композит"
+    "AttributeTypeComposite": "Атрибут: Композит",
+    "BlockingRule": "Правило блокування",
+    "MatchingRuleTypeFieldEqual": "Правило зіставлення: Поле рівне",
+    "MatchingRuleTypeFieldSimilar": "Правило зіставлення: Поле схоже",
+    "MatchingRuleTypeFieldContains": "Правило зіставлення: Поле містить",
+    "MatchingRuleTypeSet": "Правило зіставлення: Набір",
+    "MatchingRuleTypeExpression": "Правило зіставлення: Вираз",
+    "MatchingRuleTypeFieldsSimilar": "Правило зіставлення: Поля схожі",
+    "MatchingRuleTypeAttributesSimilar": "Правило зіставлення: Атрибути схожі",
+    "BlockingRuleTypeFieldEqual": "Правило блокування: Поле рівне",
+    "BlockingRuleTypeFieldSimilar": "Правило блокування: Поле схоже",
+    "BlockingRuleTypeFieldContains": "Правило блокування: Поле містить",
+    "BlockingRuleTypeSet": "Правило блокування: Набір",
+    "BlockingRuleTypeExpression": "Правило блокування: Вираз"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Програмні пакети",
@@ -283,6 +297,7 @@
     "ConnectionTypeCookie": "З'єднання: Сесія cookie",
     "ConnectionTypeSmtp": "З'єднання: SMTP",
     "ConnectionTypeVertica": "З'єднання: Vertica DB",
+    "ConnectionTypeOracle": "З'єднання: Oracle Database",
     "ConnectionTypeTokenAuthApi": "З'єднання: API автентифікації токенів",
     "ConnectionTypeApiKey": "З'єднання: Ключ API",
     "StorageTypeLocal": "Сховище: Локальне (Linux)",
@@ -310,7 +325,20 @@
     "AttributeTypeLinkMultiple": "Атрибут: Кілька посилань",
     "AttributeTypeFile": "Атрибут: Файл",
     "AttributeTypeArray": "Атрибут: Масив",
-    "AttributeTypeComposite": "Атрибут: Композит"
+    "AttributeTypeComposite": "Атрибут: Композит",
+    "BlockingRule": "Правила блокування",
+    "MatchingRuleTypeFieldEqual": "Правило зіставлення: Поле рівне",
+    "MatchingRuleTypeFieldSimilar": "Правило зіставлення: Поле схоже",
+    "MatchingRuleTypeFieldContains": "Правило зіставлення: Поле містить",
+    "MatchingRuleTypeSet": "Правило зіставлення: Набір",
+    "MatchingRuleTypeExpression": "Правило зіставлення: Вираз",
+    "MatchingRuleTypeFieldsSimilar": "Правило зіставлення: Поля схожі",
+    "MatchingRuleTypeAttributesSimilar": "Правило зіставлення: Атрибути схожі",
+    "BlockingRuleTypeFieldEqual": "Правило блокування: Поле рівне",
+    "BlockingRuleTypeFieldSimilar": "Правило блокування: Поле схоже",
+    "BlockingRuleTypeFieldContains": "Правило блокування: Поле містить",
+    "BlockingRuleTypeSet": "Правило блокування: Набір",
+    "BlockingRuleTypeExpression": "Правило блокування: Вираз"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -792,6 +820,8 @@
     "fieldShouldBeGreater": "{field} має бути більше ніж {value}",
     "fieldIsUploading": "Завантаження",
     "erasePersonalDataConfirmation": "Позначені поля будуть стерті назавжди. Ви впевнені?",
+    "erasePersonalDataRecordConfirmation": "Персональні дані цього запису будуть остаточно стерті відповідно до режиму стирання кожного поля. Ви впевнені?",
+    "erasePersonalDataRecordsConfirmation": "Персональні дані вибраних записів будуть остаточно стерті відповідно до режиму стирання кожного поля. Ви впевнені?",
     "testEmailSent": "Тестовий електронний лист надіслано",
     "isRequiredAndUnique": "{field} обов'язково і має бути унікальним.",
     "relationsAdded": "Зв'язок успішно доданий.",
@@ -836,6 +866,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Містить персональні дані",
+    "erased": "Стерті",
     "onlyActive": "Активні",
     "notActive": "Неактивні",
     "assignedToMe": "Призначений мені",
@@ -853,6 +884,7 @@
     "all": "Усі"
   },
   "massActions": {
+    "erasePersonalData": "Стерти",
     "dataPipelineTransformSource": "Трансформація записів джерела",
     "dataPipelineUpdateFromSource": "Оновлення з джерела",
     "updateFromSource": "Трансформувати",
@@ -915,6 +947,7 @@
     "teams": "Групи",
     "createdAt": "Створено в",
     "modifiedAt": "Змінено в",
+    "erasedAt": "Стерто",
     "createdBy": "Створено (ким)",
     "modifiedBy": "Змінено (ким)",
     "description": "Опис",
@@ -1010,6 +1043,8 @@
     "own": "Вас було призначено власником для {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseThis": "{user} стер персональні дані цього запису {datetime}.",
+    "erase": "{user} стер персональні дані {entityType} {entity} {datetime}.",
     "composerUpdate": "{user} змінив встановлені програмні пакети",
     "post": "{user} залишив примітку до {entityType} {entity}",
     "postInList": "{user} залишив примітку до {entityType}",
@@ -1427,6 +1462,7 @@
     "dateIsInvalid": "Дата для поля '%s' не допустима.",
     "datetimeIsInvalid": "Дата/час для поля '%s' не допустимі.",
     "filterContainsUnknownField": "Фільтр містить правило, яке відповідає неіснуючому полю \"%s\".",
+    "filterContainsUnknownScope": "Фільтр містить правило, яке відповідає неіснуючій сутності \"%s\".",
     "noSuchUnit": "Одиниця виміру '%s' для поля '%s' не допустима.",
     "noSuchOptions": "Значення '%s' для поля '%s' не допустиме.",
     "noOptionsDefined": "Опції для поля '%s' не задані.",
@@ -1454,6 +1490,8 @@
     "massRestoreNoRecordProceed": "Жоден запис не був відновлений.",
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
+    "massErasePersonalDataNoRecordProceed": "Жоден запис не був стертий.",
+    "massErasePersonalDataSomeRecordNotProceed": "Деякі записи не вдалося стерти.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
     "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки.",
     "integerValueValidationFailed": "Ціле значення для поля/атрибута \"%s\" повинно бути в межах від %s до %s.",
@@ -1703,6 +1741,19 @@
     "AttributeTypeUrl": "Вебадреса, яка може мати окреме значення для кожної мови, наприклад https://example.com/uk.",
     "ConnectionTypePsql": "Реляційна база даних, яка також зберігає значення JSON як структуровані дані, тож таблиці й документи можна поєднувати в одному запиті.",
     "ConnectionTypeMsql": "Реляційна база даних від Microsoft, поширена в корпоративних системах і надійна під великим транзакційним навантаженням.",
-    "ConnectionTypeVertica": "Швидко читає великі таблиці завдяки колонковому зберіганню."
+    "ConnectionTypeVertica": "Швидко читає великі таблиці завдяки колонковому зберіганню.",
+    "ConnectionTypeOracle": "Реляційна база даних від Oracle, що широко використовується в корпоративних застосунках та ERP-системах.",
+    "MatchingRuleTypeFieldEqual": "Нараховує бал кандидату, коли значення поля рівні.",
+    "MatchingRuleTypeFieldSimilar": "Нараховує бал кандидату, коли значення поля рівні без урахування регістру та пробілів.",
+    "MatchingRuleTypeFieldContains": "Нараховує бал кандидату, коли його значення поля містить значення запису.",
+    "MatchingRuleTypeSet": "Поєднує кілька правил: AND додає їхні бали, OR бере бал першого правила, що спрацювало.",
+    "MatchingRuleTypeExpression": "Нараховує бал кандидату за виразом ExpressionLanguage.",
+    "MatchingRuleTypeFieldsSimilar": "Нараховує бал кандидату за схожістю всіх полів, які не використовуються іншими правилами зіставлення.",
+    "MatchingRuleTypeAttributesSimilar": "Нараховує бал кандидату за схожістю всіх атрибутів, які не використовуються іншими правилами зіставлення.",
+    "BlockingRuleTypeFieldEqual": "Відбирає кандидатів, у яких значення поля рівне.",
+    "BlockingRuleTypeFieldSimilar": "Відбирає кандидатів, у яких значення поля рівне без урахування регістру та пробілів.",
+    "BlockingRuleTypeFieldContains": "Відбирає кандидатів, у яких значення поля містить значення запису.",
+    "BlockingRuleTypeSet": "Поєднує кілька правил через AND або OR.",
+    "BlockingRuleTypeExpression": "Відбирає кандидатів за виразом ExpressionLanguage."
   }
 }

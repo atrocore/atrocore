@@ -1,0 +1,17 @@
+{
+  "type": "Base",
+  "object": true,
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": false,
+  "customizable": false,
+  "importable": true,
+  "notifications": true,
+  "hideFieldTypeFilters": true,
+  "selectionDisabled": true,
+  "actionDisabled": true,
+  "bookmarkDisabled": true,
+  "nameField": "number",
+  "isSystem": true
+}

@@ -61,98 +61,9 @@
         "required": {
           "conditionGroup": [
             {
-              "type": "in",
+              "type": "notEquals",
               "attribute": "type",
-              "value": [
-                "fieldEqual",
-                "fieldSimilar",
-                "fieldContains",
-                "expression"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "type": {
-      "type": "enum",
-      "required": true,
-      "options": [
-        "fieldEqual",
-        "fieldSimilar",
-        "fieldContains",
-        "set",
-        "expression"
-      ],
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
-    },
-    "attribute": {
-      "type": "link",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "readOnly": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "attributeId"
-            }
-          ]
-        }
-      }
-    },
-    "fieldDefs": {
-      "type": "jsonObject",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "field": {
-      "type": "enum",
-      "view": "views/matching-rule/fields/entity-field",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "fieldEqual",
-                "fieldSimilar",
-                "fieldContains"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "fieldEqual",
-                "fieldSimilar",
-                "fieldContains"
-              ]
+              "value": "set"
             }
           ]
         }
@@ -179,92 +90,6 @@
         }
       }
     },
-    "operator": {
-      "type": "enum",
-      "options": [
-        "and",
-        "or"
-      ],
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "set"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "set"
-            }
-          ]
-        }
-      }
-    },
-    "matchedWhereExpression": {
-      "type": "code",
-      "notStorable": true,
-      "engine": "ExpressionLanguage",
-      "variables": [
-        "stageEntity"
-      ],
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "expression"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "expression"
-            }
-          ]
-        }
-      }
-    },
-    "matchScoreExpression": {
-      "type": "code",
-      "notStorable": true,
-      "engine": "ExpressionLanguage",
-      "variables": [
-        "stageEntity",
-        "masterEntity"
-      ],
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "expression"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "expression"
-            }
-          ]
-        }
-      }
-    },
     "createdBy": {
       "type": "link",
       "readOnly": true,
@@ -277,11 +102,6 @@
     }
   },
   "links": {
-    "attribute": {
-      "type": "belongsTo",
-      "entity": "Attribute",
-      "layoutRelationshipsDisabled": true
-    },
     "matching": {
       "type": "belongsTo",
       "foreign": "matchingRules",

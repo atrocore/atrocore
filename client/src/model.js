@@ -241,6 +241,66 @@ Espo.define('model', [], function () {
             return null;
         },
 
+        /**
+         * Returns the filter of the records of a link or a multiple link: the "where" param of the field, the
+         * placeholders of which are resolved for the record, and the rules of the "foreignFilterFields" of the field.
+         * The type of the relation ("link" or "linkMultiple") is the type of the field when it is not given.
+         */
+        getLinkWhere: function (field, linkType) {
+            let where = this.getFieldParam(field, 'where');
+
+            if (where && JSON.stringify(where).includes('{{')) {
+                const type = (linkType || this.getFieldParam(field, 'type')) === 'link' ? 'EntityFieldTypeLink' : 'EntityFieldTypeLinkMultiple';
+                const recordId = this.id || '';
+                $.ajax({
+                    url: type + '/' + this.name + '_' + field + '/where' + (recordId ? '?recordId=' + recordId : ''),
+                    type: 'GET',
+                    async: false,
+                    success: response => {
+                        where = response?.where || where;
+                    }
+                });
+            }
+
+            return this.addForeignFilterFieldsWhere(field, where) || undefined;
+        },
+
+        /**
+         * Adds the rules of the "foreignFilterFields" of the field to the filter of its records: the param maps the
+         * attributes of the foreign records to the attributes of this record, e.g. the units of the measure of the
+         * record. The rules are returned as a group of rules, so that they are shown as locked rules in the filter of
+         * the selection dialog.
+         */
+        addForeignFilterFieldsWhere: function (field, where) {
+            const filterFields = this.getFieldParam(field, 'foreignFilterFields') || {};
+            const rules = [];
+
+            Object.keys(filterFields).forEach(foreignAttribute => {
+                const attribute = filterFields[foreignAttribute];
+                const value = this.get(attribute);
+                if (value === null || value === undefined || value === '') {
+                    return;
+                }
+
+                const rule = {id: foreignAttribute, field: foreignAttribute, type: 'string', operator: 'equal', value: value};
+                if (foreignAttribute.endsWith('Id')) {
+                    rule.operator = 'in';
+                    rule.value = [value];
+                    const name = attribute.endsWith('Id') ? this.get(attribute.slice(0, -2) + 'Name') : null;
+                    if (name) {
+                        rule.data = {nameHash: {[value]: name}};
+                    }
+                }
+                rules.push(rule);
+            });
+
+            if (rules.length) {
+                where = (where || []).concat([{condition: 'AND', rules: rules, valid: true}]);
+            }
+
+            return where;
+        },
+
         getLinkType: function (link) {
             if (('defs' in this) && ('links' in this.defs) && (link in this.defs.links)) {
                 return this.defs.links[link].type || null;

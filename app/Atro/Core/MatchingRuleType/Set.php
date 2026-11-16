@@ -12,10 +12,6 @@
 
 namespace Atro\Core\MatchingRuleType;
 
-use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
@@ -30,15 +26,15 @@ class Set extends AbstractMatchingRule
     {
         $weight = 0;
 
-        if ($this->rule->get('operator') === 'or') {
-            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+        if ($this->settings->get('operator') === 'or') {
+            foreach ($this->rule->getNestedRules() as $rule) {
                 $ruleWeight = $rule->getWeight();
                 if ($ruleWeight > $weight) {
                     $weight = $ruleWeight;
                 }
             }
-        } elseif ($this->rule->get('operator') === 'and') {
-            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+        } elseif ($this->settings->get('operator') === 'and') {
+            foreach ($this->rule->getNestedRules() as $rule) {
                 $weight += $rule->getWeight();
             }
         }
@@ -46,46 +42,31 @@ class Set extends AbstractMatchingRule
         return (float)$weight;
     }
 
-    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
+    public function isSymmetric(): bool
     {
-        $alias = $qb->getQueryPart('from')[0]['alias'];
-
-        $table = Util::toUnderScore(lcfirst($this->rule->getMatching()->get('masterEntity')));
-
-        $subQb = $this->getConnection()->createQueryBuilder();
-        $subAlias = IdGenerator::unsortableId();
-        $subQb
-            ->select("{$subAlias}.id")
-            ->from($this->getConnection()->quoteIdentifier($table), $subAlias)
-            ->where("$subAlias.deleted = :false")
-            ->setParameter('false', false, ParameterType::BOOLEAN);
-
-        $rulesParts = [];
-        foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
-            $sqlPart = $rule->prepareMatchingSqlPart($subQb, $stageEntity);
-            if (!empty($sqlPart)) {
-                $rulesParts[] = $sqlPart;
+        foreach ($this->rule->getNestedRules() as $rule) {
+            if (!$rule->isSymmetric()) {
+                return false;
             }
         }
 
-        if (!empty($rulesParts)) {
-            $subQb->andWhere(implode(' OR ', $rulesParts));
-        }
+        return true;
+    }
 
-        foreach ($subQb->getParameters() as $name => $value) {
-            $qb->setParameter($name, $value, Mapper::getParameterType($value));
+    public function prepareMatchSelect(QueryBuilder $qb, Entity $stageEntity): void
+    {
+        foreach ($this->rule->getNestedRules() as $rule) {
+            $rule->prepareMatchSelect($qb, $stageEntity);
         }
-
-        return "{$alias}.id IN ({$subQb->getSQL()})";
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $weight = 0.0;
-        if ($this->rule->get('operator') === 'or') {
+        if ($this->settings->get('operator') === 'or') {
             // convert EntityCollection to array
             $rules = [];
-            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+            foreach ($this->rule->getNestedRules() as $rule) {
                 $rules[] = $rule;
             }
 
@@ -100,8 +81,8 @@ class Set extends AbstractMatchingRule
                     return $weight;
                 }
             }
-        } elseif ($this->rule->get('operator') === 'and') {
-            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+        } elseif ($this->settings->get('operator') === 'and') {
+            foreach ($this->rule->getNestedRules() as $rule) {
                 $weight += $rule->match($stageEntity, $masterEntityData);
             }
         }

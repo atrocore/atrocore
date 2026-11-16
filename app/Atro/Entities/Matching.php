@@ -39,6 +39,7 @@ class Matching extends Base
             'assignedUserId',
             'assignedUserName',
             'matchingRuleSetName',
+            'blockingRuleSetName',
             'matchingName'
         ];
 
@@ -56,6 +57,17 @@ class Matching extends Base
                 }
             }
             $res['rules'][] = $item;
+        }
+
+        $res['blockingRules'] = [];
+
+        foreach ($this->get('blockingRules')->toArray() as $item) {
+            foreach ($toRemoveKeys as $key) {
+                if (array_key_exists($key, $item)) {
+                    unset($item[$key]);
+                }
+            }
+            $res['blockingRules'][] = $item;
         }
 
         return $res;

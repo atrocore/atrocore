@@ -13,5 +13,11 @@
   },
   "expression": {
     "className": "\\Atro\\Core\\MatchingRuleType\\Expression"
+  },
+  "fieldsSimilar": {
+    "className": "\\Atro\\Core\\MatchingRuleType\\FieldsSimilar"
+  },
+  "attributesSimilar": {
+    "className": "\\Atro\\Core\\MatchingRuleType\\AttributesSimilar"
   }
 }

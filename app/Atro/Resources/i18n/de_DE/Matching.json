@@ -5,22 +5,30 @@
     "matchingRules": "Übereinstimmungs-Regeln",
     "entity": "Entität",
     "matchedRecords": "Übereinstimmende Datensätze",
-    "matchedRecordsMax": "Maximale Anzahl übereinstimmender Datensätze"
+    "matchedRecordsMax": "Maximale Anzahl übereinstimmender Datensätze",
+    "blockingRules": "Blocking-Regeln",
+    "blockingOperator": "Blocking-Operator"
   },
   "options": {
     "type": {
       "duplicate": "Duplikat - Duplikat",
       "masterRecord": "Kontributor - Master"
+    },
+    "blockingOperator": {
+      "or": "OR",
+      "and": "AND"
     }
   },
   "labels": {
     "configureMatching": "Matching konfigurieren"
   },
   "tooltips": {
-    "matchedRecordsMax": "Wenn die Anzahl der übereinstimmenden Datensätze für einen Datensatz diesen Wert überschreitet, wird die Übereinstimmung deaktiviert. Lassen Sie dieses Feld leer, um eine unbegrenzte Anzahl übereinstimmender Datensätze zuzulassen."
+    "matchedRecordsMax": "Wenn die Anzahl der übereinstimmenden Datensätze für einen Datensatz diesen Wert überschreitet, wird die Übereinstimmung deaktiviert. Lassen Sie dieses Feld leer, um eine unbegrenzte Anzahl übereinstimmender Datensätze zuzulassen.",
+    "blockingOperator": "Wie die Blocking-Regeln der obersten Ebene zur Auswahl der Kandidaten kombiniert werden. Bei AND findet eine Regel, deren Wert im Datensatz leer ist, nichts, sodass der Datensatz keine Kandidaten erhält."
   },
   "exceptions": {
     "noRules": "Die Aktivierung ist blockiert. Für diese Übereinstimmung wurden keine passenden Regeln definiert.",
-    "masterRecordEntityInvalid": "Die Entität %s kann nicht für ein Stammdatensatz-Matching verwendet werden. Nur eine abgeleitete Entität mit der Rolle Staging ist zulässig."
+    "masterRecordEntityInvalid": "Die Entität %s kann nicht für ein Stammdatensatz-Matching verwendet werden. Nur eine abgeleitete Entität mit der Rolle Staging ist zulässig.",
+    "noBlockingRules": "Die Aktivierung ist blockiert. Für diese Übereinstimmung wurden keine Blocking-Regeln definiert."
   }
 }

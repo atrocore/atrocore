@@ -102,6 +102,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                         [{"name": "isActive"}, {"name": "roles"}],
                         [{"name": "isAdmin"}, {"name": "isUserAdmin"}],
                         [{"name": "isEntityAdmin"}, {"name": "isRoleAdmin"}],
+                        [{"name": "isDataPrivacyAdmin"}, false],
                         [{"name": "teams"}, {"name": "defaultTeam"}],
                         [{"name": "disableActionHistory"}, false],
                     ]

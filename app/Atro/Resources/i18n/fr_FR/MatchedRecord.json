@@ -1,13 +1,13 @@
 {
   "fields": {
-    "master": "Maître",
-    "masterEntity": "Entité de référence",
-    "masterEntityId": "ID de l'entité de reférence",
+    "matchCandidate": "Candidat de l'appariement",
+    "matchCandidateEntity": "Entité du candidat de l'appariement",
+    "matchCandidateEntityId": "ID de l'entité du candidat de l'appariement",
     "score": "Score",
-    "source": "Source",
-    "sourceEntityId": "ID de l'entité source",
+    "matchSubject": "Sujet de l'appariement",
+    "matchSubjectEntityId": "ID de l'entité du sujet de l'appariement",
     "hash": "Hash unique",
-    "sourceEntity": "Entité source",
+    "matchSubjectEntity": "Entité du sujet de l'appariement",
     "hasCluster": "A la grappe",
     "clusterItems": "Éléments de la grappe"
   },

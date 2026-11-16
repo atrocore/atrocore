@@ -115,9 +115,23 @@ class FindMatchesForRecords extends AbstractJob implements JobInterface
             $matchingRules->append($matchingRule);
         }
 
+        if (array_key_exists('blockingRules', $matchingData)) {
+            $blockingRules = $this->getEntityManager()->createCollection('BlockingRule', []);
+            foreach ($matchingData['blockingRules'] as $ruleData) {
+                $blockingRule = $this->getEntityManager()->getEntity('BlockingRule');
+                $blockingRule->set($ruleData);
+                $blockingRules->append($blockingRule);
+            }
+        } else {
+            $blockingRules = $this->getEntityManager()->getRepository('BlockingRule')
+                ->where(['matchingId' => $matchingData['id']])
+                ->find();
+        }
+
         $matching = $this->getEntityManager()->getEntity('Matching');
         $matching->set($matchingData);
         $matching->set('matchingRules', $matchingRules);
+        $matching->set('blockingRules', $blockingRules);
 
         return $matching;
     }

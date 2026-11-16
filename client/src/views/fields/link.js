@@ -193,6 +193,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         getCreateAttributes: function () {
             let attributes = {};
             let presetAttributeList = [];
+            let presetOptions = {};
 
             // prepare attributes by where filter
             (this.model?.defs?.fields?.[this.name]?.where || []).forEach(item => {
@@ -241,6 +242,9 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                             if (values.length === 1 && values[0] !== null && values[0] !== '') {
                                 attributes[rule.field] = values[0];
                                 presetAttributeList.push(rule.field);
+                            } else if (type === 'enum' && values.length > 1) {
+                                // a filter that allows several values limits the options of the new record to them
+                                presetOptions[rule.field] = values.filter(value => value !== null && value !== '');
                             }
                         } else if (rule.operator === 'array_any_of' && type === 'multiEnum') {
                             if (values.length > 0) {
@@ -255,6 +259,11 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             // the attributes that the filter has set, for the conditional properties of the new record
             if (presetAttributeList.length) {
                 attributes._presetAttributeList = presetAttributeList;
+            }
+
+            // the options that the filter allows, for the enum fields of the new record
+            if (Object.keys(presetOptions).length) {
+                attributes._presetOptions = presetOptions;
             }
 
             return attributes;
@@ -476,39 +485,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 return this.options.whereAdditional;
             }
 
-            let res = this.model.getFieldParam(this.name, 'where');
-
-            if (res && JSON.stringify(res).includes('{{')) {
-                const entityFieldId = this.model.name + '_' + this.name;
-                const recordId = this.model.id || '';
-                const url = 'EntityFieldTypeLink/' + entityFieldId + '/where' + (recordId ? '?recordId=' + recordId : '');
-                this.ajaxGetRequest(url, null, {async: false}).success(response => {
-                    res = response?.where || res;
-                });
-            }
-
-            res = this.addForeignFilterFieldsWhere(res);
-
-            return res || undefined
-        },
-
-        /**
-         * The records are filtered by the fields of the record: "foreignFilterFields" maps the attributes of the
-         * foreign records to the attributes of the record, e.g. the units of the measure of the record.
-         */
-        addForeignFilterFieldsWhere(where) {
-            const filterFields = this.model.getFieldParam(this.name, 'foreignFilterFields') || {};
-
-            Object.keys(filterFields).forEach(foreignAttribute => {
-                const value = this.model.get(filterFields[foreignAttribute]);
-                if (value === null || value === undefined || value === '') {
-                    return;
-                }
-
-                where = (where || []).concat([{type: 'equals', attribute: foreignAttribute, value: value}]);
-            });
-
-            return where;
+            return this.model.getLinkWhere(this.name, 'link');
         },
 
         clearLink: function () {

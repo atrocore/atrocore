@@ -75,6 +75,7 @@
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
     "vertica": "Vertica DB",
+    "oracle": "Oracle Database",
     "tokenAuthApi": "API de autenticación por token"
   },
   "options": {
@@ -96,12 +97,14 @@
       "cookie": "Sesión de cookies",
       "smtp": "SMTP",
       "vertica": "Vertica DB",
+      "oracle": "Oracle Database",
       "tokenAuthApi": "API de autenticación por token"
     }
   },
   "exceptions": {
     "sqlsrvMissing": "La extensión PHP MSSQL no está instalada.",
     "pdoMysqlMissing": "La extensión PHP PDO MySQL no está instalada.",
+    "pdoOciMissing": "La extensión PHP PDO OCI (Oracle) no está instalada.",
     "connectionFailed": "No se ha podido establecer la conexión: %s",
     "noSuchType": "No existe tal tipo de conexión.",
     "notificationConnectionCannotBeDeleted": "Esta conexión se utiliza para las notificaciones por correo electrónico y no se puede eliminar",

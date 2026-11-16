@@ -78,6 +78,7 @@
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
     "vertica": "Vertica DB",
+    "oracle": "Oracle Database",
     "tokenAuthApi": "Token Auth API",
     "apiKey": "API Key"
   },
@@ -100,6 +101,7 @@
       "cookie": "Cookie Session",
       "smtp": "SMTP",
       "vertica": "Vertica DB",
+      "oracle": "Oracle Database",
       "tokenAuthApi": "Token Auth API",
       "apiKey": "API Key"
     }
@@ -107,6 +109,7 @@
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",
     "pdoMysqlMissing": "PHP PDO MySQL extension is not installed.",
+    "pdoOciMissing": "PHP PDO OCI (Oracle) extension is not installed.",
     "connectionFailed": "Connection could not be established: %s",
     "noSuchType": "No such connection type.",
     "notificationConnectionCannotBeDeleted": "This connection is used for E-Mail Notifications and cannot be deleted",

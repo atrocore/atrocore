@@ -55,6 +55,8 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         filterOperators: [
             'equal',
             'not_equal',
+            'in',
+            'not_in',
             'less',
             'less_or_equal',
             'greater',
@@ -315,6 +317,14 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             return this.searchParams.typeFront || this.searchParams.type;
         },
 
+        prepareMultipleFilterValue(value) {
+            if (!Array.isArray(value)) {
+                return [];
+            }
+
+            return value.map(item => this.parse(String(item).trim()));
+        },
+
         createQueryBuilderFilter() {
             return {
                 id: this.name,
@@ -329,6 +339,12 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                         if (rule.operator.type === 'between') {
                             if ((!Array.isArray(value) || value.length !== 2)) {
                                 return 'bad between';
+                            }
+                            return true;
+                        }
+                        if (this.isMultipleFilterOperator(rule.operator.type)) {
+                            if (!Array.isArray(value) || value.length === 0 || value.some(v => v === null || isNaN(v))) {
+                                return 'bad int';
                             }
                             return true;
                         }

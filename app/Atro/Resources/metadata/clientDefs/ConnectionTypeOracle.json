@@ -1,0 +1,6 @@
+{
+  "iconClass": "database",
+  "recordViews": {
+    "detail": "views/connection/record/detail"
+  }
+}

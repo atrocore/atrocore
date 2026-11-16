@@ -152,13 +152,23 @@ class Hierarchy extends Base
         $this->buildRoutes($entity->id);
     }
 
+    protected function getTreeSortColumn(string $sortBy): string
+    {
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $sortBy]);
+        if ($sortBy !== 'id' && (empty($fieldDefs) || !empty($fieldDefs['notStorable']))) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('filterContainsUnknownField', 'exceptions', 'Global'), $sortBy));
+        }
+
+        return Util::toUnderScore($sortBy);
+    }
+
     public function getEntityPosition(Entity $entity, string $parentId, array $sortParams): ?int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
         if (!empty($sortParams) && !empty($sortParams['sortBy'])) {
-            $primarySortBy = Util::toUnderScore($sortParams['sortBy']);
+            $primarySortBy = $this->getTreeSortColumn($sortParams['sortBy']);
             $sortOrder = !empty($sortParams['asc']) ? 'ASC' : 'DESC';
         } else {
             $primarySortBy = 'sort_order';
@@ -465,7 +475,7 @@ class Hierarchy extends Base
 
         if (!empty($parentId)) {
             if (!empty($sp['orderBy'])) {
-                $primarySortBy = Util::toUnderScore($sp['orderBy']);
+                $primarySortBy = $this->getTreeSortColumn($sp['orderBy']);
             } else {
                 $primarySortBy = 'sort_order';
             }

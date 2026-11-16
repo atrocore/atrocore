@@ -1,3 +1,5 @@
+<?php
+
 /**
  * AtroCore Software
  *
@@ -8,15 +10,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matched-record/fields/master', 'views/fields/link', Dep => {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Atro\Services;
 
-        setup() {
-            this.options.foreignScope = this.model.get('masterEntity');
-
-            Dep.prototype.setup.call(this);
-        },
-
-    });
-});
+class BlockingRuleSubtype extends MatchingRuleSubtype
+{
+}

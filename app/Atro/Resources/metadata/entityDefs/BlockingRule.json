@@ -1,0 +1,108 @@
+{
+  "fields": {
+    "number": {
+      "type": "autoincrement"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "editable": {
+      "type": "bool",
+      "notStorable": true
+    },
+    "matching": {
+      "type": "link",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "blockingRuleSetId"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "blockingRuleSetId"
+            }
+          ]
+        }
+      }
+    },
+    "blockingRuleSet": {
+      "type": "link",
+      "readOnly": true
+    },
+    "blockingRules": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "set"
+            }
+          ]
+        }
+      }
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "matching": {
+      "type": "belongsTo",
+      "foreign": "blockingRules",
+      "entity": "Matching"
+    },
+    "blockingRuleSet": {
+      "type": "belongsTo",
+      "foreign": "blockingRules",
+      "entity": "BlockingRule"
+    },
+    "blockingRules": {
+      "type": "hasMany",
+      "foreign": "blockingRuleSet",
+      "entity": "BlockingRule"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "number",
+    "asc": true
+  }
+}

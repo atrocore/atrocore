@@ -1,11 +1,11 @@
 {
   "fields": {
-    "source": "Quelle",
-    "sourceEntity": "Quellentität",
-    "sourceEntityId": "Quelle-Entitäts-ID",
-    "master": "Stammdaten-Entität",
-    "masterEntity": "Stammdaten-Entität",
-    "masterEntityId": "Stammdaten-Entitäts-ID",
+    "matchSubject": "Abgleichsobjekt",
+    "matchSubjectEntity": "Entität des Abgleichsobjekts",
+    "matchSubjectEntityId": "ID der Entität des Abgleichsobjekts",
+    "matchCandidate": "Abgleichskandidat",
+    "matchCandidateEntity": "Entität des Abgleichskandidaten",
+    "matchCandidateEntityId": "ID der Entität des Abgleichskandidaten",
     "score": "Punktzahl",
     "hash": "Eindeutiger Hash",
     "hasCluster": "Hat Cluster",

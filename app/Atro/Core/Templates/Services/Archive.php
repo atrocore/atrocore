@@ -17,12 +17,16 @@ namespace Atro\Core\Templates\Services;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Atro\Core\Services\AbstractRecordService;
+use Atro\Core\Services\Interfaces\PersonalDataErasableInterface;
+use Atro\Core\Services\Traits\PersonalDataErasableTrait;
 
 /**
  * The service of the entities of type Archive: the records are only read.
  */
-class Archive extends AbstractRecordService
+class Archive extends AbstractRecordService implements PersonalDataErasableInterface
 {
+    use PersonalDataErasableTrait;
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);

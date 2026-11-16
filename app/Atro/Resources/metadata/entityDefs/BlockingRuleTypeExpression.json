@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "matchedWhereExpression": {
+      "type": "code",
+      "notStorable": true,
+      "engine": "ExpressionLanguage",
+      "variables": [
+        "stageEntity"
+      ],
+      "tooltip": true,
+      "required": true
+    }
+  }
+}

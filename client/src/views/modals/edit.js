@@ -49,8 +49,10 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
                 this.wait(true);
                 this.selectSubtype(subtype => {
                     this.scope = subtype;
-                    this.setupForScope();
-                    this.wait(false);
+                    this.getModelFactory().getSeed(subtype, () => {
+                        this.setupForScope();
+                        this.wait(false);
+                    });
                 });
                 return;
             }
@@ -74,7 +76,7 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
 
                 this.listenToOnce(view, 'select', subtype => {
                     selected = true;
-                    view.close();
+                    this.clearView('selectSubtype');
                     callback(subtype);
                 });
 
@@ -83,7 +85,7 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
                         this.remove();
                     }
                 });
-            });
+            }, false);
         },
 
         /**

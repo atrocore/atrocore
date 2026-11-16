@@ -134,6 +134,7 @@
     "ConnectionTypeCookie": "Connection: Cookie Session",
     "ConnectionTypeSmtp": "Connection: SMTP",
     "ConnectionTypeVertica": "Connection: Vertica DB",
+    "ConnectionTypeOracle": "Connection: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Connection: Token Auth API",
     "ConnectionTypeApiKey": "Connection: API Key",
     "StorageTypeLocal": "Storage: Local (Linux)",
@@ -163,7 +164,20 @@
     "AttributeTypeLinkMultiple": "Attribute: Multiple link",
     "AttributeTypeFile": "Attribute: File",
     "AttributeTypeArray": "Attribute: Array",
-    "AttributeTypeComposite": "Attribute: Composite"
+    "AttributeTypeComposite": "Attribute: Composite",
+    "BlockingRule": "Blocking Rule",
+    "MatchingRuleTypeFieldEqual": "Matching Rule: Field is Equal",
+    "MatchingRuleTypeFieldSimilar": "Matching Rule: Field is Similar",
+    "MatchingRuleTypeFieldContains": "Matching Rule: Field Contains",
+    "MatchingRuleTypeSet": "Matching Rule: Set",
+    "MatchingRuleTypeExpression": "Matching Rule: Expression",
+    "MatchingRuleTypeFieldsSimilar": "Matching Rule: Fields are Similar",
+    "MatchingRuleTypeAttributesSimilar": "Matching Rule: Attributes are Similar",
+    "BlockingRuleTypeFieldEqual": "Blocking Rule: Field is Equal",
+    "BlockingRuleTypeFieldSimilar": "Blocking Rule: Field is Similar",
+    "BlockingRuleTypeFieldContains": "Blocking Rule: Field Contains",
+    "BlockingRuleTypeSet": "Blocking Rule: Set",
+    "BlockingRuleTypeExpression": "Blocking Rule: Expression"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Software Packages",
@@ -287,6 +301,7 @@
     "ConnectionTypeCookie": "Connection: Cookie Session",
     "ConnectionTypeSmtp": "Connection: SMTP",
     "ConnectionTypeVertica": "Connection: Vertica DB",
+    "ConnectionTypeOracle": "Connection: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Connection: Token Auth API",
     "ConnectionTypeApiKey": "Connection: API Key",
     "StorageTypeLocal": "Storage: Local (Linux)",
@@ -316,7 +331,20 @@
     "AttributeTypeLinkMultiple": "Attribute: Multiple link",
     "AttributeTypeFile": "Attribute: File",
     "AttributeTypeArray": "Attribute: Array",
-    "AttributeTypeComposite": "Attribute: Composite"
+    "AttributeTypeComposite": "Attribute: Composite",
+    "BlockingRule": "Blocking Rules",
+    "MatchingRuleTypeFieldEqual": "Matching Rule: Field is Equal",
+    "MatchingRuleTypeFieldSimilar": "Matching Rule: Field is Similar",
+    "MatchingRuleTypeFieldContains": "Matching Rule: Field Contains",
+    "MatchingRuleTypeSet": "Matching Rule: Set",
+    "MatchingRuleTypeExpression": "Matching Rule: Expression",
+    "MatchingRuleTypeFieldsSimilar": "Matching Rule: Fields are Similar",
+    "MatchingRuleTypeAttributesSimilar": "Matching Rule: Attributes are Similar",
+    "BlockingRuleTypeFieldEqual": "Blocking Rule: Field is Equal",
+    "BlockingRuleTypeFieldSimilar": "Blocking Rule: Field is Similar",
+    "BlockingRuleTypeFieldContains": "Blocking Rule: Field Contains",
+    "BlockingRuleTypeSet": "Blocking Rule: Set",
+    "BlockingRuleTypeExpression": "Blocking Rule: Expression"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
@@ -831,6 +859,8 @@
     "massRestoreResultSingle": "{count} record now is restored",
     "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+    "erasePersonalDataRecordConfirmation": "The personal data of this record will be erased permanently according to the erasure mode of each field. Are you sure?",
+    "erasePersonalDataRecordsConfirmation": "The personal data of the selected records will be erased permanently according to the erasure mode of each field. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
     "duplicatedAndLinked": "Records were successfully duplicated and linked.",
@@ -852,6 +882,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Contains personal data",
+    "erased": "Erased",
     "onlyActive": "Active",
     "notActive": "Inactive",
     "onlyMy": "My",
@@ -869,6 +900,7 @@
     "all": "All"
   },
   "massActions": {
+    "erasePersonalData": "Erase",
     "dataPipelineTransformSource": "Source Record Transformation",
     "dataPipelineUpdateFromSource": "Update From Source",
     "updateFromSource": "Transform",
@@ -983,6 +1015,7 @@
     "teams": "Teams",
     "createdAt": "Created At",
     "modifiedAt": "Modified At",
+    "erasedAt": "Erased At",
     "createdBy": "Created By",
     "modifiedBy": "Modified By",
     "description": "Description",
@@ -1029,6 +1062,8 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "eraseThis": "{user} erased personal data for this record on {datetime}.",
+    "erase": "{user} erased personal data for {entityType} {entity} on {datetime}.",
     "createRecordAssociationThis": "{user} associated {relatedRecord} as {association}",
     "deleteRecordAssociationThis": "{user} removed association to {relatedRecord} as {association}",
     "createAssociationRecordThis": "{user} associated {mainRecord} with {relatedRecord}",
@@ -1453,6 +1488,7 @@
     "dateIsInvalid": "Date for the field '%s' is not valid.",
     "datetimeIsInvalid": "Date-time for the field '%s' is not valid.",
     "filterContainsUnknownField": "Filter contains a rule that refers to a non-existent field \"%s\".",
+    "filterContainsUnknownScope": "Filter contains a rule that refers to a non-existent entity \"%s\".",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",
     "noSuchOptions": "Value '%s' for the field '%s' is not valid.",
     "noOptionsDefined": "Options for the field '%s' are not defined.",
@@ -1481,6 +1517,8 @@
     "massRestoreNoRecordProceed": "No record was restored.",
     "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
+    "massErasePersonalDataNoRecordProceed": "No record was erased.",
+    "massErasePersonalDataSomeRecordNotProceed": "Some record(s) could not be successfully erased.",
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
     "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s.",
@@ -1728,6 +1766,19 @@
     "AttributeTypeUrl": "A web address that can have its own value for each language, e.g. https://example.com/de.",
     "ConnectionTypePsql": "A relational database that also keeps JSON values as structured data, so tables and documents can be combined in one query.",
     "ConnectionTypeMsql": "A relational database from Microsoft, common in enterprise systems and reliable under large transactional workloads.",
-    "ConnectionTypeVertica": "Reads large tables fast thanks to column storage."
+    "ConnectionTypeVertica": "Reads large tables fast thanks to column storage.",
+    "ConnectionTypeOracle": "A relational database from Oracle, widely used for enterprise applications and ERP systems.",
+    "MatchingRuleTypeFieldEqual": "Scores the candidate when the values of the field are equal.",
+    "MatchingRuleTypeFieldSimilar": "Scores the candidate when the values of the field are equal regardless of case and spaces.",
+    "MatchingRuleTypeFieldContains": "Scores the candidate when its value of the field contains the value of the record.",
+    "MatchingRuleTypeSet": "Combines several rules: AND sums their scores, OR takes the score of the first rule that matches.",
+    "MatchingRuleTypeExpression": "Scores the candidate by an ExpressionLanguage expression.",
+    "MatchingRuleTypeFieldsSimilar": "Scores the candidate by the similarity of all fields that are not used by other matching rules.",
+    "MatchingRuleTypeAttributesSimilar": "Scores the candidate by the similarity of all attributes that are not used by other matching rules.",
+    "BlockingRuleTypeFieldEqual": "Selects the candidates whose value of the field is equal.",
+    "BlockingRuleTypeFieldSimilar": "Selects the candidates whose value of the field is equal regardless of case and spaces.",
+    "BlockingRuleTypeFieldContains": "Selects the candidates whose value of the field contains the value of the record.",
+    "BlockingRuleTypeSet": "Combines several rules with AND or OR.",
+    "BlockingRuleTypeExpression": "Selects the candidates by an ExpressionLanguage expression."
   }
 }

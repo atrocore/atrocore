@@ -19,38 +19,19 @@ use Espo\ORM\Entity;
 
 class MatchingRule extends Base
 {
-    protected $mandatorySelectAttributeList = ['matchingId', 'matchingRuleSetId', 'attributeId'];
+    protected $mandatorySelectAttributeList = ['matchingId', 'matchingRuleSetId', 'number', 'type'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        $checkEntity = $entity;
-        while (true) {
-            if (empty($checkEntity->get('matchingRuleSetId'))) {
-                break;
-            }
-            $res = $this->getRepository()->get($checkEntity->get('matchingRuleSetId'));
-            if (!empty($res)) {
-                $checkEntity = $res;
-            } else {
-                break;
-            }
-        }
-
-        $matching = $checkEntity->get('matching');
+        $matching = $this->getRepository()->getMatching($entity);
         if (!empty($matching)) {
             $entity->set('editable', $this->getAcl()->check($matching, 'edit'));
         }
-
-        if (!empty($entity->get('attributeId'))) {
-            $this->putAttributesToMetadata($matching, $entity);
-        }
-
-        $entity->set('fieldDefs', $this->getMetadata()->get("entityDefs.{$matching->get('entity')}.fields.{$entity->get('field')}"));
     }
 
-    public function putAttributesToMetadata(\Atro\Entities\Matching $matching, \Atro\Entities\MatchingRule $rule): void
+    public function putAttributesToMetadata(\Atro\Entities\Matching $matching, Entity $rule): void
     {
         $entityName = $matching->get('entity');
         if (empty($this->getMetadata()->get("scopes.$entityName.hasAttribute"))) {

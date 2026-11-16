@@ -208,9 +208,15 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.filter = this.getStoredFilter();
             }
 
+            let createAclScope = this.scope;
+            if (this.getMetadata().get(['scopes', this.scope, 'hasSubtypes'])) {
+                const subtypes = Object.values(this.getMetadata().get(['scopes', this.scope, 'subtypeScopes']) || {});
+                createAclScope = subtypes.find(subtype => this.getAcl().check(subtype, 'create')) || this.scope;
+            }
+
             if (
                 this.defs.create
-                && this.getAcl().check(this.scope, 'create')
+                && this.getAcl().check(createAclScope, 'create')
                 && !~['User', 'Team'].indexOf()
                 && !(this.scope === 'EntityField' && [this.model.name, this.getMetadata().get(['scopes', this.model.name, 'supertypeId'])].includes('Entity') && this.getMetadata().get(`scopes.${this.model.id}.customizable`) === false)
             ) {
@@ -219,7 +225,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     action: this.defs.createAction || 'createRelated',
                     link: this.link,
                     acl: 'create',
-                    aclScope: this.scope,
+                    aclScope: createAclScope,
                     html: '<i class="ph ph-plus"></i>',
                     data: {
                         link: this.link,

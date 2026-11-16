@@ -841,6 +841,21 @@ class Base
         $qb->andWhere("$ta.id IN (SELECT pd.record_id FROM $tableName pd)");
     }
 
+    protected function boolFilterErased(array &$result): void
+    {
+        if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
+            throw new Forbidden();
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'containsPersonalData'])) || $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) === 'ReferenceData') {
+            throw new Error("Entity '{$this->getEntityType()}' does not contain personal data");
+        }
+
+        $result['whereClause'][] = [
+            'erasedAt!=' => null
+        ];
+    }
+
     protected function boolFilterOnlyArchived(array &$result): void
     {
         $result['whereClause'][] = [
@@ -1012,6 +1027,7 @@ class Base
         }
 
         if (!empty($params['where']) && is_array($params['where'])) {
+            $params['where'] = $this->sanitizeWhereCondition($params['where']);
             $this->mutateWhereQuery($params['where'], $result);
             if ($checkWherePermission) {
                 $this->checkWhere($params['where']);
@@ -1166,6 +1182,31 @@ class Base
         ];
 
         return $params;
+    }
+
+    protected function sanitizeWhereCondition(array $where): array
+    {
+        $clean = [];
+        foreach ($where as $key => $item) {
+            if (!is_array($item)) {
+                $clean[$key] = $item;
+                continue;
+            }
+            if (isset($item['type']) && is_string($item['type']) && strtolower($item['type']) === 'innersql') {
+                continue;
+            }
+            unset($item['innerSql']);
+            if (isset($item['rules']) && is_array($item['rules'])) {
+                $item['rules'] = $this->sanitizeWhereCondition($item['rules']);
+            }
+            if (isset($item['value']) && is_array($item['value'])) {
+                unset($item['value']['innerSql']);
+                $item['value'] = $this->sanitizeWhereCondition($item['value']);
+            }
+            $clean[$key] = $item;
+        }
+
+        return $clean;
     }
 
     protected function checkWhere($where)
@@ -1965,6 +2006,9 @@ class Base
                     }
 
                 default:
+                    if (in_array($type, ['similar', 'wordSimilar'], true) && !$this->isKnownField((string)$attribute)) {
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('filterContainsUnknownField', 'exceptions', 'Global'), $attribute));
+                    }
                     if ($this->getColumnWhereConverter()->isSupported($type)) {
                         $part = $this->getColumnWhereConverter()->convert((string)$attribute, $type, $value);
                     }

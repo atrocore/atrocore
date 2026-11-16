@@ -54,6 +54,7 @@
     "emailAddressIsOptedOut": "L'adresse mail est exclue",
     "assignedUserName": "Nom de l'utilisateur assigné",
     "modifiedAt": "Modifié à",
+    "erasedAt": "Effacé le",
     "createdBy": "Créé par",
     "modifiedBy": "Modifié par",
     "order": "Commande",
@@ -248,6 +249,7 @@
     "ConnectionTypeCookie": "Connexion: Session de cookies",
     "ConnectionTypeSmtp": "Connexion: SMTP",
     "ConnectionTypeVertica": "Connexion: Vertica DB",
+    "ConnectionTypeOracle": "Connexion: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
     "ConnectionTypeApiKey": "Connexion: Clé d'API",
     "StorageTypeLocal": "Stockage: Local (Linux)",
@@ -275,7 +277,20 @@
     "AttributeTypeLinkMultiple": "Attribut: Lien multiple",
     "AttributeTypeFile": "Attribut: Fichier",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Composite"
+    "AttributeTypeComposite": "Attribut: Composite",
+    "BlockingRule": "Règle de blocage",
+    "MatchingRuleTypeFieldEqual": "Règle d'appariement: Le champ est égal",
+    "MatchingRuleTypeFieldSimilar": "Règle d'appariement: Le champ est similaire",
+    "MatchingRuleTypeFieldContains": "Règle d'appariement: Le champ contient",
+    "MatchingRuleTypeSet": "Règle d'appariement: Ensemble",
+    "MatchingRuleTypeExpression": "Règle d'appariement: Expression",
+    "MatchingRuleTypeFieldsSimilar": "Règle d'appariement: Les champs sont similaires",
+    "MatchingRuleTypeAttributesSimilar": "Règle d'appariement: Les attributs sont similaires",
+    "BlockingRuleTypeFieldEqual": "Règle de blocage: Le champ est égal",
+    "BlockingRuleTypeFieldSimilar": "Règle de blocage: Le champ est similaire",
+    "BlockingRuleTypeFieldContains": "Règle de blocage: Le champ contient",
+    "BlockingRuleTypeSet": "Règle de blocage: Ensemble",
+    "BlockingRuleTypeExpression": "Règle de blocage: Expression"
   },
   "labels": {
     "dataLineage": "Traçabilité des données",
@@ -772,6 +787,8 @@
     "massUnfollowZeroResult": "Rien n'a été désabandonné",
     "massRestoreResult": "{count} enregistrements sont maintenant restaurés",
     "erasePersonalDataConfirmation": "Les champs sélectionnés seront effacés définitivement. Êtes-vous sûr de vous ?",
+    "erasePersonalDataRecordConfirmation": "Les données personnelles de cet enregistrement seront effacées définitivement selon le mode d'effacement de chaque champ. Êtes-vous sûr ?",
+    "erasePersonalDataRecordsConfirmation": "Les données personnelles des enregistrements sélectionnés seront effacées définitivement selon le mode d'effacement de chaque champ. Êtes-vous sûr ?",
     "duplicatedAndLinked": "Les enregistrements ont été dupliqués et reliés avec succès.",
     "deletePermanentlyRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement les enregistrements sélectionnés ?",
     "deletePermanentlyRecordConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement l'enregistrement ?",
@@ -917,6 +934,7 @@
     "ConnectionTypeCookie": "Connexion: Session de cookies",
     "ConnectionTypeSmtp": "Connexion: SMTP",
     "ConnectionTypeVertica": "Connexion: Vertica DB",
+    "ConnectionTypeOracle": "Connexion: Oracle Database",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
     "ConnectionTypeApiKey": "Connexion: Clé d'API",
     "StorageTypeLocal": "Stockage: Local (Linux)",
@@ -944,13 +962,27 @@
     "AttributeTypeLinkMultiple": "Attribut: Lien multiple",
     "AttributeTypeFile": "Attribut: Fichier",
     "AttributeTypeArray": "Attribut: Array",
-    "AttributeTypeComposite": "Attribut: Composite"
+    "AttributeTypeComposite": "Attribut: Composite",
+    "BlockingRule": "Règles de blocage",
+    "MatchingRuleTypeFieldEqual": "Règle d'appariement: Le champ est égal",
+    "MatchingRuleTypeFieldSimilar": "Règle d'appariement: Le champ est similaire",
+    "MatchingRuleTypeFieldContains": "Règle d'appariement: Le champ contient",
+    "MatchingRuleTypeSet": "Règle d'appariement: Ensemble",
+    "MatchingRuleTypeExpression": "Règle d'appariement: Expression",
+    "MatchingRuleTypeFieldsSimilar": "Règle d'appariement: Les champs sont similaires",
+    "MatchingRuleTypeAttributesSimilar": "Règle d'appariement: Les attributs sont similaires",
+    "BlockingRuleTypeFieldEqual": "Règle de blocage: Le champ est égal",
+    "BlockingRuleTypeFieldSimilar": "Règle de blocage: Le champ est similaire",
+    "BlockingRuleTypeFieldContains": "Règle de blocage: Le champ contient",
+    "BlockingRuleTypeSet": "Règle de blocage: Ensemble",
+    "BlockingRuleTypeExpression": "Règle de blocage: Expression"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
   },
   "boolFilters": {
     "containsPersonalData": "Contient des données personnelles",
+    "erased": "Effacés",
     "onlyMyTeams": "Mes équipes",
     "onlyActive": "Actif",
     "notActive": "Inactif",
@@ -965,6 +997,7 @@
     "multipleClassifications": "Classifications multiples"
   },
   "massActions": {
+    "erasePersonalData": "Effacer",
     "dataPipelineTransformSource": "Transformation des enregistrements source",
     "dataPipelineUpdateFromSource": "Mise à jour depuis la source",
     "updateFromSource": "Transformer",
@@ -1003,6 +1036,8 @@
     "assign": "{entityType} {entity} vous a été attribué."
   },
   "streamMessages": {
+    "eraseThis": "{user} a effacé les données personnelles de cet enregistrement le {datetime}.",
+    "erase": "{user} a effacé les données personnelles de {entityType} {entity} le {datetime}.",
     "composerUpdate": "{user} a modifié les paquets logiciels installés",
     "createRecordAssociationThis": "{utilisateur} a associé {relatedRecord} en tant que {association}",
     "createAssociationRecordThis": "{user} a associé {mainRecord} à {relatedRecord}",
@@ -1370,6 +1405,7 @@
     "emailIsInvalid": "L'email pour le champ '%s' n'est pas valide.",
     "fileIsInvalid": "Le fichier pour le champ '%s' n'est pas valide.",
     "filterContainsUnknownField": "Le filtre contient une règle qui fait référence à un champ inexistant \"%s\".",
+    "filterContainsUnknownScope": "Le filtre contient une règle qui fait référence à une entité inexistante \"%s\".",
     "noSuchUnit": "L'unité \"%s\" pour le champ \"%s\" n'est pas valide.",
     "noSuchOptions": "La valeur '%s' pour le champ '%s' n'est pas valide.",
     "fieldIsRequired": "La validation a échoué. '%s' est requis.",
@@ -1387,6 +1423,8 @@
     "massDeleteNoRecordProceed": "Aucun enregistrement n'a été supprimé.",
     "massUpdateSomeRecordNotProceed": "Certains enregistrements n'ont pas pu être mis à jour.",
     "massDeleteSomeRecordNotProceed": "Certains enregistrements n'ont pas pu être supprimés.",
+    "massErasePersonalDataNoRecordProceed": "Aucun enregistrement n'a été effacé.",
+    "massErasePersonalDataSomeRecordNotProceed": "Certains enregistrements n'ont pas pu être effacés.",
     "singleClassificationAllowed": "Une seule classification est autorisée",
     "moreThanOneClassification": "Certains enregistrements ont plus d'une classification.",
     "notAllowedOption": "L'option \"%s\" n'est pas autorisée pour \"%s\".",
@@ -1701,6 +1739,19 @@
     "AttributeTypeUrl": "Une adresse web qui peut avoir sa propre valeur pour chaque langue, par ex. https://example.com/fr.",
     "ConnectionTypePsql": "Une base de données relationnelle qui conserve aussi les valeurs JSON sous forme de données structurées, tables et documents peuvent ainsi être combinés dans une même requête.",
     "ConnectionTypeMsql": "Une base de données relationnelle de Microsoft, répandue dans les systèmes d'entreprise et fiable sous de fortes charges transactionnelles.",
-    "ConnectionTypeVertica": "Lit rapidement les grandes tables grâce au stockage en colonnes."
+    "ConnectionTypeVertica": "Lit rapidement les grandes tables grâce au stockage en colonnes.",
+    "ConnectionTypeOracle": "Une base de données relationnelle d'Oracle, largement utilisée pour les applications d'entreprise et les systèmes ERP.",
+    "MatchingRuleTypeFieldEqual": "Note le candidat lorsque les valeurs du champ sont égales.",
+    "MatchingRuleTypeFieldSimilar": "Note le candidat lorsque les valeurs du champ sont égales sans tenir compte de la casse et des espaces.",
+    "MatchingRuleTypeFieldContains": "Note le candidat lorsque sa valeur du champ contient la valeur de l'enregistrement.",
+    "MatchingRuleTypeSet": "Combine plusieurs règles : ET additionne leurs scores, OU prend le score de la première règle satisfaite.",
+    "MatchingRuleTypeExpression": "Note le candidat par une expression ExpressionLanguage.",
+    "MatchingRuleTypeFieldsSimilar": "Note le candidat selon la similarité de tous les champs qui ne sont pas utilisés par d'autres règles d'appariement.",
+    "MatchingRuleTypeAttributesSimilar": "Note le candidat selon la similarité de tous les attributs qui ne sont pas utilisés par d'autres règles d'appariement.",
+    "BlockingRuleTypeFieldEqual": "Sélectionne les candidats dont la valeur du champ est égale.",
+    "BlockingRuleTypeFieldSimilar": "Sélectionne les candidats dont la valeur du champ est égale sans tenir compte de la casse et des espaces.",
+    "BlockingRuleTypeFieldContains": "Sélectionne les candidats dont la valeur du champ contient la valeur de l'enregistrement.",
+    "BlockingRuleTypeSet": "Combine plusieurs règles avec ET ou OU.",
+    "BlockingRuleTypeExpression": "Sélectionne les candidats par une expression ExpressionLanguage."
   }
 }

@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "host": {
+      "type": "varchar",
+      "trim": true,
+      "default": "localhost"
+    },
+    "dbName": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "port": {
+      "type": "varchar",
+      "trim": true,
+      "default": "1521"
+    },
+    "user": {
+      "type": "varchar",
+      "trim": true
+    },
+    "password": {
+      "type": "password",
+      "trim": true
+    }
+  }
+}

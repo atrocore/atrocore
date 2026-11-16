@@ -1927,17 +1927,27 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
 
                     if (!['is_null', 'is_not_null', 'current_month', 'last_month', 'next_month', 'current_year', 'last_year'].includes(rule.operator.type)) {
-                        if (rule.operator.type !== 'between' && view) {
-                            this.filterValue = view.model.get('value');
+                        // compare with the rendered value view, previousOperatorType may be an operator without input (e.g. is_null)
+                        const multipleSwitched = this.isMultipleFilterOperator(rule.operator.type) !== !!(this.multipleFilterValueViews || {})[viewKey];
+
+                        if (multipleSwitched) {
+                            // value shape changes (scalar <-> list), so the previous value can't be reused
+                            this.filterValue = this.getDefaultFilterValue(rule.operator.type);
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                        }
+                            createValueField(rule.operator.type);
+                        } else {
+                            if (rule.operator.type !== 'between' && view) {
+                                this.filterValue = view.model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            }
 
-                        if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
-                            createValueField(rule.operator.type)
-                        }
+                            if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
+                                createValueField(rule.operator.type)
+                            }
 
-                        if (!['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
-                            createValueField(rule.operator.type)
+                            if (!['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
+                                createValueField(rule.operator.type)
+                            }
                         }
                     } else {
                         rule.value = this.defaultFilterValue;
@@ -1949,9 +1959,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.isNotListeningToOperatorChange[inputName] = true;
                 })
             }
-            this.filterValue = this.defaultFilterValue;
+            this.filterValue = this.getDefaultFilterValue(rule.operator.type);
             let createValueField = (type) => this.getModelFactory().create(null, model => {
-                model.set('value', this.defaultFilterValue);
+                model.set('value', this.getDefaultFilterValue(type ?? rule.operator.type));
                 setTimeout(() => {
                     this.previousOperatorType = type ?? rule.operator.type;
                     let view = `views/fields/${this.type}`
@@ -1965,6 +1975,13 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType)) {
                         view = 'views/fields/int';
                     }
+
+                    const isMultiple = this.isMultipleFilterOperator(this.previousOperatorType);
+                    if (isMultiple) {
+                        view = 'views/fields/array';
+                    }
+                    this.multipleFilterValueViews = this.multipleFilterValueViews || {};
+                    this.multipleFilterValueViews[viewKey] = isMultiple;
                     this.createView(viewKey, view, {
                         name: 'value',
                         el: `#${rule.id} .field-container.${inputName}`,
@@ -1986,6 +2003,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                                 if (rule.rightValue != null && rule.leftValue != null) {
                                     this.filterValue = [rule.leftValue, rule.rightValue];
                                 }
+                            } else if (this.isMultipleFilterOperator(rule.operator.type)) {
+                                this.filterValue = this.prepareMultipleFilterValue(model.get('value'));
                             } else {
                                 this.filterValue = model.get('value')
                             }
@@ -2012,6 +2031,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         filterValueGetter(rule) {
             return this.filterValue;
+        },
+
+        isMultipleFilterOperator(operatorType) {
+            return ['in', 'not_in'].includes(operatorType);
+        },
+
+        getDefaultFilterValue(operatorType) {
+            return this.isMultipleFilterOperator(operatorType) ? [] : this.defaultFilterValue;
+        },
+
+        prepareMultipleFilterValue(value) {
+            return Array.isArray(value) ? value : [];
         },
 
         initLinkIfAttribute() {

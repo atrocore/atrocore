@@ -74,6 +74,7 @@
     "receipts": "Quittungen",
     "oauth1": "Oauth 1.0",
     "vertica": "Vertica DB",
+    "oracle": "Oracle Database",
     "orders": "Bestellungen",
     "returns": "Retouren",
     "products": "Produkte",
@@ -83,6 +84,7 @@
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
     "pdoMysqlMissing": "PHP PDO MySQL-Erweiterung ist nicht installiert.",
+    "pdoOciMissing": "Die PHP-Erweiterung PDO OCI (Oracle) ist nicht installiert.",
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
     "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden.",
     "notificationConnectionCannotBeDeleted": "Diese Verbindung wird für E-Mail-Benachrichtigungen verwendet und kann nicht gelöscht werden",
@@ -109,6 +111,7 @@
       "cookie": "Cookie-Sitzung",
       "smtp": "SMTP",
       "vertica": "Vertica DB",
+      "oracle": "Oracle Database",
       "tokenAuthApi": "Token-Authentifizierungs-API",
       "apiKey": "API-Schlüssel"
     }

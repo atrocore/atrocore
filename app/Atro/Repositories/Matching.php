@@ -94,6 +94,14 @@ class Matching extends Base
             if (empty($rule)) {
                 throw new BadRequest($this->getLanguage()->translate('noRules', 'exceptions', 'Matching'));
             }
+
+            $blockingRule = $this->getEntityManager()->getRepository('BlockingRule')
+                ->where(['matchingId' => $entity->id])
+                ->findOne();
+
+            if (empty($blockingRule)) {
+                throw new BadRequest($this->getLanguage()->translate('noBlockingRules', 'exceptions', 'Matching'));
+            }
         }
 
         parent::beforeSave($entity, $options);
@@ -121,7 +129,12 @@ class Matching extends Base
             }
         }
 
-        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive') || $entity->isAttributeChanged('matchedRecordsMax')) {
+        if (
+            $entity->isAttributeChanged('minimumScore')
+            || $entity->isAttributeChanged('isActive')
+            || $entity->isAttributeChanged('matchedRecordsMax')
+            || $entity->isAttributeChanged('blockingOperator')
+        ) {
             if (!empty($entity->get('isActive'))) {
                 $this->unmarkAllMatchingSearched($entity);
             }
@@ -139,6 +152,10 @@ class Matching extends Base
         parent::afterRemove($entity, $options);
 
         $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
+
+        foreach ($entity->get('blockingRules') ?? [] as $rule) {
+            $this->getEntityManager()->removeEntity($rule);
+        }
 
         foreach ($entity->get('matchingRules') ?? [] as $rule) {
             $this->getEntityManager()->removeEntity($rule);
@@ -225,6 +242,20 @@ class Matching extends Base
         $this->getEntityManager()->saveEntity($jobEntity);
     }
 
+    public function getRecordData(MatchingEntity $matching, string $id): array
+    {
+        $conn = $this->getEntityManager()->getDbal();
+
+        $row = $conn->createQueryBuilder()
+            ->select('*')
+            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('masterEntity')))))
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->fetchAssociative();
+
+        return empty($row) ? [] : Util::arrayKeysToCamelCase($row);
+    }
+
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getDbal();
@@ -247,14 +278,21 @@ class Matching extends Base
                 ->setParameter('id', $entity->get('id'));
         }
         $rulesParts = [];
-        foreach ($matching->get('matchingRules') ?? [] as $rule) {
-            $sqlPart = $rule->prepareMatchingSqlPart($qb, $entity);
+        foreach ($matching->get('blockingRules') ?? [] as $rule) {
+            $sqlPart = $rule->prepareSqlPart($qb, $entity);
             if (!empty($sqlPart)) {
                 $rulesParts[] = $sqlPart;
             }
         }
-        if (!empty($rulesParts)) {
-            $qb->andWhere(implode(' OR ', $rulesParts));
+
+        if (empty($rulesParts)) {
+            return [];
+        }
+
+        $qb->andWhere(implode($matching->get('blockingOperator') === 'and' ? ' AND ' : ' OR ', $rulesParts));
+
+        foreach ($matching->get('matchingRules') ?? [] as $rule) {
+            $rule->prepareMatchSelect($qb, $entity);
         }
 
         return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());

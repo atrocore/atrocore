@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "matchScoreExpression": {
+      "type": "code",
+      "notStorable": true,
+      "engine": "ExpressionLanguage",
+      "variables": [
+        "stageEntity",
+        "masterEntity"
+      ],
+      "tooltip": true,
+      "required": true
+    }
+  }
+}

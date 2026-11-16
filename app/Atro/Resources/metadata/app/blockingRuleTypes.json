@@ -1,0 +1,17 @@
+{
+  "fieldEqual": {
+    "className": "\\Atro\\Core\\BlockingRuleType\\FieldEqual"
+  },
+  "fieldSimilar": {
+    "className": "\\Atro\\Core\\BlockingRuleType\\FieldSimilar"
+  },
+  "fieldContains": {
+    "className": "\\Atro\\Core\\BlockingRuleType\\FieldContains"
+  },
+  "set": {
+    "className": "\\Atro\\Core\\BlockingRuleType\\Set"
+  },
+  "expression": {
+    "className": "\\Atro\\Core\\BlockingRuleType\\Expression"
+  }
+}
