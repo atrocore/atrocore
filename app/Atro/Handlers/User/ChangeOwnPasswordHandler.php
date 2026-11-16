@@ -17,6 +17,9 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Core\OAuth\BrowserSession;
+use Atro\Core\OAuth\SessionCookie;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -96,13 +99,34 @@ class ChangeOwnPasswordHandler extends AbstractHandler
             throw new BadRequest("'currentPassword' is required.");
         }
 
+        $userId = (string)($data->userId ?? $this->getUser()->id);
+
         $this->getRecordService('User')->changeOwnPassword(
-            $data->userId ?? $this->getUser()->id,
+            $userId,
             $data->password,
             $data->currentPassword,
             $data->sendAccessInfo ?? false
         );
 
-        return new BoolResponse(true);
+        return $this->renewSession($request, new BoolResponse(true), $userId);
+    }
+
+    /**
+     * Changing the password ends all sessions of the user: the browser that changed the own password gets a new one.
+     */
+    private function renewSession(ServerRequestInterface $request, ResponseInterface $response, string $userId): ResponseInterface
+    {
+        if ($userId !== $this->getUser()->id || SessionCookie::getSessionId($request) === null) {
+            return $response;
+        }
+
+        try {
+            $session = $this->container->get(BrowserSession::class)
+                ->login($userId, (string)($request->getServerParams()['REMOTE_ADDR'] ?? ''));
+        } catch (OAuthServerException $e) {
+            return $response;
+        }
+
+        return $response->withHeader('Set-Cookie', SessionCookie::buildSessionHeaders($request, $this->getConfig()->getSiteUrl(), $session['sessionId']));
     }
 }

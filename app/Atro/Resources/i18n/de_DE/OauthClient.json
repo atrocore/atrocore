@@ -19,6 +19,7 @@
   "labels": {
     "Grant Types": "Grant-Typen",
     "authorizationRequest": "{clientName} fordert Zugriff auf Ihr Konto an. Melden Sie sich an, um ihn zu erlauben.",
+    "signedInAs": "Sie sind als {userName} angemeldet.",
     "Allow": "Erlauben",
     "Deny": "Ablehnen"
   },

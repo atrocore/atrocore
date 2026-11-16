@@ -19,6 +19,7 @@ use Atro\Core\OAuth\Authorization;
 use Atro\Core\OAuth\Entities\ClientEntity;
 use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\Routing\Route;
+use Atro\Entities\User;
 use Atro\Handlers\AbstractHandler;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ResponseInterface;
@@ -49,6 +50,11 @@ use Psr\Http\Server\RequestHandlerInterface;
                                 'type'        => 'boolean',
                                 'description' => 'Whether the user confirms that the client gets access to the account.',
                             ],
+                            'userName'          => [
+                                'type'        => 'string',
+                                'nullable'    => true,
+                                'description' => 'The user who signed in at an external identity provider and gives the consent, null when the user has not signed in yet.',
+                            ],
                         ],
                     ],
                 ],
@@ -67,22 +73,34 @@ class OauthAuthorizationRequestHandler extends AbstractHandler
     {
         $authorization = $this->container->get(Authorization::class);
 
-        $query = $authorization->decryptRequest((string)($request->getCookieParams()[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
-        if ($query === null) {
+        $keptRequest = $authorization->decryptRequest((string)($request->getCookieParams()[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
+        if ($keptRequest === null) {
             throw new BadRequest($this->getLanguage()->translate('signInExpired', 'messages', 'OauthClient'));
         }
 
         try {
-            $authorizationRequest = $authorization->validateQuery($query);
+            $authorizationRequest = $authorization->validateQuery($keptRequest['query']);
         } catch (OAuthServerException $e) {
             throw new BadRequest($e->getHint() ?: $e->getMessage());
         }
 
         $client = $authorizationRequest->getClient();
+        $user = $this->getSignedInUser($keptRequest['userId']);
 
         return new JsonResponse([
             'clientName'        => $client->getName(),
             'isConsentRequired' => !$client instanceof ClientEntity || $client->isConsentRequired(),
+            'userName'          => $user?->get('userName'),
         ]);
+    }
+
+    /**
+     * The active user who signed in at an external identity provider for the authorization request.
+     */
+    private function getSignedInUser(?string $userId): ?User
+    {
+        $user = $userId !== null ? $this->getEntityManager()->getEntity('User', $userId) : null;
+
+        return $user instanceof User && $user->isActive() ? $user : null;
     }
 }

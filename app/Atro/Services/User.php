@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\ServiceUnavailable;
+use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\TokenRevoker;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
@@ -441,8 +442,12 @@ class User extends Base
         return true;
     }
 
+    /**
+     * The sessions of the user interface and the OAuth tokens of the user end.
+     */
     private function invalidateUserTokens(string $userId): void
     {
+        $this->getContainer()->get(BrowserSession::class)->endUserSessions($userId);
         $this->getContainer()->get(TokenRevoker::class)->revokeUserTokens($userId);
     }
 

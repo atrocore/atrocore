@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\OAuth;
 
+use Atro\Core\OAuth\Entities\ClientEntity;
 use Atro\Core\Utils\Config;
 use GuzzleHttp\Psr7\Response;
 use League\OAuth2\Server\CryptTrait;
@@ -85,6 +86,7 @@ class ExternalSignIn
     /**
      * Logs in the user who came back from the provider (the request has the cookies of the sign-in): approves the
      * authorization request of the login form, the response leads the user agent to the redirect URI of its client.
+     * When the client requires the consent, the response returns to the login form, where the signed-in user gives it.
      * Without one the user is logged in to the user interface: the response sets the session cookies and returns to
      * the route the sign-in started from, "sessionId" is the ID of the session (record), to keep the data of the
      * sign-in with.
@@ -97,9 +99,26 @@ class ExternalSignIn
         $cookies = $request->getCookieParams();
         $siteUrl = $this->config->getSiteUrl();
 
-        $query = $this->authorization->decryptRequest((string)($cookies[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
-        if ($query !== null) {
-            $redirectUri = $this->authorization->approve($this->authorization->validateQuery($query), $userId);
+        $authorizationRequest = $this->authorization->decryptRequest((string)($cookies[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
+        if ($authorizationRequest !== null) {
+            $validatedRequest = $this->authorization->validateQuery($authorizationRequest['query']);
+
+            // the sign-in does not replace the consent: the user gives it on the login form, signed in
+            $client = $validatedRequest->getClient();
+            if (!$client instanceof ClientEntity || $client->isConsentRequired()) {
+                return [
+                    'response'  => (new Response(302))
+                        ->withHeader('Location', rtrim($siteUrl, '/') . '/')
+                        ->withHeader('Set-Cookie', SessionCookie::buildAuthorizationRequestHeaders(
+                            $request,
+                            $siteUrl,
+                            $this->authorization->encryptRequest($authorizationRequest['query'], $userId)
+                        )),
+                    'sessionId' => null,
+                ];
+            }
+
+            $redirectUri = $this->authorization->approve($validatedRequest, $userId);
 
             return [
                 'response'  => (new Response(302))

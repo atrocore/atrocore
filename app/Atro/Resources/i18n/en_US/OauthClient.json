@@ -20,6 +20,7 @@
     "Grant Types": "Grant Types",
     "authorizationRequest": "{clientName} requests access to your account. Sign in to allow it.",
     "Allow": "Allow",
+    "signedInAs": "You are signed in as {userName}.",
     "Deny": "Deny"
   },
   "tooltips": {
