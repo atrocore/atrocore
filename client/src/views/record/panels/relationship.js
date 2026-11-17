@@ -463,6 +463,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         disableSorting: !!this.defs.disableSorting,
                         pagination: 'bottom'
                     }, (view) => {
+                        // the records of the link that are not ready are marked in the list
+                        view.listenTo(view, 'after:render', () => this.markNotReadyRows());
+
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {
                                 collection.data.select = selectAttributeList.join(',');
@@ -660,6 +663,63 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             Dep.prototype.afterRender.call(this);
 
             this.toggleVisibilityViaConditions();
+            this.toggleReadinessMarker();
+
+            if (!this.readinessMarkerListened) {
+                this.readinessMarkerListened = true;
+                this.listenTo(this.model, 'change', () => this.toggleReadinessMarker());
+                this.listenTo(this.model, 'change:_meta', () => this.markNotReadyRows());
+            }
+        },
+
+        // the records of the link that are not ready, named by the meta group readiness of the record: their names get the flag
+        markNotReadyRows() {
+            const missing = this.model.get('_meta')?.readiness?.missing;
+            const item = Array.isArray(missing) ? missing.find(i => i.field === this.link && Array.isArray(i.ids)) : null;
+            const ids = item ? item.ids : [];
+
+            this.$el.find(`.list-container a[href^="#${this.scope}/view/"]`).each((index, anchor) => {
+                const $anchor = $(anchor);
+                $anchor.next('.not-ready-flag').remove();
+
+                if (ids.includes($anchor.attr('href').split('/').pop())) {
+                    $anchor.after(`<i class="ph ph-flag not-ready-flag" title="${this.translate('linkedRecordNotReady', 'labels', 'Global')}"></i>`);
+                }
+            });
+        },
+
+        isRequiredForReadiness() {
+            if (!this.link || !this.getMetadata().get(['scopes', this.model.name, 'hasReadiness'])) {
+                return false;
+            }
+
+            const defs = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.link]);
+            if (defs?.requiredForReadiness) {
+                return true;
+            }
+
+            const conditions = defs?.conditionalProperties?.requiredForReadiness?.conditionGroup;
+
+            return !!conditions && !!new ConditionsChecker(this).checkConditionGroup(conditions);
+        },
+
+        // the sign of a field that is required for the readiness of the record, shown at the title of the panel
+        toggleReadinessMarker() {
+            const $title = this.$el.parent().find('.panel-heading .panel-title-text').first();
+            if (!$title.length) {
+                return;
+            }
+
+            let $sign = $title.find('.readiness-sign');
+            if (this.isRequiredForReadiness()) {
+                if (!$sign.length) {
+                    $title.append(`<i class="ph ph-plus readiness-sign" style="margin-left: 6px" title="${this.translate('requiredForReadiness', 'labels', 'Global')}"></i>`);
+                } else {
+                    $sign.show();
+                }
+            } else {
+                $sign.hide();
+            }
         },
 
         toggleVisibilityViaConditions() {
