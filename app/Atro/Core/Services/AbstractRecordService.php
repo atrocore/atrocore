@@ -655,8 +655,6 @@ abstract class AbstractRecordService extends AbstractService
                 $this->calculateScriptFields($e);
             }
             if (empty($params['skipMeta']) && RequestHeaders::isMetaRequested()) {
-                // the meta of a record of a list is the light one: the listeners skip the groups that only a detail view needs
-                $e->_inList = true;
                 $this->putMeta($e);
                 if (RequestHeaders::isMetaGroupRequested('availableActions')) {
                     $this->putAclMeta($e);
