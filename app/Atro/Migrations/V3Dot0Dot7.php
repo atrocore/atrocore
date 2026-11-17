@@ -301,33 +301,40 @@ class V3Dot0Dot7 extends Base
 
     /**
      * The table of a subtype: its own id, the unique link to the supertype record that is removed together with
-     * it, the columns of the subtype fields.
+     * it, the columns of the subtype fields. The table that exists without the link gets it.
      */
     protected function createSubtypeTable(Schema $schema, string $supertypeTable, string $type, array $columns): void
     {
         $tableName = $this->getSubtypeTableName($supertypeTable, $type);
+
         if ($schema->hasTable($tableName)) {
+            $table = $schema->getTable($tableName);
+        } else {
+            $table = $schema->createTable($tableName);
+            $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
+            $table->addColumn('supertype_id', 'string', ['length' => 36, 'notnull' => false]);
+
+            foreach ($columns as $column) {
+                $options = self::COLUMNS[$column];
+                $table->addColumn($column, $options['type'], array_merge(['notnull' => false], array_diff_key($options, ['type' => true, 'index' => true])));
+                if (!empty($options['index'])) {
+                    $table->addIndex([$column], $this->generateIndexName($tableName . '_' . $column));
+                }
+            }
+
+            $table->setPrimaryKey(['id']);
+            $table->addUniqueIndex(['supertype_id']);
+        }
+
+        $foreignKeyName = $this->generateForeignKeyName($tableName . '_supertype_id');
+        if ($table->hasForeignKey($foreignKeyName)) {
             return;
         }
 
-        $table = $schema->createTable($tableName);
-        $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
-        $table->addColumn('supertype_id', 'string', ['length' => 36, 'notnull' => false]);
-
-        foreach ($columns as $column) {
-            $options = self::COLUMNS[$column];
-            $table->addColumn($column, $options['type'], array_merge(['notnull' => false], array_diff_key($options, ['type' => true, 'index' => true])));
-            if (!empty($options['index'])) {
-                $table->addIndex([$column], $this->generateIndexName($tableName . '_' . $column));
-            }
-        }
-
-        $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['supertype_id']);
-
-        $foreignKeyName = $this->generateForeignKeyName($tableName . '_supertype_id');
         $table->addForeignKeyConstraint($supertypeTable, ['supertype_id'], ['id'], ['onDelete' => 'CASCADE'], $foreignKeyName);
-        $table->addIndex(['supertype_id'], $foreignKeyName);
+        if (!$table->hasIndex($foreignKeyName)) {
+            $table->addIndex(['supertype_id'], $foreignKeyName);
+        }
     }
 
     /**

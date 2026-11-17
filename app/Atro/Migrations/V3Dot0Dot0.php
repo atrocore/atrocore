@@ -21,6 +21,8 @@ use Ramsey\Uuid\Uuid;
 
 class V3Dot0Dot0 extends Base
 {
+    protected const int MAX_INDEX_LENGTH = 3072;
+
     public function getMigrationDateTime(): ?\DateTime
     {
         return new \DateTime('2026-10-30 12:00:00');
@@ -28,10 +30,98 @@ class V3Dot0Dot0 extends Base
 
     public function up(): void
     {
+        $this->convertToUtf8mb4();
         $this->migrateConnection();
         $this->migrateStorage();
         $this->migrateAction();
         $this->migrateAttribute();
+    }
+
+    /**
+     * MySQL stores the texts in utf8mb4. The tables and the columns created in utf8mb3 are converted to it, a binary
+     * collation stays binary. The types of the columns stay the same. A table with an index that is too long for
+     * utf8mb4 stays as it is.
+     */
+    protected function convertToUtf8mb4(): void
+    {
+        if ($this->isPgSQL()) {
+            return;
+        }
+
+        $tableNames = array_diff($this->getUtf8mb3TableNames(), $this->getTableNamesWithTooLongIndex());
+        if (empty($tableNames)) {
+            return;
+        }
+
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        foreach ($tableNames as $tableName) {
+            if (!$toSchema->hasTable($tableName)) {
+                continue;
+            }
+
+            foreach ($toSchema->getTable($tableName)->getColumns() as $column) {
+                if (!$column->hasPlatformOption('collation')) {
+                    continue;
+                }
+
+                $collation = (string)$column->getPlatformOption('collation');
+                if (!str_starts_with($collation, 'utf8_') && !str_starts_with($collation, 'utf8mb3_')) {
+                    continue;
+                }
+
+                $column->setPlatformOption('charset', 'utf8mb4');
+                $column->setPlatformOption('collation', str_ends_with($collation, '_bin') ? 'utf8mb4_bin' : 'utf8mb4_unicode_ci');
+            }
+        }
+
+        $conn = $this->getDbal();
+        $conn->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+
+        try {
+            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                $conn->executeStatement($sql);
+            }
+
+            foreach ($tableNames as $tableName) {
+                $conn->executeStatement('ALTER TABLE ' . $conn->quoteIdentifier($tableName) . ' DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+            }
+        } finally {
+            $conn->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+        }
+    }
+
+    /**
+     * The tables in utf8mb3 and the tables with columns in utf8mb3.
+     */
+    protected function getUtf8mb3TableNames(): array
+    {
+        $tableNames = $this->getDbal()->fetchFirstColumn(
+            "SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE() AND table_type = 'BASE TABLE' AND (table_collation LIKE 'utf8\_%' OR table_collation LIKE 'utf8mb3\_%')"
+        );
+
+        $columnTableNames = $this->getDbal()->fetchFirstColumn(
+            "SELECT DISTINCT table_name FROM information_schema.columns WHERE table_schema = DATABASE() AND character_set_name IN ('utf8', 'utf8mb3')"
+        );
+
+        return array_values(array_unique(array_merge($tableNames, $columnTableNames)));
+    }
+
+    /**
+     * An index of InnoDB is at most 3072 bytes long, a character of utf8mb4 takes 4 bytes.
+     */
+    protected function getTableNamesWithTooLongIndex(): array
+    {
+        return $this->getDbal()->fetchFirstColumn(
+            "SELECT DISTINCT t.table_name FROM (
+                SELECT s.table_name, s.index_name, SUM(CASE WHEN c.character_maximum_length IS NULL THEN 8 ELSE COALESCE(s.sub_part, c.character_maximum_length) * 4 END) AS length
+                FROM information_schema.statistics s
+                JOIN information_schema.columns c ON c.table_schema = s.table_schema AND c.table_name = s.table_name AND c.column_name = s.column_name
+                WHERE s.table_schema = DATABASE() AND s.index_type = 'BTREE'
+                GROUP BY s.table_name, s.index_name
+            ) t WHERE t.length > " . self::MAX_INDEX_LENGTH
+        );
     }
 
     /**
