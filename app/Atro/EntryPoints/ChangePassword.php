@@ -11,6 +11,7 @@
 
 namespace Atro\EntryPoints;
 
+use Atro\Core\Authentication\PasswordChangeRequests;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 
@@ -25,15 +26,17 @@ class ChangePassword extends AbstractEntryPoint
             throw new BadRequest();
         }
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->findActive($id);
-
-        if (!$p) {
+        if ($this->container->get(PasswordChangeRequests::class)->findUserId($id) === null) {
             throw new NotFound();
         }
 
+        $requestId = json_encode($id);
+
         $runScript = "
-            app.getController('PasswordChangeRequest', function (controller) {
-                controller.doAction('passwordChange', '{$id}');
+            app.getController(null, function (controller) {
+                controller.entire('views/user/password-change-request', {requestId: {$requestId}}, function (view) {
+                    view.render();
+                });
             });
         ";
         $vars['classReplaceMap'] = json_encode($this->getMetadata()->get(['app', 'clientClassReplaceMap']));
