@@ -17,13 +17,12 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\ServiceUnavailable;
+use Atro\Core\Authentication\PasswordChangeRequests;
 use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\TokenRevoker;
-use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\PasswordHash;
-use Atro\Repositories\PasswordChangeRequest as PasswordChangeRequestRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Atro\Core\Templates\Services\Base;
@@ -206,15 +205,10 @@ class User extends Base
 
     public function changePasswordByRequest(string $requestId, string $password): bool
     {
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->findActive($requestId);
+        $userId = $this->getPasswordChangeRequests()->findUserId($requestId);
 
-        if (!$p) {
+        if ($userId === null) {
             throw new NotFound();
-        }
-
-        $userId = $p->get('userId');
-        if (!$userId) {
-            throw new Error();
         }
 
         try {
@@ -222,11 +216,11 @@ class User extends Base
         } catch (BadRequest $e) {
             throw $e;
         } catch (\Throwable $e) {
-            $this->getEntityManager()->removeEntity($p);
+            $this->getPasswordChangeRequests()->removeByUser($userId);
             throw $e;
         }
 
-        $this->getEntityManager()->getRepository('PasswordChangeRequest')->removeByUser($userId);
+        $this->getPasswordChangeRequests()->removeByUser($userId);
 
         return true;
     }
@@ -258,13 +252,6 @@ class User extends Base
             throw new ServiceUnavailable($this->getLanguage()->translate('passwordChangeRequestUnavailable', 'messages', 'User'));
         }
 
-        $repository = $this->getEntityManager()->getRepository('PasswordChangeRequest');
-
-        $repository->removeOutdated();
-
-        $resendInterval = max(1, (int)$this->getConfig()->get('passwordChangeRequestResendInterval', PasswordChangeRequestRepository::DEFAULT_RESEND_INTERVAL));
-        $resendAllowedFrom = (new \DateTime())->modify("-$resendInterval minutes");
-
         $user = $this->getEntityManager()->getRepository('User')
             ->where([
                 'userName'     => $userName,
@@ -276,16 +263,13 @@ class User extends Base
             return true;
         }
 
-        $recentRequestCount = $repository
-            ->where([
-                'userId'     => $user->id,
-                'createdAt>' => $resendAllowedFrom->format('Y-m-d H:i:s')
-            ])
-            ->count();
-
-        if ($recentRequestCount > 0) {
+        if (!$this->getPasswordChangeRequests()->isResendAllowed($user->id)) {
             throw new BadRequest(
-                str_replace('{minutes}', (string)$resendInterval, $this->getLanguage()->translate('passwordChangeRequestTooFrequent', 'messages', 'User'))
+                str_replace(
+                    '{minutes}',
+                    (string)$this->getPasswordChangeRequests()->getResendInterval(),
+                    $this->getLanguage()->translate('passwordChangeRequestTooFrequent', 'messages', 'User')
+                )
             );
         }
 
@@ -296,22 +280,13 @@ class User extends Base
 
     protected function createPasswordChangeRequest(\Atro\Entities\User $user, bool $isResetAction): void
     {
-        $requestId = IdGenerator::uuid();
+        $token = $this->getPasswordChangeRequests()->create($user->id);
 
-        $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
-        $passwordChangeRequest->set([
-            'userId'    => $user->id,
-            'requestId' => $requestId
-        ]);
-
-        $this->sendChangePasswordLink($requestId, $user->get('emailAddress'), null, $isResetAction);
-
-        $this->getEntityManager()->getRepository('PasswordChangeRequest')->removeByUser($user->id);
-
-        $this->getEntityManager()->saveEntity($passwordChangeRequest);
-
-        if (!$passwordChangeRequest->id) {
-            throw new Error();
+        try {
+            $this->sendChangePasswordLink($token, $user->get('emailAddress'), null, $isResetAction);
+        } catch (\Throwable $e) {
+            $this->getPasswordChangeRequests()->removeByUser($user->id);
+            throw $e;
         }
     }
 
@@ -567,6 +542,11 @@ class User extends Base
     protected function getContainer(): Container
     {
         return $this->getInjection('container');
+    }
+
+    protected function getPasswordChangeRequests(): PasswordChangeRequests
+    {
+        return $this->getContainer()->get(PasswordChangeRequests::class);
     }
 
     protected function getPasswordHash(): PasswordHash

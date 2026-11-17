@@ -16,6 +16,7 @@ namespace Atro\Console;
 use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
+use Atro\Core\Authentication\PasswordChangeRequests;
 use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\TokenRevoker;
 use Espo\ORM\EntityManager;
@@ -89,9 +90,10 @@ class Cron extends AbstractConsole
 
         $this->getContainer()->get(CurrentUser::class)->setSystemUser();
 
-        // end the expired sessions of the user interface and remove the expired OAuth tokens
+        // end the expired sessions of the user interface, remove the expired OAuth tokens and password change requests
         $this->getContainer()->get(BrowserSession::class)->deleteExpired();
         $this->getContainer()->get(TokenRevoker::class)->deleteExpired();
+        $this->getContainer()->get(PasswordChangeRequests::class)->deleteExpired();
 
         // find pending job to create queue file
         $this->createQueueFile();
