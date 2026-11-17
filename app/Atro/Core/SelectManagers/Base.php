@@ -968,35 +968,33 @@ class Base
             return;
         }
 
-        $sortBy = (string)$params['sortBy'];
-        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType(), 'read');
-
-        // composite values like "t1.column" are converted by the QueryConverter into raw "alias.column" paths and would bypass field level ACL
-        $isComposite = str_contains($sortBy, '.');
+        $sortBy = $params['sortBy'];
+        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType());
 
         $isExists = false;
-        if (!$isComposite) {
-            if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy])) {
-                $isExists = true;
-            } elseif (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute']))) {
+        if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy])) {
+            $isExists = true;
+        } elseif (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute']))) {
+            if (!isset($this->cachedData['attributes'][$this->getEntityType()][$sortBy])) {
                 // attribute fields are sorted by "{name}", "{name}Unit", "{name}From" or "{name}To"
-                $candidates = array_values(array_unique([$sortBy, preg_replace('/(Unit|From|To)$/', '', $sortBy)]));
+                $ids = array_values(array_unique([$sortBy, preg_replace('/(Unit|From|To)$/', '', $sortBy)]));
                 $conn = $this->getEntityManager()->getDbal();
-                $isExists = $conn->createQueryBuilder()
+                $this->cachedData['attributes'][$this->getEntityType()][$sortBy] = $conn->createQueryBuilder()
                         ->select('a.id')
                         ->from($conn->quoteIdentifier('attribute'), 'a')
-                        ->where('a.system_name IN (:systemNames)')
+                        ->where('a.system_name IN (:ids) OR a.id IN (:ids)')
                         ->andWhere('a.entity_id = :entityName')
                         ->andWhere('a.deleted = :false')
-                        ->setParameter('systemNames', $candidates, Connection::PARAM_STR_ARRAY)
+                        ->setParameter('ids', $ids, Connection::PARAM_STR_ARRAY)
                         ->setParameter('entityName', $this->getEntityType())
                         ->setParameter('false', false, ParameterType::BOOLEAN)
                         ->setMaxResults(1)
                         ->fetchOne() !== false;
             }
+            $isExists = $this->cachedData['attributes'][$this->getEntityType()][$sortBy];
         }
 
-        if (!$isComposite && $isExists && !in_array($sortBy, $forbiddenAttributeList)) {
+        if ($isExists && !in_array($sortBy, $forbiddenAttributeList)) {
             return;
         }
 
