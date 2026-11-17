@@ -52,6 +52,7 @@ class EntityField extends ReferenceData
         'isDuplicatableRelation',
         'modifiedExtendedEnabled',
         'conditionalRequired',
+        'conditionalRequiredForReadiness',
         'conditionalReadOnly',
         'conditionalProtected',
         'conditionalVisible',
@@ -242,6 +243,7 @@ class EntityField extends ReferenceData
             'entityName'                => $this->translate($entityName, 'scopeNames'),
             'tooltipText'               => $this->translate($fieldName, 'tooltips', $entityName),
             'conditionalRequired'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
+            'conditionalRequiredForReadiness' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.requiredForReadiness"),
             'conditionalReadOnly'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
             'conditionalProtected'      => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.protected"),
             'conditionalVisible'        => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
@@ -1247,6 +1249,11 @@ class EntityField extends ReferenceData
         if ($entity->isAttributeChanged('conditionalRequired')) {
             $conditionalProperties['required'] = $entity->get('conditionalRequired');
             $conditionalPropertiesChanged      = true;
+        }
+
+        if ($entity->isAttributeChanged('conditionalRequiredForReadiness')) {
+            $conditionalProperties['requiredForReadiness'] = $entity->get('conditionalRequiredForReadiness');
+            $conditionalPropertiesChanged                  = true;
         }
 
         if ($entity->isAttributeChanged('conditionalReadOnly')) {

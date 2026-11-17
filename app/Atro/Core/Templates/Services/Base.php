@@ -649,6 +649,7 @@ class Base extends AbstractRecordService implements
                 $this->prepareEntityForOutput($e);
 
                 if (RequestHeaders::isMetaRequested()) {
+                    $e->_inList = true;
                     $this->putMeta($e);
                     if (RequestHeaders::isMetaGroupRequested('availableActions')) {
                         $this->putAclMeta($e);

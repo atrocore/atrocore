@@ -406,6 +406,7 @@ class AttributeFieldConverter
             }
         }
 
+        $classificationAttrs = [];
         if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
             $propertyFields = [];
             foreach ($this->metadata->get('entityDefs.ClassificationAttribute.fields', []) as $f => $fDefs) {
@@ -563,7 +564,7 @@ class AttributeFieldConverter
             $this->convert($entity, $row, $attributesDefs);
         }
 
-        $attributesDefs = $this->eventManager->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $res, 'attributesDefs' => $attributesDefs]))
+        $attributesDefs = $this->eventManager->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $res, 'attributesDefs' => $attributesDefs, 'classificationAttributes' => $classificationAttrs]))
             ->getArgument('attributesDefs');
 
         $entity->set('attributesDefs', $attributesDefs);
