@@ -39,8 +39,9 @@ class V3Dot0Dot0 extends Base
 
     /**
      * MySQL stores the texts in utf8mb4. The tables and the columns created in utf8mb3 are converted to it, a binary
-     * collation stays binary. The types of the columns stay the same. A table with an index that is too long for
-     * utf8mb4 stays as it is.
+     * collation stays binary. The types of the columns stay the same. MySQL does not change a column of a foreign
+     * key, so the foreign keys of the converted tables are removed and created again. A table with an index that is
+     * too long for utf8mb4 stays as it is, together with the tables linked to it by foreign keys.
      */
     protected function convertToUtf8mb4(): void
     {
@@ -48,47 +49,121 @@ class V3Dot0Dot0 extends Base
             return;
         }
 
-        $tableNames = array_diff($this->getUtf8mb3TableNames(), $this->getTableNamesWithTooLongIndex());
+        $schema = $this->getCurrentSchema();
+
+        $tableNames = [];
+        foreach ($schema->getTables() as $table) {
+            $tableNames[] = $table->getName();
+        }
+        $tableNames = array_values(array_intersect($this->getUtf8mb3TableNames(), $tableNames));
+
+        $tableNames = $this->excludeLinkedTableNames(
+            $schema,
+            $tableNames,
+            array_values(array_intersect($this->getTableNamesWithTooLongIndex(), $tableNames))
+        );
+
         if (empty($tableNames)) {
             return;
         }
 
-        $fromSchema = $this->getCurrentSchema();
-        $toSchema = clone $fromSchema;
-
-        foreach ($tableNames as $tableName) {
-            if (!$toSchema->hasTable($tableName)) {
-                continue;
-            }
-
-            foreach ($toSchema->getTable($tableName)->getColumns() as $column) {
-                if (!$column->hasPlatformOption('collation')) {
-                    continue;
-                }
-
-                $collation = (string)$column->getPlatformOption('collation');
-                if (!str_starts_with($collation, 'utf8_') && !str_starts_with($collation, 'utf8mb3_')) {
-                    continue;
-                }
-
-                $column->setPlatformOption('charset', 'utf8mb4');
-                $column->setPlatformOption('collation', str_ends_with($collation, '_bin') ? 'utf8mb4_bin' : 'utf8mb4_unicode_ci');
-            }
-        }
+        $foreignKeys = $this->getForeignKeysOfTables($schema, $tableNames);
 
         $conn = $this->getDbal();
         $conn->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
 
         try {
-            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-                $conn->executeStatement($sql);
+            $fromSchema = $this->getCurrentSchema();
+            $toSchema = clone $fromSchema;
+            foreach ($foreignKeys as $row) {
+                $toSchema->getTable($row['table'])->removeForeignKey($row['foreignKey']->getName());
             }
+            $this->executeSchemaDiff($fromSchema, $toSchema);
+
+            $fromSchema = $this->getCurrentSchema();
+            $toSchema = clone $fromSchema;
+            foreach ($tableNames as $tableName) {
+                foreach ($toSchema->getTable($tableName)->getColumns() as $column) {
+                    if (!$column->hasPlatformOption('collation')) {
+                        continue;
+                    }
+
+                    $collation = (string)$column->getPlatformOption('collation');
+                    if (!str_starts_with($collation, 'utf8_') && !str_starts_with($collation, 'utf8mb3_')) {
+                        continue;
+                    }
+
+                    $column->setPlatformOption('charset', 'utf8mb4');
+                    $column->setPlatformOption('collation', str_ends_with($collation, '_bin') ? 'utf8mb4_bin' : 'utf8mb4_unicode_ci');
+                }
+            }
+            $this->executeSchemaDiff($fromSchema, $toSchema);
 
             foreach ($tableNames as $tableName) {
                 $conn->executeStatement('ALTER TABLE ' . $conn->quoteIdentifier($tableName) . ' DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
             }
+
+            $fromSchema = $this->getCurrentSchema();
+            $toSchema = clone $fromSchema;
+            foreach ($foreignKeys as $row) {
+                $foreignKey = $row['foreignKey'];
+                $toSchema->getTable($row['table'])->addForeignKeyConstraint(
+                    $foreignKey->getForeignTableName(),
+                    $foreignKey->getLocalColumns(),
+                    $foreignKey->getForeignColumns(),
+                    $foreignKey->getOptions(),
+                    $foreignKey->getName()
+                );
+            }
+            $this->executeSchemaDiff($fromSchema, $toSchema);
         } finally {
             $conn->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+        }
+    }
+
+    /**
+     * The tables that stay in utf8mb3 keep the tables linked to them by foreign keys in utf8mb3 too, otherwise their
+     * foreign keys could not be created again.
+     */
+    protected function excludeLinkedTableNames(Schema $schema, array $tableNames, array $keptTableNames): array
+    {
+        $tableNames = array_values(array_diff($tableNames, $keptTableNames));
+
+        do {
+            $count = count($tableNames);
+            foreach ($this->getForeignKeysOfTables($schema, $tableNames) as $row) {
+                $linked = [$row['table'], $row['foreignKey']->getForeignTableName()];
+                if (!empty(array_intersect($linked, $keptTableNames))) {
+                    $keptTableNames = array_unique(array_merge($keptTableNames, $linked));
+                    $tableNames = array_values(array_diff($tableNames, $linked));
+                }
+            }
+        } while ($count !== count($tableNames));
+
+        return $tableNames;
+    }
+
+    /**
+     * The foreign keys that a table of the list has or that refer to a table of the list.
+     */
+    protected function getForeignKeysOfTables(Schema $schema, array $tableNames): array
+    {
+        $result = [];
+        foreach ($schema->getTables() as $table) {
+            foreach ($table->getForeignKeys() as $foreignKey) {
+                if (in_array($table->getName(), $tableNames, true) || in_array($foreignKey->getForeignTableName(), $tableNames, true)) {
+                    $result[] = ['table' => $table->getName(), 'foreignKey' => $foreignKey];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected function executeSchemaDiff(Schema $fromSchema, Schema $toSchema): void
+    {
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getDbal()->executeStatement($sql);
         }
     }
 
