@@ -1,106 +1,106 @@
 {
     "fields": {
-        "number": "",
-        "masterEntity": "",
-        "clusterItems": "",
-        "rejectedClusterItems": "",
-        "stagingItemCount": "",
-        "masterItemCount": "",
-        "status": "",
-        "consolidationMethod": "",
-        "executionMode": ""
+        "number": "Szám",
+        "masterEntity": "Mesterentitás",
+        "clusterItems": "Klaszterelemek",
+        "rejectedClusterItems": "Elutasított klaszterelemek",
+        "stagingItemCount": "Közreműködő elemek száma",
+        "masterItemCount": "Főelem darabszáma",
+        "status": "Állapot",
+        "consolidationMethod": "Konszolidálási módszer",
+        "executionMode": "Végrehajtási mód"
     },
     "options": {
         "status": {
-            "empty": "",
-            "review": "",
-            "consolidated": "",
-            "invalid": ""
+            "empty": "Üres",
+            "review": "Ellenőrzés",
+            "consolidated": "Konszolidált",
+            "invalid": "Érvénytelen"
         },
         "consolidationMethod": {
-            "ruleBased": "",
-            "hybrid": "",
-            "manual": ""
+            "ruleBased": "Szabályalapú",
+            "hybrid": "Hibrid",
+            "manual": "Manuális"
         },
         "executionMode": {
-            "automatic": "",
-            "manual": ""
+            "automatic": "Automatikus",
+            "manual": "Manuális"
         }
     },
     "actions": {
-        "reject": "",
-        "consolidate": "",
-        "unreject": "",
-        "deconsolidate": "",
-        "split": "",
-        "move": "",
-        "purge": ""
+        "reject": "Elutasítás",
+        "consolidate": "Konszolidálás",
+        "unreject": "Elutasítás visszavonása",
+        "deconsolidate": "Szétválasztás",
+        "split": "Szétválasztás",
+        "move": "Áthelyezés",
+        "purge": "Végleges törlés"
     },
     "massActions": {
-        "purge": ""
+        "purge": "Végleges törlés"
     },
     "massActionConfirmMessages": {
-        "purge": "",
-        "purgeAll": ""
+        "purge": "Biztos benne, hogy véglegesen törli a kijelölt klasztereket? Ez a művelet nem vonható vissza.",
+        "purgeAll": "Biztosan véglegesen törölni szeretné az összes klasztert? Ez a művelet nem vonható vissza."
     },
     "actionConfirms": {
-        "purge": ""
+        "purge": "Biztosan véglegesen törli ezt a klasztert? Ez a művelet nem vonható vissza."
     },
     "exceptions": {
-        "cannotDelete": "",
-        "cannotMergeWithoutGoldenRecord": "",
-        "noClusterItemsToPreview": "",
-        "cannotPreviewInvalidCluster": "",
-        "clusterItemsNotInCluster": ""
+        "cannotDelete": "Csak üres klaszterek törölhetők",
+        "cannotMergeWithoutGoldenRecord": "Aranyrekord nélkül nem lehet összevonni",
+        "noClusterItemsToPreview": "Nincs előnézet: a klaszterben nincsenek közreműködő elemek",
+        "cannotPreviewInvalidCluster": "Érvénytelen klaszter esetén nem tekinthető meg a konszolidáció előnézete",
+        "clusterItemsNotInCluster": "A klaszter elemei (%s) nem tartoznak ehhez a klaszterhez"
     },
     "messages": {
-        "noClusterFound": "",
-        "consolidated": ""
+        "noClusterFound": "Nem található klaszter ehhez a rekordhoz",
+        "consolidated": "Konszolidált"
     },
     "labels": {
-        "contributorRecord": "",
-        "contributorRecords": "",
-        "contributorRecordsPanel": "",
-        "masterRecord": "",
-        "masterRecords": "",
-        "masterRecordsPanel": "",
-        "consolidated": "",
-        "unconsolidated": "",
-        "rejected": "",
-        "consolidationPreview": "",
-        "standardView": "",
-        "comparisonView": "",
-        "manualConsolidationView": "",
-        "suggestedValues": "",
-        "selectAllSuggestedValues": "",
-        "consolidationPreviewHint": "",
-        "noConsolidationConfigured": "",
-        "discard": ""
+        "contributorRecord": "Közreműködő rekord",
+        "contributorRecords": "közreműködő rekordok",
+        "contributorRecordsPanel": "Közreműködő rekordok",
+        "masterRecord": "főrekord",
+        "masterRecords": "főrekordok",
+        "masterRecordsPanel": "Főrekordok",
+        "consolidated": "Konszolidált",
+        "unconsolidated": "Nincs konszolidálva",
+        "rejected": "Elutasítva",
+        "consolidationPreview": "Konszolidáció előnézete",
+        "standardView": "Normál",
+        "comparisonView": "Összehasonlítás",
+        "manualConsolidationView": "Manuális konszolidáció",
+        "suggestedValues": "Javasolt értékek",
+        "selectAllSuggestedValues": "Összes javasolt érték kijelölése",
+        "consolidationPreviewHint": "Megmutatja, hogyan nézne ki az aranyrekord a konszolidáció után. A rendszer nem menti a módosításokat.",
+        "noConsolidationConfigured": "Ehhez az entitáshoz nincs konszolidáció beállítva",
+        "discard": "Elvetés"
     },
     "streamMessages": {
-        "clusterLinked": "",
-        "clusterLinkedThis": "",
-        "clusterUnlinked": "",
-        "clusterUnlinkedThis": "",
-        "clusterRejected": "",
-        "clusterRejectedThis": "",
-        "clusterReincluded": "",
-        "clusterReincludedThis": "",
-        "clusterMoved": "",
-        "clusterMovedThis": "",
-        "clusterConsolidated": "",
-        "clusterConsolidatedThis": "",
-        "clusterDeconsolidated": "",
-        "clusterDeconsolidatedThis": "",
-        "clusterGoldenRecord": "",
-        "clusterGoldenRecordThis": "",
-        "clusterDeleted": "",
-        "clusterDeletedThis": "",
-        "clusterRecordDeleted": "",
-        "clusterRecordDeletedThis": "",
-        "clusterMovedToCluster": "",
-        "clusterMovedToClusterThis": "",
-        "clusterMovedFromCluster": "",
-        "clusterMovedFromClusterThis": ""
+        "clusterLinked": "A(z) {user} hozzákapcsolta a(z) {relatedEntity} elemet ehhez a klaszterhez",
+        "clusterLinkedThis": "{user} összekapcsolta a(z) {relatedEntity} rekordot ezzel a klaszterrel",
+        "clusterUnlinked": "{user} leválasztotta a(z) {relatedEntity} elemet erről a klaszterről",
+        "clusterUnlinkedThis": "A(z) {user} leválasztotta a(z) {relatedEntity} rekordot erről a klaszterről",
+        "clusterRejected": "{user} elutasította a(z) {relatedEntity} elemet ebben a klaszterben",
+        "clusterRejectedThis": "{user} elutasította a(z) {relatedEntity} elemet ebben a klaszterben",
+        "clusterReincluded": "{user} ismét hozzáadta a(z) {relatedEntity} elemet ehhez a klaszterhez",
+        "clusterReincludedThis": "{user} újra bevonta a(z) {relatedEntity} rekordot ebbe a klaszterbe",
+        "clusterMoved": "A(z) {user} áthelyezte a(z) {relatedEntity} rekordot ebből a klaszterből",
+        "clusterMovedThis": "A(z) {user} eltávolította a(z) {relatedEntity} elemet ebből a klaszterből",
+        "clusterConsolidated": "A(z) {user} konszolidálta a(z) {relatedEntity} elemet ebben a klaszterben",
+        "clusterConsolidatedThis": "{user} egyesítette a(z) {relatedEntity} rekordot ebben a klaszterben",
+        "clusterDeconsolidated": "{user} megszüntette a(z) {relatedEntity} konszolidációját ebben a klaszterben",
+        "clusterDeconsolidatedThis": "{user} megszüntette a(z) {relatedEntity} rekord egyesítését ebben a klaszterben",
+        "clusterGoldenRecord": "A(z) {user} aranyrekordként állította be a(z) {relatedEntity} rekordot ebben a klaszterben",
+        "clusterGoldenRecordThis": "{user} aranyrekordként jelölte meg a(z) {relatedEntity} elemet ebben a klaszterben",
+        "clusterDeleted": "A(z) {user} törölte ezt a klasztert",
+        "clusterDeletedThis": "{user} törölte ezt a klasztert",
+        "clusterRecordDeleted": "A(z) {user} törölte a(z) {relatedEntity} rekordot ebből a klaszterből",
+        "clusterRecordDeletedThis": "{user} törölte a(z) {relatedEntity} rekordot ebből a klaszterből",
+        "clusterMovedToCluster": "A(z) {user} áthelyezte a(z) {records} elemet a(z) {clusterLink} klaszterből a(z) {entity} entitásba",
+        "clusterMovedToClusterThis": "A(z) {user} áthelyezte a(z) {clusterLink} klaszterből ebbe a klaszterbe a(z) {records} rekordot",
+        "clusterMovedFromCluster": "A(z) {user} áthelyezte a(z) {entity} entitásból a(z) {clusterLink} klaszterbe a(z) {records} rekordot",
+        "clusterMovedFromClusterThis": "{user} áthelyezte a(z) {records} rekordot ebből a klaszterből a(z) {clusterLink} klaszterbe"
     }
 }
