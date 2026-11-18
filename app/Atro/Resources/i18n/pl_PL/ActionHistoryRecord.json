@@ -1,13 +1,17 @@
 {
-  "fields": {
-    "user": "Użytkownik",
-    "action": "Akcja",
-    "createdAt": "Data",
-    "target": "Cel",
-    "ipAddress": "Adres IP",
-    "data": "Dane",
-    "controllerName": "Nazwa kontrolera",
-    "targetName": "Nazwa celu",
-    "targetId": "Identyfikator celu"
-  }
+    "fields": {
+        "user": "Użytkownik",
+        "action": "Akcja",
+        "createdAt": "Data",
+        "target": "Cel",
+        "ipAddress": "Adres IP",
+        "data": "Dane",
+        "controllerName": "Nazwa kontrolera",
+        "targetName": "Nazwa celu",
+        "targetId": "Identyfikator celu",
+        "oauthClient": "Klient OAuth"
+    },
+    "links": {
+        "oauthClient": "Klient OAuth"
+    }
 }
