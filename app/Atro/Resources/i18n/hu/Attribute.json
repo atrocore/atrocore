@@ -1,0 +1,122 @@
+{
+    "fields": {
+        "entity": "",
+        "compositeAttribute": "",
+        "nestedAttributes": "",
+        "attributeGroup": "",
+        "attributePanel": "",
+        "systemName": "",
+        "products": "",
+        "isMultilang": "",
+        "fileType": "",
+        "pattern": "",
+        "measure": "",
+        "defaultUnit": "",
+        "prefixEnabled": "",
+        "defaultDate": "",
+        "isRequired": "",
+        "isReadOnly": "",
+        "isProtected": "",
+        "allowNullForBool": "",
+        "tooltip": "",
+        "maxLength": "",
+        "countBytesInsteadOfCharacters": "",
+        "useDisabledTextareaInViewMode": "",
+        "amountOfDigitsAfterComma": "",
+        "description": "",
+        "classifications": "",
+        "min": "",
+        "max": "",
+        "notNull": "",
+        "trim": "",
+        "classificationAttributes": "",
+        "preparedName": "",
+        "htmlSanitizer": "",
+        "fullWidth": "",
+        "channel": "",
+        "attributeGroupSortOrder": "",
+        "conditionalRequired": "",
+        "conditionalVisible": "",
+        "conditionalReadOnly": "",
+        "conditionalProtected": "",
+        "conditionalDisableOptions": "",
+        "modifiedExtendedDisabled": "",
+        "duplicateIgnore": "",
+        "entityType": "",
+        "entityField": "",
+        "selectPageSize": "",
+        "options": ""
+    },
+    "labels": {
+        "Classification": "",
+        "addNewValue": "",
+        "conditionalProperties": "",
+        "viewRecordsWithAttribute": ""
+    },
+    "options": {
+        "type": {
+            "array": "",
+            "bool": "",
+            "composite": "",
+            "date": "",
+            "datetime": "",
+            "float": "",
+            "int": "",
+            "enum": "",
+            "multiEnum": "",
+            "text": "",
+            "markdown": "",
+            "url": "",
+            "varchar": "",
+            "wysiwyg": "",
+            "rangeInt": "",
+            "rangeFloat": "",
+            "file": "",
+            "link": "",
+            "linkMultiple": ""
+        }
+    },
+    "messages": {
+        "sameNumberOptions": "",
+        "productsCountWithAttribute": "",
+        "removeAttribute(s)": ""
+    },
+    "filterLabels": {
+        "All": ""
+    },
+    "boolFilters": {
+        "notLinkedWithAnyRecord": ""
+    },
+    "tooltips": {
+        "pattern": "",
+        "defaultDate": "",
+        "dropdown": "",
+        "selectPageSize": ""
+    },
+    "exceptions": {
+        "entityNotAllowToChoose": "",
+        "wrongAttributeEntity": "",
+        "attributeEntityMustBeSameAsInCompositeAttribute": "",
+        "attributeNotBelongToEntity": "",
+        "entityCannotBeChanged": "",
+        "compositeAttributeNotFound": "",
+        "compositeAttributeCannotBeChild": "",
+        "fileTypeCannotBeDeleted": "",
+        "maxLessThanMin": "",
+        "noAttributeConverterFound": "",
+        "attributeValueIsInUse": "",
+        "youCantChangeFieldOfTypeInAttribute": "",
+        "attributeWithSuchCodeAlreadyExist": "",
+        "attributeIsUsedInProducts": "",
+        "attributeIsUsedInClassifications": "",
+        "invalidType": "",
+        "attributeTypeCannotBeChanged": ""
+    },
+    "subtypeGroups": {
+        "character": "",
+        "numeric": "",
+        "date": "",
+        "reference": "",
+        "other": ""
+    }
+}
