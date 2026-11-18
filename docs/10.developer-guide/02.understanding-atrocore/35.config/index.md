@@ -38,10 +38,18 @@ For typed values, use `Config::env('WORKER_COUNT', 'json')`: JSON numbers, boole
 their types. Missing or empty variables and invalid JSON fail immediately without exposing values.
 There are no default values. Supply variables to web, CLI and worker processes.
 
-A top-level setting containing an environment binding is read-only through `set()` and `remove()`;
-this also prevents Admin UI and installer writes from replacing nested bindings. For example,
-a binding for `database.password` protects the entire `database` setting. Configure that setting in
-the file and environment instead. Unrelated settings can still be saved normally.
+Environment-managed values cannot be changed through `set()` or removed through `remove()`.
+When replacing a section, include its managed fields with their current runtime values: saves
+retain the original bindings for those fields while applying changes to ordinary fields. For example,
+you can change `database.port` by submitting an updated `database` array with its existing password.
+Changing or omitting a managed password, or removing the entire section, throws an exception naming
+the affected path. The same rules apply to Admin UI and installer updates. Array and object values
+are compared recursively, with strict scalar types.
+
+Writes accept top-level keys; dot notation is for reads. Declare bindings directly in `config.php`,
+not through `set()`. The config utility keeps separate stored and resolved snapshots in memory.
+Each save reads the latest stored configuration once and revalidates pending changes against it,
+so changes to bindings made externally are also respected.
 
 Replace existing `getenv()` calls with `Config::env()` to retain their environment binding across
 saves. Arbitrary PHP expressions are still evaluated normally and are not preserved. Restart PHP
