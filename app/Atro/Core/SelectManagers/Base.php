@@ -990,23 +990,18 @@ class Base
         if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy])) {
             $isExists = true;
         } elseif (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute']))) {
-            if (!isset($this->cachedData['attributes'][$this->getEntityType()][$sortBy])) {
+            if (!isset($this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy])) {
                 // attribute fields are sorted by "{name}", "{name}Unit", "{name}From" or "{name}To"
                 $ids = array_values(array_unique([$sortBy, preg_replace('/(Unit|From|To)$/', '', $sortBy)]));
-                $conn = $this->getEntityManager()->getDbal();
-                $this->cachedData['attributes'][$this->getEntityType()][$sortBy] = $conn->createQueryBuilder()
-                        ->select('a.id')
-                        ->from($conn->quoteIdentifier('attribute'), 'a')
-                        ->where('a.system_name IN (:ids) OR a.id IN (:ids)')
-                        ->andWhere('a.entity_id = :entityName')
-                        ->andWhere('a.deleted = :false')
-                        ->setParameter('ids', $ids, Connection::PARAM_STR_ARRAY)
-                        ->setParameter('entityName', $this->getEntityType())
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->setMaxResults(1)
-                        ->fetchOne() !== false;
+
+                $this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy] = $this
+                    ->getEntityManager()
+                    ->getRepository('Attribute')
+                    ->select(['id'])
+                    ->where(['OR' => ['systemName' => $ids, 'id' => $ids], 'entityId' => $this->getEntityType()])
+                    ->findOne() !== null;
             }
-            $isExists = $this->cachedData['attributes'][$this->getEntityType()][$sortBy];
+            $isExists = $this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy];
         }
 
         if ($isExists && !in_array($sortBy, $forbiddenAttributeList)) {
