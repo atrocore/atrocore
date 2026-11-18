@@ -1,14 +1,14 @@
 {
     "fields": {
-        "code": "",
-        "files": "",
-        "storages": ""
+        "code": "Kód",
+        "files": "Fájlok",
+        "storages": "Tárhelyek"
     },
     "exceptions": {
-        "folderStorageCannotBeChanged": "",
-        "folderCreateFailed": "",
-        "folderRenameFailed": "",
-        "folderMoveFailed": "",
-        "folderDeleteFailed": ""
+        "folderStorageCannotBeChanged": "A mappa tárhelye nem módosítható.",
+        "folderCreateFailed": "A mappa létrehozása nem sikerült.",
+        "folderRenameFailed": "A mappa átnevezése nem sikerült.",
+        "folderMoveFailed": "A mappa áthelyezése nem sikerült.",
+        "folderDeleteFailed": "A mappa törlése nem sikerült."
     }
 }
