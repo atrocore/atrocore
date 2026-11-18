@@ -1,15 +1,15 @@
 {
     "fields": {
-        "code": "",
-        "itemType": "",
-        "products": ""
+        "code": "Kód",
+        "itemType": "Tételtípus",
+        "products": "Termékek"
     },
     "options": {
         "itemType": {
-            "physical_goods": "",
-            "services": "",
-            "digital_products": "",
-            "legal_rights": ""
+            "physical_goods": "Fizikai áruk",
+            "services": "Szolgáltatások",
+            "digital_products": "Digitális termékek",
+            "legal_rights": "Jogi jogosultságok"
         }
     }
 }
