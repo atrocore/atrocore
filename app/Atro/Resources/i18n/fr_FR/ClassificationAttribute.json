@@ -32,7 +32,8 @@
         "conditionalVisible": "Visible"
     },
     "labels": {
-        "classificationAttribute": "Attribut de la classification"
+        "classificationAttribute": "Attribut de la classification",
+        "conditionalProperties": "Propriétés conditionnelles"
     },
     "options": {
         "scope": {
