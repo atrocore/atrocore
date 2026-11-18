@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "name": "",
+        "scheduling": "",
+        "jobs": "",
+        "action": ""
+    },
+    "links": {
+        "action": ""
+    },
+    "labels": {
+        "executeNow": ""
+    },
+    "exceptions": {
+        "wrongCrontabConfiguration": "",
+        "onlyOneJobTypeAllowed": ""
+    },
+    "messages": {
+        "jobLaunched": "",
+        "jobAlreadyExist": ""
+    },
+    "options": {
+        "type": {
+            "ClearEntities": "",
+            "ComposerAutoUpdate": "",
+            "UpdateCurrencyExchangeViaECB": "",
+            "CheckUpdates": "",
+            "ScanStorage": "",
+            "FindMatches": "",
+            "CalculateScriptFieldsForEntities": "",
+            "SendReports": "",
+            "CreateClusters": "",
+            "Action": ""
+        }
+    },
+    "tooltips": {
+        "scheduling": ""
+    }
+}
