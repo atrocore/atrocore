@@ -15,19 +15,22 @@
         "itemsMustBelongToTheSameCluster": "Усі вибрані елементи мають належати до одного кластера.",
         "cannotDeconsolidateMasterEntityItem": "Неможливо розконсолідувати елемент майстер-сутності.",
         "cannotDeconsolidateAllItems": "Неможливо деконсолідувати всі консолідовані елементи: щонайменше один має лишитися пов’язаним із golden record.",
-        "cannotSplitMasterEntityItem": "Неможливо розділити елемент майстер-сутності."
+        "cannotSplitMasterEntityItem": "Неможливо розділити елемент майстер-сутності.",
+        "targetClusterIdRequired": "Потрібно вказати цільовий кластер."
     },
     "massActions": {
         "reject": "Відхилити",
         "deconsolidate": "Розконсолідувати",
         "split": "Розділити",
-        "consolidate": "Консолідувати"
+        "consolidate": "Консолідувати",
+        "move": "Перемістити"
     },
     "massActionSuccessMessages": {
         "reject": "Вибрані елементи кластера видаляються у фоновому режимі",
         "deconsolidate": "Вибрані елементи кластера розконсолідовано",
         "split": "Вибрані елементи кластера перенесено в новий кластер",
-        "consolidate": "Вибрані елементи кластера консолідовано"
+        "consolidate": "Вибрані елементи кластера консолідовано",
+        "move": "Вибрані елементи кластера переміщено"
     },
     "massActionConfirmMessages": {
         "reject": "Ви впевнені, що хочете відхилити вибрані елементи?",
@@ -38,6 +41,12 @@
         "consolidate": "Консолідувати",
         "reject": "Відхилити",
         "deconsolidate": "Розконсолідувати",
-        "split": "Розділити"
+        "split": "Розділити",
+        "move": "Перемістити"
+    },
+    "labels": {
+        "confirmedAutomatically": "Підтверджено автоматично",
+        "selectTargetCluster": "Вибрати цільовий кластер",
+        "moveToCluster": "Перемістити до кластера"
     }
 }
