@@ -22,7 +22,6 @@ use Atro\Core\OAuth\BrowserSession;
 use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\OAuth\TokenUser;
 use Atro\Services\SoftwarePackage;
-use Espo\Core\EntryPointManager;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;

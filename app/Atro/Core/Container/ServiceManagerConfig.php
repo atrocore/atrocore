@@ -60,7 +60,6 @@ class ServiceManagerConfig
         'matchingManager'          => \Atro\Core\MatchingManager::class,
         'uniqueIndexDescriber'     => \Atro\Core\Utils\UniqueIndexDescriber::class,
         'expressionLanguage'       => \Atro\Core\Factories\ExpressionLanguage::class,
-        'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
         'aclManager'               => \Espo\Core\AclManager::class,
         'entityManager'            => \Espo\Core\Factories\EntityManager::class,
         'injectableFactory'        => \Espo\Core\InjectableFactory::class,

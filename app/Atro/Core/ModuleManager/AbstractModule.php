@@ -245,34 +245,6 @@ abstract class AbstractModule
     }
 
     /**
-     * Get className hash
-     *
-     * @param string $classesDir
-     *
-     * @return array
-     */
-    public function getClassNameHash(string $classesDir): array
-    {
-        // get files
-        $fileList = $this
-            ->container
-            ->get('fileManager')
-            ->getFileList($this->getAppPath() . $classesDir, false, '\.php$', true);
-
-        $result = [];
-        if (!empty($fileList)) {
-            foreach ($fileList as $item) {
-                // prepare classname
-                $className = str_replace('.php', '', $item);
-
-                $result[$className] = "\\" . $this->id . "\\$classesDir\\$className";
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * Returns FQCN list of PSR-15 middleware classes this module wants to add to the HTTP pipeline.
      * Middlewares are piped after authentication, in the order returned.
      *
