@@ -1,8 +1,8 @@
 {
     "fields": {
-        "accounts": "",
-        "code": "",
-        "discount": "",
-        "discountPercentage": ""
+        "accounts": "Fiókok",
+        "code": "Kód",
+        "discount": "Kedvezmény, %",
+        "discountPercentage": "Kedvezmény, %"
     }
 }
