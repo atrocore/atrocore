@@ -1,14 +1,20 @@
 {
-  "fields": {
-    "score": "Punteggio",
-    "hash": "Hash unico",
-    "hasCluster": "Ha un cluster",
-    "clusterItems": "Articoli del cluster"
-  },
-  "options": {
-    "type": {
-      "duplicate": "Duplicato",
-      "masterRecord": "Record principale"
+    "fields": {
+        "score": "Punteggio",
+        "hash": "Hash unico",
+        "hasCluster": "Ha un cluster",
+        "clusterItems": "Articoli del cluster",
+        "matchSubject": "Soggetto della corrispondenza",
+        "matchSubjectEntity": "Entità del soggetto della corrispondenza",
+        "matchSubjectEntityId": "ID entità del soggetto della corrispondenza",
+        "matchCandidate": "Candidato della corrispondenza",
+        "matchCandidateEntity": "Entità del candidato della corrispondenza",
+        "matchCandidateEntityId": "ID entità del candidato della corrispondenza"
+    },
+    "options": {
+        "type": {
+            "duplicate": "Duplicato",
+            "masterRecord": "Record principale"
+        }
     }
-  }
 }
