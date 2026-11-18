@@ -17,8 +17,9 @@ use Atro\Core\SelectManagers\Base;
 use Atro\Core\Utils\Util;
 
 /**
- * Creates the select manager of an entity: the class of the module of the entity, then the class of the core,
- * then the base select manager. A derivative entity uses the select manager of its primary entity.
+ * Creates the select manager of an entity: the class set in app.selectManagers, then the class of the module
+ * of the entity, then the class of the core, then the base select manager. A derivative entity uses
+ * the select manager of its primary entity.
  */
 class SelectManagerFactory
 {
@@ -39,6 +40,11 @@ class SelectManagerFactory
     private function getClassName(string $entityType): string
     {
         $metadata = $this->container->get('metadata');
+
+        $className = $metadata->get(['app', 'selectManagers', $entityType]);
+        if (!empty($className)) {
+            return $className;
+        }
 
         $scope = $metadata->get("scopes.$entityType.primaryEntityId") ?: $entityType;
         $name = Util::normilizeClassName($scope);
