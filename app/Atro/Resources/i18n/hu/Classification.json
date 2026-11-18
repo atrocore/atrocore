@@ -1,30 +1,30 @@
 {
     "fields": {
-        "entity": "",
-        "description": "",
-        "release": "",
-        "synonyms": "",
-        "isActive": "",
-        "classifications": "",
-        "classificationAttributes": "",
-        "type": ""
+        "entity": "Entitás",
+        "description": "Leírás",
+        "release": "Kiadás",
+        "synonyms": "Szinonimák",
+        "isActive": "Aktív",
+        "classifications": "Osztályozások",
+        "classificationAttributes": "Osztályozási attribútumok",
+        "type": "Típus"
     },
     "options": {
         "type": {
-            "general": ""
+            "general": "Általános"
         }
     },
     "labels": {
-        "selectAttributeGroup": ""
+        "selectAttributeGroup": "Attribútumcsoport kiválasztása"
     },
     "actions": {
-        "unlinkRelatedAttribute": "",
-        "cascadeUnlinkRelatedAttribute": ""
+        "unlinkRelatedAttribute": "Törlés és megőrzés a rekordokban",
+        "cascadeUnlinkRelatedAttribute": "Törlés és eltávolítás a rekordokból"
     },
     "exceptions": {
-        "entityCannotBeChanged": "",
-        "classificationForToAnotherEntity": "",
-        "classificationHasRecords": "",
-        "entityNotAllowToChoose": ""
+        "entityCannotBeChanged": "Az Entitás nem módosítható.",
+        "classificationForToAnotherEntity": "Az osztályozás nem kapcsolható ehhez a rekordhoz, mert egy másik Entitás használja.",
+        "classificationHasRecords": "Kapcsolódó rekordokkal rendelkező osztályozás nem törölhető.",
+        "entityNotAllowToChoose": "Az Entitás nem választható ki."
     }
 }
