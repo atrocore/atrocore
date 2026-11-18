@@ -16,7 +16,6 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\LayoutManager;
-use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 
 class Layout extends AbstractListener

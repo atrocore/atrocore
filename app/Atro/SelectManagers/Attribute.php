@@ -28,7 +28,7 @@ class Attribute extends Base
         $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
     }
 
-    public function applyAdditional(array &$result, array $params)
+    public function applyAdditional(array &$result, array $params): void
     {
         parent::applyAdditional($result, $params);
 

@@ -62,15 +62,8 @@ class Background extends ReferenceData
         $this->getDataManager()->clearCache();
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 }

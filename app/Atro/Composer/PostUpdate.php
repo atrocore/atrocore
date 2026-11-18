@@ -506,9 +506,9 @@ class PostUpdate
             // rebuild
             self::$container->get('dataManager')->rebuild();
 
-            foreach ($composerDiff['install'] as $row) {
-                self::renderLine('Calling post-install steps for ' . $row['id']);
-                $lifecycle->afterInstall($row['id']);
+            foreach (self::sortForInstall(array_column($composerDiff['install'], 'id')) as $id) {
+                self::renderLine('Calling post-install steps for ' . $id);
+                $lifecycle->afterInstall($id);
             }
         }
 
@@ -516,6 +516,25 @@ class PostUpdate
             self::renderLine('Calling post-delete steps for ' . $row['id']);
             $lifecycle->afterDelete($row['id']);
         }
+    }
+
+    /**
+     * In the load order of the modules: a module after the modules it depends on.
+     *
+     * @param string[] $ids
+     *
+     * @return string[]
+     */
+    private static function sortForInstall(array $ids): array
+    {
+        $loadOrders = [];
+        foreach ($ids as $id) {
+            $className = "\\$id\\Module";
+            $loadOrders[$id] = class_exists($className) ? $className::getLoadOrder() : PHP_INT_MAX;
+        }
+        asort($loadOrders);
+
+        return array_keys($loadOrders);
     }
 
     /**

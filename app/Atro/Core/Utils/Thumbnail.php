@@ -15,8 +15,7 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Entities\File as FileEntity;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\File\Manager;
+use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
 
@@ -135,12 +134,11 @@ class Thumbnail
 
         $image->resizeToBestFit($w, $h);
 
-        $thumbnailDirPath = $this->getFileManager()->getFileDir($thumbnailPath);
-        if (!is_dir($thumbnailDirPath)) {
-            $this->getFileManager()->mkdir($thumbnailDirPath, 0777, true);
+        if (!is_dir(dirname($thumbnailPath))) {
+            mkdir(dirname($thumbnailPath), 0777, true);
         }
 
-        return $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
+        return file_put_contents($thumbnailPath, $image->getImageAsString()) !== false;
     }
 
     public function deleteAllThumbnails(FileEntity $file): void
@@ -156,7 +154,9 @@ class Thumbnail
     protected function createImageFromPdf(string $pdfPath): array
     {
         $tmpDir = 'data' . DIRECTORY_SEPARATOR . '.pdf-thumbnail-tmp' . DIRECTORY_SEPARATOR . uniqid();
-        $this->getFileManager()->mkdir($tmpDir, 0777, true);
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
         $pdflib = new PDFLib($this->getConfig());
         $pdflib->setPdfPath($pdfPath);
         $pdflib->setOutputPath($tmpDir);
@@ -201,11 +201,6 @@ class Thumbnail
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
-    }
-
-    protected function getFileManager(): Manager
-    {
-        return $this->container->get('fileManager');
     }
 
     protected function getConfig(): Config

@@ -132,7 +132,7 @@ class RemoveNavigationItems extends AbstractAfterDelete
 
 When the step is run, the code of the module does not exist anymore: the `AfterDelete` folder is copied to `data/module-manager-events/{Module}/AfterDelete/` on every update, and the step is run from the copy. That is why the step gets the database connection (`$this->connection`) and the config (`$this->config`) only, and uses the classes of the core only. The entities of the module are not in the metadata anymore, so their data is changed via the connection.
 
-**Order** — the steps of the core are run first, then the steps of the modules in their load order (`getLoadOrder()`). The steps of one module are run in the order of `getSortOrder()`, the lower one first.
+**Order** — the steps of one module are run in the order of `getSortOrder()`, the lower one first. AfterInstall steps: the steps of the core are run first, then the steps of the modules in their load order (`getLoadOrder()`). AfterDelete steps of different modules are run in no particular order: each module cleans up only after itself.
 
 ### Frontend folder
 

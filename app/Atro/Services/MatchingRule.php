@@ -52,15 +52,8 @@ class MatchingRule extends Base
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
-        return $this->getInjection('container')->get(AttributeFieldConverter::class);
+        return $this->container->get(AttributeFieldConverter::class);
     }
 }

@@ -328,7 +328,7 @@ trait LinkableTrait
             return;
         }
 
-        $message = $this->getInjection('language')->translate($shouldDuplicateForeign ? 'someCouldNotDuplicatedAndLinked' : 'someCouldNotLinked', 'exceptions');
+        $message = $this->container->get('language')->translate($shouldDuplicateForeign ? 'someCouldNotDuplicatedAndLinked' : 'someCouldNotLinked', 'exceptions');
 
         try {
             $conn    = $this->getEntityManager()->getConnection();
@@ -342,7 +342,6 @@ trait LinkableTrait
                 ->setMaxResults(20)
                 ->fetchAllAssociative();
         } catch (\Throwable $e) {
-
         }
 
         if (!empty($results)) {
@@ -595,13 +594,13 @@ trait LinkableTrait
 
         // input data validation
         if (empty($relationData['associationId'])) {
-            throw new BadRequest($this->getInjection('language')->translate('wrongInputData', 'exceptions'));
+            throw new BadRequest($this->container->get('language')->translate('wrongInputData', 'exceptions'));
         }
 
         /** @var Entity $association */
         $association = $this->getEntityManager()->getEntity("Association", $relationData['associationId']);
         if (empty($association)) {
-            throw new BadRequest($this->getInjection('language')->translate('noSuchAssociation', 'exceptions'));
+            throw new BadRequest($this->container->get('language')->translate('noSuchAssociation', 'exceptions'));
         }
 
         /**
@@ -688,19 +687,19 @@ trait LinkableTrait
         $message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
         if (!empty($success)) {
             $plural = $success > 1 ? 'Plural' : '';
-            $successMessage = $relate ? $this->getInjection('language')->translate('relationsAdded' . $plural, 'messages') : $this->getInjection('language')->translate('relationsRemoved' . $plural, 'messages');
+            $successMessage = $relate ? $this->container->get('language')->translate('relationsAdded' . $plural, 'messages') : $this->container->get('language')->translate('relationsRemoved' . $plural, 'messages');
             $message .= "<span>" . sprintf($successMessage, $success) . "</span><br>";
         }
         if (!empty($errors)) {
             $plural = count($errors) > 1 ? 'Plural' : '';
-            $errorMessage = $relate ? $this->getInjection('language')->translate('relationsDidNotAdded' . $plural, 'messages') : $this->getInjection('language')->translate('relationsDidNotRemoved' . $plural, 'messages');
+            $errorMessage = $relate ? $this->container->get('language')->translate('relationsDidNotAdded' . $plural, 'messages') : $this->container->get('language')->translate('relationsDidNotRemoved' . $plural, 'messages');
             $message .= "<span style=\"color: red\">" . sprintf($errorMessage, count($errors)) . "</span><br>";
             foreach ($errors as $item) {
                 $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";
             }
         } else {
             if ($success === 0) {
-                $message .= "<span>" . $this->getInjection('language')->translate('Done') . "</span>";
+                $message .= "<span>" . $this->container->get('language')->translate('Done') . "</span>";
             }
         }
 

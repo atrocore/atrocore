@@ -19,7 +19,7 @@ $selectParams = $selectManager->getSelectParams(['where' => $where], true, true)
 
 $count = $repository->count($selectParams);
 
-$entities = $repository->find($selectManager);
+$entities = $repository->find($selectParams);
 ```
 
 -----
@@ -331,7 +331,7 @@ $selectParams['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, a
 
     $qb->andWhere($sql)
         ->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY)
-        ->setParameter('entityType', $this->entityType)
+        ->setParameter('entityType', $this->getEntityType())
         ->setParameter('false', false, ParameterType::BOOLEAN);
 };
 ```
@@ -401,7 +401,7 @@ use Atro\Core\SelectManagers\Base;
 
 class Manufacturer extends Base
 {
-    protected function boolFilterOnlyNotActive(&$result)
+    protected function boolFilterOnlyNotActive(array &$result): void
     {
         $result['whereClause'][] = ['isActive' => false];
     }
@@ -414,9 +414,21 @@ class Manufacturer extends Base
 {
     "controller": "controllers/record",
     "iconClass": "tag",
-    "boolFilterList": ["isNotActive"]
+    "boolFilterList": ["onlyNotActive"]
 }
 ```
+
+### Replacing a Select Manager
+
+The select manager of an entity is the class set for it in `app.selectManagers`, otherwise `{Module}\SelectManagers\{EntityName}` of the module of the entity, otherwise `Atro\SelectManagers\{EntityName}`, otherwise `Atro\Core\SelectManagers\Base`. To replace the select manager of an existing entity, create (or change) the `app/Resources/metadata/app/selectManagers.json` file in your module:
+
+```json
+{
+  "Product": "\\CustomModule\\SelectManagers\\Product"
+}
+```
+
+The class extends the select manager it replaces, e.g. `\Pim\SelectManagers\Product`.
 
 ### Applying Saved Searches(Filters)
 

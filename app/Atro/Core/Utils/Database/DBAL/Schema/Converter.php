@@ -14,15 +14,16 @@ namespace Atro\Core\Utils\Database\DBAL\Schema;
 use Atro\Core\Container;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\DBAL\Schema\Table;
 use Atro\Core\Utils\Metadata;
-use Espo\Core\Utils\Metadata\OrmMetadata;
+use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
 use Atro\Core\Utils\Util;
 
 class Converter
 {
     protected Container $container;
-    protected OrmMetadata $ormMetadata;
+    protected OrmConverter $ormConverter;
     protected Metadata $metadata;
     protected Connection $connection;
 
@@ -33,7 +34,7 @@ class Converter
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->ormMetadata = $container->get('ormMetadata');
+        $this->ormConverter = $container->get('ormConverter');
         $this->metadata = $container->get('metadata');
         $this->connection = $container->get('connection');
     }
@@ -89,14 +90,19 @@ class Converter
 
     public function createSchema(): Schema
     {
-        $ormMetadata = $this->ormMetadata->getData();
+        $ormMetadata = $this->ormConverter->process();
 
         // UserProfile is the virtual entity and should not have the db table
         unset($ormMetadata['UserProfile']);
 
         $indexList = $this->getIndexList($ormMetadata);
 
-        $schema = new Schema();
+        $schemaConfig = new SchemaConfig();
+        if (!self::isPgSQL($this->connection)) {
+            $schemaConfig->setDefaultTableOptions(['charset' => 'utf8mb4', 'collate' => 'utf8mb4_unicode_ci']);
+        }
+
+        $schema = new Schema([], [], $schemaConfig);
 
         $this->tables = [];
         foreach ($ormMetadata as $entityName => $entityDefs) {
@@ -293,7 +299,7 @@ class Converter
         if (!$table->hasColumn($columnName)) {
             $column = $table->addColumn($columnName, $type, $fieldDefs);
             if ($isUniqueVarchar && !self::isPgSQL($this->connection)) {
-                $column->setPlatformOption('collation', 'utf8_bin');
+                $column->setPlatformOption('collation', 'utf8mb4_bin');
             }
         }
 

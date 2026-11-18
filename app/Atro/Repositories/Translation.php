@@ -375,7 +375,7 @@ class Translation extends Base
 
     public function refreshTimestamp(array $options): void
     {
-        $this->getInjection('language')->clearCache();
+        $this->container->get('language')->clearCache();
 
         if (!empty($options['keepCache'])) {
             return;

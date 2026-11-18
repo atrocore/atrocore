@@ -223,18 +223,11 @@ class SavedSearch extends Base
 
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function getAcl(): Acl
     {
-        return $this->getInjection('acl');
-    }
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('dataManager');
-        $this->addDependency('acl');
+        return $this->container->get('acl');
     }
 }

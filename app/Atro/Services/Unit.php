@@ -53,7 +53,7 @@ class Unit extends Base
 
         if ($needToSave) {
             $this->getMetadata()->save();
-            $this->getInjection('dataManager')->clearCache();
+            $this->container->get('dataManager')->clearCache();
         }
 
         $this->dispatchEvent('afterSetUnitAsDefault', new Event(['entity' => $unit, 'service' => $this]));
@@ -69,11 +69,5 @@ class Unit extends Base
         $this->putAclMeta($entity);
 
         $entity->setAvailableAction('setDefault',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'edit'));
-    }
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('dataManager');
     }
 }

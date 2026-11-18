@@ -184,7 +184,7 @@ class Cluster extends Base
         $missingIds = array_diff($clusterItemIds, array_map(fn($clusterItem) => $clusterItem->get('id'), $clusterItems));
         if (!empty($missingIds)) {
             throw new BadRequest(sprintf(
-                $this->getInjection('language')->translate('clusterItemsNotInCluster', 'exceptions', 'Cluster'),
+                $this->container->get('language')->translate('clusterItemsNotInCluster', 'exceptions', 'Cluster'),
                 implode(', ', $missingIds)
             ));
         }
@@ -201,18 +201,18 @@ class Cluster extends Base
         }
 
         if ($cluster->get('status') === 'invalid') {
-            throw new BadRequest($this->getInjection('language')->translate('cannotPreviewInvalidCluster', 'exceptions', 'Cluster'));
+            throw new BadRequest($this->container->get('language')->translate('cannotPreviewInvalidCluster', 'exceptions', 'Cluster'));
         }
 
         $masterEntityName = (string)$cluster->get('masterEntity');
 
         $payload = $this->getRecordService('Consolidation')->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
         if ($payload === null) {
-            throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
+            throw new BadRequest($this->container->get('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
         }
 
         if (empty($payload)) {
-            throw new BadRequest($this->getInjection('language')->translate('consolidationScriptReturnedNoValues', 'exceptions', 'Consolidation'));
+            throw new BadRequest($this->container->get('language')->translate('consolidationScriptReturnedNoValues', 'exceptions', 'Consolidation'));
         }
 
         $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
@@ -252,7 +252,7 @@ class Cluster extends Base
         /** @var RDB $masterRepository */
         $masterRepository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
         /** @var AbstractRecordService $masterService */
-        $masterService = $this->getContainer()->get('serviceFactory')->create($cluster->get('masterEntity'));
+        $masterService = $this->container->get('serviceFactory')->create($cluster->get('masterEntity'));
 
         $sourceList = [];
 
@@ -271,7 +271,7 @@ class Cluster extends Base
         if (!empty($suggestedFields)) {
             $preview = $this->buildMasterRecordPreview($clusterId);
             foreach ($suggestedFields as $field) {
-                foreach ($this->getInjection('fieldManagerUtil')->getActualAttributeList($cluster->get('masterEntity'), $field, $preview) as $attribute) {
+                foreach ($this->container->get('fieldManagerUtil')->getActualAttributeList($cluster->get('masterEntity'), $field, $preview) as $attribute) {
                     $attributes->input->$attribute = $preview->get($attribute);
                     $manualAttributes = array_diff($manualAttributes, [$attribute]);
                 }
@@ -307,7 +307,6 @@ class Cluster extends Base
 
         $linksDefs = $this->getMetadata()->get(['entityDefs', $goldenRecord->getEntityType(), 'links']);
         foreach ($linksDefs as $link => $linkDefs) {
-
             if ($linkDefs['type'] !== 'hasMany' || !empty($linkDefs['relationName'])) {
                 continue;
             }
@@ -318,7 +317,6 @@ class Cluster extends Base
             }
 
             foreach ($sourceList as $source) {
-
                 if (empty($source->entityDefs['links'][$link])) {
                     continue;
                 }
@@ -362,7 +360,6 @@ class Cluster extends Base
             $attributes->input->_skipCheckForConflicts = true;
             $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
         } catch (NotModified $e) {
-
         }
 
         foreach ($sourceList as $source) {
@@ -400,18 +397,5 @@ class Cluster extends Base
         }
 
         return $goldenRecord;
-    }
-
-    protected function getContainer(): \Atro\Core\Container
-    {
-        return $this->getInjection('container');
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('fieldManagerUtil');
     }
 }

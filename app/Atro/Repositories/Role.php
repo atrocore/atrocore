@@ -67,7 +67,7 @@ class Role extends \Atro\Core\ORM\Repositories\RDB
                     }
 
                     /** @var \Atro\Services\Attribute $attributeService */
-                    $attributeService = $this->getInjection('container')->get('serviceFactory')->create('Attribute');
+                    $attributeService = $this->container->get('serviceFactory')->create('Attribute');
 
                     // for attribute panels
                     foreach ($roleScope->get('attributePanels') ?? [] as $roleAttributePanel) {
@@ -125,20 +125,13 @@ class Role extends \Atro\Core\ORM\Repositories\RDB
             ->clearAclCache();
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     protected function getAclManager(): AclManager
     {
-        return $this->getInjection('container')->get('aclManager');
+        return $this->container->get('aclManager');
     }
 
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('container')->get('dataManager');
+        return $this->container->get('dataManager');
     }
 }

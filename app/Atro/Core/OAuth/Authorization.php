@@ -151,21 +151,25 @@ class Authorization
     }
 
     /**
-     * The value of the cookie that keeps the query string of the authorization request for the sign-in form
-     * (SessionCookie::AUTHORIZATION_REQUEST), so it does not travel in the URL of the page.
+     * The value of the cookie that keeps the authorization request for the login form (SessionCookie::AUTHORIZATION_REQUEST),
+     * so it does not travel in the URL: its query string and, after a sign-in at an external identity provider, the
+     * user who signed in and has to give the consent.
      */
-    public function encryptRequest(string $query): string
+    public function encryptRequest(string $query, ?string $userId = null): string
     {
         return $this->encrypt(json_encode([
             'query'      => $query,
+            'userId'     => $userId,
             'expireTime' => time() + self::REQUEST_TTL,
         ]));
     }
 
     /**
-     * The query string of the authorization request kept by encryptRequest(), null when it is invalid or has expired.
+     * The authorization request kept by encryptRequest(), null when it is invalid or has expired.
+     *
+     * @return array{query: string, userId: string|null}|null
      */
-    public function decryptRequest(string $value): ?string
+    public function decryptRequest(string $value): ?array
     {
         try {
             $request = json_decode($this->decrypt($value), true);
@@ -177,7 +181,10 @@ class Authorization
             return null;
         }
 
-        return (string)$request['query'];
+        return [
+            'query'  => (string)$request['query'],
+            'userId' => !empty($request['userId']) ? (string)$request['userId'] : null,
+        ];
     }
 
     /**

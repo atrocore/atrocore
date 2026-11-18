@@ -13,11 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\ModuleManager;
 
-use Espo\Core\Utils\DataUtil;
-use Espo\Core\Utils\File\Unifier;
-use Espo\Core\Utils\Json;
 use Atro\Core\Container;
-use Atro\Core\Utils\Util;
 use Laminas\ServiceManager\ServiceManager;
 
 abstract class AbstractModule
@@ -39,16 +35,6 @@ abstract class AbstractModule
 
     protected ServiceManager $sm;
     protected Container $container;
-
-    /**
-     * @var Unifier
-     */
-    protected $unifier;
-
-    /**
-     * @var Unifier
-     */
-    protected $objUnifier;
 
     /**
      * Get module load order
@@ -210,19 +196,6 @@ abstract class AbstractModule
     }
 
     /**
-     * Load module metadata
-     *
-     * @param \stdClass $data
-     */
-    public function loadMetadata(\stdClass &$data)
-    {
-        $metadata = $this
-            ->getObjUnifier()
-            ->unify('metadata', $this->getAppPath() . 'Resources/metadata', true);
-        $data = DataUtil::merge($data, $metadata);
-    }
-
-    /**
      * Load module layouts
      *
      * @param string $scope
@@ -240,10 +213,10 @@ abstract class AbstractModule
 
         if (file_exists($fileFullPath)) {
             // get file data
-            $fileData = $this->getContainer()->get('fileManager')->getContents($fileFullPath);
+            $fileData = file_get_contents($fileFullPath);
 
             // prepare data
-            $data = array_merge_recursive($data, Json::decode($fileData, true));
+            $data = array_merge_recursive($data, json_decode($fileData, true));
         }
     }
 
@@ -268,44 +241,6 @@ abstract class AbstractModule
                 }
             }
         }
-    }
-
-    /**
-     * Load module translates
-     *
-     * @param array $data
-     */
-    public function loadTranslates(array &$data)
-    {
-        $data = Util::merge($data, $this->getUnifier()->unify('i18n', $this->getAppPath() . 'Resources/i18n', true));
-    }
-
-    /**
-     * Get className hash
-     *
-     * @param string $classesDir
-     *
-     * @return array
-     */
-    public function getClassNameHash(string $classesDir): array
-    {
-        // get files
-        $fileList = $this
-            ->container
-            ->get('fileManager')
-            ->getFileList($this->getAppPath() . $classesDir, false, '\.php$', true);
-
-        $result = [];
-        if (!empty($fileList)) {
-            foreach ($fileList as $item) {
-                // prepare classname
-                $className = str_replace('.php', '', $item);
-
-                $result[$className] = "\\" . $this->id . "\\$classesDir\\$className";
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -370,38 +305,6 @@ abstract class AbstractModule
      */
     public function onLoad()
     {
-    }
-
-    /**
-     * @return Unifier
-     */
-    protected function getUnifier(): Unifier
-    {
-        if (!isset($this->unifier)) {
-            $this->unifier = new Unifier(
-                $this->getContainer()->get('fileManager'),
-                $this->getContainer()->get('metadata'),
-                false
-            );
-        }
-
-        return $this->unifier;
-    }
-
-    /**
-     * @return Unifier
-     */
-    protected function getObjUnifier(): Unifier
-    {
-        if (!isset($this->objUnifier)) {
-            $this->objUnifier = new Unifier(
-                $this->getContainer()->get('fileManager'),
-                $this->getContainer()->get('metadata'),
-                true
-            );
-        }
-
-        return $this->objUnifier;
     }
 
     /**

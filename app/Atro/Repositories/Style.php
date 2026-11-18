@@ -43,7 +43,7 @@ class Style extends ReferenceData
 
     public function refreshCache(): void
     {
-        $this->getInjection('dataManager')->clearCache(true);
+        $this->container->get('dataManager')->clearCache(true);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -53,7 +53,7 @@ class Style extends ReferenceData
         if ($entity->isNew() || $entity->isAttributeChanged('code')) {
             $pattern = '/^[a-zA-Z0-9._\-]+$/';
             if (preg_match($pattern, $entity->get('code')) !== 1) {
-                throw new BadRequest($this->getInjection('language')->translate('codeShouldBeString', 'exceptions', 'Style'));
+                throw new BadRequest($this->container->get('language')->translate('codeShouldBeString', 'exceptions', 'Style'));
             }
         }
 
@@ -104,7 +104,7 @@ class Style extends ReferenceData
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if ($this->getEntityManager()->getRepository('User')->where(['styleId' => $entity->get('id')])->findOne()) {
-            throw new BadRequest($this->getInjection('language')->translate('styleIsUsed', 'exceptions', 'Style'));
+            throw new BadRequest($this->container->get('language')->translate('styleIsUsed', 'exceptions', 'Style'));
         }
 
         parent::beforeRemove($entity, $options);
@@ -133,13 +133,5 @@ class Style extends ReferenceData
     public function getCustomHeadCodePath(Entity $entity): string
     {
         return $this->customHeadCodeDir . DIRECTORY_SEPARATOR . "head-code_{$entity->get('code')}.html";
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('dataManager');
     }
 }

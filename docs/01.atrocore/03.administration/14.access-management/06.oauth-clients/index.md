@@ -4,7 +4,7 @@ title: OAuth Clients
 
 AtroCore is an OAuth 2.0 authorization server. Every application that calls the REST API – an integration, a web or mobile application, a tool like Postman – is registered as an OAuth client and receives access tokens for it. How applications request and use the tokens is described in [REST API Authentication](../../../../10.developer-guide/10.rest-api/index.md#authentication).
 
-To manage the clients go to `Administration / Authentication / OAuth Clients`. Administrators and users whose role grants access to the entity *OAuth Client* can manage them.
+To manage the clients go to `Administration / Authentication / OAuth Clients`. Only administrators manage the clients: a client acts with the permissions of its user, so its secret gives the access of that user.
 
 <!-- To Do: add screenshot of the OAuth Client detail view -->
 
@@ -17,7 +17,7 @@ To manage the clients go to `Administration / Authentication / OAuth Clients`. A
 - **User**: the user a client with **Client Credentials** acts as. Its tokens have the permissions of this user, so give the user a role with only the permissions the integration needs.
 - **Authorization Code**: the client obtains access tokens on behalf of a user who logs in on the AtroCore login form. PKCE with the `S256` method is required.
 - **Refresh Token**: together with the access token the client gets a refresh token and renews the access token without a new login. Available with **Authorization Code**.
-- **Redirect URIs**: the addresses AtroCore returns the user to after the login, required for **Authorization Code**. Each one is an absolute URI without a fragment; the `redirect_uri` of an authorization request has to match one of them exactly.
+- **Redirect URIs**: the addresses AtroCore returns the user to after the login, required for **Authorization Code**. Each one is an `https` or `http` URI, or a custom scheme of a native application in reverse domain notation (e.g. `com.example.app:/callback`), without a fragment. Other schemes, such as `javascript:` or `data:`, are rejected. The `redirect_uri` of an authorization request has to match one of them exactly.
 - **Consent Required**: the user confirms that the application gets access to the account. Disable it only for the applications of your own organization.
 
 A client needs at least one grant: **Client Credentials** or **Authorization Code**.

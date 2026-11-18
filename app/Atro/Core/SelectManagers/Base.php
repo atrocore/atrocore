@@ -11,7 +11,6 @@
 
 namespace Atro\Core\SelectManagers;
 
-use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
@@ -26,36 +25,24 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
-use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Entity;
-use Espo\Core\SelectManagerFactory;
+use Atro\Core\SelectManagerFactory;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
+use Espo\ORM\Repository;
 use Psr\Container\ContainerInterface;
 
 class Base
 {
-    const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
-
-    protected ContainerInterface $container;
-
-    protected User $user;
-
-    protected Acl $acl;
-
-    protected string $entityType;
+    public const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     protected array $selectParameters;
 
-    protected ?SelectManagerFactory $selectManagerFactory;
-
     protected ?IEntity $seed = null;
-
-    public bool $isSubQuery = false;
 
     protected array $textFilterUseContainsAttributeList = [];
 
@@ -63,55 +50,45 @@ class Base
 
     protected array $cachedData = [];
 
-    public function __construct(ContainerInterface $container, User $user, Acl $acl)
-    {
-        $this->container = $container;
-        $this->user      = $user;
-        $this->acl       = $acl;
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly string $entityType
+    ) {
     }
 
-    protected function limit($offset = null, $maxSize = null, &$result = [])
+    protected function limit(?int $offset, ?int $maxSize, array &$result): void
     {
-        if (!is_null($offset)) {
+        if ($offset !== null) {
             $result['offset'] = $offset;
         }
-        if (!is_null($maxSize)) {
+        if ($maxSize !== null) {
             $result['limit'] = $maxSize;
         }
     }
 
-    protected function order($sortBy, $desc = false, &$result = [])
+    protected function order(string $sortBy, bool $desc, array &$result): void
     {
-        if (!empty($sortBy)) {
+        $direction = $desc ? 'DESC' : 'ASC';
 
-            $result['orderBy'] = $sortBy;
-            $type              = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
-            if (in_array($type, ['link', 'file', 'image'])) {
-                $result['orderBy'] .= 'Name';
-            } else {
-                if ($type === 'linkParent') {
-                    $result['orderBy'] .= 'Type';
-                } else {
-                    if ($type === 'address') {
-                        if (!$desc) {
-                            $orderPart = 'ASC';
-                        } else {
-                            $orderPart = 'DESC';
-                        }
-                        $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
-                        return;
-                    }
-                }
+        if ($sortBy !== '') {
+            $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
+
+            if ($type === 'address') {
+                $result['orderBy'] = [[$sortBy . 'Country', $direction], [$sortBy . 'City', $direction], [$sortBy . 'Street', $direction]];
+                return;
             }
+
+            $result['orderBy'] = match (true) {
+                in_array($type, ['link', 'file', 'image']) => $sortBy . 'Name',
+                $type === 'linkParent'                     => $sortBy . 'Type',
+                default                                    => $sortBy,
+            };
         }
-        if (!$desc) {
-            $result['order'] = 'ASC';
-        } else {
-            $result['order'] = 'DESC';
-        }
+
+        $result['order'] = $direction;
     }
 
-    protected function getTextFilterFieldList()
+    protected function getTextFilterFieldList(): array
     {
         $result = ['id'];
 
@@ -137,7 +114,7 @@ class Base
         return $result;
     }
 
-    protected function getSeed()
+    protected function getSeed(): IEntity
     {
         if (empty($this->seed)) {
             $this->seed = $this->getEntityManager()->getEntityFactory()->create($this->entityType);
@@ -147,83 +124,49 @@ class Base
         return $this->seed;
     }
 
-    public function applyWhere($where, &$result)
+    public function applyWhere(array $where, array &$result): void
     {
         $this->prepareResult($result);
         $this->where($where, $result);
     }
 
-    protected function where($where, &$result)
+    protected function where(array $where, array &$result): void
     {
         $this->prepareResult($result);
 
         foreach ($where as $item) {
-            if (!isset($item['type'])) {
-                continue;
-            }
+            $type = $item['type'] ?? null;
+            $value = $item['value'] ?? null;
 
-            if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
-                foreach ($item['value'] as $filter) {
-                    $p = $this->getBoolFilterWhere($filter);
-                    if (!empty($p)) {
-                        $where[] = $p;
-                    }
+            if ($type === 'bool' && !empty($value) && is_array($value)) {
+                foreach ($value as $filter) {
                     $this->applyBoolFilter($filter, $result);
                 }
-            } else {
-                if ($item['type'] == 'textFilter') {
-                    if (isset($item['value']) && $item['value'] !== '') {
-                        $this->textFilter($item['value'], $result);
-                    }
-                } else {
-                    if ($item['type'] == 'primary' && !empty($item['value'])) {
-                        $this->applyPrimaryFilter($item['value'], $result);
-                    }
-                }
+            } elseif ($type === 'textFilter' && $value !== null && $value !== '') {
+                $this->textFilter($value, $result);
+            } elseif ($type === 'primary' && !empty($value)) {
+                $this->applyPrimaryFilter($value, $result);
             }
         }
 
-        $whereClause = $this->convertWhere($where, false, $result);
-
-        $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
+        $result['whereClause'] = array_merge($result['whereClause'], $this->convertWhere($where, $result));
     }
 
-    public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
+    /**
+     * Converts the where items into the where clause; the bool and primary filters are applied by where().
+     */
+    public function convertWhere(array $where, ?array &$result = null): array
     {
         $whereClause = [];
 
-        $ignoreTypeList = ['bool', 'primary'];
-
         foreach ($where as $item) {
-            if (!isset($item['type'])) {
+            if (!isset($item['type']) || in_array($item['type'], ['bool', 'primary'])) {
                 continue;
             }
 
-            $type = $item['type'];
-            if (!in_array($type, $ignoreTypeList)) {
-                $part = $this->getWherePart($item, $result);
-                if (!empty($part)) {
-                    $whereClause[] = $part;
-                }
-            } else {
-                if (!$ignoreAdditionaFilterTypes) {
-                    if (!empty($item['value'])) {
-                        $methodName = 'apply' . ucfirst($type);
-
-                        if (method_exists($this, $methodName)) {
-                            $attribute = null;
-                            if (isset($item['field'])) {
-                                $attribute = $item['field'];
-                            }
-                            if (isset($item['attribute'])) {
-                                $attribute = $item['attribute'];
-                            }
-                            if ($attribute) {
-                                $this->$methodName($attribute, $item['value'], $result);
-                            }
-                        }
-                    }
-                }
+            $part = $this->getWherePart($item, $result);
+            if (!empty($part)) {
+                $whereClause[] = $part;
             }
         }
 
@@ -505,183 +448,85 @@ class Base
 
     public function qbOperatorToType(string $operator): string
     {
-        switch ($operator) {
-            case 'equal':
-                $operator = 'equals';
-                break;
-            case 'not_equal':
-                $operator = 'notEquals';
-                break;
-            case 'begins_with':
-                $operator = 'startsWith';
-                break;
-            case 'ends_with':
-                $operator = 'endsWith';
-                break;
-            case 'not_contains':
-                $operator = 'notContains';
-                break;
-            case 'less':
-                $operator = 'lessThan';
-                break;
-            case 'less_or_equal':
-                $operator = 'lessThanOrEquals';
-                break;
-            case 'greater':
-                $operator = 'greaterThan';
-                break;
-            case 'greater_or_equal':
-                $operator = 'greaterThanOrEquals';
-                break;
-            case 'not_in':
-                $operator = 'notIn';
-                break;
-            case 'linked_with':
-                $operator = 'linkedWith';
-                break;
-            case 'not_linked_with':
-                $operator = 'notLinkedWith';
-                break;
-            case 'is_attribute_linked':
-            case 'is_linked':
-                $operator = 'isLinked';
-                break;
-            case 'is_attribute_not_linked':
-            case 'is_not_linked':
-                $operator = 'isNotLinked';
-                break;
-            case 'is_null':
-                $operator = 'isNull';
-                break;
-            case 'is_not_null':
-                $operator = 'isNotNull';
-                break;
-            case 'array_any_of':
-                $operator = 'arrayAnyOf';
-                break;
-            case 'array_none_of':
-                $operator = 'arrayNoneOf';
-                break;
-            case 'last_x_days':
-                $operator = 'lastXDays';
-                break;
-            case 'older_than_x_days':
-                $operator = 'olderThanXDays';
-                break;
-            case 'after_x_days':
-                $operator = 'afterXDays';
-                break;
-            case 'next_x_days':
-                $operator = 'nextXDays';
-                break;
-            case 'current_month':
-                $operator = 'currentMonth';
-                break;
-            case 'last_month':
-                $operator = 'lastMonth';
-                break;
-            case 'next_month':
-                $operator = 'nextMonth';
-                break;
-            case 'current_year':
-                $operator = 'currentYear';
-                break;
-            case 'last_year':
-                $operator = 'lastYear';
-                break;
-            case 'similar':
-                $operator = 'similar';
-                break;
-            case 'word_similar':
-                $operator = 'wordSimilar';
-                break;
-        }
-
-        return $operator;
+        return match ($operator) {
+            'equal'                                         => 'equals',
+            'not_equal'                                     => 'notEquals',
+            'begins_with'                                   => 'startsWith',
+            'ends_with'                                     => 'endsWith',
+            'not_contains'                                  => 'notContains',
+            'less'                                          => 'lessThan',
+            'less_or_equal'                                 => 'lessThanOrEquals',
+            'greater'                                       => 'greaterThan',
+            'greater_or_equal'                              => 'greaterThanOrEquals',
+            'not_in'                                        => 'notIn',
+            'linked_with'                                   => 'linkedWith',
+            'not_linked_with'                               => 'notLinkedWith',
+            'is_attribute_linked', 'is_linked'              => 'isLinked',
+            'is_attribute_not_linked', 'is_not_linked'      => 'isNotLinked',
+            'is_null'                                       => 'isNull',
+            'is_not_null'                                   => 'isNotNull',
+            'array_any_of'                                  => 'arrayAnyOf',
+            'array_none_of'                                 => 'arrayNoneOf',
+            'last_x_days'                                   => 'lastXDays',
+            'older_than_x_days'                             => 'olderThanXDays',
+            'after_x_days'                                  => 'afterXDays',
+            'next_x_days'                                   => 'nextXDays',
+            'current_month'                                 => 'currentMonth',
+            'last_month'                                    => 'lastMonth',
+            'next_month'                                    => 'nextMonth',
+            'current_year'                                  => 'currentYear',
+            'last_year'                                     => 'lastYear',
+            'word_similar'                                  => 'wordSimilar',
+            default                                         => $operator,
+        };
     }
 
-    protected function q($params, &$result)
+    protected function q(array $params, array &$result): void
     {
         if (isset($params['q']) && $params['q'] !== '') {
-            $textFilter = $params['q'];
-            $this->textFilter($textFilter, $result);
+            $this->textFilter($params['q'], $result);
         }
     }
 
-    public function manageAccess(&$result)
+    public function manageAccess(array &$result): void
     {
         $this->prepareResult($result);
         $this->applyAccess($result);
     }
 
-    public function manageTextFilter($textFilter, &$result)
+    protected function prepareResult(array &$result): void
     {
-        $this->prepareResult($result);
-        $this->q(['q' => $textFilter], $result);
+        $result['joins'] ??= [];
+        $result['leftJoins'] ??= [];
+        $result['whereClause'] ??= [];
+        $result['customJoin'] ??= '';
+        $result['additionalSelectColumns'] ??= [];
+        $result['joinConditions'] ??= [];
+        $result['customWhere'] ??= '';
     }
 
-    public function getEmptySelectParams()
+    protected function access(array &$result): void
     {
-        $result = array();
-        $this->prepareResult($result);
+        $entityType = $this->getEntityType();
 
-        return $result;
-    }
-
-    protected function prepareResult(&$result)
-    {
-        if (empty($result)) {
-            $result = array();
-        }
-        if (empty($result['joins'])) {
-            $result['joins'] = [];
-        }
-        if (empty($result['leftJoins'])) {
-            $result['leftJoins'] = [];
-        }
-        if (empty($result['whereClause'])) {
-            $result['whereClause'] = array();
-        }
-        if (empty($result['customJoin'])) {
-            $result['customJoin'] = '';
-        }
-        if (empty($result['additionalSelectColumns'])) {
-            $result['additionalSelectColumns'] = array();
-        }
-        if (empty($result['joinConditions'])) {
-            $result['joinConditions'] = array();
-        }
-        if (!isset($result['customWhere'])) {
-            $result['customWhere'] = '';
-        }
-    }
-
-    protected function access(&$result)
-    {
-        if (!$this->getUser()->isAdmin() && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type'], 'Base') == 'Relation') {
+        if (!$this->getUser()->isAdmin() && $this->getMetadata()->get(['scopes', $entityType, 'type'], 'Base') === 'Relation') {
             $result['callbacks'][] = [$this, 'accessForRelationEntity'];
         }
 
-        if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
+        if ($this->getAcl()->checkReadOnlyOwn($entityType)) {
             $this->accessOnlyOwn($result);
-        } else {
-            if (!$this->getUser()->isAdmin()) {
-                if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
-                    $this->accessOnlyTeam($result);
-                } else {
-                    if ($this->getAcl()->checkReadNo($this->getEntityType())) {
-                        $this->accessNo($result);
-                    }
-                }
+        } elseif (!$this->getUser()->isAdmin()) {
+            if ($this->getAcl()->checkReadOnlyTeam($entityType)) {
+                $this->accessOnlyTeam($result);
+            } elseif ($this->getAcl()->checkReadNo($entityType)) {
+                $this->accessNo($result);
             }
         }
     }
 
-    protected function accessNo(&$result)
+    protected function accessNo(array &$result): void
     {
-        $result['whereClause'][] = array(
-            'id' => null
-        );
+        $result['whereClause'][] = ['id' => null];
     }
 
     public function accessForRelationEntity(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
@@ -715,27 +560,30 @@ class Base
         }
     }
 
-    protected function accessOnlyOwn(&$result)
+    protected function accessOnlyOwn(array &$result): void
     {
+        $userId = $this->getUser()->id;
+
+        $where = [];
         if ($this->hasOwnerUserField()) {
-            $d['ownerUserId'] = $this->getUser()->id;
+            $where['ownerUserId'] = $userId;
         }
         if ($this->hasAssignedUserField()) {
-            $d['assignedUserId'] = $this->getUser()->id;
+            $where['assignedUserId'] = $userId;
         }
         if ($this->hasCreatedByField() && !$this->hasAssignedUserField() && !$this->hasOwnerUserField()) {
-            $d['createdById'] = $this->getUser()->id;
+            $where['createdById'] = $userId;
         }
 
-        $result['whereClause'][] = ['OR' => $d];
+        $result['whereClause'][] = ['OR' => $where];
     }
 
-    protected function accessOnlyTeam(&$result)
+    protected function accessOnlyTeam(array &$result): void
     {
         $result['callbacks'][] = [$this, 'applyAccessOnlyTeam'];
     }
 
-    public function applyAccessOnlyTeam(QueryBuilder $qb, $entity, $params, Mapper $mapper): void
+    public function applyAccessOnlyTeam(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void
     {
         $currentUserId = $this->getUser()->id;
 
@@ -750,7 +598,6 @@ class Base
             $qb->setParameter($entityTypeParam, $this->entityType);
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
         }
-
 
         if ($this->hasOwnerUserField()) {
             $parts[] = "($ta.owner_user_id = :currentUserId)";
@@ -768,54 +615,30 @@ class Base
         }
 
         if (!empty($parts)) {
-            $qb->andWhere(join(' OR ', $parts));
+            $qb->andWhere(implode(' OR ', $parts));
         }
     }
 
-    /**
-     * @deprecated will be removed soon
-     */
-    protected function hasAssignedUsersField()
+    protected function hasOwnerUserField(): bool
     {
-        return false;
+        return !empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasOwner']));
     }
 
-    /**
-     * @return bool
-     */
-    protected function hasOwnerUserField()
+    protected function hasAssignedUserField(): bool
     {
-        return !empty($this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasOwner'));
-    }
-
-    /**
-     * @return bool
-     */
-    protected function hasAssignedUserField()
-    {
-        return !empty($this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasAssignedUser'));
+        return !empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAssignedUser']));
     }
 
     protected function boolFilterFieldsFilter(array &$result): void
     {
-        $data = $this->getBoolFilterParameter('fieldsFilter') ?? [];
-        if (!empty($data)) {
-            foreach ($data as $field => $value) {
-                $result['whereClause'][] = [$field => $value];
-            }
+        foreach ($this->getBoolFilterParameter('fieldsFilter') ?? [] as $field => $value) {
+            $result['whereClause'][] = [$field => $value];
         }
     }
 
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
     protected function boolFilterOnlyActive(array &$result): void
     {
-        $result['whereClause'][] = [
-            'isActive' => true
-        ];
+        $result['whereClause'][] = ['isActive' => true];
     }
 
     protected function boolFilterContainsPersonalData(array &$result): void
@@ -858,9 +681,7 @@ class Base
 
     protected function boolFilterOnlyArchived(array &$result): void
     {
-        $result['whereClause'][] = [
-            'isArchived' => true
-        ];
+        $result['whereClause'][] = ['isArchived' => true];
     }
 
     protected function boolFilterWithArchived(array &$result): void
@@ -870,11 +691,9 @@ class Base
 
     protected function boolFilterOnlyDeleted(array &$result): void
     {
-        $result['withDeleted']                                                       = true;
-        $result['whereClause'][]                                                     = [
-            "deleted" => true
-        ];
-        $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . ".deleted"] = "deleted";
+        $result['withDeleted'] = true;
+        $result['whereClause'][] = ['deleted' => true];
+        $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . '.deleted'] = 'deleted';
     }
 
     protected function boolFilterNotDisabledOptions(array &$result): void
@@ -887,9 +706,7 @@ class Base
 
     protected function boolFilterNotActive(array &$result): void
     {
-        $result['whereClause'][] = [
-            'isActive' => false
-        ];
+        $result['whereClause'][] = ['isActive' => false];
     }
 
     protected function boolFilterOnlyBookmarked(array &$result): void
@@ -915,7 +732,7 @@ class Base
             return;
         }
 
-        $handler = $this->getEntityManager()->getContainer()->get($reportHandlerClass);
+        $handler = $this->container->get($reportHandlerClass);
 
         $methodName = 'filteringBy' . ucfirst($data['field']);
         if (method_exists($handler, $methodName)) {
@@ -924,52 +741,32 @@ class Base
         }
     }
 
-    public function applyOnlyBookmarked(QueryBuilder $qb, $entity, $params, Mapper $mapper): void
+    public function applyOnlyBookmarked(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void
     {
-        $currentUserId = $this->getUser()->id;
-
         $ta = $mapper->getQueryConverter()->getMainTableAlias();
 
         $qb->andWhere("$ta.id IN (SELECT entity_id FROM bookmark WHERE entity_type = :bentityType AND user_id = :bUserId AND deleted = :false)")
-            ->setParameter('bentityType', $entity->getEntityType())
-            ->setParameter('bUserId', $currentUserId)
+            ->setParameter('bentityType', $entity->getEntityName())
+            ->setParameter('bUserId', $this->getUser()->id)
             ->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
-    public function applyMultipleClassifications(QueryBuilder $qb, $entity, $params, Mapper $mapper): void
+    public function applyMultipleClassifications(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void
     {
-        $cqb       = $this->getEntityManager()->getRepository('Classification')->getMultipleClassificationsQb($entity->getEntityType());
+        $cqb       = $this->getEntityManager()->getRepository('Classification')->getMultipleClassificationsQb($entity->getEntityName());
         $mainAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
         $qb->andWhere($qb->expr()->in("$mainAlias.id", $cqb->getSQL()));
     }
 
-    /**
-     * @return bool
-     */
-    protected function hasCreatedByField()
+    protected function hasCreatedByField(): bool
     {
         return $this->getSeed()->hasAttribute('createdById');
     }
 
-    /**
-     * @return bool
-     */
-    protected function hasTeamsField()
+    protected function hasTeamsField(): bool
     {
         return $this->getSeed()->hasRelation('teams') && $this->getSeed()->hasAttribute('teamsIds');
-    }
-
-    public function getAclParams()
-    {
-        $result = array();
-        $this->applyAccess($result);
-        return $result;
-    }
-
-    public function buildSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
-    {
-        return $this->getSelectParams($params, $withAcl, $checkWherePermission);
     }
 
     public function dispatch(string $scope, string $action, Event $event): Event
@@ -1012,38 +809,28 @@ class Base
         $params['sortBy'] = !in_array($defaultSortBy, $forbiddenAttributeList) ? $defaultSortBy : 'id';
     }
 
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false): array
     {
         $params = $this
             ->dispatch('Entity', 'beforeGetSelectParams', new Event(['params' => $params, 'entityType' => $this->entityType]))
             ->getArgument('params');
 
         $this->prepareActionExecutionFilter($params);
+        $this->prepareSortBy($params, $withAcl);
 
         $this->selectParameters = $params;
 
-        $this->prepareForExtensibleEnumOption($params);
-        $this->prepareSortBy($params, $withAcl);
-
-        $result = array();
+        $result = [];
         $this->prepareResult($result);
 
         if (empty($params['sortBy'])) {
             $params['sortBy'] = 'id';
         }
-
-        if (!array_key_exists('asc', $params)) {
-            $params['asc'] = true;
-        }
+        $params['asc'] ??= true;
+        $params['offset'] ??= null;
+        $params['maxSize'] ??= null;
 
         $this->order($params['sortBy'], !$params['asc'], $result);
-
-        if (!isset($params['offset'])) {
-            $params['offset'] = null;
-        }
-        if (!isset($params['maxSize'])) {
-            $params['maxSize'] = null;
-        }
         $this->limit($params['offset'], $params['maxSize'], $result);
 
         if (!empty($params['primaryFilter'])) {
@@ -1058,7 +845,7 @@ class Base
 
         if (!empty($params['filterList']) && is_array($params['filterList'])) {
             foreach ($params['filterList'] as $filterName) {
-                $this->applyFilter($filterName, $result);
+                $this->applyPrimaryFilter($filterName, $result);
             }
         }
 
@@ -1077,21 +864,13 @@ class Base
 
         $this->q($params, $result);
 
-        // check if entity has hasArchive activated
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasArchive'])) {
-            //filter only if boolean filter not activated
-            $hasArchivedFilterInWhere = count(
-                    array_filter($result['whereClause'], function ($row) {
-                        return isset($row['isArchived=']) || isset($row['isArchived']);
-                    })
-                ) > 0;
-
-            if (!isset($result['withArchived']) && !$hasArchivedFilterInWhere) {
-                $result['whereClause'][] = [
-                    'isArchived' => false
-                ];
-
-            }
+        // an entity with the archive shows the archived records only when a filter asks for them
+        if (
+            $this->getMetadata()->get(['scopes', $this->entityType, 'hasArchive'])
+            && !isset($result['withArchived'])
+            && !$this->hasArchivedCondition($result['whereClause'])
+        ) {
+            $result['whereClause'][] = ['isArchived' => false];
         }
 
         if ($withAcl) {
@@ -1115,6 +894,17 @@ class Base
         return $this
             ->dispatch('Entity', 'afterGetSelectParams', new Event(['result' => $result, 'params' => $params, 'entityType' => $this->entityType]))
             ->getArgument('result');
+    }
+
+    private function hasArchivedCondition(array $whereClause): bool
+    {
+        foreach ($whereClause as $row) {
+            if (isset($row['isArchived=']) || isset($row['isArchived'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function applyActionExecutionFilter(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
@@ -1163,7 +953,7 @@ class Base
         }
     }
 
-    protected function prepareActionExecutionFilter(&$params): void
+    protected function prepareActionExecutionFilter(array &$params): void
     {
         foreach ($params['where'] ?? [] as $key => $row) {
             foreach ($row['rules'] ?? [] as $rule) {
@@ -1185,39 +975,6 @@ class Base
                 }
             }
         }
-    }
-
-    protected function prepareForExtensibleEnumOption(array &$params): void
-    {
-        if ($this->entityType !== 'ExtensibleEnumOption' || empty($params['where'])) {
-            return;
-        }
-
-        foreach ($params['where'] ?? [] as $filter) {
-            if (!empty($filter['type']) && $filter['type'] === 'bool' && !empty($filter['value'])) {
-                foreach ($filter['value'] as $boolFilter) {
-                    $method = "boolFilter" . ucfirst($boolFilter);
-                    if (method_exists($this, $method)) {
-                        $this->$method($params, isset($filter['data'][$boolFilter]) ? $filter['data'][$boolFilter] : null);
-                    }
-                }
-            }
-        }
-    }
-
-    protected function boolFilterOnlyExtensibleEnumOptionIds(&$params, ?array $ids = [])
-    {
-        if (!is_array($ids) || empty($ids)) {
-            return $params;
-        }
-
-        $params['where'][] = [
-            "type"      => "notIn",
-            "attribute" => "id",
-            "value"     => $ids
-        ];
-
-        return $params;
     }
 
     protected function sanitizeWhereCondition(array $where): array
@@ -1245,41 +1002,31 @@ class Base
         return $clean;
     }
 
-    protected function checkWhere($where)
+    protected function checkWhere(array $where): void
     {
         foreach ($where as $w) {
-            $attribute = null;
-            if (isset($w['field'])) {
-                $attribute = $w['field'];
-            }
-            if (isset($w['attribute'])) {
-                $attribute = $w['attribute'];
-            }
+            $attribute = $w['attribute'] ?? $w['field'] ?? null;
             if ($attribute) {
-                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith'])) {
-                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
-                        throw new Forbidden();
-                    }
-                } else {
-                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType()))) {
-                        throw new Forbidden();
-                    }
+                $forbiddenList = in_array($w['type'] ?? null, ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith'])
+                    ? $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType())
+                    : $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType());
+
+                if (in_array($attribute, $forbiddenList)) {
+                    throw new Forbidden();
                 }
             }
+
             if (!empty($w['value']) && is_array($w['value'])) {
                 $this->checkWhere($w['value']);
             }
         }
     }
 
-    public function convertDateTimeWhere($item)
+    public function convertDateTimeWhere(array $item): array
     {
         $where = $this->getColumnWhereConverter()->prepareDateTimeItem($item);
-        if ($where === null) {
-            return null;
-        }
 
-        return $this->getWherePart($where);
+        return $where === null ? [] : $this->getWherePart($where);
     }
 
     protected function getColumnWhereConverter(): ColumnWhereConverter
@@ -1599,7 +1346,7 @@ class Base
         ];
     }
 
-    protected function getWherePart($item, &$result = null)
+    protected function getWherePart(array $item, ?array &$result = null): array
     {
         $part = [];
 
@@ -1610,13 +1357,8 @@ class Base
             $this->$method($item);
         }
 
-        $attribute = null;
-        if (!empty($item['field'])) { // for backward compatibility
-            $attribute = $item['field'];
-        }
-        if (!empty($item['attribute'])) {
-            $attribute = $item['attribute'];
-        }
+        // "field" is for backward compatibility
+        $attribute = !empty($item['attribute']) ? $item['attribute'] : (!empty($item['field']) ? $item['field'] : null);
 
         if (!is_null($attribute) && !is_string($attribute)) {
             throw new Error('Bad attribute in where statement');
@@ -1666,20 +1408,13 @@ class Base
 
         // for backward compatibility (extensibleMultiEnum)
         if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'linkMultiple' && !empty($item['type'])) {
-            switch ($item['type']) {
-                case 'arrayAnyOf':
-                    $item['type'] = 'linkedWith';
-                    break;
-                case 'arrayNoneOf':
-                    $item['type'] = 'notLinkedWith';
-                    break;
-                case 'arrayIsEmpty':
-                    $item['type'] = 'isNotLinked';
-                    break;
-                case 'arrayIsNotEmpty':
-                    $item['type'] = 'isLinked';
-                    break;
-            }
+            $item['type'] = match ($item['type']) {
+                'arrayAnyOf'      => 'linkedWith',
+                'arrayNoneOf'     => 'notLinkedWith',
+                'arrayIsEmpty'    => 'isNotLinked',
+                'arrayIsNotEmpty' => 'isLinked',
+                default           => $item['type'],
+            };
         }
 
         if (
@@ -1721,15 +1456,6 @@ class Base
         }
 
         if (!empty($attribute) && !empty($item['type'])) {
-            $methodName = 'getWherePart' . ucfirst($attribute) . ucfirst($item['type']);
-            if (method_exists($this, $methodName)) {
-                $value = null;
-                if (array_key_exists('value', $item)) {
-                    $value = $item['value'];
-                }
-                return $this->$methodName($value, $result);
-            }
-
             $methodName = 'getWherePartFor' . ucfirst($attribute);
             if (method_exists($this, $methodName)) {
                 return $this->$methodName($item, $result);
@@ -1740,17 +1466,14 @@ class Base
             return $this->convertDateTimeWhere($item);
         }
 
-        if (!array_key_exists('value', $item)) {
-            $item['value'] = null;
-        }
-        $value = $item['value'];
+        $value = $item['value'] ?? null;
 
         if (!empty($item['type'])) {
             $type = $item['type'];
 
             switch ($type) {
                 case 'innerSql':
-                    $part['innerSql'] = $item['value'];
+                    $part['innerSql'] = $value;
                     break;
                 case 'or':
                 case 'and':
@@ -2054,48 +1777,23 @@ class Base
         return $part;
     }
 
-    public function applyOrder($sortBy, $desc, &$result)
-    {
-        $this->prepareResult($result);
-        $this->order($sortBy, $desc, $result);
-    }
-
-    public function applyLimit($offset, $maxSize, &$result)
-    {
-        $this->prepareResult($result);
-        $this->limit($offset, $maxSize, $result);
-    }
-
-    public function applyPrimaryFilter($filterName, &$result)
+    /**
+     * Applies the primary filter {name} by the method filter{Name} of the select manager.
+     */
+    public function applyPrimaryFilter(string $filterName, array &$result): void
     {
         $this->prepareResult($result);
 
         $method = 'filter' . ucfirst($filterName);
         if (method_exists($this, $method)) {
             $this->$method($result);
-        } else {
-            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filterName, 'className']);
-            if ($className) {
-                if (!class_exists($className)) {
-                    $GLOBALS['log']->error("Could find class for filter {$filterName}.");
-                    return;
-                }
-                $impl = $this->getInjectableFactory()->createByClassName($className);
-                if (!$impl) {
-                    $GLOBALS['log']->error("Could not create filter {$filterName} implementation.");
-                    return;
-                }
-                $impl->applyFilter($this->entityType, $filterName, $result, $this);
-            }
         }
     }
 
-    public function applyFilter($filterName, &$result)
-    {
-        $this->applyPrimaryFilter($filterName, $result);
-    }
-
-    public function applyBoolFilter($filterName, &$result)
+    /**
+     * Applies the bool filter {name} by the method boolFilter{Name} of the select manager.
+     */
+    public function applyBoolFilter(string $filterName, array &$result): void
     {
         $this->prepareResult($result);
 
@@ -2105,109 +1803,26 @@ class Base
         }
     }
 
-    public function applyTextFilter($textFilter, &$result)
+    public function applyTextFilter(string $textFilter, array &$result): void
     {
         $this->prepareResult($result);
         $this->textFilter($textFilter, $result);
     }
 
     /**
-     * @param array $result
-     * @param array $params
+     * Lets a select manager of an entity add its conditions to the select parameters.
      */
-    public function applyAdditional(array &$result, array $params)
+    public function applyAdditional(array &$result, array $params): void
     {
     }
 
-    public function hasJoin($join, &$result)
+    public function addLeftJoin(string|array $leftJoin, array &$result): void
     {
-        if (in_array($join, $result['joins'])) {
-            return true;
-        }
+        $result['leftJoins'] ??= [];
 
-        foreach ($result['joins'] as $item) {
-            if (is_array($item) && count($item) > 1) {
-                if ($item[1] == $join) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public function hasLeftJoin($leftJoin, &$result)
-    {
-        if (in_array($leftJoin, $result['leftJoins'])) {
-            return true;
-        }
-
-        foreach ($result['leftJoins'] as $item) {
-            if (is_array($item) && count($item) > 1) {
-                if ($item[1] == $leftJoin) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public function addJoin($join, &$result)
-    {
-        if (empty($result['joins'])) {
-            $result['joins'] = [];
-        }
-
-        $alias = $join;
-        if (is_array($join)) {
-            if (count($join) > 1) {
-                $alias = $join[1];
-            } else {
-                $alias = $join[0];
-            }
-        }
-        foreach ($result['joins'] as $j) {
-            $a = $j;
-            if (is_array($j)) {
-                if (count($j) > 1) {
-                    $a = $j[1];
-                } else {
-                    $a = $j[0];
-                }
-            }
-            if ($a === $alias) {
-                return;
-            }
-        }
-
-        $result['joins'][] = $join;
-    }
-
-    public function addLeftJoin($leftJoin, &$result)
-    {
-        if (empty($result['leftJoins'])) {
-            $result['leftJoins'] = [];
-        }
-
-        $alias = $leftJoin;
-        if (is_array($leftJoin)) {
-            if (count($leftJoin) > 1) {
-                $alias = $leftJoin[1];
-            } else {
-                $alias = $leftJoin[0];
-            }
-        }
-        foreach ($result['leftJoins'] as $j) {
-            $a = $j;
-            if (is_array($j)) {
-                if (count($j) > 1) {
-                    $a = $j[1];
-                } else {
-                    $a = $j[0];
-                }
-            }
-            if ($a === $alias) {
+        $alias = $this->getJoinAlias($leftJoin);
+        foreach ($result['leftJoins'] as $join) {
+            if ($this->getJoinAlias($join) === $alias) {
                 return;
             }
         }
@@ -2215,26 +1830,14 @@ class Base
         $result['leftJoins'][] = $leftJoin;
     }
 
-    public function setJoinCondition($join, $condition, &$result)
+    private function getJoinAlias(string|array $join): string
     {
-        $result['joinConditions'][$join] = $condition;
+        return is_array($join) ? ($join[1] ?? $join[0]) : $join;
     }
 
-    public function setDistinct($distinct, &$result)
+    public function setDistinct(bool $distinct, array &$result): void
     {
-        $result['distinct'] = (bool)$distinct;
-    }
-
-    public function addAndWhere($whereClause, &$result)
-    {
-        $result['whereClause'][] = $whereClause;
-    }
-
-    public function addOrWhere($whereClause, &$result)
-    {
-        $result['whereClause'][] = array(
-            'OR' => $whereClause
-        );
+        $result['distinct'] = $distinct;
     }
 
     protected function isValidNumber(string $value, string $thousandSeparator = ',', string $decimalSeparator = '.'): bool
@@ -2252,10 +1855,10 @@ class Base
         return (bool)preg_match($pattern, $value);
     }
 
-    protected function textFilter($textFilter, &$result)
+    protected function textFilter(string $textFilter, array &$result): void
     {
         $autocompletion = false;
-        if (mb_strpos($textFilter, 'AUTOCOMPLETE:') === 0) {
+        if (str_starts_with($textFilter, 'AUTOCOMPLETE:')) {
             $textFilter     = mb_substr($textFilter, strlen('AUTOCOMPLETE:'));
             $autocompletion = true;
         }
@@ -2272,13 +1875,13 @@ class Base
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
 
-        if (mb_strpos($textFilter, 'ft:') === 0) {
+        if (str_starts_with($textFilter, 'ft:')) {
             $textFilter = mb_substr($textFilter, 3);
         }
 
         $skipWildcards = false;
 
-        if (mb_strpos($textFilter, '*') !== false) {
+        if (str_contains($textFilter, '*')) {
             $skipWildcards = true;
             $textFilter    = str_replace('*', '%', $textFilter);
         }
@@ -2331,7 +1934,7 @@ class Base
                 continue;
             }
 
-            if (Converter::isPgSQL($this->getEntityManager()->getConnection()) &&
+            if (Converter::isPgSQL($this->getEntityManager()->getDbal()) &&
                 in_array($attributeType, ['bool', 'date', 'datetime'])) {
                 $field = "VARCHAR:$field";
             }
@@ -2411,132 +2014,70 @@ class Base
             }
         }
 
-        if (count($group) === 0) {
-            $result['whereClause'][] = [
-                'id' => null
-            ];
-        }
-
-        if (count($group) > 0) {
-            $result['whereClause'][] = [
-                'OR' => $group
-            ];
-        }
+        $result['whereClause'][] = empty($group) ? ['id' => null] : ['OR' => $group];
     }
 
-    public function applyAccess(&$result)
+    public function applyAccess(array &$result): void
     {
         $this->prepareResult($result);
         $this->access($result);
     }
 
-    protected function boolFilters($params, &$result)
+    protected function boolFilterOnlyMy(array &$result): void
     {
-        if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
-            foreach ($params['boolFilterList'] as $filterName) {
-                $this->applyBoolFilter($filterName, $result);
-            }
-        }
-    }
+        $userId = $this->getUser()->id;
 
-    protected function getBoolFilterWhere($filterName)
-    {
-        $method = 'getBoolFilterWhere' . ucfirst($filterName);
-        if (method_exists($this, $method)) {
-            return $this->$method();
-        }
-    }
-
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
-    protected function boolFilterOnlyMy(&$result)
-    {
         $where = [];
-
         if ($this->hasOwnerUserField()) {
-            $where[] = ['ownerUserId' => $this->getUser()->id];
+            $where[] = ['ownerUserId' => $userId];
         }
-
         if ($this->hasAssignedUserField()) {
-            $where[] = ['assignedUserId' => $this->getUser()->id];
+            $where[] = ['assignedUserId' => $userId];
         }
-
         if (!$this->hasOwnerUserField() && !$this->hasAssignedUserField()) {
-            $where[] = ['createdById' => $this->getUser()->id];
+            $where[] = ['createdById' => $userId];
         }
 
-        $result['whereClause'][] = [
-            'OR' => $where
-        ];
+        $result['whereClause'][] = ['OR' => $where];
     }
 
-    protected function boolFilterOnlyMyTeams(&$result): void
+    protected function boolFilterOnlyMyTeams(array &$result): void
     {
-        if (!$this->hasTeamsField()) {
-            return;
-        }
-
-        $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
-            $ta  = $mapper->getQueryConverter()->getMainTableAlias();
-            $sql = "($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:entityType AND team_id IN (:teamsIds)))";
-
-            $qb->andWhere($sql)
-                ->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY)
-                ->setParameter('entityType', $this->entityType)
-                ->setParameter('false', false, ParameterType::BOOLEAN);
-        };
-    }
-
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
-    protected function boolFilterOwnedByMe(&$result)
-    {
-        if ($this->hasOwnerUserField()) {
-            $result['whereClause'][] = [
-                'ownerUserId' => $this->getUser()->id
-            ];
-        } else {
-            $result['whereClause'][] = [
-                'createdById' => $this->getUser()->id
-            ];
+        if ($this->hasTeamsField()) {
+            $result['callbacks'][] = [$this, 'applyOnlyMyTeams'];
         }
     }
 
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
-    protected function boolFilterAssignedToMe(&$result)
+    public function applyOnlyMyTeams(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
-        if ($this->hasAssignedUserField()) {
-            $result['whereClause'][] = [
-                'assignedUserId' => $this->getUser()->id
-            ];
-        } else {
-            $result['whereClause'][] = [
-                'createdById' => $this->getUser()->id
-            ];
-        }
+        $ta = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $qb->andWhere("($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:entityType AND team_id IN (:teamsIds)))")
+            ->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY)
+            ->setParameter('entityType', $this->entityType)
+            ->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
-    /**
-     * @return RDB
-     */
-    protected function getRepository()
+    protected function boolFilterOwnedByMe(array &$result): void
     {
-        return $this
-            ->getEntityManager()
-            ->getRepository($this->entityType);
+        $field = $this->hasOwnerUserField() ? 'ownerUserId' : 'createdById';
+
+        $result['whereClause'][] = [$field => $this->getUser()->id];
     }
 
-    protected function boolFilterNotParents(array &$result)
+    protected function boolFilterAssignedToMe(array &$result): void
+    {
+        $field = $this->hasAssignedUserField() ? 'assignedUserId' : 'createdById';
+
+        $result['whereClause'][] = [$field => $this->getUser()->id];
+    }
+
+    protected function getRepository(): Repository
+    {
+        return $this->getEntityManager()->getRepository($this->entityType);
+    }
+
+    protected function boolFilterNotParents(array &$result): void
     {
         $id = $this->getBoolFilterParameter('notParents');
 
@@ -2546,7 +2087,7 @@ class Base
         $result['whereClause'][] = ['id!=' => $ids];
     }
 
-    protected function boolFilterNotChildren(array &$result)
+    protected function boolFilterNotChildren(array &$result): void
     {
         $id = $this->getBoolFilterParameter('notChildren');
 
@@ -2556,7 +2097,7 @@ class Base
         $result['whereClause'][] = ['id!=' => $ids];
     }
 
-    protected function boolFilterOnlyFollowed(array &$result)
+    protected function boolFilterOnlyFollowed(array &$result): void
     {
         $result['callbacks'][] = [$this, 'applyOnlyFollowedFilter'];
     }
@@ -2571,101 +2112,58 @@ class Base
         $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
-    protected function boolFilterNotEntity(&$result)
+    protected function boolFilterNotEntity(array &$result): void
     {
-        if (!empty($value = $this->getBoolFilterParameter('notEntity'))) {
-            if (is_string($value)) {
-                $ids = [$value];
-            } else {
-                $ids = (array)$value;
-            }
-            foreach ($ids as $id) {
-                $result['whereClause'][] = [
-                    'id!=' => $id
-                ];
-            }
+        foreach ((array)$this->getBoolFilterParameter('notEntity') as $id) {
+            $result['whereClause'][] = ['id!=' => $id];
         }
     }
 
-    /**
-     * NotAssociatedRecord filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotAssociatedRecords(&$result)
+    protected function boolFilterNotAssociatedRecords(array &$result): void
     {
-        // prepare data
         $data = (array)$this->getBoolFilterParameter('notAssociatedRecords');
+        if (empty($data['associationId']) || empty($data['mainRecordId'])) {
+            return;
+        }
 
-        if (!empty($data['associationId']) && !empty($data['mainRecordId'])) {
-            foreach ($this->getAssociatedRecords($data['associationId'], $data['mainRecordId']) as $id) {
-                $result['whereClause'][] = [
-                    'id!=' => $id
-                ];
-            }
+        foreach ($this->getAssociatedRecords($data['associationId'], $data['mainRecordId']) as $id) {
+            $result['whereClause'][] = ['id!=' => $id];
         }
     }
 
-    /**
-     * Get associated records
-     *
-     * @param string $associationId
-     * @param string $recordId
-     *
-     * @return array
-     */
     protected function getAssociatedRecords(string $associationId, string $mainRecordId): array
     {
-        $scope = $this->entityType;
-
-        return $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select("associated_item_id")
-            ->from(Util::toUnderScore("Associated$scope"))
+        return $this->getEntityManager()->getDbal()->createQueryBuilder()
+            ->select('associated_item_id')
+            ->from(Util::toUnderScore("Associated{$this->entityType}"))
             ->where('associating_item_id = :mainRecordId')
             ->andWhere('association_id = :associationId')
             ->andWhere('deleted = :false')
-            ->setParameter('associationId', $associationId, Mapper::getParameterType($associationId))
-            ->setParameter('mainRecordId', $mainRecordId, Mapper::getParameterType($mainRecordId))
-            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('associationId', $associationId)
+            ->setParameter('mainRecordId', $mainRecordId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchFirstColumn();
     }
 
-    /**
-     * @param string $filterName
-     *
-     * @return mixed
-     */
-    protected function getBoolFilterParameter(string $filterName)
+    protected function getBoolFilterParameter(string $filterName): mixed
     {
-        if (isset($this->selectParameters['where'])) {
-            foreach ($this->selectParameters['where'] as $key => $row) {
-                if ($row['type'] == 'bool' && !empty($row['data'][$filterName])) {
-                    return $row['data'][$filterName];
-                }
+        foreach ($this->selectParameters['where'] ?? [] as $row) {
+            if (($row['type'] ?? null) === 'bool' && !empty($row['data'][$filterName])) {
+                return $row['data'][$filterName];
             }
         }
 
         return null;
     }
 
-    public function setSelectManagerFactory(SelectManagerFactory $selectManagerFactory): Base
-    {
-        $this->selectManagerFactory = $selectManagerFactory;
-
-        return $this;
-    }
-
     protected function getSelectManagerFactory(): SelectManagerFactory
     {
-        return $this->selectManagerFactory;
+        return $this->container->get('selectManagerFactory');
     }
 
     protected function createSelectManager(string $scope): Base
     {
-        $selectManager             = $this->getSelectManagerFactory()->create($scope);
-        $selectManager->isSubQuery = true;
-
-        return $selectManager;
+        return $this->getSelectManagerFactory()->create($scope);
     }
 
     protected function getEntityManager(): EntityManager
@@ -2680,12 +2178,12 @@ class Base
 
     protected function getUser(): User
     {
-        return $this->user->get('delegator');
+        return $this->container->get('user')->get('delegator');
     }
 
     protected function getAcl(): Acl
     {
-        return $this->acl;
+        return $this->container->get('acl');
     }
 
     protected function getConfig(): Config
@@ -2698,19 +2196,9 @@ class Base
         return $this->container->get('aclManager');
     }
 
-    protected function getInjectableFactory(): InjectableFactory
-    {
-        return $this->container->get('injectableFactory');
-    }
-
     protected function getLanguage(): Language
     {
         return $this->container->get('language');
-    }
-
-    public function setEntityType(string $entityType): void
-    {
-        $this->entityType = $entityType;
     }
 
     protected function getEntityType(): string
@@ -2718,7 +2206,7 @@ class Base
         return $this->entityType;
     }
 
-    public function getWherePartForClusterId(array $item, array $result): array
+    public function getWherePartForClusterId(array $item, ?array $result = null): array
     {
         $entityName      = $this->entityType;
         $suffix          = str_replace('.', '_', uniqid('', true));

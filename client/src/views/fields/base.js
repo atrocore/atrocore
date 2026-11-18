@@ -343,6 +343,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.on('after:render', function () {
                 this.initLinkIfAttribute();
                 this.toggleRequiredMarker();
+                this.toggleReadinessMarker();
                 this.initSetDefaultValueAction();
 
                 if (this.readOnly) {
@@ -1097,6 +1098,68 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
+        // the ids of the linked records of the field that are not ready, from the meta group `readiness` of the record
+        getNotReadyLinkedIds() {
+            const missing = this.model?.get('_meta')?.readiness?.missing;
+            if (!Array.isArray(missing)) {
+                return [];
+            }
+
+            const item = missing.find(i => i.field === (this.originalName || this.name) && Array.isArray(i.ids));
+
+            return item ? item.ids : [];
+        },
+
+        // the status icon of a link to a record that is not ready: a flag after the link, shown on the detail view only
+        markNotReadyAnchor($anchor, notReady) {
+            $anchor.next('.not-ready-flag').remove();
+
+            if (notReady) {
+                $anchor.after(`<i class="ph ph-flag not-ready-flag" title="${this.translate('linkedRecordNotReady', 'labels', 'Global')}"></i>`);
+            }
+        },
+
+        isRequiredForReadiness() {
+            if (!this.model?.name || !this.getMetadata().get(['scopes', this.model.name, 'hasReadiness'])) {
+                return false;
+            }
+
+            const fieldName = this.getFieldForConditions();
+            const defs = this.model.get('attributesDefs')?.[fieldName] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`);
+            if (defs?.requiredForReadiness) {
+                return true;
+            }
+
+            const conditions = this.getConditions('requiredForReadiness');
+
+            return !!conditions && !!this.checkConditionGroup(conditions);
+        },
+
+        // the field is required for the readiness of the record: it is not required to save the record
+        toggleReadinessMarker() {
+            if (!['detail', 'edit'].includes(this.mode)) {
+                return;
+            }
+
+            this.initStatusContainer();
+
+            const statusIcons = this.getStatusIconsContainer();
+            if (!statusIcons.size()) {
+                return;
+            }
+
+            let $sign = statusIcons.find('.readiness-sign');
+            if (this.isRequiredForReadiness() && !this.isRequired()) {
+                if (!$sign.size()) {
+                    statusIcons.prepend(`<i class="ph ph-plus readiness-sign" title="${this.translate('requiredForReadiness', 'labels', 'Global')}"></i>`);
+                } else {
+                    $sign.show();
+                }
+            } else {
+                $sign.hide();
+            }
+        },
+
         isAttributeLinked() {
             const attributeName = this.originalName || this.name;
             const attributesDefs = this.model.get('attributesDefs');
@@ -1296,6 +1359,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
         },
 
+        getValueAttributeList: function () {
+            return Object.keys(this.fetch() || {});
+        },
+
         inlineEditSave: function () {
             var data = this.fetch();
 
@@ -1358,6 +1425,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(this.translate('Record cannot be saved'), 'error');
                 model.set(prev, { silent: true });
                 return;
+            }
+
+            const lockedFields = attrs._lockedFields || {};
+            const valueChanged = this.getValueAttributeList().some(attribute => attribute in attrs);
+            if (valueChanged && this.hasLockedControls() && !this.readOnly && !this.isLocked() && !(this.getLockedFieldName() in lockedFields)) {
+                attrs._lockedFields = {...lockedFields, [this.getLockedFieldName()]: true};
             }
 
             let _prev = {};

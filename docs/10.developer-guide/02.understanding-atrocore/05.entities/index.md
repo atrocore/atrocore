@@ -722,7 +722,7 @@ Once your entity is created, you can perform standard CRUD operations:
 ```php
 <?php
 
-/** @var \Espo\Core\ORM\EntityManager $entityManager */
+/** @var \Espo\ORM\EntityManager $entityManager */
 $entityManager = $container->get('entityManager');
 
 // CREATE - Create a new manufacturer

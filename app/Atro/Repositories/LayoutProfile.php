@@ -83,7 +83,7 @@ class LayoutProfile extends Base
                 ->findOne();
 
             if (empty($profile)) {
-                throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'LayoutProfile'));
+                throw new BadRequest($this->container->get('language')->translate('defaultIsRequired', 'exceptions', 'LayoutProfile'));
             }
         }
 
@@ -100,7 +100,7 @@ class LayoutProfile extends Base
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if (!empty($entity->get('isDefault'))) {
-            throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'LayoutProfile'));
+            throw new BadRequest($this->container->get('language')->translate('defaultIsRequired', 'exceptions', 'LayoutProfile'));
         }
 
         parent::beforeRemove($entity, $options);
@@ -112,15 +112,7 @@ class LayoutProfile extends Base
 
         if ((empty($options['cascadeChange']) && $entity->isAttributeChanged('isDefault') && $entity->get('isDefault') === true) ||
             $entity->isAttributeChanged('hideShowFullList') || $entity->isAttributeChanged('navigation')) {
-            $this->getInjection('dataManager')->clearCache(true);
+            $this->container->get('dataManager')->clearCache(true);
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('dataManager');
     }
 }

@@ -16,18 +16,13 @@ use Espo\Core\ORM\Entity;
 
 class EditableEntity extends AbstractTwigFunction
 {
-    public function __construct()
-    {
-        $this->addDependency('acl');
-    }
-
     public function run(mixed $entity, array $fields = []): ?string
     {
         if (!$entity instanceof Entity) {
             return null;
         }
 
-        if (!$this->getInjection('acl')->check($entity->getEntityType(), 'edit')) {
+        if (!$this->container->get('acl')->check($entity->getEntityType(), 'edit')) {
             return null;
         }
 

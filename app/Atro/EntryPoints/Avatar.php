@@ -19,8 +19,6 @@ class Avatar extends Image
 {
     public static bool $authRequired = true;
 
-    public static bool $notStrictAuth = true;
-
     protected string $systemColor = '#D4729B';
 
     protected array $colorList

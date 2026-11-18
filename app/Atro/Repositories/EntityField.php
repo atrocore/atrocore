@@ -52,6 +52,7 @@ class EntityField extends ReferenceData
         'isDuplicatableRelation',
         'modifiedExtendedEnabled',
         'conditionalRequired',
+        'conditionalRequiredForReadiness',
         'conditionalReadOnly',
         'conditionalProtected',
         'conditionalVisible',
@@ -133,7 +134,7 @@ class EntityField extends ReferenceData
 
         $item = $this->prepareItem($parts[0], $parts[1]);
         if (!empty($item) && $this->isItemOfSubtype($item)) {
-            $entity = $this->entityFactory->create($this->entityName);
+            $entity = $this->getEntityFactory()->create($this->entityName);
             $entity->set($item);
             $this->prepareVirtualBoolFields($entity);
             $entity->setAsFetched();
@@ -242,6 +243,7 @@ class EntityField extends ReferenceData
             'entityName'                => $this->translate($entityName, 'scopeNames'),
             'tooltipText'               => $this->translate($fieldName, 'tooltips', $entityName),
             'conditionalRequired'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
+            'conditionalRequiredForReadiness' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.requiredForReadiness"),
             'conditionalReadOnly'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
             'conditionalProtected'      => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.protected"),
             'conditionalVisible'        => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
@@ -736,7 +738,6 @@ class EntityField extends ReferenceData
                 $data         = json_decode(file_get_contents($file), true);
                 $shouldUpdate = false;
                 foreach ($data as $code => $item) {
-
                     if (empty($item[$field])) {
                         continue;
                     }
@@ -1249,6 +1250,11 @@ class EntityField extends ReferenceData
             $conditionalPropertiesChanged      = true;
         }
 
+        if ($entity->isAttributeChanged('conditionalRequiredForReadiness')) {
+            $conditionalProperties['requiredForReadiness'] = $entity->get('conditionalRequiredForReadiness');
+            $conditionalPropertiesChanged                  = true;
+        }
+
         if ($entity->isAttributeChanged('conditionalReadOnly')) {
             $conditionalProperties['readOnly'] = $entity->get('conditionalReadOnly');
             $conditionalPropertiesChanged      = true;
@@ -1385,7 +1391,6 @@ class EntityField extends ReferenceData
         $scope = $entity->get('entityId');
         $name  = $entity->get('code');
 
-
         $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");
         if (!empty($foreignScope)) {
             $foreign = $this->getMetadata()->get("entityDefs.$scope.links.$name.foreign");
@@ -1501,16 +1506,9 @@ class EntityField extends ReferenceData
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function getTranslationRepository(): Translation

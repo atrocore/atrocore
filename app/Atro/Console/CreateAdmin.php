@@ -47,6 +47,7 @@ class CreateAdmin extends AbstractConsole
         $user = $entityManager->getRepository('User')->get();
         $user->set([
             'userName' => $userName,
+            'name'     => 'Admin',
             'lastName' => 'Admin',
             'password' => $this->getContainer()->get(PasswordHash::class)->hash($password),
             'isAdmin'  => true,

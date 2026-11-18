@@ -18,7 +18,6 @@ use Atro\Core\Templates\Services\Base;
 
 class PreviewTemplate extends Base
 {
-
     public function getHtmlPreview(string $previewTemplateId, string $entityId): string
     {
         $previewTemplate = $this->getRepository()->get($previewTemplateId);
@@ -33,7 +32,7 @@ class PreviewTemplate extends Base
             throw new NotFound();
         }
 
-        return $this->getInjection('twig')->renderTemplate($previewTemplate->get('template') ?? '', [
+        return $this->container->get('twig')->renderTemplate($previewTemplate->get('template') ?? '', [
             'entities' => [$entity],
             'language' => $this->getHeaderLanguage() ?? 'en_US',
             'mainLanguage' => $this->getConfig()->get('mainLanguage', 'en_US')
@@ -47,11 +46,5 @@ class PreviewTemplate extends Base
         $repository = $this->getEntityManager()->getRepository($scope);
         $repository->handleSelectParams($selectParams);
         return $repository->count($selectParams) > 0;
-    }
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('twig');
     }
 }

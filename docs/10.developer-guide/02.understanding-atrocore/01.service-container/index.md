@@ -42,14 +42,14 @@ namespace Pim\Services;
 
 use Atro\Core\Utils\Config;
 use Espo\ORM\EntityManager;
-use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\Metadata;
 
 class ProductExporter
 {
     public function __construct(
         private readonly EntityManager $em,
         private readonly Config $config,
-        private readonly FileManager $fileManager
+        private readonly Metadata $metadata
     ) {}
 }
 
@@ -77,7 +77,7 @@ class StorageFactory implements FactoryInterface
     {
         return match($container->get('config')->get('storageDriver')) {
             's3'    => new S3Storage($container->get('config')),
-            'local' => new LocalStorage($container->get('fileManager')),
+            'local' => new LocalStorage($container->get('config')),
         };
     }
 }

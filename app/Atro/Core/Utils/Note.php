@@ -17,7 +17,7 @@ use Atro\Core\Container;
 use Atro\Entities\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
 

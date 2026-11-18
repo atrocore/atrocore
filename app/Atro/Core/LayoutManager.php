@@ -17,13 +17,11 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Config;
-use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Json;
+use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 use Atro\Core\Http\RequestHeaders;
 
@@ -523,10 +521,10 @@ class LayoutManager
 
                 if (file_exists($fileFullPath)) {
                     // get file data
-                    $fileData = $this->getFileManager()->getContents($fileFullPath);
+                    $fileData = file_get_contents($fileFullPath);
 
                     // prepare data
-                    $data = Json::decode($fileData, true);
+                    $data = json_decode($fileData, true);
                 }
             }
         }
@@ -566,10 +564,10 @@ class LayoutManager
         $fileFullPath = $this->concatPath($filePath, $name . '.json');
         if (file_exists($fileFullPath)) {
             // get file data
-            $fileData = $this->getFileManager()->getContents($fileFullPath);
+            $fileData = file_get_contents($fileFullPath);
 
             // prepare data
-            $data = Json::decode($fileData, true);
+            $data = json_decode($fileData, true);
         }
 
         // from modules data
@@ -981,11 +979,6 @@ class LayoutManager
         return preg_replace("([\.]{2,})", '', $name);
     }
 
-    protected function getFileManager(): FileManager
-    {
-        return $this->container->get('fileManager');
-    }
-
     protected function getMetadata(): \Atro\Core\Utils\Metadata
     {
         return $this->container->get('metadata');
@@ -996,7 +989,7 @@ class LayoutManager
         return $this->container->get('config');
     }
 
-    protected function getEntityManager(): \Espo\Core\Orm\EntityManager
+    protected function getEntityManager(): \Espo\ORM\EntityManager
     {
         return $this->container->get('entityManager');
     }

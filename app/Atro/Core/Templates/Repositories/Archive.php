@@ -43,7 +43,7 @@ class Archive extends Base
 
         if ($this->hasClickHouse()) {
             $this
-                ->getInjection('container')
+                ->container
                 ->get('\ClickHouse\Console\ClearEntity')
                 ->clearData($this->entityName);
 
@@ -73,12 +73,5 @@ class Archive extends Base
         }
 
         return $this->mapper;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
     }
 }

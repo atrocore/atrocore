@@ -122,7 +122,7 @@ class Matching extends Base
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isActive')) {
-            $this->getInjection('dataManager')->clearCache();
+            $this->container->get('dataManager')->clearCache();
 
             if (empty($entity->get('isActive'))) {
                 $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
@@ -300,13 +300,6 @@ class Matching extends Base
 
     protected function rebuild(): void
     {
-        $this->getInjection('dataManager')->rebuild();
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
+        $this->container->get('dataManager')->rebuild();
     }
 }

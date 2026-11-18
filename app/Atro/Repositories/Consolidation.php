@@ -192,15 +192,8 @@ class Consolidation extends Base
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('expressionLanguage');
-    }
-
     protected function getExpressionLanguage(): ExpressionLanguage
     {
-        return $this->getInjection('expressionLanguage');
+        return $this->container->get('expressionLanguage');
     }
 }

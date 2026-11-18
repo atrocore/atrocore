@@ -20,7 +20,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 class MatchedRecord extends Base
 {
-    protected function access(&$result)
+    protected function access(&$result): void
     {
         parent::access($result);
 

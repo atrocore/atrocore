@@ -48,7 +48,7 @@ class Unit extends Base
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+                throw new BadRequest($this->container->get('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
             }
         }
 
@@ -83,7 +83,7 @@ class Unit extends Base
 
         if (empty($options['skipIsMainValidation'])) {
             if ($entity->get('isMain')) {
-                throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+                throw new BadRequest($this->container->get('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
             }
         }
 
@@ -159,7 +159,6 @@ class Unit extends Base
             }
         }
 
-
         $caId = $this->getConnection()->createQueryBuilder()
             ->select('id')
             ->from($this->getConnection()->quoteIdentifier('classification_attribute'), 't')
@@ -199,14 +198,7 @@ class Unit extends Base
 
         if ($entity->isNew() && $entity->get('measureId') === 'currency') {
             // update currency rates
-            $this->getInjection('container')->get(UpdateCurrencyExchangeViaECB::class)->updateCurrencyRates();
+            $this->container->get(UpdateCurrencyExchangeViaECB::class)->updateCurrencyRates();
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

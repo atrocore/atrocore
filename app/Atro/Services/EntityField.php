@@ -199,7 +199,6 @@ class EntityField extends ReferenceData
         $this->putAclMeta($entity);
     }
 
-
     protected function prepareFileTypesField(Entity $entity): void
     {
         if (empty($entity->get('fileTypes'))) {
@@ -262,16 +261,8 @@ class EntityField extends ReferenceData
         return [];
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('twig');
-        $this->addDependency('dataManager');
-    }
-
     protected function twig(): Twig
     {
-        return $this->getInjection('twig');
+        return $this->container->get('twig');
     }
 }

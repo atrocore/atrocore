@@ -211,14 +211,9 @@ class ClassificationAttribute extends Base
             ->findOne(['withDeleted' => $deleted]);
     }
 
-    protected function init()
-    {
-        $this->addDependency('language');
-    }
-
     protected function translate(string $key, string $label, string $scope = 'ClassificationAttribute'): string
     {
-        return $this->getInjection('language')->translate($key, $label, $scope);
+        return $this->container->get('language')->translate($key, $label, $scope);
     }
 
     protected function exception(string $key): string

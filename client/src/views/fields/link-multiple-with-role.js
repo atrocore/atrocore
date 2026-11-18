@@ -210,6 +210,10 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
             return data;
         },
 
+        getValueAttributeList: function () {
+            return [...Dep.prototype.getValueAttributeList.call(this), this.columnsName];
+        },
+
     });
 });
 

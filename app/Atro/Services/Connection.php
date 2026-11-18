@@ -74,7 +74,7 @@ class Connection extends Base
 
     public function createConnection($connectionEntity): ConnectionInterface
     {
-        $connection = $this->getInjection('container')->get('connectionFactory')->create($connectionEntity);
+        $connection = $this->container->get('connectionFactory')->create($connectionEntity);
         if (empty($connection) || !$connection instanceof ConnectionInterface) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
         }
@@ -128,14 +128,6 @@ class Connection extends Base
         return $this->getEncrypter()->decryptPassword($hash);
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('container');
-    }
-
     protected function getSubtypeRecord(string $id): Entity
     {
         $connectionEntity = $this->getRepository()->get($id);
@@ -148,11 +140,11 @@ class Connection extends Base
 
     protected function exception(string $name, string $scope = 'Connection'): string
     {
-        return $this->getInjection('language')->translate($name, 'exceptions', $scope);
+        return $this->container->get('language')->translate($name, 'exceptions', $scope);
     }
 
     protected function getEncrypter(): Encrypter
     {
-        return $this->getInjection('container')->get(Encrypter::class);
+        return $this->container->get(Encrypter::class);
     }
 }

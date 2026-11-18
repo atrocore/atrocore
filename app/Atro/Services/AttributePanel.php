@@ -14,6 +14,7 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\ReferenceData;
+use Espo\ORM\Entity;
 
 class AttributePanel extends ReferenceData
 {
@@ -74,5 +75,24 @@ class AttributePanel extends ReferenceData
         }
 
         throw new BadRequest();
+    }
+
+    protected function getRelationSortRecords(Entity $entity, string $link, string $sortField): array
+    {
+        if ($link === 'attributes') {
+            $collection = $this->getEntityManager()->getRepository('Attribute')
+                ->where(['attributePanelId' => $entity->get('id')])
+                ->order($sortField)
+                ->find();
+
+            $records = [];
+            foreach ($collection as $record) {
+                $records[(string)$record->get('id')] = $record;
+            }
+
+            return $records;
+        }
+
+        return parent::getRelationSortRecords($entity, $link, $sortField);
     }
 }

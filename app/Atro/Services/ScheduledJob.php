@@ -46,7 +46,7 @@ class ScheduledJob extends Base
 
                 // prepare message
                 $message = $this
-                    ->getInjection('language')
+                    ->container->get('language')
                     ->translate($key, 'exceptions', 'ScheduledJob');
 
                 throw new Error($message);
@@ -74,12 +74,5 @@ class ScheduledJob extends Base
         $this->getEntityManager()->saveEntity($jobEntity);
 
         return true;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

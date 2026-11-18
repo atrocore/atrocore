@@ -19,6 +19,7 @@ use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\OAuth\Authorization;
 use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\Routing\Route;
+use Atro\Entities\User;
 use Atro\Handlers\AbstractHandler;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ResponseInterface;
@@ -31,7 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Approve or deny an OAuth authorization request',
-    description: 'Completes the authorization request kept in its cookie by the authorization page /oauth/authorize. To approve it the user signs in with the username and password; denying needs no credentials. Returns the redirect URI of the client with the authorization code or with the "access_denied" error (RFC 6749, section 4.1.2). Called by the login form of the authorization request.',
+    description: 'Completes the authorization request kept in its cookie by the authorization page /oauth/authorize. To approve it the user signs in with the username and password, unless the user has signed in at an external identity provider for this request; denying needs no credentials. Returns the redirect URI of the client with the authorization code or with the "access_denied" error (RFC 6749, section 4.1.2). Called by the login form of the authorization request.',
     tag: 'Global',
     auth: false,
     requestBody: [
@@ -95,20 +96,21 @@ class OauthAuthorizationRequestSubmitHandler extends AbstractHandler
 
         $authorization = $this->container->get(Authorization::class);
 
-        $query = $authorization->decryptRequest((string)($request->getCookieParams()[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
-        if ($query === null) {
+        $keptRequest = $authorization->decryptRequest((string)($request->getCookieParams()[SessionCookie::AUTHORIZATION_REQUEST] ?? ''));
+        if ($keptRequest === null) {
             throw new BadRequest($this->getLanguage()->translate('signInExpired', 'messages', 'OauthClient'));
         }
 
         try {
-            $authorizationRequest = $authorization->validateQuery($query);
+            $authorizationRequest = $authorization->validateQuery($keptRequest['query']);
 
             if (empty($data->approved)) {
                 return $this->redirectResponse($request, $authorization->deny($authorizationRequest));
             }
 
-            $user = $this->container->get(UserAuthenticator::class)
-                ->authenticate((string)($data->username ?? ''), (string)($data->password ?? ''), $request);
+            $user = $this->getSignedInUser($keptRequest['userId'])
+                ?? $this->container->get(UserAuthenticator::class)
+                    ->authenticate((string)($data->username ?? ''), (string)($data->password ?? ''), $request);
 
             if ($user === null) {
                 throw new BadRequest($this->getLanguage()->translate('wrongUsernamePasword', 'messages', 'User'));
@@ -118,6 +120,16 @@ class OauthAuthorizationRequestSubmitHandler extends AbstractHandler
         } catch (OAuthServerException $e) {
             throw new BadRequest($e->getHint() ?: $e->getMessage());
         }
+    }
+
+    /**
+     * The active user who signed in at an external identity provider for the authorization request.
+     */
+    private function getSignedInUser(?string $userId): ?User
+    {
+        $user = $userId !== null ? $this->getEntityManager()->getEntity('User', $userId) : null;
+
+        return $user instanceof User && $user->isActive() ? $user : null;
     }
 
     /**

@@ -149,7 +149,7 @@ class Consolidation extends Base
             throw new Error("'$className' must be an instance of " . CompiledConsolidationSkipCondition::class);
         }
 
-        $skipCondition = $this->getContainer()->get($className);
+        $skipCondition = $this->container->get($className);
 
         $filteredCandidates = new EntityCollection([], $candidates->getEntityName());
         foreach ($candidates as $candidate) {
@@ -242,10 +242,10 @@ class Consolidation extends Base
         if ($consolidation->get('executeConsolidationAs') === 'system') {
             $executeAsUser = $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
         } else {
-            $executeAsUser = $this->getContainer()->get('user')->getSystemUser();
+            $executeAsUser = $this->container->get('user')->getSystemUser();
         }
 
-        $currentUser = $this->getContainer()->get('user');
+        $currentUser = $this->container->get('user');
 
         $userChanged = $currentUser !== $executeAsUser;
 
@@ -268,29 +268,16 @@ class Consolidation extends Base
         }
 
         $this->getEntityManager()->setUser($user);
-        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user);
+        $this->container->get(\Atro\Core\UserContext::class)->set($user);
     }
 
     protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
-        return $this->getInjection('language')->translate($label, $category, $scope);
+        return $this->container->get('language')->translate($label, $category, $scope);
     }
 
     protected function getTwig(): Twig
     {
-        return $this->getInjection('twig');
-    }
-
-    protected function getContainer(): \Atro\Core\Container
-    {
-        return $this->getInjection('container');
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('twig');
-        $this->addDependency('container');
+        return $this->container->get('twig');
     }
 }

@@ -17,7 +17,6 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\LanguageResolvers\AbstractLanguageResolver;
 use Atro\DTOs\TranslationKeyDTO;
 use Atro\Repositories\Translation as TranslationRepository;
-use Espo\Core\Utils\File\Unifier;
 use Atro\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -29,7 +28,6 @@ class Language
 
     protected Container $container;
 
-    protected Unifier $unifier;
     protected ?string $localeId;
     protected ?string $language = null;
 
@@ -49,7 +47,6 @@ class Language
 
         $this->container = $container;
         $this->localeId = $localeId;
-        $this->unifier = new Unifier($this->container->get('fileManager'), $this->getMetadata());
     }
 
     /**
@@ -743,15 +740,10 @@ class Language
 
     public function getModulesData(): array
     {
-        $data = [];
+        $data = ['core' => $this->readTranslationDir(CORE_PATH . '/Atro/Resources/i18n')];
 
-        // load core
-        $data['core'] = $this->unify(CORE_PATH . '/Atro/Resources/i18n');
-
-        // load modules
         foreach ($this->getMetadata()->getModules() as $name => $module) {
-            $data[$name] = [];
-            $module->loadTranslates($data[$name]);
+            $data[$name] = $this->readTranslationDir($module->getAppPath() . 'Resources/i18n');
         }
 
         return $data;
@@ -762,9 +754,29 @@ class Language
         return $this->getEntityManager()->getRepository('Translation');
     }
 
-    private function unify(string $path): array
+    /**
+     * Reads <path>/<locale>/<scope>.json files into [locale => [scope => translations]].
+     */
+    private function readTranslationDir(string $path): array
     {
-        return $this->unifier->unify('i18n', $path, true);
+        $data = [];
+
+        foreach (glob($path . '/*', GLOB_ONLYDIR) as $dir) {
+            $locale = basename($dir);
+            $data[$locale] = [];
+
+            foreach (glob($dir . '/*.json') as $file) {
+                $content = json_decode(file_get_contents($file), true);
+                if (!is_array($content)) {
+                    $GLOBALS['log']->emergency("Syntax error in $file");
+                    continue;
+                }
+
+                $data[$locale][basename($file, '.json')] = $content;
+            }
+        }
+
+        return $data;
     }
 
     private function getEntityManager(): EntityManager

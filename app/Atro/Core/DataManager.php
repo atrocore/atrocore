@@ -16,7 +16,6 @@ use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Util;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Database\Schema\Schema;
-use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 
 class DataManager
@@ -35,28 +34,20 @@ class DataManager
     public static function pushPublicData(string $key, $value): void
     {
         if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
-            $data = file_get_contents(self::PUBLIC_DATA_FILE_PATH);
-
-            if (JSON::isJSON($data)) {
-                $result = JSON::decode($data, true);
-            }
+            $result = json_decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
         }
 
         if (empty($result) || !is_array($result)) {
             $result = [];
         }
 
-        file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode(array_merge($result, [$key => $value])));
+        file_put_contents(self::PUBLIC_DATA_FILE_PATH, json_encode(array_merge($result, [$key => $value])));
     }
 
     public static function getPublicData(string $key)
     {
         if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
-            $data = file_get_contents(self::PUBLIC_DATA_FILE_PATH);
-
-            if (JSON::isJSON($data)) {
-                $result = JSON::decode($data, true);
-            }
+            $result = json_decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
         }
 
         if (empty($result) || !is_array($result) || empty($result[$key])) {
@@ -101,7 +92,7 @@ class DataManager
         }
 
         self::createCacheDir();
-        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
+        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", json_encode($data));
 
         return true;
     }
@@ -210,7 +201,7 @@ class DataManager
         $metadata = $this->container->get('metadata');
         $metadata->init(true);
 
-        $ormData = $this->container->get('ormMetadata')->getData(true);
+        $ormData = $this->container->get('ormConverter')->process();
 
         return !empty($ormData);
     }

@@ -583,6 +583,34 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 return true;
             }
 
+            const lockedFields = {...(model.get('_lockedFields') || {})};
+            $.each(this.getFieldViews(true), (name, view) => {
+                if (view.mode !== 'edit' || view.disabled || view.readOnly || view.options.useRelationModel || !view.isFullyRendered()) {
+                    return;
+                }
+
+                if (!view.hasLockedControls() || view.isLocked()) {
+                    return;
+                }
+
+                const field = view.getLockedFieldName();
+                if (field in lockedFields) {
+                    return;
+                }
+
+                const changed = view.getValueAttributeList().some(attribute => {
+                    return attribute in attrs && !_.isEqual(initialAttributes[attribute] ?? null, attrs[attribute] ?? null);
+                });
+
+                if (changed) {
+                    lockedFields[field] = true;
+                }
+            });
+
+            if (Object.keys(lockedFields).length) {
+                attrs._lockedFields = lockedFields;
+            }
+
             model.set(attrs, { silent: true });
 
             if (this.validate()) {
@@ -662,6 +690,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this[method](url, attrs).success(function (res) {
                 // set to model
                 model.set(res);
+                if (!_.isEmpty(attrs._lockedFields)) {
+                    const meta = Espo.Utils.cloneDeep(model.get('_meta') || {});
+                    meta.locked = meta.locked || {};
+                    meta.locked.fields = {...(meta.locked.fields || {}), ...attrs._lockedFields};
+                    model.set('_meta', meta);
+                }
                 model.unset('_lockedFields', {silent: true});
 
                 this.attributes = model.getClonedAttributes();

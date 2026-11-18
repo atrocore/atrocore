@@ -206,7 +206,6 @@
     "file": "File",
     "image": "Immagine",
     "multiEnum": "Elenco a più valori",
-    "attachmentMultiple": "Attacco multiplo",
     "rangeInt": "Intervallo di numeri interi",
     "rangeFloat": "Intervallo del galleggiante",
     "wysiwyg": "HTML",

@@ -126,13 +126,6 @@ class Classification extends Hierarchy
 
     protected function exception(string $key, string $scope = 'Attribute'): string
     {
-        return $this->getInjection('language')->translate($key, 'exceptions', $scope);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
+        return $this->container->get('language')->translate($key, 'exceptions', $scope);
     }
 }

@@ -615,8 +615,31 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return [];
         },
 
+        // the links to the records that are not ready get the status icon flag, on the detail view
+        markNotReadyLinks: function () {
+            if (this.mode !== 'detail') {
+                return;
+            }
+
+            const notReady = this.getNotReadyLinkedIds();
+            (this.ids || []).forEach(id => {
+                this.markNotReadyAnchor(this.$el.find(`a[href="#${this.foreignScope}/view/${id}"]`), notReady.includes(id));
+            });
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            this.markNotReadyLinks();
+
+            if (!this.notReadyLinksListened) {
+                this.notReadyLinksListened = true;
+                this.listenTo(this.model, 'change:_meta', () => {
+                    if (this.isRendered()) {
+                        this.markNotReadyLinks();
+                    }
+                });
+            }
 
             if (this.mode === 'edit' || this.mode === 'search') {
                 this.$element = this.$el.find('input.main-element');
@@ -895,6 +918,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             data[this.nameHashName] = Object.keys(this.nameHash || {}).length ? this.nameHash : null;
 
             return data;
+        },
+
+        getValueAttributeList: function () {
+            return [this.idsName];
         },
 
         fetchFromDom: function () {

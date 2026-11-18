@@ -16,17 +16,28 @@ namespace Atro\Repositories;
 use Atro\Core\Templates\Repositories\Relation;
 use Espo\ORM\Entity;
 
+/**
+ * The membership of a user in a team: changing it changes the access rights of the user.
+ */
 class TeamUser extends Relation
 {
-   protected function afterSave(Entity $entity, array $options = [])
-   {
-       parent::beforeSave($entity, $options);
-       $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
-   }
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
 
-   protected function afterRemove($entity, array $options = [])
-   {
-       parent::afterRemove($entity, $options);
-       $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
-   }
+        $this->afterMembershipChanged();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->afterMembershipChanged();
+    }
+
+    private function afterMembershipChanged(): void
+    {
+        $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
+        $this->container->get('aclManager')->clearAclCache();
+    }
 }

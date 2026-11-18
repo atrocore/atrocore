@@ -16,20 +16,14 @@ use Atro\Core\Utils\Util;
 
 class GetAllLanguageFields extends AbstractTwigFunction
 {
-    public function __construct()
-    {
-        $this->addDependency('metadata');
-        $this->addDependency('config');
-    }
-
     public function run(string $entityType, string|array $fields): array
     {
         if (is_string($fields)) {
             $fields = [$fields];
         }
 
-        $langList = $this->getInjection('config')->get('inputLanguageList', []);
-        $metadata = $this->getInjection('metadata')->get(['entityDefs', $entityType]);
+        $langList = $this->container->get('config')->get('inputLanguageList', []);
+        $metadata = $this->container->get('metadata')->get(['entityDefs', $entityType]);
         if (empty($metadata)) {
             return $fields;
         }

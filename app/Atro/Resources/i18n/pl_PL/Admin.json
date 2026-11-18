@@ -121,7 +121,6 @@
     "file": "Plik",
     "image": "Obraz",
     "multiEnum": "Lista wielowartościowa",
-    "attachmentMultiple": "Wielokrotne załączniki",
     "rangeInt": "Zakres liczb całkowitych",
     "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
     "wysiwyg": "HTML",

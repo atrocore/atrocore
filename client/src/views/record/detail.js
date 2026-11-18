@@ -2089,6 +2089,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
 
                     fieldHideMap[name] = allHidden;
+                    if (fieldView.originalName) {
+                        fieldHideMap[fieldView.originalName] = allHidden;
+                    }
                     this.controlFieldVisibility(fieldView, allHidden);
                     return allHidden;
                 }
@@ -2139,6 +2142,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
 
                 fieldHideMap[name] = hide;
+                if (fieldView.originalName) {
+                    fieldHideMap[fieldView.originalName] = hide;
+                }
                 this.controlFieldVisibility(fieldView, hide);
                 return hide
             }

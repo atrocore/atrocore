@@ -278,6 +278,10 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             }
 
             return data;
+        },
+
+        getValueAttributeList: function () {
+            return Dep.prototype.getValueAttributeList.call(this).filter(attribute => attribute !== this.unitFieldNameName);
         }
 
     });

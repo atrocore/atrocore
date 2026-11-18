@@ -600,8 +600,29 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             return [];
         },
 
+        // the link to a record that is not ready gets the status icon flag, on the detail view
+        markNotReadyLink: function () {
+            if (this.mode !== 'detail') {
+                return;
+            }
+
+            const id = this.model.get(this.idName);
+            this.markNotReadyAnchor(this.$el.find('a.url-field-link').first(), !!id && this.getNotReadyLinkedIds().includes(id));
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            this.markNotReadyLink();
+
+            if (!this.notReadyLinkListened) {
+                this.notReadyLinkListened = true;
+                this.listenTo(this.model, 'change:_meta', () => {
+                    if (this.isRendered()) {
+                        this.markNotReadyLink();
+                    }
+                });
+            }
 
             if (this.foreignScope === 'User' && this.model.getFieldParam(this.name, 'currentUserAsDefault') && (this.mode === 'edit' || this.mode === 'detail') && !this.model.get('id')) {
                 this.model.set(this.idName, this.getUser().get('id'));
@@ -886,6 +907,10 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             data[this.idName] = this.$el.find('[name="' + this.idName + '"]').val() || null;
 
             return data;
+        },
+
+        getValueAttributeList: function () {
+            return [this.idName];
         },
 
         clearSearch: function () {

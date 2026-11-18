@@ -3,21 +3,7 @@
   "layouts": false,
   "type": "Base",
   "tab": true,
-  "acl": true,
-  "aclActionLevelListMap": {
-    "read": [
-      "all",
-      "no"
-    ],
-    "edit": [
-      "all",
-      "no"
-    ],
-    "delete": [
-      "all",
-      "no"
-    ]
-  },
+  "acl": false,
   "customizable": false,
   "streamDisabled": true,
   "notificationDisabled": true,

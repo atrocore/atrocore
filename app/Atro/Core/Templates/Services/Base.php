@@ -127,7 +127,6 @@ class Base extends AbstractRecordService implements
 
     protected function prepareDuplicateAttributes(string $id, \stdClass $attributes): \stdClass
     {
-
         if (!$this->getMetadata()->get(['scopes', $this->entityName, 'hasAttribute'])) {
             return $attributes;
         }
@@ -699,7 +698,7 @@ class Base extends AbstractRecordService implements
                 continue;
             }
 
-            throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeChanged', 'exceptions', 'Global'));
+            throw new BadRequest($this->container->get('language')->translate('archivedRecordCannotBeChanged', 'exceptions', 'Global'));
         }
     }
 
@@ -1010,7 +1009,6 @@ class Base extends AbstractRecordService implements
                 $attributes->input->_sourceEntities        = $sourceList;
                 $this->updateEntity($id, $attributes->input);
             } catch (NotModified $e) {
-
             }
         }
 

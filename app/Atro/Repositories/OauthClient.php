@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\OAuth\Repositories\ClientRepository;
 use Atro\Core\OAuth\TokenRevoker;
 use Atro\Core\OAuth\UiClient;
 use Atro\Core\Templates\Repositories\Base;
@@ -29,7 +30,7 @@ class OauthClient extends Base
     {
         $secret = bin2hex(random_bytes(32));
 
-        $client->set('secretHash', $this->getInjection('container')->get(PasswordHash::class)->hash($secret));
+        $client->set('secretHash', $this->container->get(PasswordHash::class)->hash($secret));
         $this->getEntityManager()->saveEntity($client);
 
         return $secret;
@@ -44,14 +45,15 @@ class OauthClient extends Base
         $hasClientCredentials = !empty($entity->get('isConfidential')) && !empty($entity->get('clientCredentialsGrant'));
 
         if (!$hasClientCredentials && empty($entity->get('authorizationCodeGrant'))) {
-            throw new BadRequest($this->getInjection('language')->translate('grantRequired', 'exceptions', 'OauthClient'));
+            throw new BadRequest($this->container->get('language')->translate('grantRequired', 'exceptions', 'OauthClient'));
         }
 
         if ($hasClientCredentials && empty($entity->get('userId'))) {
-            throw new BadRequest($this->getInjection('language')->translate('userRequiredForClientCredentials', 'exceptions', 'OauthClient'));
+            throw new BadRequest($this->container->get('language')->translate('userRequiredForClientCredentials', 'exceptions', 'OauthClient'));
         }
 
-        if (!empty($entity->get('authorizationCodeGrant'))) {
+        // the redirect URI of the client of the user interface is the site URL
+        if (!empty($entity->get('authorizationCodeGrant')) && !$this->isUiClient($entity)) {
             $this->validateRedirectUris((array)$entity->get('redirectUris'));
         }
 
@@ -69,7 +71,7 @@ class OauthClient extends Base
      */
     protected function validateUiClient(Entity $entity): void
     {
-        $redirectUris = [$this->getInjection('container')->get(UiClient::class)->getRedirectUri()];
+        $redirectUris = [$this->container->get(UiClient::class)->getRedirectUri()];
 
         $isValid = $entity->get('isConfidential') === false
             && $entity->get('clientCredentialsGrant') === false
@@ -80,26 +82,25 @@ class OauthClient extends Base
             && (!$entity->isAttributeChanged('redirectUris') || array_values((array)$entity->get('redirectUris')) === $redirectUris);
 
         if (!$isValid) {
-            throw new BadRequest($this->getInjection('language')->translate('uiClientProtected', 'exceptions', 'OauthClient'));
+            throw new BadRequest($this->container->get('language')->translate('uiClientProtected', 'exceptions', 'OauthClient'));
         }
 
         $entity->set('redirectUris', $redirectUris);
     }
 
     /**
-     * A redirect URI is absolute and has no fragment (RFC 6749, section 3.1.2).
+     * See ClientRepository::isAllowedRedirectUri() for the allowed redirect URIs.
      */
     protected function validateRedirectUris(array $redirectUris): void
     {
-        $language = $this->getInjection('language');
+        $language = $this->container->get('language');
 
         if (empty($redirectUris)) {
             throw new BadRequest($language->translate('redirectUrisRequired', 'exceptions', 'OauthClient'));
         }
 
         foreach ($redirectUris as $redirectUri) {
-            $parts = parse_url((string)$redirectUri);
-            if ($parts === false || empty($parts['scheme']) || isset($parts['fragment'])) {
+            if (!ClientRepository::isAllowedRedirectUri((string)$redirectUri)) {
                 throw new BadRequest(sprintf($language->translate('invalidRedirectUri', 'exceptions', 'OauthClient'), $redirectUri));
             }
         }
@@ -117,7 +118,7 @@ class OauthClient extends Base
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if ($this->isUiClient($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('uiClientNotRemovable', 'exceptions', 'OauthClient'));
+            throw new BadRequest($this->container->get('language')->translate('uiClientNotRemovable', 'exceptions', 'OauthClient'));
         }
 
         parent::beforeRemove($entity, $options);
@@ -132,13 +133,6 @@ class OauthClient extends Base
 
     protected function getTokenRevoker(): TokenRevoker
     {
-        return $this->getInjection('container')->get(TokenRevoker::class);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
+        return $this->container->get(TokenRevoker::class);
     }
 }

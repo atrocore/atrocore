@@ -23,13 +23,6 @@ use Espo\ORM\IEntity;
 
 class LastViewed extends AbstractService
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('selectManagerFactory');
-        $this->addDependency('metadata');
-    }
-
     public function getLastVisitItemsTreeData($scope, $offset = 0): array
     {
         $params = [
@@ -78,7 +71,7 @@ class LastViewed extends AbstractService
         $targetTypeList[] = 'App';
 
         /** @var \Atro\Core\SelectManagers\Base $selectManager */
-        $selectManager = $this->getInjection('selectManagerFactory')->create('ActionHistoryRecord');
+        $selectManager = $this->container->get('selectManagerFactory')->create('ActionHistoryRecord');
         $params = [
             'maxSize' => $maxSize,
             'sortBy'  => 'createdAt',
@@ -199,7 +192,6 @@ class LastViewed extends AbstractService
 
         $offset = $params['offset'] ?? 0;
 
-
         if (!empty($params['targetTypeList'])) {
             $targetTypeList = $params['targetTypeList'];
         } else {
@@ -209,7 +201,6 @@ class LastViewed extends AbstractService
                 return !empty($scopes[$item]['object']) && empty($scopes[$item]['hideLastViewed']);
             });
         }
-
 
         $callbacks = [];
         if (!empty($params['joinScope'])) {
@@ -308,6 +299,6 @@ class LastViewed extends AbstractService
 
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('metadata');
+        return $this->container->get('metadata');
     }
 }

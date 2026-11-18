@@ -398,6 +398,10 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        getValueAttributeList: function () {
+            return [this.idName, this.typeName];
+        },
+
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
 

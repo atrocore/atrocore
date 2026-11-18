@@ -24,4 +24,12 @@ class Team extends Base
         }
         return parent::checkScope($user, $data, $action, $entity, $entityAccessData);
     }
+
+    /**
+     * A user is in the team of a Team record when the user is its member.
+     */
+    public function checkInTeam(User $user, Entity $entity)
+    {
+        return in_array($entity->get('id'), $user->getLinkMultipleIdList('teams'));
+    }
 }
