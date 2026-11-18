@@ -65,7 +65,6 @@ class ServiceManagerConfig
         'ormConverter'             => \Espo\Core\Utils\Database\Orm\Converter::class,
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
-        'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         \League\OAuth2\Server\AuthorizationServer::class => \Atro\Core\Factories\OauthAuthorizationServer::class,
         \League\OAuth2\Server\ResourceServer::class      => \Atro\Core\Factories\OauthResourceServer::class,
     ];
