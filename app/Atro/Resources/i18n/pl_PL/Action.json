@@ -1,91 +1,96 @@
 {
-  "fields": {
-    "isActive": "Aktywny",
-    "type": "Typ",
-    "sourceEntity": "Źródłowa Jednostka",
-    "inBackground": "Wykonaj w tle",
-    "usage": "Wykorzystanie",
-    "massAction": "Akcja Masowa",
-    "display": "Wyświetlanie",
-    "displayField": "Pole wyświetlania",
-    "targetEntity": "Podmiot docelowy",
-    "showEmailPreview": "Podgląd przed wysłaniem",
-    "emailTo": "Email do",
-    "emailCc": "Email CC",
-    "actionsSet": "Zestaw działań",
-    "focusField": "Pole",
-    "changeFields": "Pola",
-    "emailBcc": "Email BCC",
-    "executeAs": "Wykonać jako",
-    "mode": "Tryb",
-    "emailScript": "Skrypt",
-    "emailTemplate": "Szablon e-maila",
-    "actions": "Akcje",
-    "webhookUrl": "URL AtroCore",
-    "hideTextLabel": "Ukryj etykietę tekstową na przycisku",
-    "updateType": "Update Type",
-    "updateFields": "Pola aktualizacji",
-    "applyToPreselectedRecords": "Zastosowanie do wstępnie wybranych rekordów",
-    "updateScript": "Skrypt",
-    "executions": "Egzekucje",
-    "searchEntity": "Podmiot wyszukujący",
-    "deletePermanently": "Usuń trwale"
-  },
-  "labels": {
-    "execute": "Wykonaj",
-    "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizuj"
-  },
-  "actions": {
-    "allLogs": "Wszystkie dzienniki"
-  },
-  "massActions": {
-    "execute": "Wykonaj"
-  },
-  "messages": {
-    "executeNow": "Czy na pewno chcesz wykonać wybraną akcję?"
-  },
-  "options": {
-    "display": {
-      "dropdown": "Rozwijane",
-      "single": "Pojedyncze"
+    "fields": {
+        "isActive": "Aktywny",
+        "type": "Typ",
+        "sourceEntity": "Źródłowa Jednostka",
+        "inBackground": "Wykonaj w tle",
+        "usage": "Wykorzystanie",
+        "massAction": "Akcja Masowa",
+        "display": "Wyświetlanie",
+        "displayField": "Pole wyświetlania",
+        "targetEntity": "Podmiot docelowy",
+        "showEmailPreview": "Podgląd przed wysłaniem",
+        "emailTo": "Email do",
+        "emailCc": "Email CC",
+        "actionsSet": "Zestaw działań",
+        "focusField": "Pole",
+        "changeFields": "Pola",
+        "emailBcc": "Email BCC",
+        "executeAs": "Wykonać jako",
+        "mode": "Tryb",
+        "emailScript": "Skrypt",
+        "emailTemplate": "Szablon e-maila",
+        "actions": "Akcje",
+        "webhookUrl": "URL AtroCore",
+        "hideTextLabel": "Ukryj etykietę tekstową na przycisku",
+        "updateType": "Update Type",
+        "updateFields": "Pola aktualizacji",
+        "applyToPreselectedRecords": "Zastosowanie do wstępnie wybranych rekordów",
+        "updateScript": "Skrypt",
+        "executions": "Egzekucje",
+        "searchEntity": "Podmiot wyszukujący",
+        "deletePermanently": "Usuń trwale",
+        "handler": "Program obsługi"
     },
-    "usage": {
-      "entity": "Przycisk akcji jednostki",
-      "record": "Przycisk nagrywania akcji",
-      "field": "Przycisk akcji w polu",
-      "onFieldFocus": "Koncentracja na terenie",
-      "onFieldChange": "Zmiana pola",
-      "onRecordLoad": "Tworzenie/aktualizacja rekordów"
+    "labels": {
+        "execute": "Wykonaj",
+        "Parameters": "Parametry",
+        "fieldsPanel": "Aktualizuj"
     },
-    "type": {
-      "webhook": "Webhook",
-      "email": "Proszę wysłać e-mail",
-      "set": "Zestaw akcji",
-      "customCode": "Kod niestandardowy",
-      "update": "Aktualizuj",
-      "create": "Utwórz",
-      "delete": "Usuń",
-      "createOrUpdate": "Tworzenie lub aktualizacja",
-      "custom": "Kod niestandardowy"
+    "actions": {
+        "allLogs": "Wszystkie dzienniki"
     },
-    "executeAs": {
-      "sameUser": "Ten sam użytkownik",
-      "system": "System"
+    "massActions": {
+        "execute": "Wykonaj"
     },
-    "mode": {
-      "basic": "Basic",
-      "script": "Skrypt"
+    "messages": {
+        "executeNow": "Czy na pewno chcesz wykonać wybraną akcję?"
+    },
+    "options": {
+        "display": {
+            "dropdown": "Rozwijane",
+            "single": "Pojedyncze"
+        },
+        "usage": {
+            "entity": "Przycisk akcji jednostki",
+            "record": "Przycisk nagrywania akcji",
+            "field": "Przycisk akcji w polu",
+            "onFieldFocus": "Koncentracja na terenie",
+            "onFieldChange": "Zmiana pola",
+            "onRecordLoad": "Tworzenie/aktualizacja rekordów"
+        },
+        "type": {
+            "webhook": "Webhook",
+            "email": "Proszę wysłać e-mail",
+            "set": "Zestaw akcji",
+            "customCode": "Kod niestandardowy",
+            "update": "Aktualizuj",
+            "create": "Utwórz",
+            "delete": "Usuń",
+            "createOrUpdate": "Tworzenie lub aktualizacja",
+            "custom": "Kod niestandardowy"
+        },
+        "executeAs": {
+            "sameUser": "Ten sam użytkownik",
+            "system": "System"
+        },
+        "mode": {
+            "basic": "Basic",
+            "script": "Skrypt"
+        },
+        "updateType": {
+            "basic": "Podstawowy",
+            "script": "Skrypt"
+        }
+    },
+    "tooltips": {
+        "inBackground": "Akcja zostanie wykonana w tle bez bezpośredniej informacji o sukcesie/błędzie. Użyj tej opcji, jeśli wykonanie akcji zajmie więcej niż 30 sekund.",
+        "usage": "Wykorzystanie określa umiejscowienie akcji. Akcja Rekordu wymaga wcześniejszego zaznaczenia dotkniętych rekordów.",
+        "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania akcji."
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "Wyrażenie nie może być puste.",
+        "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta.",
+        "actionTypeDisabledForTargetEntity": "Typu akcji \"%1$s\" nie można użyć, ponieważ ta akcja jest wyłączona dla encji \"%2$s\"."
     }
-  },
-  "tooltips": {
-    "inBackground": "Akcja zostanie wykonana w tle bez bezpośredniej informacji o sukcesie/błędzie. Użyj tej opcji, jeśli wykonanie akcji zajmie więcej niż 30 sekund.",
-    "usage": "Wykorzystanie określa umiejscowienie akcji. Akcja Rekordu wymaga wcześniejszego zaznaczenia dotkniętych rekordów.",
-    "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania akcji."
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "Wyrażenie nie może być puste.",
-    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta.",
-    "actionTypeDisabledForTargetEntity": "Typu akcji \"%1$s\" nie można użyć, ponieważ ta akcja jest wyłączona dla encji \"%2$s\"."
-  }
 }
