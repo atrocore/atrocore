@@ -25,7 +25,7 @@ use Atro\Core\Utils\Metadata;
 use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Atro\Repositories\Action as ActionRepository;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Atro\Core\ServiceFactory;
 use Espo\ORM\Entity;
 

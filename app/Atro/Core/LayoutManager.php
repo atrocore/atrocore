@@ -21,7 +21,7 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 use Atro\Core\Http\RequestHeaders;
 

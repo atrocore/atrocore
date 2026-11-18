@@ -27,7 +27,7 @@ that extends `\Atro\Core\Templates\Repositories{Type}` where
 To get the repository of an entity we need to use the Entity Manager from the container.
 
 ```php
-/** @var \Espo\Core\ORM\EntityManager $entityManager */
+/** @var \Espo\ORM\EntityManager $entityManager */
 $entityManager = $container->get('entityManager');
 
 /** @var \Atro\Core\Templates\Repositories\Base $repository */
@@ -63,7 +63,7 @@ $manufacturer = $entityManager->getEntity('Manufacturer', $id);
 ```php
 <?php
 
-/** @var \Espo\Core\ORM\EntityManager $entityManager */
+/** @var \Espo\ORM\EntityManager $entityManager */
 $entityManager = $container->get('entityManager');
 
 // Method 1: Repository approach
@@ -433,7 +433,7 @@ $repository->save($manufacturer);  // Triggers beforeSave() and afterSave()
 For complex queries beyond ORM capabilities, use direct database connections:
 
 ```php
-/** @var \Espo\Core\ORM\EntityManager $entityManager */
+/** @var \Espo\ORM\EntityManager $entityManager */
 $entityManager = $containter->get('entityManager');
 
 /** @var \Doctrine\DBAL\Connection $connection */

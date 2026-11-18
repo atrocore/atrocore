@@ -15,7 +15,7 @@ namespace Atro\Core\Utils\Condition;
 
 use DateInterval;
 use Atro\Core\Exceptions\Error;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use DateTime;

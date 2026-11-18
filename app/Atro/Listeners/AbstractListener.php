@@ -16,7 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\Container;
 use Atro\Core\Twig\Twig;
 use Espo\Core\Acl;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;

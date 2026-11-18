@@ -16,7 +16,7 @@ namespace Atro\Core\FileValidation;
 use Atro\Entities\File;
 use Atro\Core\Container;
 use Atro\Core\Utils\Language;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Atro\Entities\User;
 use Espo\ORM\Entity;
 

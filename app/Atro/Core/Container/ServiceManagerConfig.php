@@ -60,7 +60,7 @@ class ServiceManagerConfig
         'uniqueIndexDescriber'     => \Atro\Core\Utils\UniqueIndexDescriber::class,
         'expressionLanguage'       => \Atro\Core\Factories\ExpressionLanguage::class,
         'aclManager'               => \Espo\Core\AclManager::class,
-        'entityManager'            => \Espo\Core\Factories\EntityManager::class,
+        'entityManager'            => \Espo\ORM\EntityManager::class,
         'ormConverter'             => \Espo\Core\Utils\Database\Orm\Converter::class,
         'selectManagerFactory'     => \Atro\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Atro\Core\ServiceFactory::class,

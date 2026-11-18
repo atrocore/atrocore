@@ -102,7 +102,7 @@ Following these naming conventions helps prevent conflicts and makes your code m
 To enqueue a job for background processing:
 
 ```php
-/** @var \Espo\Core\ORM\EntityManager $entityManager */
+/** @var \Espo\ORM\EntityManager $entityManager */
 $entityManager = $container->get('entityManager');
 
 // Create a job entity
@@ -152,7 +152,7 @@ for cancellation).
 **Example: Canceling a Job**
 
 ```php
-/** @var \Espo\Core\ORM\EntityManager $entityManager */
+/** @var \Espo\ORM\EntityManager $entityManager */
 $entityManager = $container->get('entityManager');
 
 // Get the job you want to cancel

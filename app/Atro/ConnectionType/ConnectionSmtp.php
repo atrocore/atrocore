@@ -17,7 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Mail\Sender;
 use Atro\Core\Mail\SmtpOauthAuthenticator;
 use Atro\Core\Utils\Config;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
