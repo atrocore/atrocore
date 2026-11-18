@@ -13,11 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core\ModuleManager;
 
-use Atro\Core\Utils\DataUtil;
-use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Json;
 use Atro\Core\Container;
-use Atro\Core\Utils\Util;
 use Laminas\ServiceManager\ServiceManager;
 
 abstract class AbstractModule
@@ -39,16 +36,6 @@ abstract class AbstractModule
 
     protected ServiceManager $sm;
     protected Container $container;
-
-    /**
-     * @var Unifier
-     */
-    protected $unifier;
-
-    /**
-     * @var Unifier
-     */
-    protected $objUnifier;
 
     /**
      * Get module load order
@@ -210,19 +197,6 @@ abstract class AbstractModule
     }
 
     /**
-     * Load module metadata
-     *
-     * @param \stdClass $data
-     */
-    public function loadMetadata(\stdClass &$data)
-    {
-        $metadata = $this
-            ->getObjUnifier()
-            ->unify('metadata', $this->getAppPath() . 'Resources/metadata', true);
-        $data = DataUtil::merge($data, $metadata);
-    }
-
-    /**
      * Load module layouts
      *
      * @param string $scope
@@ -268,16 +242,6 @@ abstract class AbstractModule
                 }
             }
         }
-    }
-
-    /**
-     * Load module translates
-     *
-     * @param array $data
-     */
-    public function loadTranslates(array &$data)
-    {
-        $data = Util::merge($data, $this->getUnifier()->unify('i18n', $this->getAppPath() . 'Resources/i18n', true));
     }
 
     /**
@@ -370,38 +334,6 @@ abstract class AbstractModule
      */
     public function onLoad()
     {
-    }
-
-    /**
-     * @return Unifier
-     */
-    protected function getUnifier(): Unifier
-    {
-        if (!isset($this->unifier)) {
-            $this->unifier = new Unifier(
-                $this->getContainer()->get('fileManager'),
-                $this->getContainer()->get('metadata'),
-                false
-            );
-        }
-
-        return $this->unifier;
-    }
-
-    /**
-     * @return Unifier
-     */
-    protected function getObjUnifier(): Unifier
-    {
-        if (!isset($this->objUnifier)) {
-            $this->objUnifier = new Unifier(
-                $this->getContainer()->get('fileManager'),
-                $this->getContainer()->get('metadata'),
-                true
-            );
-        }
-
-        return $this->objUnifier;
     }
 
     /**

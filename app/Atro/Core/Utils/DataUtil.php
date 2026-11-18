@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core\Utils;
 
-use Atro\Core\Exceptions\Error;
-
 class DataUtil
 {
     /**
@@ -51,27 +49,6 @@ class DataUtil
         }
 
         return $overrideData;
-    }
-
-    /**
-     * Removes values by key paths. A path is a dot-separated string ("entityDefs.Product.fields.name")
-     * or a list of keys. Missing paths are ignored.
-     */
-    public static function unsetByKey(mixed $data, string|array|object $paths): mixed
-    {
-        foreach ((array)$paths as $path) {
-            if (is_string($path)) {
-                $path = explode('.', $path);
-            }
-
-            if (!is_array($path)) {
-                throw new Error('Bad unset parameter');
-            }
-
-            $data = self::unsetPath($data, array_values($path));
-        }
-
-        return $data;
     }
 
     private static function mergeObject(mixed $data, object $overrideData): object
@@ -134,31 +111,6 @@ class DataUtil
             }
 
             return $isRemoved ? array_values($data) : $data;
-        }
-
-        return $data;
-    }
-
-    private static function unsetPath(mixed $data, array $keys): mixed
-    {
-        if (empty($keys)) {
-            return $data;
-        }
-
-        $key = array_shift($keys);
-
-        if (is_object($data) && property_exists($data, (string)$key)) {
-            if (empty($keys)) {
-                unset($data->$key);
-            } else {
-                $data->$key = self::unsetPath($data->$key, $keys);
-            }
-        } elseif (is_array($data) && array_key_exists($key, $data)) {
-            if (empty($keys)) {
-                unset($data[$key]);
-            } else {
-                $data[$key] = self::unsetPath($data[$key], $keys);
-            }
         }
 
         return $data;

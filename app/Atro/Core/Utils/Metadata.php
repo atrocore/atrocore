@@ -17,7 +17,6 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata\Helper;
 use Espo\Core\Utils\Json;
@@ -29,7 +28,6 @@ class Metadata
     private ModuleManager $moduleManager;
     private EventManager $eventManager;
     private DataManager $dataManager;
-    private Unifier $objUnifier;
     private Helper $helper;
 
     private $data = null;
@@ -45,7 +43,6 @@ class Metadata
         $this->dataManager   = $container->get('dataManager');
         $this->moduleManager = $container->get('moduleManager');
         $this->eventManager  = $container->get('eventManager');
-        $this->objUnifier    = new Unifier($this->fileManager, $this, true);
         $this->helper        = new Helper($this);
     }
 
@@ -223,13 +220,13 @@ class Metadata
 
     public function loadData(bool $ignoreCustom = false): \stdClass
     {
-        $content = $this->unify(CORE_PATH . '/Atro/Resources/metadata');
+        $content = $this->readMetadataDir(CORE_PATH . '/Atro/Resources/metadata');
         foreach ($this->getModules() as $module) {
-            $module->loadMetadata($content);
+            $content = DataUtil::merge($content, $this->readMetadataDir($module->getAppPath() . 'Resources/metadata'));
         }
 
         if (!$ignoreCustom) {
-            $content = DataUtil::merge($content, $this->unify('data/metadata'));
+            $content = DataUtil::merge($content, $this->readMetadataDir($this->customPath));
         }
 
         return $this->addAdditionalFieldsObj($content);
@@ -248,9 +245,29 @@ class Metadata
         }
     }
 
-    protected function unify(string $path): \stdClass
+    /**
+     * Reads <path>/<section>/<name>.json files into {section: {name: content}}.
+     */
+    private function readMetadataDir(string $path): \stdClass
     {
-        return $this->objUnifier->unify('metadata', $path, true);
+        $data = new \stdClass();
+
+        foreach (glob($path . '/*', GLOB_ONLYDIR) as $dir) {
+            $section = basename($dir);
+            $data->$section = new \stdClass();
+
+            foreach (glob($dir . '/*.json') as $file) {
+                $content = json_decode(file_get_contents($file));
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $GLOBALS['log']->emergency("Syntax error in $file");
+                    $content = new \stdClass();
+                }
+
+                $data->$section->{basename($file, '.json')} = $content;
+            }
+        }
+
+        return $data;
     }
 
     /**
