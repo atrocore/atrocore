@@ -5,23 +5,48 @@
         "record": "Záznam",
         "cluster": "Cluster",
         "matchedRecord": "Shodný záznam",
-        "matchedScore": "Shodný počet bodů"
+        "matchedScore": "Shodný počet bodů",
+        "confirmedAutomatically": "Automaticky potvrzeno"
     },
     "exceptions": {
         "notFound": "Záznam o položce clusteru nebyl nalezen",
         "cannotUnreject": "Tuto položku shluku nelze odmítnout",
-        "idOrIdListOrWhereRequired": "Zadejte alespoň jedno z následujících: ID, seznam ID nebo vyhledávací filtr."
+        "idOrIdListOrWhereRequired": "Zadejte alespoň jedno z následujících: ID, seznam ID nebo vyhledávací filtr.",
+        "itemsMustBelongToTheSameCluster": "Všechny vybrané položky musí patřit do stejného shluku.",
+        "cannotDeconsolidateMasterEntityItem": "Položku hlavní entity nelze vyjmout z konsolidace.",
+        "cannotDeconsolidateAllItems": "Nelze vyjmout z konsolidace všechny konsolidované položky: alespoň jedna položka musí zůstat propojena se zlatým záznamem.",
+        "cannotSplitMasterEntityItem": "Položku hlavní entity nelze rozdělit.",
+        "targetClusterIdRequired": "Je nutné zadat cílový shluk."
     },
     "massActions": {
-        "reject": "Odmítnout"
+        "reject": "Odmítnout",
+        "deconsolidate": "Zrušit konsolidaci",
+        "split": "Rozdělit",
+        "move": "Přesunout",
+        "consolidate": "Konsolidovat"
     },
     "massActionSuccessMessages": {
-        "reject": "Vybrané položky clusteru jsou mazány na pozadí"
+        "reject": "Vybrané položky clusteru jsou mazány na pozadí",
+        "deconsolidate": "U vybraných položek shluku byla zrušena konsolidace",
+        "split": "Vybrané položky shluku byly přesunuty do nového shluku",
+        "move": "Vybrané položky shluku byly přesunuty",
+        "consolidate": "Vybrané položky clusteru byly konsolidovány"
     },
     "massActionConfirmMessages": {
-        "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
+        "reject": "Jste si jisti, že chcete odmítnout vybrané položky?",
+        "deconsolidate": "Jste si jisti, že chcete zrušit konsolidaci vybraných položek?",
+        "split": "Jste si jisti, že chcete přesunout vybrané položky do nového clusteru?"
     },
     "actions": {
-        "reject": "Odmítnout"
+        "reject": "Odmítnout",
+        "consolidate": "Konsolidovat",
+        "deconsolidate": "Zrušit konsolidaci",
+        "split": "Rozdělit",
+        "move": "Přesunout"
+    },
+    "labels": {
+        "confirmedAutomatically": "Automaticky potvrzeno",
+        "selectTargetCluster": "Vybrat cílový shluk",
+        "moveToCluster": "Přesunout do shluku"
     }
 }
