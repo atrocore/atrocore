@@ -1,66 +1,66 @@
 {
     "fields": {
-        "type": "",
-        "folder": "",
-        "storage": "",
-        "mimeType": "",
-        "path": "",
-        "thumbnailsPath": "",
-        "preview": "",
-        "hash": "",
-        "generated": "",
-        "fileSize": "",
-        "fileMtime": "",
-        "url": "",
-        "uploadUrl": "",
-        "width": "",
-        "height": "",
-        "size": "",
-        "colorSpace": "",
-        "brands": "",
-        "replacementReason": ""
+        "type": "Típus",
+        "folder": "Mappa",
+        "storage": "Tárhely",
+        "mimeType": "MIME-típus",
+        "path": "Útvonal",
+        "thumbnailsPath": "Bélyegképek elérési útja",
+        "preview": "Előnézet",
+        "hash": "Hash",
+        "generated": "Generált",
+        "fileSize": "Fájlméret (bájt)",
+        "fileMtime": "A fájl módosításának dátuma",
+        "url": "URL",
+        "uploadUrl": "URL",
+        "width": "Szélesség",
+        "height": "Magasság",
+        "size": "Méret",
+        "colorSpace": "Színtér",
+        "brands": "Márkák",
+        "replacementReason": "Csere oka"
     },
     "options": {
         "replacementReason": {
-            "wrongFileAttached": "",
-            "poorQuality": "",
-            "corruptUpload": ""
+            "wrongFileAttached": "Nem megfelelő fájl van csatolva",
+            "poorQuality": "Gyenge minőség",
+            "corruptUpload": "Sérült feltöltés"
         }
     },
     "labels": {
-        "Preview": "",
-        "Upload": "",
-        "retry": "",
-        "uploaded": "",
-        "putUploadUrl": "",
-        "zipDownloadNotification": "",
-        "Share": "",
-        "thumbnailUrl": ""
+        "Preview": "Előnézet",
+        "Upload": "Feltöltés",
+        "retry": "Újrapróbálja?",
+        "uploaded": "feltöltve",
+        "putUploadUrl": "Adja meg a fájl URL-jét, ha URL-en keresztül szeretné feltölteni",
+        "zipDownloadNotification": "Letöltheti <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">letölteni</a> a ZIP-fájlt",
+        "Share": "Megosztás",
+        "thumbnailUrl": "Bélyegkép URL (%s)"
     },
     "insightsPanels": {
-        "sharing": ""
+        "sharing": "Megosztás"
     },
     "messages": {
-        "notAllFilesWereUploaded": "",
-        "fileCouldNotBeUploaded": "",
-        "fileHasDuplicate": "",
-        "cannotDefineFileName": "",
-        "urlExpected": "",
-        "urlCannotBeFetched": "",
-        "fileExtensionCorrectedAutomatically": "",
-        "downloadJobsCreated": ""
+        "notAllFilesWereUploaded": "A YY fájl közül XX nem lett feltöltve.",
+        "fileCouldNotBeUploaded": "A fájl nem tölthető fel.",
+        "fileHasDuplicate": "Ennek a fájlnak már van legalább egy <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplikátuma</a>.",
+        "cannotDefineFileName": "A rendszer nem tudja felismerni a fájl nevét az URL alapján.",
+        "urlExpected": "Érvénytelen URL-t adott meg",
+        "urlCannotBeFetched": "Az URL lekérése nem sikerült.",
+        "fileExtensionCorrectedAutomatically": "A fájlkiterjesztés automatikusan javítva lett.",
+        "downloadJobsCreated": "Az archív fájl előkészítéséhez háttérfeladat jött létre."
     },
     "exceptions": {
-        "fileExtensionCannotBeChanged": "",
-        "fileStorageCannotBeChanged": "",
-        "fileFolderCannotBeChanged": "",
-        "fileCreateFailed": "",
-        "fileMoveFailed": "",
-        "fileRenameFailed": "",
-        "fileDeleteFailed": "",
-        "fileNameNotValidByUserRegex": "",
-        "fileNameNotValid": "",
-        "notAllowToFileWithEntity": "",
-        "replacementReasonCanBeSetOnReuploadOnly": ""
+        "fileExtensionCannotBeChanged": "A fájlkiterjesztés nem módosítható.",
+        "fileStorageCannotBeChanged": "A fájltároló nem módosítható.",
+        "fileFolderCannotBeChanged": "A fájlmappa nem módosítható.",
+        "fileCreateFailed": "A fájl létrehozása nem sikerült.",
+        "fileMoveFailed": "A fájl áthelyezése nem sikerült.",
+        "fileRenameFailed": "A fájl átnevezése nem sikerült.",
+        "fileDeleteFailed": "A fájl törlése nem sikerült.",
+        "fileNameNotValidByUserRegex": "A fájlnév érvénytelen. Meg kell felelnie a(z) „%s” reguláris kifejezésnek.",
+        "fileNameNotValid": "A fájlnév érvénytelen. Nem lehet üres, és nem tartalmazhat elérésiút-elválasztó karaktereket.",
+        "notAllowToFileWithEntity": "A(z) '%s' típusú fájl nem kapcsolható össze a(z) '%s' elemmel. Csak a következő típusok engedélyezettek: '%s'",
+        "replacementReasonCanBeSetOnReuploadOnly": "A csere oka csak fájl újbóli feltöltésekor állítható be."
     }
 }
