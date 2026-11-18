@@ -1,14 +1,14 @@
 {
     "fields": {
-        "subject": "",
-        "body": "",
-        "isHtml": ""
+        "subject": "Tárgy",
+        "body": "Törzs",
+        "isHtml": "HTML"
     },
     "labels": {
-        "send": ""
+        "send": "Küldés"
     },
     "exceptions": {
-        "systemTemplatesCannotBeDeleted": "",
-        "systemTemplateCodeChanged": ""
+        "systemTemplatesCannotBeDeleted": "A rendszersablonok nem törölhetők",
+        "systemTemplateCodeChanged": "A rendszersablon kódja nem módosítható"
     }
 }
