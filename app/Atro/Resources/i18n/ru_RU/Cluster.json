@@ -1,54 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Предметы кластера",
-    "number": "Номер",
-    "masterEntity": "Мастер сущность",
-    "rejectedClusterItems": "Отклоненные элементы кластера",
-    "stagingItemCount": "Количество Contributor-записей",
-    "masterItemCount": "Мастер подсчета предметов"
-  },
-  "actions": {
-    "reject": "Отклонить",
-    "unreject": "Отклонить"
-  },
-  "options": {
-    "status": {
-      "empty": "Пустые значения",
-      "review": "Проверка",
-      "invalid": "Неверный"
+    "fields": {
+        "clusterItems": "Предметы кластера",
+        "number": "Номер",
+        "masterEntity": "Мастер сущность",
+        "rejectedClusterItems": "Отклоненные элементы кластера",
+        "stagingItemCount": "Количество Contributor-записей",
+        "masterItemCount": "Мастер подсчета предметов",
+        "status": "Статус",
+        "consolidationMethod": "Метод консолидации",
+        "executionMode": "Режим выполнения"
+    },
+    "actions": {
+        "reject": "Отклонить",
+        "unreject": "Отклонить",
+        "consolidate": "Объединить",
+        "deconsolidate": "Разъединить",
+        "split": "Разделить",
+        "move": "Переместить",
+        "purge": "Удалить"
+    },
+    "options": {
+        "status": {
+            "empty": "Пустые значения",
+            "review": "Проверка",
+            "invalid": "Неверный",
+            "consolidated": "Сконсолидировано"
+        },
+        "consolidationMethod": {
+            "ruleBased": "На основе правил",
+            "hybrid": "Гибридный",
+            "manual": "Вручную"
+        },
+        "executionMode": {
+            "automatic": "Автоматически",
+            "manual": "Вручную"
+        }
+    },
+    "exceptions": {
+        "cannotMergeWithoutGoldenRecord": "Объединение без эталонной записи невозможно",
+        "cannotDelete": "Удалить можно только пустые кластеры",
+        "noClusterItemsToPreview": "Предварительный просмотр недоступен: в кластере нет элементов-участников",
+        "cannotPreviewInvalidCluster": "Невозможно просмотреть результат консолидации для некорректного кластера",
+        "clusterItemsNotInCluster": "Элементы кластера %s не принадлежат этому кластеру"
+    },
+    "labels": {
+        "contributorRecord": "contributor-запись",
+        "contributorRecords": "contributor-записи",
+        "contributorRecordsPanel": "Contributor-записи",
+        "masterRecord": "мастер-запись",
+        "masterRecords": "мастер-записи",
+        "rejected": "Отклонено",
+        "masterRecordsPanel": "Главные записи",
+        "consolidated": "Консолидировано",
+        "unconsolidated": "Не консолидировано",
+        "consolidationPreview": "Предварительный просмотр консолидации",
+        "standardView": "Стандартный",
+        "comparisonView": "Сравнение",
+        "manualConsolidationView": "Ручная консолидация",
+        "suggestedValues": "Предлагаемые значения",
+        "selectAllSuggestedValues": "Выбрать все предлагаемые значения",
+        "consolidationPreviewHint": "Показывает, как будет выглядеть главная запись после консолидации. Изменения не сохраняются.",
+        "noConsolidationConfigured": "Для этой сущности не настроена консолидация",
+        "discard": "Отменить"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} связал {relatedEntity} с этим кластером",
+        "clusterLinkedThis": "{user} связал {relatedEntity} с этим кластером",
+        "clusterUnlinked": "{user} отвязал {relatedEntity} от этого кластера",
+        "clusterUnlinkedThis": "{user} отвязал {relatedEntity} от этого кластера",
+        "clusterRejected": "{user} отклонил {relatedEntity} в этом кластере",
+        "clusterRejectedThis": "{user} отклонил {relatedEntity} в этом кластере",
+        "clusterReincluded": "{user} повторно включил {relatedEntity} в этот кластер",
+        "clusterReincludedThis": "{user} повторно включил {relatedEntity} в этот кластер",
+        "clusterMoved": "{user} переместил {relatedEntity} из этого кластера",
+        "clusterMovedThis": "{user} переместил {relatedEntity} из этого кластера",
+        "clusterGoldenRecord": "{user} установил {relatedEntity} как золотую запись в этом кластере",
+        "clusterGoldenRecordThis": "{user} установил {relatedEntity} как золотую запись в этом кластере",
+        "clusterDeleted": "{user} удалил этот кластер",
+        "clusterDeletedThis": "{user} удалил этот кластер",
+        "clusterRecordDeleted": "{user} удалил {relatedEntity} из этого кластера",
+        "clusterRecordDeletedThis": "{user} удалил {relatedEntity} из этого кластера",
+        "clusterMovedToCluster": "{user} переместил {records} из кластера {clusterLink} в {entity}",
+        "clusterMovedToClusterThis": "{user} переместил {records} из кластера {clusterLink} в этот кластер",
+        "clusterMovedFromCluster": "{user} переместил {records} из {entity} в кластер {clusterLink}",
+        "clusterMovedFromClusterThis": "{user} переместил {records} из этого кластера в кластер {clusterLink}",
+        "clusterConsolidated": "{user} выполнил консолидацию {relatedEntity} в этом кластере",
+        "clusterConsolidatedThis": "{user} объединил {relatedEntity} в этом кластере",
+        "clusterDeconsolidated": "{user} отменил консолидацию {relatedEntity} в этом кластере",
+        "clusterDeconsolidatedThis": "{user} разъединил {relatedEntity} в этом кластере"
+    },
+    "massActions": {
+        "purge": "Удалить навсегда"
+    },
+    "massActionConfirmMessages": {
+        "purge": "Вы уверены, что хотите удалить выбранные кластеры? Это действие нельзя отменить.",
+        "purgeAll": "Вы уверены, что хотите удалить все кластеры? Это действие нельзя отменить."
+    },
+    "actionConfirms": {
+        "purge": "Вы уверены, что хотите удалить этот кластер? Это действие нельзя отменить."
+    },
+    "messages": {
+        "noClusterFound": "Для этой записи не найден кластер",
+        "consolidated": "Консолидировано"
     }
-  },
-  "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Объединение без эталонной записи невозможно"
-  },
-  "labels": {
-    "contributorRecord": "contributor-запись",
-    "contributorRecords": "contributor-записи",
-    "contributorRecordsPanel": "Contributor-записи",
-    "masterRecord": "мастер-запись",
-    "masterRecords": "мастер-записи",
-    "rejected": "Отклонено"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} связал {relatedEntity} с этим кластером",
-    "clusterLinkedThis": "{user} связал {relatedEntity} с этим кластером",
-    "clusterUnlinked": "{user} отвязал {relatedEntity} от этого кластера",
-    "clusterUnlinkedThis": "{user} отвязал {relatedEntity} от этого кластера",
-    "clusterRejected": "{user} отклонил {relatedEntity} в этом кластере",
-    "clusterRejectedThis": "{user} отклонил {relatedEntity} в этом кластере",
-    "clusterReincluded": "{user} повторно включил {relatedEntity} в этот кластер",
-    "clusterReincludedThis": "{user} повторно включил {relatedEntity} в этот кластер",
-    "clusterMoved": "{user} переместил {relatedEntity} из этого кластера",
-    "clusterMovedThis": "{user} переместил {relatedEntity} из этого кластера",
-    "clusterGoldenRecord": "{user} установил {relatedEntity} как золотую запись в этом кластере",
-    "clusterGoldenRecordThis": "{user} установил {relatedEntity} как золотую запись в этом кластере",
-    "clusterDeleted": "{user} удалил этот кластер",
-    "clusterDeletedThis": "{user} удалил этот кластер",
-    "clusterRecordDeleted": "{user} удалил {relatedEntity} из этого кластера",
-    "clusterRecordDeletedThis": "{user} удалил {relatedEntity} из этого кластера",
-    "clusterMovedToCluster": "{user} переместил {records} из кластера {clusterLink} в {entity}",
-    "clusterMovedToClusterThis": "{user} переместил {records} из кластера {clusterLink} в этот кластер",
-    "clusterMovedFromCluster": "{user} переместил {records} из {entity} в кластер {clusterLink}",
-    "clusterMovedFromClusterThis": "{user} переместил {records} из этого кластера в кластер {clusterLink}"
-  }
 }
