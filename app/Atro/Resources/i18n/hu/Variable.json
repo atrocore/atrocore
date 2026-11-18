@@ -1,15 +1,15 @@
 {
     "fields": {
-        "key": "",
-        "type": "",
-        "value": ""
+        "key": "Kulcs",
+        "type": "Típus",
+        "value": "Érték"
     },
     "options": {
         "type": {
-            "text": "",
-            "float": "",
-            "bool": "",
-            "array": ""
+            "text": "Szöveg",
+            "float": "Szám",
+            "bool": "Logikai",
+            "array": "Tömb"
         }
     }
 }
