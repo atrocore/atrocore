@@ -1,44 +1,44 @@
 {
     "fields": {
-        "width": "",
-        "widthPx": "",
-        "link": "",
-        "notSortable": "",
-        "align": "",
-        "panelName": "",
-        "style": "",
-        "sticked": "",
-        "isLarge": "",
-        "cssStyle": "",
-        "hiddenPerDefault": "",
-        "label": ""
+        "width": "Szélesség (%)",
+        "widthPx": "Szélesség (px)",
+        "link": "Hivatkozás",
+        "notSortable": "Nem rendezhető",
+        "align": "Igazítás",
+        "panelName": "Panel neve",
+        "style": "Stílus",
+        "sticked": "Rögzített",
+        "isLarge": "Nagy betűméret",
+        "cssStyle": "CSS-stílusok",
+        "hiddenPerDefault": "Alapértelmezés szerint rejtett",
+        "label": "Címke"
     },
     "options": {
         "align": {
-            "left": "",
-            "right": "",
-            "center": ""
+            "left": "Balra",
+            "right": "Jobbra",
+            "center": "Középre"
         },
         "style": {
-            "default": "",
-            "success": "",
-            "danger": "",
-            "info": "",
-            "warning": "",
-            "primary": ""
+            "default": "Alapértelmezett",
+            "success": "Siker",
+            "danger": "Veszély",
+            "info": "Információ",
+            "warning": "Figyelmeztetés",
+            "primary": "Elsődleges"
         }
     },
     "labels": {
-        "New panel": "",
-        "Layout": "",
-        "Current Layout": "",
-        "Add Dynamic Fields": "",
-        "reset": "",
-        "fullEdit": "",
-        "resetToSystem": "",
-        "layoutManagement": "",
-        "layoutSelection": "",
-        "layoutCustomization": "",
-        "configure": ""
+        "New panel": "Új panel",
+        "Layout": "Elrendezés",
+        "Current Layout": "Jelenlegi elrendezés",
+        "Add Dynamic Fields": "Dinamikus mezők hozzáadása",
+        "reset": "Elrendezés visszaállítása",
+        "fullEdit": "Teljes szerkesztés",
+        "resetToSystem": "Rendszerelrendezés visszaállítása",
+        "layoutManagement": "Elrendezés kezelése",
+        "layoutSelection": "Elrendezés kiválasztása",
+        "layoutCustomization": "Elrendezés testreszabása",
+        "configure": "Konfigurálás"
     }
 }
