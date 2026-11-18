@@ -1,34 +1,34 @@
 {
     "fields": {
-        "status": "",
-        "executeTime": "",
-        "pid": "",
-        "priority": "",
-        "handler": "",
-        "payload": "",
-        "scheduledJob": "",
-        "message": "",
-        "startedAt": "",
-        "endedAt": ""
+        "status": "Állapot",
+        "executeTime": "Végrehajtás időpontja",
+        "pid": "PID",
+        "priority": "Prioritás",
+        "handler": "Kezelő",
+        "payload": "Adattartalom",
+        "scheduledJob": "Ütemezett feladat",
+        "message": "Üzenet",
+        "startedAt": "Indítás ideje",
+        "endedAt": "Befejezés időpontja"
     },
     "labels": {
-        "cancel": ""
+        "cancel": "Mégse"
     },
     "options": {
         "status": {
-            "Pending": "",
-            "Success": "",
-            "Running": "",
-            "Failed": "",
-            "Canceled": "",
-            "Awaiting": "",
-            "Closed": ""
+            "Pending": "Függőben",
+            "Success": "Sikeres",
+            "Running": "Folyamatban",
+            "Failed": "Sikertelen",
+            "Canceled": "Megszakítva",
+            "Awaiting": "Várakozik",
+            "Closed": "Lezárva"
         }
     },
     "tooltips": {
-        "priority": ""
+        "priority": "A nagyobb szám magasabb prioritást jelent"
     },
     "exceptions": {
-        "jobIsRunning": ""
+        "jobIsRunning": "Folyamatban lévő feladat nem távolítható el."
     }
 }
