@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "matchSubject": "",
+        "matchSubjectEntity": "",
+        "matchSubjectEntityId": "",
+        "matchCandidate": "",
+        "matchCandidateEntity": "",
+        "matchCandidateEntityId": "",
+        "score": "",
+        "hash": "",
+        "hasCluster": "",
+        "clusterItems": ""
+    },
+    "options": {
+        "type": {
+            "duplicate": "",
+            "masterRecord": ""
+        }
+    }
+}
