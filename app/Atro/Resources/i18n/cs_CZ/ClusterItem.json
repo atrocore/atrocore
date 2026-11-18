@@ -1,28 +1,27 @@
 {
-  "fields": {
-    "entityName": "Název entity",
-    "entityId": "ID entity",
-    "record": "Záznam",
-    "cluster": "Cluster",
-    "matchedRecord": "Shodný záznam",
-    "matchedScore": "Shodný počet bodů"
-  },
-  "exceptions": {
-    "notFound": "Záznam o položce clusteru nebyl nalezen",
-    "cannotReject": "Tuto položku shluku nelze odmítnout",
-    "cannotUnreject": "Tuto položku shluku nelze odmítnout",
-    "idOrIdListOrWhereRequired": "Zadejte alespoň jedno z následujících: ID, seznam ID nebo vyhledávací filtr."
-  },
-  "massActions": {
-    "reject": "Odmítnout"
-  },
-  "massActionSuccessMessages": {
-    "reject": "Vybrané položky clusteru jsou mazány na pozadí"
-  },
-  "massActionConfirmMessages": {
-    "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
-  },
-  "actions": {
-    "reject": "Odmítnout"
-  }
+    "fields": {
+        "entityName": "Název entity",
+        "entityId": "ID entity",
+        "record": "Záznam",
+        "cluster": "Cluster",
+        "matchedRecord": "Shodný záznam",
+        "matchedScore": "Shodný počet bodů"
+    },
+    "exceptions": {
+        "notFound": "Záznam o položce clusteru nebyl nalezen",
+        "cannotUnreject": "Tuto položku shluku nelze odmítnout",
+        "idOrIdListOrWhereRequired": "Zadejte alespoň jedno z následujících: ID, seznam ID nebo vyhledávací filtr."
+    },
+    "massActions": {
+        "reject": "Odmítnout"
+    },
+    "massActionSuccessMessages": {
+        "reject": "Vybrané položky clusteru jsou mazány na pozadí"
+    },
+    "massActionConfirmMessages": {
+        "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
+    },
+    "actions": {
+        "reject": "Odmítnout"
+    }
 }

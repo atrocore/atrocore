@@ -1,28 +1,27 @@
 {
-  "fields": {
-    "entityName": "Название организации",
-    "entityId": "ID субъекта",
-    "record": "Запись",
-    "cluster": "Кластер",
-    "matchedRecord": "Сопоставленная запись",
-    "matchedScore": "Соответствующий балл"
-  },
-  "exceptions": {
-    "notFound": "Запись об элементе кластера не найдена",
-    "cannotReject": "Этот кластерный элемент не может быть отвергнут",
-    "cannotUnreject": "Этот кластерный элемент не может быть не отклонен",
-    "idOrIdListOrWhereRequired": "Укажите хотя бы одно из следующего: ID, список ID или фильтр поиска."
-  },
-  "massActions": {
-    "reject": "Отклонить"
-  },
-  "massActionSuccessMessages": {
-    "reject": "Выбранные элементы кластера удаляются в фоновом режиме"
-  },
-  "massActionConfirmMessages": {
-    "reject": "Вы уверены, что хотите отклонить выбранные элементы?"
-  },
-  "actions": {
-    "reject": "Отклонить"
-  }
+    "fields": {
+        "entityName": "Название организации",
+        "entityId": "ID субъекта",
+        "record": "Запись",
+        "cluster": "Кластер",
+        "matchedRecord": "Сопоставленная запись",
+        "matchedScore": "Соответствующий балл"
+    },
+    "exceptions": {
+        "notFound": "Запись об элементе кластера не найдена",
+        "cannotUnreject": "Этот кластерный элемент не может быть не отклонен",
+        "idOrIdListOrWhereRequired": "Укажите хотя бы одно из следующего: ID, список ID или фильтр поиска."
+    },
+    "massActions": {
+        "reject": "Отклонить"
+    },
+    "massActionSuccessMessages": {
+        "reject": "Выбранные элементы кластера удаляются в фоновом режиме"
+    },
+    "massActionConfirmMessages": {
+        "reject": "Вы уверены, что хотите отклонить выбранные элементы?"
+    },
+    "actions": {
+        "reject": "Отклонить"
+    }
 }

@@ -1,28 +1,27 @@
 {
-  "fields": {
-    "entityName": "Nombre de la entidad",
-    "entityId": "ID de la entidad",
-    "record": "Registre",
-    "cluster": "Cluster",
-    "matchedRecord": "Registro coincidente",
-    "matchedScore": "Puntuación igualada"
-  },
-  "exceptions": {
-    "notFound": "No se ha encontrado el registro de artículos del cluster",
-    "cannotReject": "Este elemento de agrupación no puede ser rechazado",
-    "cannotUnreject": "Este elemento del conglomerado no puede ser rechazado",
-    "idOrIdListOrWhereRequired": "Proporcione al menos uno de los siguientes: un ID, una lista de IDs o un filtro de búsqueda."
-  },
-  "massActions": {
-    "reject": "Rechazar"
-  },
-  "massActionSuccessMessages": {
-    "reject": "Los elementos del clúster seleccionados se están eliminando en segundo plano"
-  },
-  "massActionConfirmMessages": {
-    "reject": "¿Está seguro de que desea rechazar los elementos seleccionados?"
-  },
-  "actions": {
-    "reject": "Rechace"
-  }
+    "fields": {
+        "entityName": "Nombre de la entidad",
+        "entityId": "ID de la entidad",
+        "record": "Registre",
+        "cluster": "Cluster",
+        "matchedRecord": "Registro coincidente",
+        "matchedScore": "Puntuación igualada"
+    },
+    "exceptions": {
+        "notFound": "No se ha encontrado el registro de artículos del cluster",
+        "cannotUnreject": "Este elemento del conglomerado no puede ser rechazado",
+        "idOrIdListOrWhereRequired": "Proporcione al menos uno de los siguientes: un ID, una lista de IDs o un filtro de búsqueda."
+    },
+    "massActions": {
+        "reject": "Rechazar"
+    },
+    "massActionSuccessMessages": {
+        "reject": "Los elementos del clúster seleccionados se están eliminando en segundo plano"
+    },
+    "massActionConfirmMessages": {
+        "reject": "¿Está seguro de que desea rechazar los elementos seleccionados?"
+    },
+    "actions": {
+        "reject": "Rechace"
+    }
 }

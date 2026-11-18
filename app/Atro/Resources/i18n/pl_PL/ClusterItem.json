@@ -1,28 +1,27 @@
 {
-  "fields": {
-    "entityName": "Nazwa podmiotu",
-    "entityId": "Identyfikator podmiotu",
-    "record": "Rekord",
-    "cluster": "Klaster",
-    "matchedRecord": "Dopasowany rekord",
-    "matchedScore": "Dopasowany wynik"
-  },
-  "exceptions": {
-    "notFound": "Nie znaleziono rekordu elementu klastra",
-    "cannotReject": "Ten element klastra nie może zostać odrzucony",
-    "cannotUnreject": "Ten element klastra nie może zostać odrzucony",
-    "idOrIdListOrWhereRequired": "Podaj co najmniej jedno z następujących: identyfikator, listę identyfikatorów lub filtr wyszukiwania."
-  },
-  "massActions": {
-    "reject": "Odrzuć"
-  },
-  "massActionSuccessMessages": {
-    "reject": "Wybrane elementy klastra są usuwane w tle"
-  },
-  "massActionConfirmMessages": {
-    "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
-  },
-  "actions": {
-    "reject": "Proszę odrzucić"
-  }
+    "fields": {
+        "entityName": "Nazwa podmiotu",
+        "entityId": "Identyfikator podmiotu",
+        "record": "Rekord",
+        "cluster": "Klaster",
+        "matchedRecord": "Dopasowany rekord",
+        "matchedScore": "Dopasowany wynik"
+    },
+    "exceptions": {
+        "notFound": "Nie znaleziono rekordu elementu klastra",
+        "cannotUnreject": "Ten element klastra nie może zostać odrzucony",
+        "idOrIdListOrWhereRequired": "Podaj co najmniej jedno z następujących: identyfikator, listę identyfikatorów lub filtr wyszukiwania."
+    },
+    "massActions": {
+        "reject": "Odrzuć"
+    },
+    "massActionSuccessMessages": {
+        "reject": "Wybrane elementy klastra są usuwane w tle"
+    },
+    "massActionConfirmMessages": {
+        "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
+    },
+    "actions": {
+        "reject": "Proszę odrzucić"
+    }
 }
