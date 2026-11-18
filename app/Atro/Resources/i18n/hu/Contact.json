@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "name": "",
+        "firstName": "",
+        "secondName": "",
+        "gender": "",
+        "title": "",
+        "jobPosition": "",
+        "email": "",
+        "phone": "",
+        "mobile": "",
+        "street": "",
+        "zip": "",
+        "box": "",
+        "city": "",
+        "accounts": ""
+    },
+    "options": {
+        "gender": {
+            "Male": "",
+            "Female": "",
+            "Neutral": ""
+        }
+    }
+}
