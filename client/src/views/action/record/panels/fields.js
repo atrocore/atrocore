@@ -119,7 +119,8 @@ Espo.define('views/action/record/panels/fields', 'view',
                     required: false,
                 },
                 mode: this.mode,
-                inlineEditDisabled: true
+                inlineEditDisabled: true,
+                hasFieldLocking: false
             }, view => {
                 this.fieldList.push(name);
                 view.render();
