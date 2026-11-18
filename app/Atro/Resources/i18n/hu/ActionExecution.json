@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "incomingWebhook": "",
+        "scheduledJob": "",
+        "workflow": "",
+        "statusMessage": "",
+        "startedAt": "",
+        "finishedAt": "",
+        "logs": "",
+        "createdCount": "",
+        "updatedCount": "",
+        "failedCount": ""
+    },
+    "notifications": {
+        "actionExecutionFinished": ""
+    },
+    "options": {
+        "type": {
+            "manual": "",
+            "incomingWebhook": "",
+            "scheduledJob": "",
+            "workflow": ""
+        },
+        "status": {
+            "running": "",
+            "done": "",
+            "failed": ""
+        }
+    }
+}
