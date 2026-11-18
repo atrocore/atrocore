@@ -1,29 +1,35 @@
 {
-  "labels": {
-    "sourceEntities": "Пайплайны источник-стейджинг"
-  },
-  "fields": {
-    "consolidationScript": "Скрипт консолидации",
-    "updateMasterAutomatically": "Автоматическое обновление мастера",
-    "executeConsolidationAs": "Выполнить слияние как",
-    "minimumMatchingScore": "Минимальный балл соответствия",
-    "deleteInvalidMastersAutomatically": "Автоматически удалять недействительные мастер-записи"
-  },
-  "tooltips": {
-    "name": "Можно выбрать только ту мастер-сущность, для которой уже существует дериватив с ролью «Контрибьютор».",
-    "consolidationScript": "Настройте преобразование, унификацию и сопоставление исходных данных с мастер-записью.",
-    "executeConsolidationAs": "Учетная запись пользователя, которая будет использоваться для выполнения скрипта консолидации."
-  },
-  "exceptions": {
-    "consolidationScriptIsMissing": "Скрипт консолидации отсутствует для главной сущности",
-    "consolidationScriptIsNotValid": "Скрипт консолидации возвращает недопустимую полезную нагрузку: %s",
-    "entityTypeInvalid": "Тип сущности \"%s\" не может использоваться для консолидации",
-    "consolidationAlreadyExists": "Консолидация для \"%s\" уже существует"
-  },
-  "options": {
-    "executeConsolidationAs": {
-      "sameUser": "Тот же пользователь",
-      "system": "Система"
+    "labels": {
+        "sourceEntities": "Пайплайны источник-стейджинг"
+    },
+    "fields": {
+        "consolidationScript": "Скрипт консолидации",
+        "updateMasterAutomatically": "Автоматическое обновление мастера",
+        "executeConsolidationAs": "Выполнить слияние как",
+        "minimumMatchingScore": "Минимальный балл соответствия",
+        "deleteInvalidMastersAutomatically": "Автоматически удалять недействительные мастер-записи",
+        "consolidateAutomatically": "Автоматическая консолидация",
+        "skipCondition": "Условие пропуска"
+    },
+    "tooltips": {
+        "name": "Можно выбрать только ту мастер-сущность, для которой уже существует дериватив с ролью «Контрибьютор».",
+        "consolidationScript": "Настройте преобразование, унификацию и сопоставление исходных данных с мастер-записью.",
+        "executeConsolidationAs": "Учетная запись пользователя, которая будет использоваться для выполнения скрипта консолидации.",
+        "skipCondition": "Выражение ExpressionLanguage, вычисляемое для каждого кандидата с доступом к `candidate` и `masterRecord` (пустое, пока главная запись ещё не создана). Кандидаты, для которых оно возвращает true, исключаются из `candidates` скрипта консолидации. Если кандидатов не остаётся, главная запись не создаётся и не обновляется — например, candidate.get('name') == null."
+    },
+    "exceptions": {
+        "consolidationScriptIsMissing": "Скрипт консолидации отсутствует для главной сущности",
+        "consolidationScriptIsNotValid": "Скрипт консолидации возвращает недопустимую полезную нагрузку: %s",
+        "entityTypeInvalid": "Тип сущности \"%s\" не может использоваться для консолидации",
+        "consolidationAlreadyExists": "Консолидация для \"%s\" уже существует",
+        "consolidationScriptReturnedNoValues": "Скрипт консолидации не вернул значений",
+        "skipConditionFailed": "Ошибка условия пропуска: %s",
+        "allCandidatesSkipped": "Все кандидаты пропущены по условию пропуска, консолидировать нечего"
+    },
+    "options": {
+        "executeConsolidationAs": {
+            "sameUser": "Тот же пользователь",
+            "system": "Система"
+        }
     }
-  }
 }
