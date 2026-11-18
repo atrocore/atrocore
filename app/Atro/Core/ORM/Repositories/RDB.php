@@ -386,7 +386,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
-            $fieldOptions = $fieldData['options'] ?? [];
+            $fieldOptions = $fieldData['options'];
             if (empty($fieldOptions) && !empty($fieldData['groupOptions'])) {
                 $fieldOptions = [];
                 foreach ($fieldData['groupOptions'] as $group) {
