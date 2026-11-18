@@ -1,54 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Elementy klastra",
-    "number": "Numer",
-    "masterEntity": "Podmiot główny",
-    "rejectedClusterItems": "Odrzucone elementy klastra",
-    "stagingItemCount": "Liczba rekordów współtwórców",
-    "masterItemCount": "Główna liczba pozycji"
-  },
-  "actions": {
-    "reject": "Proszę odrzucić",
-    "unreject": "Odrzucić"
-  },
-  "options": {
-    "status": {
-      "empty": "Puste",
-      "review": "Recenzja",
-      "invalid": "Nieprawidłowy"
+    "fields": {
+        "clusterItems": "Elementy klastra",
+        "number": "Numer",
+        "masterEntity": "Podmiot główny",
+        "rejectedClusterItems": "Odrzucone elementy klastra",
+        "stagingItemCount": "Liczba rekordów współtwórców",
+        "masterItemCount": "Główna liczba pozycji",
+        "status": "Status",
+        "consolidationMethod": "Metoda konsolidacji",
+        "executionMode": "Tryb wykonania"
+    },
+    "actions": {
+        "reject": "Proszę odrzucić",
+        "unreject": "Odrzucić",
+        "consolidate": "Konsoliduj",
+        "deconsolidate": "Dekonsoliduj",
+        "split": "Podziel",
+        "move": "Przenieś",
+        "purge": "Usuń trwale"
+    },
+    "options": {
+        "status": {
+            "empty": "Puste",
+            "review": "Recenzja",
+            "invalid": "Nieprawidłowy",
+            "consolidated": "Skonsolidowany"
+        },
+        "consolidationMethod": {
+            "ruleBased": "Oparty na regułach",
+            "hybrid": "Hybrydowy",
+            "manual": "Ręczny"
+        },
+        "executionMode": {
+            "automatic": "Automatyczny",
+            "manual": "Ręczny"
+        }
+    },
+    "exceptions": {
+        "cannotMergeWithoutGoldenRecord": "Scalanie bez rekordu wzorcowego nie jest możliwe",
+        "cannotDelete": "Można usuwać tylko puste klastry",
+        "noClusterItemsToPreview": "Nie ma nic do podglądu: klaster nie zawiera elementów źródłowych",
+        "cannotPreviewInvalidCluster": "Nie można wyświetlić podglądu konsolidacji dla nieprawidłowego klastra",
+        "clusterItemsNotInCluster": "Elementy klastra %s nie należą do tego klastra"
+    },
+    "labels": {
+        "contributorRecord": "rekord współtwórcy",
+        "contributorRecords": "rekordy współtwórców",
+        "contributorRecordsPanel": "Rekordy współtwórców",
+        "masterRecord": "rekord główny",
+        "masterRecords": "rekordy główne",
+        "rejected": "Odrzucone",
+        "masterRecordsPanel": "Rekordy główne",
+        "consolidated": "Skonsolidowany",
+        "unconsolidated": "Nieskonsolidowane",
+        "consolidationPreview": "Podgląd konsolidacji",
+        "standardView": "Standardowy",
+        "comparisonView": "Porównanie",
+        "manualConsolidationView": "Konsolidacja ręczna",
+        "suggestedValues": "Sugerowane wartości",
+        "selectAllSuggestedValues": "Zaznacz wszystkie sugerowane wartości",
+        "consolidationPreviewHint": "Pokazuje, jak będzie wyglądał rekord główny po konsolidacji. Żadne zmiany nie zostaną zapisane.",
+        "noConsolidationConfigured": "Dla tej encji nie skonfigurowano konsolidacji",
+        "discard": "Odrzuć"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} powiązał {relatedEntity} z tym klastrem",
+        "clusterLinkedThis": "{user} powiązał {relatedEntity} z tym klastrem",
+        "clusterUnlinked": "{user} odłączył {relatedEntity} od tego klastra",
+        "clusterUnlinkedThis": "{user} odłączył {relatedEntity} od tego klastra",
+        "clusterRejected": "{user} odrzucił {relatedEntity} w tym klastrze",
+        "clusterRejectedThis": "{user} odrzucił {relatedEntity} w tym klastrze",
+        "clusterReincluded": "{user} ponownie włączył {relatedEntity} do tego klastra",
+        "clusterReincludedThis": "{user} ponownie włączył {relatedEntity} do tego klastra",
+        "clusterMoved": "{user} przeniósł {relatedEntity} z tego klastra",
+        "clusterMovedThis": "{user} przeniósł {relatedEntity} z tego klastra",
+        "clusterGoldenRecord": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
+        "clusterGoldenRecordThis": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
+        "clusterDeleted": "{user} usunął ten klaster",
+        "clusterDeletedThis": "{user} usunął ten klaster",
+        "clusterRecordDeleted": "{user} usunął {relatedEntity} z tego klastra",
+        "clusterRecordDeletedThis": "{user} usunął {relatedEntity} z tego klastra",
+        "clusterMovedToCluster": "{user} przeniósł {records} z klastra {clusterLink} do {entity}",
+        "clusterMovedToClusterThis": "{user} przeniósł {records} z klastra {clusterLink} do tego klastra",
+        "clusterMovedFromCluster": "{user} przeniósł {records} z {entity} do klastra {clusterLink}",
+        "clusterMovedFromClusterThis": "{user} przeniósł {records} z tego klastra do klastra {clusterLink}",
+        "clusterConsolidated": "{user} skonsolidował {relatedEntity} w tym klastrze",
+        "clusterConsolidatedThis": "{user} skonsolidował {relatedEntity} w tym klastrze",
+        "clusterDeconsolidated": "{user} cofnął konsolidację {relatedEntity} w tym klastrze",
+        "clusterDeconsolidatedThis": "{user} wyłączył {relatedEntity} z konsolidacji w tym klastrze"
+    },
+    "massActions": {
+        "purge": "Usuń trwale"
+    },
+    "massActionConfirmMessages": {
+        "purge": "Czy na pewno trwale usunąć wybrane klastry? Tej operacji nie można cofnąć.",
+        "purgeAll": "Czy na pewno trwale usunąć wszystkie klastry? Tej operacji nie można cofnąć."
+    },
+    "actionConfirms": {
+        "purge": "Czy na pewno trwale usunąć ten klaster? Tej operacji nie można cofnąć."
+    },
+    "messages": {
+        "noClusterFound": "Nie znaleziono klastra dla tego rekordu",
+        "consolidated": "Skonsolidowano"
     }
-  },
-  "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Scalanie bez rekordu wzorcowego nie jest możliwe"
-  },
-  "labels": {
-    "contributorRecord": "rekord współtwórcy",
-    "contributorRecords": "rekordy współtwórców",
-    "contributorRecordsPanel": "Rekordy współtwórców",
-    "masterRecord": "rekord główny",
-    "masterRecords": "rekordy główne",
-    "rejected": "Odrzucone"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} powiązał {relatedEntity} z tym klastrem",
-    "clusterLinkedThis": "{user} powiązał {relatedEntity} z tym klastrem",
-    "clusterUnlinked": "{user} odłączył {relatedEntity} od tego klastra",
-    "clusterUnlinkedThis": "{user} odłączył {relatedEntity} od tego klastra",
-    "clusterRejected": "{user} odrzucił {relatedEntity} w tym klastrze",
-    "clusterRejectedThis": "{user} odrzucił {relatedEntity} w tym klastrze",
-    "clusterReincluded": "{user} ponownie włączył {relatedEntity} do tego klastra",
-    "clusterReincludedThis": "{user} ponownie włączył {relatedEntity} do tego klastra",
-    "clusterMoved": "{user} przeniósł {relatedEntity} z tego klastra",
-    "clusterMovedThis": "{user} przeniósł {relatedEntity} z tego klastra",
-    "clusterGoldenRecord": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
-    "clusterGoldenRecordThis": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
-    "clusterDeleted": "{user} usunął ten klaster",
-    "clusterDeletedThis": "{user} usunął ten klaster",
-    "clusterRecordDeleted": "{user} usunął {relatedEntity} z tego klastra",
-    "clusterRecordDeletedThis": "{user} usunął {relatedEntity} z tego klastra",
-    "clusterMovedToCluster": "{user} przeniósł {records} z klastra {clusterLink} do {entity}",
-    "clusterMovedToClusterThis": "{user} przeniósł {records} z klastra {clusterLink} do tego klastra",
-    "clusterMovedFromCluster": "{user} przeniósł {records} z {entity} do klastra {clusterLink}",
-    "clusterMovedFromClusterThis": "{user} przeniósł {records} z tego klastra do klastra {clusterLink}"
-  }
 }
