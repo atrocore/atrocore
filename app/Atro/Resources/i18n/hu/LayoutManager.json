@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "width": "",
+        "widthPx": "",
+        "link": "",
+        "notSortable": "",
+        "align": "",
+        "panelName": "",
+        "style": "",
+        "sticked": "",
+        "isLarge": "",
+        "cssStyle": "",
+        "hiddenPerDefault": "",
+        "label": ""
+    },
+    "options": {
+        "align": {
+            "left": "",
+            "right": "",
+            "center": ""
+        },
+        "style": {
+            "default": "",
+            "success": "",
+            "danger": "",
+            "info": "",
+            "warning": "",
+            "primary": ""
+        }
+    },
+    "labels": {
+        "New panel": "",
+        "Layout": "",
+        "Current Layout": "",
+        "Add Dynamic Fields": "",
+        "reset": "",
+        "fullEdit": "",
+        "resetToSystem": "",
+        "layoutManagement": "",
+        "layoutSelection": "",
+        "layoutCustomization": "",
+        "configure": ""
+    }
+}
