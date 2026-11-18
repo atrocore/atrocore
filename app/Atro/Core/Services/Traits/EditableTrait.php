@@ -825,6 +825,20 @@ trait EditableTrait
                 }
             }
 
+            // The entity that was just stored has no original (fetched) values, so the relates of the steps below (e.g. duplicating the links)
+            // would see all its attributes as changed and run the update workflows again. When the workflows did not provide a fresh entity,
+            // read the record again from the database (the same as the workflows listener does).
+            if (!isset($entity->_freshEntity)) {
+                $repository = $this->getEntityManager()->getRepository($entity->getEntityName());
+                $repository->getMemoryStorage()->delete($repository->getCacheKey($entity->get('id')));
+
+                $freshEntity = $repository->get($entity->get('id'));
+                if (!empty($freshEntity)) {
+                    $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($freshEntity);
+                    $entity->_freshEntity = $freshEntity;
+                }
+            }
+
             $entity = $entity->_freshEntity ?? $entity;
 
             $this->afterCreateEntity($entity, $attachment);
