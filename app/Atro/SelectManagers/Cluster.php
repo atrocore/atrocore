@@ -21,7 +21,7 @@ use Espo\ORM\IEntity;
 
 class Cluster extends Base
 {
-    protected function access(&$result)
+    protected function access(&$result): void
     {
         parent::access($result);
 
@@ -30,7 +30,7 @@ class Cluster extends Base
         }
     }
 
-    public function applyAdditional(array &$result, array $params)
+    public function applyAdditional(array &$result, array $params): void
     {
         parent::applyAdditional($result, $params);
 

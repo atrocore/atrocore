@@ -63,7 +63,7 @@ class ServiceManagerConfig
         'entityManager'            => \Espo\Core\Factories\EntityManager::class,
         'injectableFactory'        => \Espo\Core\InjectableFactory::class,
         'ormConverter'             => \Espo\Core\Utils\Database\Orm\Converter::class,
-        'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
+        'selectManagerFactory'     => \Atro\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
         \League\OAuth2\Server\AuthorizationServer::class => \Atro\Core\Factories\OauthAuthorizationServer::class,
         \League\OAuth2\Server\ResourceServer::class      => \Atro\Core\Factories\OauthResourceServer::class,
