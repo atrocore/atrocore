@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "number": "",
+        "isActive": "",
+        "image": "",
+        "price": "",
+        "description": "",
+        "longDescription": "",
+        "children": "",
+        "parents": "",
+        "quantity": "",
+        "mpn": "",
+        "gtin": "",
+        "ean": "",
+        "customsNumber": "",
+        "countryOfOrigin": "",
+        "defaultSupplier": "",
+        "note": "",
+        "brand": ""
+    },
+    "labels": {
+        "manufacturer": "",
+        "other": "",
+        "MasterData": "",
+        "Description": "",
+        "State": "",
+        "Taxonomy": "",
+        "ProductLifeCycle": ""
+    }
+}
