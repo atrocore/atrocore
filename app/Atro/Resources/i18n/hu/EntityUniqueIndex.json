@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "name": "",
+        "entity": "",
+        "fields": "",
+        "isCustom": ""
+    },
+    "tooltips": {
+        "name": "",
+        "fields": ""
+    },
+    "exceptions": {
+        "indexNameIsInvalid": "",
+        "atLeastTwoFieldsRequired": "",
+        "indexFieldsShouldBeUnique": "",
+        "fieldCannotBeUsedInUniqueIndex": "",
+        "fieldTypeCannotBeUsedInUniqueIndex": "",
+        "duplicateValuesExist": "",
+        "indexNameAlreadyUsed": "",
+        "entityTypeIsNotSuitableForUniqueIndexes": ""
+    }
+}
