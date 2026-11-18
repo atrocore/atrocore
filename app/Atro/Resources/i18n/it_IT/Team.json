@@ -1,11 +1,14 @@
 {
-  "fields": {
-    "name": "Nome",
-    "roles": "Ruoli",
-    "users": "Utenti",
-    "notes": "Note"
-  },
-  "tooltips": {
-    "roles": "Ruoli di accesso. Gli utenti di questo team ottengono il livello di controllo dell'accesso dai ruoli selezionati."
-  }
+    "fields": {
+        "name": "Nome",
+        "roles": "Ruoli",
+        "users": "Utenti",
+        "notes": "Note",
+        "languageRestricted": "Limitazione per lingua",
+        "languages": "Lingue"
+    },
+    "tooltips": {
+        "roles": "Ruoli di accesso. Gli utenti di questo team ottengono il livello di controllo dell'accesso dai ruoli selezionati.",
+        "languageRestricted": "Se abilitata, gli utenti di questo team possono accedere solo alle lingue elencate esplicitamente. Se disabilitata, non viene applicato alcun filtro per lingua."
+    }
 }
