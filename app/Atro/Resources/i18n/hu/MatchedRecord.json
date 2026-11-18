@@ -1,20 +1,20 @@
 {
     "fields": {
-        "matchSubject": "",
-        "matchSubjectEntity": "",
-        "matchSubjectEntityId": "",
-        "matchCandidate": "",
-        "matchCandidateEntity": "",
-        "matchCandidateEntityId": "",
-        "score": "",
-        "hash": "",
-        "hasCluster": "",
-        "clusterItems": ""
+        "matchSubject": "Egyezési alany",
+        "matchSubjectEntity": "Egyezési alany entitása",
+        "matchSubjectEntityId": "Egyezési alany entitásazonosítója",
+        "matchCandidate": "Egyezési jelölt",
+        "matchCandidateEntity": "Egyezési jelölt entitása",
+        "matchCandidateEntityId": "Egyezési jelölt entitásazonosítója",
+        "score": "Pontszám",
+        "hash": "Egyedi hash",
+        "hasCluster": "Van klasztere",
+        "clusterItems": "Klaszterelemek"
     },
     "options": {
         "type": {
-            "duplicate": "",
-            "masterRecord": ""
+            "duplicate": "Duplikátum",
+            "masterRecord": "Mesterrekord"
         }
     }
 }
