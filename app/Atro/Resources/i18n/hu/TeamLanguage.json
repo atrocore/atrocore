@@ -1,14 +1,14 @@
 {
     "fields": {
-        "language": "",
-        "team": "",
-        "editAction": ""
+        "language": "Nyelv",
+        "team": "Csapat",
+        "editAction": "Szerkesztés"
     },
     "labels": {
-        "yes": "",
-        "no": ""
+        "yes": "Igen",
+        "no": "Nem"
     },
     "exceptions": {
-        "cannotRemoveLanguageWhenRestricted": ""
+        "cannotRemoveLanguageWhenRestricted": "A fő nyelv nem távolítható el, ha a csapat nyelvi korlátozása engedélyezve van."
     }
 }
