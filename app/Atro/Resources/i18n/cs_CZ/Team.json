@@ -1,11 +1,14 @@
 {
-  "fields": {
-    "name": "Jméno",
-    "roles": "Role",
-    "users": "Uživatelé",
-    "notes": "Poznámky"
-  },
-  "tooltips": {
-    "roles": "Přístupové role. Uživatelé tohoto týmu získají úroveň řízení přístupu z vybraných rolí."
-  }
+    "fields": {
+        "name": "Jméno",
+        "roles": "Role",
+        "users": "Uživatelé",
+        "notes": "Poznámky",
+        "languageRestricted": "Jazykové omezení",
+        "languages": "Jazyky"
+    },
+    "tooltips": {
+        "roles": "Přístupové role. Uživatelé tohoto týmu získají úroveň řízení přístupu z vybraných rolí.",
+        "languageRestricted": "Při zapnutí budou uživatelům tohoto týmu dostupné pouze výslovně uvedené jazyky. Při vypnutí se nebude uplatňovat žádné filtrování jazyků."
+    }
 }
