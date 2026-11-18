@@ -1,33 +1,47 @@
 {
-  "fields": {
-    "matching": "Odpovídající",
-    "weight": "Hmotnost",
-    "matchingRuleSet": "Sada",
-    "matchingRules": "Pravidla porovnávání",
-    "operator": "Operátor",
-    "matchScoreExpression": "Výraz pro skóre"
-  },
-  "options": {
-    "type": {
-      "fieldEqual": "Pole se rovná",
-      "fieldSimilar": "Pole je podobné",
-      "fieldContains": "Pole obsahuje",
-      "set": "Sada",
-      "expression": "Výraz"
+    "fields": {
+        "matching": "Odpovídající",
+        "weight": "Hmotnost",
+        "matchingRuleSet": "Sada",
+        "matchingRules": "Pravidla porovnávání",
+        "operator": "Operátor",
+        "matchScoreExpression": "Výraz pro skóre",
+        "attribute": "Atribut",
+        "ignoreUnavailableAttributes": "Ignorovat nedostupné atributy"
     },
-    "operator": {
-      "and": "A",
-      "or": "NEBO"
+    "options": {
+        "type": {
+            "fieldEqual": "Pole se rovná",
+            "fieldSimilar": "Pole je podobné",
+            "fieldContains": "Pole obsahuje",
+            "set": "Sada",
+            "expression": "Výraz",
+            "fieldsSimilar": "Pole jsou podobná",
+            "attributesSimilar": "Atributy jsou podobné"
+        },
+        "operator": {
+            "and": "A",
+            "or": "NEBO"
+        }
+    },
+    "exceptions": {
+        "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky.",
+        "notValidMatchingActivation": "Pravidlo přiřazování lze změnit pouze u neaktivního přiřazování.",
+        "notValidMatching": "Shoda je neplatná",
+        "notValidMatchingRuleSet": "Sada odpovídajících pravidel je neplatná",
+        "expressionCannotBeEmpty": "Výraz nesmí být prázdný.",
+        "notValidFieldType": "Typ pole není podporován vybraným typem pravidla.",
+        "notValidAttributeType": "Typ atributu není podporován vybraným typem pravidla.",
+        "notValidAttributesSimilar": "Entity shody nemají žádné atributy."
+    },
+    "tooltips": {
+        "matchScoreExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam) a `masterEntity` (surové hodnoty polí kandidáta jako pole - např. masterEntity['name']). Musí vrátit číslo mezi 0 a 1, které se vynásobí váhou pravidla a vytvoří skóre shody - např. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 ohodnotí přesnou shodu jako 1 a vše ostatní jako 0.",
+        "ignoreUnavailableAttributes": "Je-li tato možnost zapnutá, atribut propojený pouze s jedním z porovnávaných záznamů se neporovnává. Jinak je podobnost takového atributu 0."
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Pole",
+            "attributes": "Atributy"
+        }
     }
-  },
-  "exceptions": {
-    "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky.",
-    "notValidMatchingActivation": "Pravidlo přiřazování lze změnit pouze u neaktivního přiřazování.",
-    "notValidMatching": "Shoda je neplatná",
-    "notValidMatchingRuleSet": "Sada odpovídajících pravidel je neplatná",
-    "expressionCannotBeEmpty": "Výraz nesmí být prázdný."
-  },
-  "tooltips": {
-    "matchScoreExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam) a `masterEntity` (surové hodnoty polí kandidáta jako pole - např. masterEntity['name']). Musí vrátit číslo mezi 0 a 1, které se vynásobí váhou pravidla a vytvoří skóre shody - např. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 ohodnotí přesnou shodu jako 1 a vše ostatní jako 0."
-  }
 }
