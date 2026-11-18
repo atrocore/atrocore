@@ -1,9 +1,9 @@
 {
     "fields": {
-        "name": "",
-        "value": ""
+        "name": "Név",
+        "value": "Érték"
     },
     "tooltips": {
-        "value": ""
+        "value": "A mező értéke előtt megjelenített karakterlánc (pl. „Dr.”, „kb.”)"
     }
 }
