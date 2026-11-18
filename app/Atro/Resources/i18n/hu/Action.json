@@ -1,0 +1,96 @@
+{
+    "fields": {
+        "searchEntity": "",
+        "isActive": "",
+        "type": "",
+        "sourceEntity": "",
+        "inBackground": "",
+        "usage": "",
+        "massAction": "",
+        "display": "",
+        "actionsSet": "",
+        "actions": "",
+        "webhookUrl": "",
+        "executeAs": "",
+        "displayField": "",
+        "focusField": "",
+        "changeFields": "",
+        "targetEntity": "",
+        "mode": "",
+        "emailScript": "",
+        "showEmailPreview": "",
+        "emailTemplate": "",
+        "emailTo": "",
+        "emailCc": "",
+        "emailBcc": "",
+        "hideTextLabel": "",
+        "applyToPreselectedRecords": "",
+        "updateType": "",
+        "updateFields": "",
+        "updateScript": "",
+        "executions": "",
+        "deletePermanently": "",
+        "handler": ""
+    },
+    "labels": {
+        "execute": "",
+        "Parameters": "",
+        "fieldsPanel": ""
+    },
+    "actions": {
+        "allLogs": ""
+    },
+    "massActions": {
+        "execute": ""
+    },
+    "messages": {
+        "executeNow": ""
+    },
+    "options": {
+        "usage": {
+            "entity": "",
+            "record": "",
+            "field": "",
+            "onFieldFocus": "",
+            "onFieldChange": "",
+            "onRecordLoad": ""
+        },
+        "display": {
+            "dropdown": "",
+            "single": ""
+        },
+        "type": {
+            "create": "",
+            "update": "",
+            "createOrUpdate": "",
+            "delete": "",
+            "set": "",
+            "webhook": "",
+            "customCode": "",
+            "email": "",
+            "custom": ""
+        },
+        "updateType": {
+            "basic": "",
+            "script": ""
+        },
+        "executeAs": {
+            "system": "",
+            "sameUser": ""
+        },
+        "mode": {
+            "basic": "",
+            "script": ""
+        }
+    },
+    "tooltips": {
+        "inBackground": "",
+        "usage": "",
+        "executeAs": ""
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "",
+        "forEditModeOnly": "",
+        "actionTypeDisabledForTargetEntity": ""
+    }
+}
