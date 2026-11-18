@@ -1,32 +1,32 @@
 {
     "fields": {
-        "type": "",
-        "path": "",
-        "files": "",
-        "folder": "",
-        "folders": "",
-        "syncFolders": ""
+        "type": "Típus",
+        "path": "Útvonal",
+        "files": "Fájlok",
+        "folder": "Csatolt mappa",
+        "folders": "Mappák",
+        "syncFolders": "Fájl- és mappaszerkezet megőrzése"
     },
     "options": {
         "type": {
-            "local": ""
+            "local": "Helyi (Linux)"
         }
     },
     "tooltips": {
-        "syncFolders": ""
+        "syncFolders": "Ha be van jelölve, a tárhely fizikai fájl- és mappaszerkezete megegyezik a rendszerben találhatóval. Ez azt jelenti, hogy ugyanazon az útvonalon csak egy azonos nevű fájl vagy mappa tárolható."
     },
     "labels": {
-        "scan": "",
-        "scanDone": ""
+        "scan": "Beolvasás",
+        "scanDone": "A(z) %s tárhely beolvasása befejeződött."
     },
     "exceptions": {
-        "itemCannotBeMovedToAnotherStorage": "",
-        "folderInUse": "",
-        "storageHasItems": "",
-        "storagePathNotUnique": "",
-        "storagePathContainFilesFromAnotherStorage": "",
-        "storageTypeCannotBeChanged": "",
-        "storagePathCannotBeChanged": "",
-        "folderUsedByOtherStorage": ""
+        "itemCannotBeMovedToAnotherStorage": "Mappa vagy fájl nem helyezhető át másik tárhelyre.",
+        "folderInUse": "Csatolt mappaként csak üres mappa választható ki.",
+        "storageHasItems": "Nem üres tárhely esetén a csatolt mappa nem módosítható.",
+        "storagePathNotUnique": "A tárhely útvonalának egyedinek kell lennie.",
+        "storagePathContainFilesFromAnotherStorage": "A kiválasztott tárhelyútvonal által kijelölt mappastruktúra nem tartalmazhat másik tárhelyhez tartozó mappákat vagy fájlokat.",
+        "storageTypeCannotBeChanged": "A tárhely típusa nem módosítható.",
+        "storagePathCannotBeChanged": "A tárhely útvonala nem módosítható.",
+        "folderUsedByOtherStorage": "Ezt a mappát már egy másik tárhely használja."
     }
 }
