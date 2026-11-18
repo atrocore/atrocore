@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "name": "",
+        "roles": "",
+        "users": "",
+        "notes": "",
+        "languageRestricted": "",
+        "languages": ""
+    },
+    "tooltips": {
+        "roles": "",
+        "languageRestricted": ""
+    }
+}
