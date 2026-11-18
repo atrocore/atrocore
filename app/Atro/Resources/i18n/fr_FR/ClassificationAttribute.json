@@ -1,54 +1,53 @@
 {
-  "fields": {
-    "classification": "Classification",
-    "attribute": "Attribut",
-    "isRequired": "Requis",
-    "isReadOnly": "Lecture seule",
-    "isProtected": "Protegé",
-    "maxLength": "Longueur maximale",
-    "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
-    "value": "Valeur par défaut",
-    "valueFrom": "Valeur par défaut De",
-    "valueTo": "Valeur par défaut A",
-    "varcharValue": "Valeur par défaut : Chaîne",
-    "referenceValue": "Valeur par défaut : Référence",
-    "textValue": "Valeur par défaut : Texte",
-    "intValue": "Valeur par défaut : Entier",
-    "floatValue": "Valeur par défaut : Flottant",
-    "dateValue": "Valeur par défaut : Date",
-    "datetimeValue": "Valeur par défaut : Date-heure",
-    "boolValue": "Valeur par défaut : Booléen",
-    "min": "Min",
-    "max": "Max",
-    "conditionalProtected": "Protegé",
-    "conditionalRequired": "Requis",
-    "conditionalReadOnly": "Lecture seule",
-    "conditionalDisableOptions": "Options désactivées",
-    "enableConditionalRequired": "Activation requise",
-    "enableConditionalVisible": "Activer visible",
-    "enableConditionalReadOnly": "Activer la lecture seule",
-    "enableConditionalProtected": "Activer \"protégé\"",
-    "enableConditionalDisableOptions": "Activer les options désactivées",
-    "conditionalVisible": "Visible"
-  },
-  "labels": {
-    "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
-    "classificationAttribute": "Attribut de la classification"
-  },
-  "options": {
-    "scope": {
-      "Global": "Mondial",
-      "Channel": "Canal"
+    "fields": {
+        "classification": "Classification",
+        "attribute": "Attribut",
+        "isRequired": "Requis",
+        "isReadOnly": "Lecture seule",
+        "isProtected": "Protegé",
+        "maxLength": "Longueur maximale",
+        "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
+        "value": "Valeur par défaut",
+        "valueFrom": "Valeur par défaut De",
+        "valueTo": "Valeur par défaut A",
+        "varcharValue": "Valeur par défaut : Chaîne",
+        "referenceValue": "Valeur par défaut : Référence",
+        "textValue": "Valeur par défaut : Texte",
+        "intValue": "Valeur par défaut : Entier",
+        "floatValue": "Valeur par défaut : Flottant",
+        "dateValue": "Valeur par défaut : Date",
+        "datetimeValue": "Valeur par défaut : Date-heure",
+        "boolValue": "Valeur par défaut : Booléen",
+        "min": "Min",
+        "max": "Max",
+        "conditionalProtected": "Protegé",
+        "conditionalRequired": "Requis",
+        "conditionalReadOnly": "Lecture seule",
+        "conditionalDisableOptions": "Options désactivées",
+        "enableConditionalRequired": "Activation requise",
+        "enableConditionalVisible": "Activer visible",
+        "enableConditionalReadOnly": "Activer la lecture seule",
+        "enableConditionalProtected": "Activer \"protégé\"",
+        "enableConditionalDisableOptions": "Activer les options désactivées",
+        "conditionalVisible": "Visible"
+    },
+    "labels": {
+        "classificationAttribute": "Attribut de la classification"
+    },
+    "options": {
+        "scope": {
+            "Global": "Mondial",
+            "Channel": "Canal"
+        }
+    },
+    "messages": {
+        "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis.",
+        "unlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée ? Tous les enregistrements liés conserveront cet attribut.",
+        "cascadeUnlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée et des enregistrements qui lui sont liés ? Toutes les valeurs d'attributs associées seront également supprimées.",
+        "removeRelatedAttributeGroup": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné dans la classification sélectionnée ? Tous les enregistrements liés conserveront ces attributs.",
+        "removeRelatedAttributeGroupCascade": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné de la classification sélectionnée et des enregistrements qui lui sont liés ? Toutes les valeurs d'attributs associées seront également supprimées."
+    },
+    "exceptions": {
+        "attributeEntityMismatch": "L’attribut « %s » appartient à %s, alors que la classification concerne %s."
     }
-  },
-  "messages": {
-    "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis.",
-    "unlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée ? Tous les enregistrements liés conserveront cet attribut.",
-    "cascadeUnlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée et des enregistrements qui lui sont liés ? Toutes les valeurs d'attributs associées seront également supprimées.",
-    "removeRelatedAttributeGroup": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné dans la classification sélectionnée ? Tous les enregistrements liés conserveront ces attributs.",
-    "removeRelatedAttributeGroupCascade": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné de la classification sélectionnée et des enregistrements qui lui sont liés ? Toutes les valeurs d'attributs associées seront également supprimées."
-  },
-  "exceptions": {
-    "attributeEntityMismatch": "L’attribut « %s » appartient à %s, alors que la classification concerne %s."
-  }
 }
