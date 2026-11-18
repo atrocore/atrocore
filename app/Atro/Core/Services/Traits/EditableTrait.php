@@ -632,7 +632,7 @@ trait EditableTrait
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
-        if (!isset($fieldDefs['options']) || !empty($fieldDefs['relationVirtualField'])) {
+        if (empty($fieldDefs['options']) || !empty($fieldDefs['relationVirtualField'])) {
             return $values;
         }
 

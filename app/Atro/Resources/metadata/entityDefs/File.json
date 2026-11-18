@@ -21,8 +21,7 @@
       "exportDisabled": true
     },
     "tags": {
-      "type": "multiEnum",
-      "options": []
+      "type": "multiEnum"
     },
     "url": {
       "type": "varchar",
