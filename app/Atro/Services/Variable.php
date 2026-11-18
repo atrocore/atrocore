@@ -87,13 +87,13 @@ class Variable extends AbstractService
         $key = $attachment->key;
 
         if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $key)) {
-            throw new BadRequest($this->getInjection('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
+            throw new BadRequest($this->container->get('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
         }
 
         $variables = self::loadAll();
 
         if (array_key_exists($key, $variables)) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsExist', 'exceptions', 'Settings'), $key));
+            throw new BadRequest(sprintf($this->container->get('language')->translate('variableKeyIsExist', 'exceptions', 'Settings'), $key));
         }
 
         $value = $attachment->value ?? '';

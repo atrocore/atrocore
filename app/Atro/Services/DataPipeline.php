@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
@@ -231,7 +230,7 @@ class DataPipeline extends Base
             return;
         }
 
-        throw new BadRequest($this->getInjection('language')->translate('noSourceRecordIsLinked', 'exceptions', 'DataPipeline'));
+        throw new BadRequest($this->container->get('language')->translate('noSourceRecordIsLinked', 'exceptions', 'DataPipeline'));
     }
 
     public function buildTargetRecordPreview(string $pipelineId, string $sourceRecordId, ?string $transformationScript = null): Entity
@@ -253,7 +252,7 @@ class DataPipeline extends Base
         }
 
         if (empty($transformationScript)) {
-            throw new BadRequest($this->getInjection('language')->translate('transformationScriptIsMissing', 'exceptions', 'DataPipeline'));
+            throw new BadRequest($this->container->get('language')->translate('transformationScriptIsMissing', 'exceptions', 'DataPipeline'));
         }
 
         $sourceRecord = $this->getEntityManager()->getEntity($sourceEntityType, $sourceRecordId);
@@ -296,7 +295,7 @@ class DataPipeline extends Base
 
         $targetRecordData = json_decode((string)$res, true);
         if (!is_array($targetRecordData)) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('transformationScriptIsNotValid', 'exceptions', 'DataPipeline'), (string)$res));
+            throw new BadRequest(sprintf($this->container->get('language')->translate('transformationScriptIsNotValid', 'exceptions', 'DataPipeline'), (string)$res));
         }
 
         return $targetRecordData;
@@ -306,7 +305,7 @@ class DataPipeline extends Base
     {
         $transformationScript = (string)$pipeline->get('transformationScript');
         if ($transformationScript === '') {
-            throw new BadRequest($this->getInjection('language')->translate('transformationScriptIsMissing', 'exceptions', 'DataPipeline'));
+            throw new BadRequest($this->container->get('language')->translate('transformationScriptIsMissing', 'exceptions', 'DataPipeline'));
         }
 
         $targetEntityType = (string)$pipeline->get('targetEntityId');
@@ -370,7 +369,7 @@ class DataPipeline extends Base
     private function executeTransformationAs(Entity $pipeline, callable $callback): void
     {
         $em = $this->getEntityManager();
-        $userContext = $this->getContainer()->get(UserContext::class);
+        $userContext = $this->container->get(UserContext::class);
         $previousUser = $userContext->getUser();
 
         $executeAsUser = $pipeline->get('executeTransformationAs') === 'sameUser' && $previousUser !== null
@@ -381,7 +380,7 @@ class DataPipeline extends Base
         $userContext->set($executeAsUser);
 
         try {
-            $callback($this->getContainer()->get('acl'));
+            $callback($this->container->get('acl'));
         } finally {
             if ($previousUser !== null) {
                 $em->setUser($previousUser);
@@ -390,20 +389,8 @@ class DataPipeline extends Base
         }
     }
 
-    protected function getContainer(): Container
-    {
-        return $this->getInjection('container');
-    }
-
     protected function getTwig(): Twig
     {
-        return $this->getContainer()->get('twig');
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
+        return $this->container->get('twig');
     }
 }

@@ -102,7 +102,6 @@ class Layout extends Base
                         ]);
                         $this->getEntityManager()->saveEntity($section);
 
-
                         //create row items
                         $rowItems = $rowItemRepository->where(['sectionId' => $section->get('id')])->find() ?? [];
                         $processedItems = [];
@@ -260,7 +259,7 @@ class Layout extends Base
 
         $event = new Event(['viewType' => $viewType, 'keys' => $keys]);
 
-        return $this->getInjection('eventManager')->dispatch('Layout', 'getListItemKeys', $event)->getArgument('keys');
+        return $this->container->get('eventManager')->dispatch('Layout', 'getListItemKeys', $event)->getArgument('keys');
     }
 
     protected function getListItemKeyDefault(string $key): mixed

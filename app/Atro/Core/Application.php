@@ -23,7 +23,6 @@ use Atro\Core\OAuth\SessionCookie;
 use Atro\Core\OAuth\TokenUser;
 use Atro\Services\SoftwarePackage;
 use Atro\Core\Utils\Config;
-use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -218,7 +217,7 @@ final class Application
         }
 
         header('Content-Type: application/json; charset=utf-8');
-        echo Json::encode($this->getContainer()->get(OpenApiGenerator::class)->getFullSchema());
+        echo json_encode($this->getContainer()->get(OpenApiGenerator::class)->getFullSchema());
         exit;
     }
 

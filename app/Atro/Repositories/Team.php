@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Espo\Core\AclManager;
+use Atro\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
 
-class Team extends \Atro\Core\ORM\Repositories\RDB
+class Team extends RDB
 {
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -26,7 +26,7 @@ class Team extends \Atro\Core\ORM\Repositories\RDB
             if ($entity->get('languageRestricted')) {
                 $this->createMainLanguageEntry($entity->get('id'));
             }
-            $this->getAclManager()->clearAclCache();
+            $this->container->get('aclManager')->clearAclCache();
         }
     }
 
@@ -53,17 +53,5 @@ class Team extends \Atro\Core\ORM\Repositories\RDB
         $entry->set('languageId', $mainLanguage->get('id'));
         $entry->set('editAction', false);
         $this->getEntityManager()->saveEntity($entry);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
-    protected function getAclManager(): AclManager
-    {
-        return $this->getInjection('container')->get('aclManager');
     }
 }

@@ -103,7 +103,7 @@ class Job extends Base
                 }
 
                 /** @var Set $actionTypeService */
-                $actionTypeService = $this->getInjection('container')->get($className);
+                $actionTypeService = $this->container->get($className);
                 $actionTypeService->checkJob($entity);
             }
         }
@@ -186,12 +186,5 @@ class Job extends Base
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('type', 'FindMatchesForRecord')
             ->executeQuery();
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
     }
 }

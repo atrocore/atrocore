@@ -53,7 +53,7 @@ class EntityUniqueIndex extends ReferenceData
             return null;
         }
 
-        $entity = $this->entityFactory->create($this->entityName);
+        $entity = $this->getEntityFactory()->create($this->entityName);
         $entity->set($item);
         $entity->setAsFetched();
 
@@ -437,15 +437,8 @@ class EntityUniqueIndex extends ReferenceData
         return $ormField;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 }

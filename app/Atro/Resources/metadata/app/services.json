@@ -1,5 +1,8 @@
 {
   "Global": "\\Atro\\Services\\GlobalService",
+  "Note": "\\Espo\\Services\\Note",
+  "Notification": "\\Espo\\Services\\Notification",
+  "Stream": "\\Espo\\Services\\Stream",
   "Avatar": "\\Atro\\Services\\Avatar",
   "ConnectionTypeAtrocore": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypePdoSql": "\\Atro\\Services\\ConnectionSubtype",

@@ -18,7 +18,7 @@ use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Doctrine\DBAL\Schema\Schema as SchemaDBAL;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -41,7 +41,7 @@ class Schema
         $this->schemaConverter = $container->get(Converter::class);
         $this->comparator = new Comparator();
 
-        $this->ormConverter = new OrmConverter($container->get('metadata'), $container->get('fileManager'), $container->get('config'));
+        $this->ormConverter = $container->get('ormConverter');
     }
 
     public function rebuild(): bool

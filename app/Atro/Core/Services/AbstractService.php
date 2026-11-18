@@ -17,30 +17,17 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\RequestHeaders;
 use Atro\Core\LinkedRecords\LinkedRecordsLoader;
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Espo\Core\Interfaces\Injectable;
+use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 /**
- * Base of the services: receives the dependencies listed in $dependencies from the container.
+ * Base of the services: takes the services it needs from the container.
  */
-abstract class AbstractService implements Injectable
+abstract class AbstractService
 {
-    protected $dependencies = ['config', 'entityManager', 'user', 'language', 'memoryStorage'];
-    protected $injections = [];
-
-    public function __construct()
-    {
-        $this->init();
-    }
-
-    public function inject($name, $object): void
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function init()
+    public function __construct(protected readonly Container $container)
     {
     }
 
@@ -63,57 +50,35 @@ abstract class AbstractService implements Injectable
         return null;
     }
 
-    protected function getInjection(string $name)
-    {
-        return $this->injections[$name];
-    }
-
-    protected function addDependency(string $name): void
-    {
-        $this->dependencies[] = $name;
-    }
-
-    protected function addDependencyList(array $list): void
-    {
-        foreach ($list as $item) {
-            $this->addDependency($item);
-        }
-    }
-
-    public function getDependencyList(): array
-    {
-        return $this->dependencies;
-    }
-
     protected function getEntityManager(): EntityManager
     {
-        return $this->getInjection('entityManager');
+        return $this->container->get('entityManager');
     }
 
     protected function getLinkedRecordLoader(): LinkedRecordsLoader
     {
-        return $this->getEntityManager()->getContainer()->get(LinkedRecordsLoader::class);
+        return $this->container->get(LinkedRecordsLoader::class);
     }
 
     protected function getConfig(): Config
     {
-        return $this->getInjection('config');
+        return $this->container->get('config');
     }
 
     protected function getUser(): User
     {
-        return $this->getInjection('user');
+        return $this->container->get('user');
     }
 
     public function getMemoryStorage(): StorageInterface
     {
-        return $this->getInjection('memoryStorage');
+        return $this->container->get('memoryStorage');
     }
 
     protected function getUserDisplayName(User $user): string
     {
         if ($user->isSystemUser()) {
-            return $this->getInjection('language')->translate('System');
+            return $this->container->get('language')->translate('System');
         }
 
         return (string)$user->get('name');

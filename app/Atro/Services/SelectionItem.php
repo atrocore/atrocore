@@ -99,7 +99,7 @@ class SelectionItem extends Base
                 foreach ($records as $record) {
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
-                            $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+                            $this->container->get(AttributeFieldConverter::class)->putAttributesToEntity($entity);
                         }
 
                         $service->putMeta($entity);

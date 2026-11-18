@@ -106,14 +106,12 @@ SQL;
                 ->fetchAllAssociative();
         }
 
-
         foreach ($records as &$record) {
             $this->hierarchyData[$record['entity_id']] = &$record;
         }
 
         $this->loadedHierarchyIds = array_merge($this->loadedHierarchyIds, $idsToLoad);
     }
-
 
     public function getFolderHierarchyData(string $folderId): array
     {
@@ -183,13 +181,13 @@ SQL;
 
             // create origin file
             if (empty($options['scanning']) && !$this->getStorage($entity)->createFolder($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('folderCreateFailed', 'exceptions', 'Folder'));
+                throw new BadRequest($this->container->get('language')->translate('folderCreateFailed', 'exceptions', 'Folder'));
             }
         } else {
             if ($entity->isAttributeChanged('name')) {
                 $this->updateItem($entity);
                 if (!$this->getStorage($entity)->renameFolder($entity)) {
-                    throw new BadRequest($this->getInjection('language')->translate('folderRenameFailed', 'exceptions', 'File'));
+                    throw new BadRequest($this->container->get('language')->translate('folderRenameFailed', 'exceptions', 'File'));
                 }
             }
         }
@@ -225,7 +223,7 @@ SQL;
         $storage = $this->getStorage($entity);
         if ($storage instanceof HasBasketInterface) {
             if (!$storage->deleteFolder($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+                throw new BadRequest($this->container->get('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
             }
         } else {
             if (property_exists($entity, '_scan')) {
@@ -350,7 +348,7 @@ SQL;
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -378,7 +376,7 @@ SQL;
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -437,7 +435,7 @@ SQL;
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -446,7 +444,7 @@ SQL;
         /** @var \Atro\Entities\Folder $folder */
         $folder = $this
             ->getMapper()
-            ->selectById($this->entityFactory->create($this->entityType), $folderId, ['withDeleted' => true]);
+            ->selectById($this->getEntityFactory()->create($this->entityType), $folderId, ['withDeleted' => true]);
         if (!empty($folder)) {
             if (!empty($this->isScanning)) {
                 $folder->_scan = true;
@@ -466,12 +464,5 @@ SQL;
     public function getStorage(FolderEntity $folder): FileStorageInterface
     {
         return $this->getEntityManager()->getRepository('Storage')->getFileStorage($folder->get('storageId'));
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

@@ -13,7 +13,7 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
-use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Thumbnail;
@@ -122,12 +122,12 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
         $path      = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . LocalStorage::assertChunkHash($input->fileUniqueHash ?? null);
         $chunkName = LocalStorage::assertChunkName($input->start ?? null);
 
-        $this->getFileManager()->putContents(
-            $path . DIRECTORY_SEPARATOR . $chunkName,
-            LocalStorage::parseInputFileContent($input->piece)
-        );
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+        file_put_contents($path . DIRECTORY_SEPARATOR . $chunkName, LocalStorage::parseInputFileContent($input->piece));
 
-        $chunkFiles = $this->getFileManager()->scanDir($path);
+        $chunkFiles = Util::scanDir($path);
         sort($chunkFiles);
 
         $chunks = [];
@@ -140,7 +140,7 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
 
     public function deleteCache(Storage $storage): void
     {
-        $this->getFileManager()->removeAllInDir($this->getCacheDir() . DIRECTORY_SEPARATOR . $storage->get('id'));
+        Util::removeDir($this->getCacheDir() . DIRECTORY_SEPARATOR . $storage->get('id'));
     }
 
     public function getChunksDir(Storage $storage): string
@@ -214,11 +214,6 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
-    }
-
-    protected function getFileManager(): FileManager
-    {
-        return $this->container->get('fileManager');
     }
 
     protected function getConfig(): Config

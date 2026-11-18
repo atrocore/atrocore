@@ -19,7 +19,7 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Entities\User;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\SelectManagerFactory;
+use Atro\Core\SelectManagerFactory;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 

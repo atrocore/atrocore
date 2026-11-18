@@ -23,19 +23,12 @@ class IncomingWebhook extends ReferenceData
         $url = $this->getConfig()->getSiteUrl() . '?entryPoint=webhook&code=' . $entity->get('code');
 
         if (!empty($entity->get('hash'))) {
-            $hash = trim($this->getInjection('twig')->renderTemplate($entity->get('hash'), []));
+            $hash = trim($this->container->get('twig')->renderTemplate($entity->get('hash'), []));
             if (!empty($hash)) {
                 $url .= '&hash=' . $hash;
             }
         }
 
         $entity->set('url', $url);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('twig');
     }
 }

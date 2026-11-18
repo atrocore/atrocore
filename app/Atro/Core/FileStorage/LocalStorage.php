@@ -28,7 +28,7 @@ use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
-use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Config;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
@@ -125,7 +125,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
         $fileName = $this->getLocalPath($file);
 
-        $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
+        if (!is_dir(dirname($fileName))) {
+            mkdir(dirname($fileName), 0777, true);
+        }
 
         // copy, not move: $localPath is caller-owned and reused/deleted by it afterward
         $result = copy($localPath, $fileName);
@@ -135,7 +137,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
             $file->set('mimeType', $mimeType);
             $file->set('fileSize', filesize($fileName));
-            $file->set('hash', $this->getFileManager()->md5File($fileName));
+            $file->set('hash', md5_file($fileName) ?: null);
 
             $xattr = new Xattr();
             $xattr->set($fileName, 'atroId', $file->id);
@@ -153,7 +155,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $folderName = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
 
         // create folder
-        $this->getFileManager()->mkdir($folderName, 0777, true);
+        if (!is_dir($folderName)) {
+            mkdir($folderName, 0777, true);
+        }
 
         $xattr = new Xattr();
         $xattr->set($folderName, 'atroId', $folder->id);
@@ -166,9 +170,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $path      = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . self::assertChunkHash($input->fileUniqueHash ?? null);
         $chunkName = self::assertChunkName($input->start ?? null);
 
-        $this->getFileManager()->putContents($path . DIRECTORY_SEPARATOR . $chunkName, self::parseInputFileContent($input->piece));
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+        file_put_contents($path . DIRECTORY_SEPARATOR . $chunkName, self::parseInputFileContent($input->piece));
 
-        $chunkFiles = $this->getFileManager()->scanDir($path);
+        $chunkFiles = Util::scanDir($path);
         sort($chunkFiles);
 
         $chunks = [];
@@ -181,8 +188,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function deleteCache(Storage $storage): void
     {
-        $this->getFileManager()->removeAllInDir($this->getChunksDir($storage));
-        $this->getFileManager()->removeAllInDir($this->getPdfImagesDir($storage));
+        Util::removeDir($this->getChunksDir($storage));
+        Util::removeDir($this->getPdfImagesDir($storage));
     }
 
     public function renameFile(File $file): bool
@@ -191,7 +198,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $to   = $this->getLocalPath($file);
 
         if (file_exists($from)) {
-            return $this->getFileManager()->move($from, $to);
+            return $this->moveLocalFile($from, $to);
         }
 
         return false;
@@ -275,7 +282,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
-            return $this->getFileManager()->move($path, $this->getFileTrashPath($file));
+            return $this->moveLocalFile($path, $this->getFileTrashPath($file));
         }
 
         return true;
@@ -285,13 +292,13 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         $trashPath = $this->getFileTrashPath($file);
         if (file_exists($trashPath)) {
-            $this->getFileManager()->removeFile($trashPath);
+            unlink($trashPath);
         }
 
         try {
             $path = $this->getLocalPath($file);
             if (file_exists($path)) {
-                $this->getFileManager()->removeFile($path);
+                unlink($path);
             }
         } catch (NotFound $e) {
         }
@@ -303,7 +310,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         $trashPath = $this->getFileTrashPath($file);
         if (file_exists($trashPath)) {
-            $this->getFileManager()->move($trashPath, $this->getLocalPath($file));
+            $this->moveLocalFile($trashPath, $this->getLocalPath($file));
         }
 
         return true;
@@ -314,7 +321,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $storagePath = $file->getStorage()->getSubtype()->get('path');
         $trashDir    = $storagePath . DIRECTORY_SEPARATOR . self::TRASH_DIR;
 
-        $this->getFileManager()->mkdir($trashDir, 0777, true);
+        if (!is_dir($trashDir)) {
+            mkdir($trashDir, 0777, true);
+        }
 
         return $trashDir . DIRECTORY_SEPARATOR . $file->get('id');
     }
@@ -330,7 +339,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             return true;
         }
 
-        $this->getFileManager()->removeAllInDir($folderName);
+        Util::removeDir($folderName);
 
         return true;
     }
@@ -353,7 +362,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public function createFileVersion(File $file, string $versionId): bool
     {
         $versionDir = $this->getFileVersionDir($file, $versionId);
-        $this->getFileManager()->mkdir($versionDir, 0777, true);
+        if (!is_dir($versionDir)) {
+            mkdir($versionDir, 0777, true);
+        }
 
         // use fetched (currently-persisted) values — when called from a beforeSave hook, $file's
         // current attributes may already hold pending, not-yet-applied values (e.g. a new name),
@@ -373,7 +384,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function deleteFileVersion(File $file, string $versionId): bool
     {
-        $this->getFileManager()->removeAllInDir($this->getFileVersionDir($file, $versionId));
+        Util::removeDir($this->getFileVersionDir($file, $versionId));
 
         return true;
     }
@@ -672,7 +683,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                     'name'      => $fileInfo['basename'],
                     'fileSize'  => filesize($fileName),
                     'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
-                    'hash'      => $this->getFileManager()->md5File($fileName),
+                    'hash'      => md5_file($fileName) ?: null,
                     'mimeType'  => $this->getMimeTypeResolver()->resolveByPath($fileName, $fileInfo['basename']),
                     'storageId' => $storage->get('id'),
                     '_fileName' => $fileName
@@ -851,9 +862,25 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         return $this->container->get(MimeTypeResolver::class);
     }
 
-    protected function getFileManager(): FileManager
+    /**
+     * Moves the file, creating the target directory, and removes the source directories left empty.
+     */
+    protected function moveLocalFile(string $from, string $to): bool
     {
-        return $this->container->get('fileManager');
+        if (!is_dir(dirname($to))) {
+            mkdir(dirname($to), 0777, true);
+        }
+
+        if (!rename($from, $to)) {
+            return false;
+        }
+
+        $dir = dirname($from);
+        while (empty(Util::scanDir($dir)) && @rmdir($dir)) {
+            $dir = dirname($dir);
+        }
+
+        return true;
     }
 
     public function getMemoryStorage(): StorageInterface

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 
 abstract class AbstractLayoutListener extends AbstractListener

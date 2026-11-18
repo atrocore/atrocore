@@ -15,7 +15,6 @@ namespace Atro\Core\Container;
 
 use Atro\Core\Container as AtroContainer;
 use Atro\Core\Factories\FactoryInterface as AtroCoreFactory;
-use Espo\Core\Interfaces\Injectable;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -55,14 +54,6 @@ class AbstractFactory implements AbstractFactoryInterface
                 }
             }
             return new $className(...$input);
-        }
-
-        if (is_a($className, Injectable::class, true)) {
-            $instance = new $className();
-            foreach ($instance->getDependencyList() as $dependency) {
-                $instance->inject($dependency, $this->container->get($dependency));
-            }
-            return $instance;
         }
 
         return new $className();

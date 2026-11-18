@@ -169,7 +169,7 @@ class Base extends RDB
         }
 
         try {
-            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterForContributor($entity);
+            $this->container->get('serviceFactory')->create('Consolidation')->updateMasterForContributor($entity);
         } catch (Forbidden|BadRequest $e) {
             // ignore
         }
@@ -422,28 +422,18 @@ class Base extends RDB
         $qb->executeQuery();
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency(AttributeFieldConverter::class);
-        $this->addDependency('language');
-        $this->addDependency('pseudoTransactionManager');
-        $this->addDependency('serviceFactory');
-    }
-
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
-        return $this->getInjection(AttributeFieldConverter::class);
+        return $this->container->get(AttributeFieldConverter::class);
     }
 
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
-        return $this->getInjection('pseudoTransactionManager');
+        return $this->container->get('pseudoTransactionManager');
     }
 
     protected function translateException(string $key): string
     {
-        return $this->getInjection('language')->translate($key, 'exceptions', $this->entityName);
+        return $this->container->get('language')->translate($key, 'exceptions', $this->entityName);
     }
 }

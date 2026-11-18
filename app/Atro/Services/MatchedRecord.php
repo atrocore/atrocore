@@ -38,13 +38,6 @@ class MatchedRecord extends Base
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('matchingManager');
-    }
-
     protected function getMatchingRepository(): MatchingRepository
     {
         return $this->getEntityManager()->getRepository('Matching');
@@ -52,6 +45,6 @@ class MatchedRecord extends Base
 
     protected function getMatchingManager(): MatchingManager
     {
-        return $this->getInjection('matchingManager');
+        return $this->container->get('matchingManager');
     }
 }

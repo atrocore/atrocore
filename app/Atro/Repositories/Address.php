@@ -33,10 +33,4 @@ class Address extends Base
         parent::beforeSave($entity, $options);
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-    }
 }

@@ -62,7 +62,7 @@ class GlobalService extends AbstractService
         $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
         $data['coreVersion'] = SoftwarePackageService::getCoreVersion();
 
-        return $this->getInjection('container')->get('eventManager')
+        return $this->container->get('eventManager')
             ->dispatch('AppService', 'afterGetBootstrapData', new Event(['data' => $data]))
             ->getArgument('data');
     }
@@ -333,7 +333,7 @@ class GlobalService extends AbstractService
                 continue;
             }
 
-            $selectManager = $this->getInjection('container')->get('selectManagerFactory')->create($entityName);
+            $selectManager = $this->container->get('selectManagerFactory')->create($entityName);
             $params = ['select' => ['id']];
 
             if ($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'name'])) {
@@ -850,13 +850,6 @@ class GlobalService extends AbstractService
         return $value;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     protected function getUserProfileService(): UserProfile
     {
         return $this->getService('UserProfile');
@@ -864,27 +857,27 @@ class GlobalService extends AbstractService
 
     protected function getService(string $name)
     {
-        return $this->getInjection('container')->get('serviceFactory')->create($name);
+        return $this->container->get('serviceFactory')->create($name);
     }
 
     protected function getAcl(): Acl
     {
-        return $this->getInjection('container')->get('acl');
+        return $this->container->get('acl');
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('container')->get('metadata');
+        return $this->container->get('metadata');
     }
 
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('container')->get('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
-        return $this->getInjection('container')->get(AttributeFieldConverter::class);
+        return $this->container->get(AttributeFieldConverter::class);
     }
 
     protected function getSoftwarePackageRepository(): SoftwarePackage

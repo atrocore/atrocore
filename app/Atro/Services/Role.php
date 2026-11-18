@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Base;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Espo\ORM\Entity;
 
 class Role extends Base
@@ -94,15 +94,8 @@ class Role extends Base
         }
     }
 
-    protected function init(): void
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
-    }
-
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->getInjection('serviceFactory');
+        return $this->container->get('serviceFactory');
     }
 }

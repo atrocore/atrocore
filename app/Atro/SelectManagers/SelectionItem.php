@@ -20,7 +20,7 @@ use Espo\ORM\IEntity;
 
 class SelectionItem extends Base
 {
-    protected function access(&$result)
+    protected function access(&$result): void
     {
         parent::access($result);
 
@@ -29,7 +29,7 @@ class SelectionItem extends Base
         }
     }
 
-    public function applyAdditional(array &$result, array $params)
+    public function applyAdditional(array &$result, array $params): void
     {
         parent::applyAdditional($result, $params);
 

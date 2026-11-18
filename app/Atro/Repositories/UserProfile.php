@@ -21,9 +21,9 @@ class UserProfile extends User
         $params = [];
         $this->handleSelectParams($params);
 
-        $user = $this->getMapper()->selectById($this->entityFactory->create('User'), $id, $params);
+        $user = $this->getMapper()->selectById($this->getEntityFactory()->create('User'), $id, $params);
 
-        $entity = $this->entityFactory->create($this->entityType);
+        $entity = $this->getEntityFactory()->create($this->entityType);
         $entity->set($user->toArray());
 
         $entity->setAsFetched();
@@ -78,7 +78,7 @@ class UserProfile extends User
 
     private function user(Entity $entity): Entity
     {
-        $user = $this->entityFactory->create('User');
+        $user = $this->getEntityFactory()->create('User');
         $user->set($entity->toArray());
 
         return $user;

@@ -82,7 +82,7 @@ class Settings extends AbstractService
             }
         }
 
-        return $this->getInjection('eventManager')
+        return $this->container->get('eventManager')
             ->dispatch('SettingsService', 'afterGetConfigData', new Event(['data' => $data]))
             ->getArgument('data');
     }
@@ -130,7 +130,7 @@ class Settings extends AbstractService
             );
         }
 
-        $this->getInjection('eventManager')->dispatch('SettingsService', 'beforeUpdate', new Event(['data' => $data]));
+        $this->container->get('eventManager')->dispatch('SettingsService', 'beforeUpdate', new Event(['data' => $data]));
 
         if (property_exists($data, 'onlyStableReleases')) {
             if ($data->onlyStableReleases !== $this->getConfig()->get('onlyStableReleases')) {
@@ -173,27 +173,27 @@ class Settings extends AbstractService
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('metadata');
+        return $this->container->get('metadata');
     }
 
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function getFieldManager(): FieldManager
     {
-        return $this->getInjection('fieldManagerUtil');
+        return $this->container->get('fieldManagerUtil');
     }
 
     protected function getGlobalService(): GlobalService
     {
-        return $this->getInjection('serviceFactory')->create('Global');
+        return $this->container->get('serviceFactory')->create('Global');
     }
 
     private function setData(array|\stdClass $data): void
@@ -219,7 +219,6 @@ class Settings extends AbstractService
             $this->getConfig()->set($key, $value);
         }
     }
-
 
     private function getCustomHeadCode(): ?string
     {
@@ -319,16 +318,5 @@ class Settings extends AbstractService
     private function getCustomStylesheetPath(): string
     {
         return $this->customStylesheetDir . '/' . $this->customStylesheetFileName;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('metadata');
-        $this->addDependency('dataManager');
-        $this->addDependency('eventManager');
-        $this->addDependency('fieldManagerUtil');
-        $this->addDependency('serviceFactory');
     }
 }

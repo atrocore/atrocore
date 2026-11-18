@@ -17,7 +17,7 @@ use Atro\Core\SelectManagers\Base;
 
 class UiHandler extends Base
 {
-   protected function getTextFilterFieldList()
+   protected function getTextFilterFieldList(): array
    {
        return array_merge(['type', 'fields'], parent::getTextFilterFieldList());
    }

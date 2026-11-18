@@ -13,28 +13,23 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
-use Atro\Core\Utils\Language;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityManager;
 
 class Hierarchy extends Base
 {
     protected string $tableName;
     protected string $hierarchyTableName;
 
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, Container $container)
     {
-        parent::__construct($entityType, $entityManager, $entityFactory);
+        parent::__construct($entityType, $container);
 
-        $this->tableName = $entityManager->getMapper()->toDb($this->entityType);
+        $this->tableName = $this->getEntityManager()->getMapper()->toDb($this->entityType);
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
@@ -141,7 +136,7 @@ class Hierarchy extends Base
             if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
                 throw new BadRequest('Restore prohibited for entity with possible multiple parents.');
             }
-            $this->getInjection('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
+            $this->container->get('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
         }
     }
 
@@ -527,7 +522,6 @@ class Hierarchy extends Base
             }
         }
 
-
         return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
     }
 
@@ -546,7 +540,6 @@ class Hierarchy extends Base
                 'value'     => '%|' . $parentId . '|"%'
             ];
         }
-
 
         $sp = $this->convertToSelectParams($params);
         return $this->getMapper()->count($this->get(), $sp);
@@ -628,7 +621,6 @@ class Hierarchy extends Base
     {
         return !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasArchive']));
     }
-
 
     protected function validateIsArchived(Entity $entity): void
     {
@@ -767,14 +759,6 @@ class Hierarchy extends Base
 
     public function convertToSelectParams($params): array
     {
-        return $this->getInjection('selectManagerFactory')->create($this->entityType)->getSelectParams($params, true, true);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
-        $this->addDependency('selectManagerFactory');;
+        return $this->container->get('selectManagerFactory')->create($this->entityType)->getSelectParams($params, true, true);
     }
 }

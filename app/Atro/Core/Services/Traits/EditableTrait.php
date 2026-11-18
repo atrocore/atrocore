@@ -27,7 +27,6 @@ use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\UniqueIndexDescriber;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Utils\Json;
 use Atro\Core\Services\AbstractRecordService;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -265,7 +264,7 @@ trait EditableTrait
      */
     protected function throwOneToOneForbidden(string $messageKey, string $link, array $linkData): void
     {
-        $language = $this->getInjection('language');
+        $language = $this->container->get('language');
 
         throw new Forbidden(
             sprintf(
@@ -308,7 +307,7 @@ trait EditableTrait
         }
 
         /** @var Language $language */
-        $language = $this->getInjection('language');
+        $language = $this->container->get('language');
 
         foreach ($this->getRequiredFields($entity, $data) as $field) {
             if ($this->isNullField($entity, $field)) {
@@ -344,7 +343,7 @@ trait EditableTrait
     protected function validateDisabledOptions(Entity $entity): void
     {
         /** @var Language $language */
-        $language = $this->getInjection('language');
+        $language = $this->container->get('language');
 
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields']) as $field => $defs) {
             if (empty($defs['type']) || !in_array($defs['type'], ['enum', 'multiEnum', 'link', 'linkMultiple'])) {
@@ -408,7 +407,7 @@ trait EditableTrait
 
         $pattern = $defs['pattern'];
         if (!preg_match(RegexUtil::toPhpPattern($pattern), $entity->get($field))) {
-            $message = $this->getInjection('language')->translate('dontMatchToPattern', 'exceptions', $entity->getEntityType());
+            $message = $this->container->get('language')->translate('dontMatchToPattern', 'exceptions', $entity->getEntityType());
             $message = str_replace('{field}', $defs['label'] ?? $field, $message);
             $message = str_replace('{pattern}', $pattern, $message);
 
@@ -606,7 +605,7 @@ trait EditableTrait
             return null;
         }
 
-        $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
+        $fieldLabel = $this->container->get('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
         if (!isset($fieldDefs['options']) || !empty($fieldDefs['relationVirtualField'])) {
@@ -617,7 +616,7 @@ trait EditableTrait
             if (!$validate) {
                 return $value;
             }
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
+            throw new BadRequest(sprintf($this->container->get('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
         }
 
         return $value;
@@ -629,7 +628,7 @@ trait EditableTrait
             return [];
         }
 
-        $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
+        $fieldLabel = $this->container->get('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
         if (!isset($fieldDefs['options']) || !empty($fieldDefs['relationVirtualField'])) {
@@ -641,7 +640,7 @@ trait EditableTrait
                 if (!$validate) {
                     continue;
                 }
-                throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $v, $fieldLabel));
+                throw new BadRequest(sprintf($this->container->get('language')->translate('noSuchOptions', 'exceptions', 'Global'), $v, $fieldLabel));
             }
         }
 
@@ -753,12 +752,12 @@ trait EditableTrait
     {
         // the records of such an entity cannot be created at all, also not as duplicates
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'createDisabled']))) {
-            throw new NotFound($this->getInjection('language')->translate('recordCannotBeCreated', 'exceptions'));
+            throw new NotFound($this->container->get('language')->translate('recordCannotBeCreated', 'exceptions'));
         }
 
         // each record of an entity with subtypes belongs to one of them, so it is created via the subtype
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasSubtypes']))) {
-            throw new BadRequest($this->getInjection('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
+            throw new BadRequest($this->container->get('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
         }
 
         $attachment = $this
@@ -778,7 +777,7 @@ trait EditableTrait
         // set input data to entity property
         $entity->_originalInput = $entity->_input = $attachment;
 
-        $attributeFieldConverter = $this->getInjection(AttributeFieldConverter::class);
+        $attributeFieldConverter = $this->container->get(AttributeFieldConverter::class);
         $attributeFieldConverter->validateInput($entity);
         $attributeFieldConverter->putAttributesToEntity($entity);
 
@@ -842,7 +841,7 @@ trait EditableTrait
     {
         // the records of such an entity cannot be edited at all
         if (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'editDisabled']))) {
-            throw new Forbidden($this->getInjection('language')->translate('recordCannotBeEdited', 'exceptions'));
+            throw new Forbidden($this->container->get('language')->translate('recordCannotBeEdited', 'exceptions'));
         }
 
         $event = $this
@@ -871,7 +870,7 @@ trait EditableTrait
 
         $entity->_originalInput = clone $data;
 
-        $attributeFieldConverter = $this->getInjection(AttributeFieldConverter::class);
+        $attributeFieldConverter = $this->container->get(AttributeFieldConverter::class);
         $attributeFieldConverter->validateInput($entity);
         $attributeFieldConverter->putAttributesToEntity($entity);
 
@@ -915,7 +914,7 @@ trait EditableTrait
         if (empty($this->getMemoryStorage()->get('importJobId')) && !$skipCheckForConflicts && $this->getConfig()->get('checkForConflicts', true)) {
             $conflicts = $this->getFieldsThatConflict($entity, $data);
             if (!empty($conflicts)) {
-                $message = $this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global');
+                $message = $this->container->get('language')->translate('editedByAnotherUser', 'exceptions', 'Global');
                 throw (new Conflict(sprintf($message, implode(', ', $conflicts))))->setFields($conflicts);
             }
         }
@@ -1198,7 +1197,7 @@ trait EditableTrait
 
             if (!empty($where)) {
                 $renderedWhere = @json_decode(
-                    $this->getInjection('twig')->renderTemplate(json_encode($where), ['entity' => $entity]),
+                    $this->container->get('twig')->renderTemplate(json_encode($where), ['entity' => $entity]),
                     true
                 );
                 if (is_array($renderedWhere)) {
@@ -1296,7 +1295,7 @@ trait EditableTrait
             }
 
             if ($this->hasArchivedRecords($linkDefs['entity'], $ids)) {
-                throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
+                throw new BadRequest($this->container->get('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
             }
         }
     }
@@ -1304,7 +1303,7 @@ trait EditableTrait
     protected function validateArchivedRelation(Entity $entity, Entity $foreignEntity): void
     {
         if ($this->isArchivedRecord($entity) || $this->isArchivedRecord($foreignEntity)) {
-            throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
+            throw new BadRequest($this->container->get('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
         }
     }
 
@@ -1412,7 +1411,7 @@ trait EditableTrait
 
                 /** @var AbstractRecordService $handler */
                 $handler = $this
-                    ->getInjection('eventManager')
+                    ->container->get('eventManager')
                     ->dispatch(
                         $entity->getEntityType() . 'Service', 'beforeDuplicateLink',
                         new Event(
@@ -1637,10 +1636,10 @@ trait EditableTrait
 
         if (in_array($type, [Entity::JSON_ARRAY, Entity::JSON_OBJECT])) {
             if (is_string($value1)) {
-                $value1 = Json::decode($value1, true);
+                $value1 = json_decode($value1, true);
             }
             if (is_string($value2)) {
-                $value2 = Json::decode($value2, true);
+                $value2 = json_decode($value2, true);
             }
         }
 
@@ -1711,7 +1710,7 @@ trait EditableTrait
                         }
 
                     }
-                    $fieldsThatConflict[$field] = $this->getInjection('language')->translate($field, 'fields', $this->entityName);
+                    $fieldsThatConflict[$field] = $this->container->get('language')->translate($field, 'fields', $this->entityName);
                 }
             }
         }
@@ -1778,7 +1777,7 @@ trait EditableTrait
 
     protected function getUniqueIndexDescriber(): UniqueIndexDescriber
     {
-        return $this->getInjection(UniqueIndexDescriber::class);
+        return $this->container->get(UniqueIndexDescriber::class);
     }
 
     /**

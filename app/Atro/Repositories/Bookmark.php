@@ -19,19 +19,12 @@ use Espo\ORM\Entity;
 
 class Bookmark extends Base
 {
-
   public function beforeSave(Entity $entity, array $options = [])
   {
       if($this->getMetadata()->get(['scope', $entity->get('entityType'), 'bookmarkDisabled'])) {
-          throw new BadRequest($this->getInjection('language')->translate('entityCannotBeBookmarked', 'exceptions', 'Bookmark'));
+          throw new BadRequest($this->container->get('language')->translate('entityCannotBeBookmarked', 'exceptions', 'Bookmark'));
       }
       $entity->set('userId', $this->getEntityManager()->getUser()->id);
       parent::beforeSave($entity, $options);
-  }
-
-  protected function init()
-  {
-      parent::init();
-      $this->addDependency('language');
   }
 }

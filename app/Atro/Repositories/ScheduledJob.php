@@ -24,7 +24,7 @@ class ScheduledJob extends Base
             if (!empty($action) && !empty($this->getMetadata()->get("action.typesData.{$action->get('type')}.forEditModeOnly"))) {
                 throw new BadRequest(
                     sprintf(
-                        $this->getInjection('language')->translate('forEditModeOnly', 'exceptions', 'Action'),
+                        $this->container->get('language')->translate('forEditModeOnly', 'exceptions', 'Action'),
                         $action->get('name')
                     )
                 );
@@ -64,8 +64,8 @@ class ScheduledJob extends Base
 
             $exists = $this->where($where)->findOne();
             if (!empty($exists)) {
-                $message   = $this->getInjection('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
-                $typeLabel = $this->getInjection('language')->translateOption($entity->get('type'), 'type', 'ScheduledJob');
+                $message   = $this->container->get('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
+                $typeLabel = $this->container->get('language')->translateOption($entity->get('type'), 'type', 'ScheduledJob');
 
                 throw new BadRequest(sprintf($message, $typeLabel));
             }

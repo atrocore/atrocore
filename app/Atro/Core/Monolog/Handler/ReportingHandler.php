@@ -16,7 +16,6 @@ namespace Atro\Core\Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Monolog\LogRecord;
 
 class ReportingHandler extends AbstractProcessingHandler
@@ -24,7 +23,6 @@ class ReportingHandler extends AbstractProcessingHandler
     public const REPORTING_PATH = 'data/reporting';
 
     protected string $instanceId;
-    protected FileManager $fileManager;
     private string $errorMessage;
     private int $maxErrorMessageLength = 5000;
 
@@ -33,22 +31,18 @@ class ReportingHandler extends AbstractProcessingHandler
         parent::__construct($level);
 
         $this->instanceId = $instanceId;
-        $this->fileManager = new FileManager();
     }
 
     protected function write(LogRecord $record): void
     {
         $fileName = self::REPORTING_PATH . DIRECTORY_SEPARATOR . $record->datetime->format('Y-m-d H:i:00') . '.log';
 
-        if (!is_writable($fileName)) {
-            $this->fileManager->checkCreateFile($fileName);
+        set_error_handler([$this, 'customErrorHandler']);
+        if (!is_dir(self::REPORTING_PATH)) {
+            mkdir(self::REPORTING_PATH, 0777, true);
         }
-
-        if (is_writable($fileName)) {
-            set_error_handler([$this, 'customErrorHandler']);
-            $this->fileManager->appendContents($fileName, $this->jsonMessage($record) . "\n");
-            restore_error_handler();
-        }
+        file_put_contents($fileName, $this->jsonMessage($record) . "\n", FILE_APPEND | LOCK_EX);
+        restore_error_handler();
 
         if (isset($this->errorMessage)) {
             throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: ' . $this->errorMessage, $fileName));

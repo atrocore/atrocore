@@ -22,7 +22,6 @@ use Espo\ORM\IEntity;
 
 class LayoutProfile extends Base
 {
-
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -78,19 +77,12 @@ class LayoutProfile extends Base
 
     protected function getLayoutManager(): LayoutManager
     {
-        return $this->getInjection('layoutManager');
+        return $this->container->get('layoutManager');
     }
 
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
-    }
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('layoutManager');
-        $this->addDependency('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function duplicateLayouts(IEntity $entity, IEntity $duplicatingEntity)

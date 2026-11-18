@@ -17,7 +17,6 @@ use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Utils\Json;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 use Atro\Core\Services\AbstractRecordService;
@@ -65,12 +64,12 @@ class PseudoTransactionManager
 
     public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, ?string $parentId = null, bool $duplicateForeign = false): string
     {
-        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId, 'duplicateForeign' => $duplicateForeign], JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, $entityId, 'linkEntity', json_encode(['link' => $link, 'foreignId' => $foreignId, 'duplicateForeign' => $duplicateForeign], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, ?string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, $entityId, 'unlinkEntity', json_encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushCustomJob(string $entityType, string $action, $data, ?string $parentId = null): string
@@ -119,7 +118,7 @@ class PseudoTransactionManager
         }
 
         if (is_array($data) || is_object($data)) {
-            return Json::encode($data, JSON_UNESCAPED_UNICODE);
+            return json_encode($data, JSON_UNESCAPED_UNICODE);
         }
 
         if (is_string($data)) {
@@ -257,17 +256,17 @@ class PseudoTransactionManager
             switch ($job['action']) {
                 case 'createEntity':
                     if (!$inputIsEmpty) {
-                        $service->createEntity(Json::decode($job['input_data']));
+                        $service->createEntity(json_decode($job['input_data']));
                     }
                     break;
                 case 'updateEntity':
                     if (!$inputIsEmpty) {
-                        $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                        $service->updateEntity($job['entity_id'], json_decode($job['input_data']));
                     }
                     break;
                 case 'massUpdate':
                     if (!$inputIsEmpty) {
-                        $payload = Json::decode($job['input_data'], true);
+                        $payload = json_decode($job['input_data'], true);
                         if (array_key_exists('data', $payload)) {
                             $data = json_decode(json_encode($payload['data']));
                             $params = array_key_exists('params', $payload) ? $payload['params'] : [];
@@ -280,7 +279,7 @@ class PseudoTransactionManager
                     break;
                 case 'linkEntity':
                     if (!$inputIsEmpty) {
-                        $inputData = Json::decode($job['input_data']);
+                        $inputData = json_decode($job['input_data']);
                         if (!empty($inputData->duplicateForeign)) {
                             $service->duplicateAndLinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
                         } else {
@@ -290,7 +289,7 @@ class PseudoTransactionManager
                     break;
                 case 'unlinkEntity':
                     if (!$inputIsEmpty) {
-                        $inputData = Json::decode($job['input_data']);
+                        $inputData = json_decode($job['input_data']);
                         $service->unlinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
                     }
                     break;
@@ -298,7 +297,7 @@ class PseudoTransactionManager
                     if ($inputIsEmpty) {
                         $service->{$job['action']}();
                     } else {
-                        $service->{$job['action']}(Json::decode($job['input_data'], true));
+                        $service->{$job['action']}(json_decode($job['input_data'], true));
                     }
                     break;
             }

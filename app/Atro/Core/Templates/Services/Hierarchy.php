@@ -1190,7 +1190,7 @@ class Hierarchy extends Base
 
             $this->validateArchivedRecordUpdate($entity, $data);
             if ($this->hasArchivedRecords($this->entityType, [$data->parentId, $this->getRepository()->getParentRecord((string)$id)['id'] ?? null])) {
-                throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
+                throw new BadRequest($this->container->get('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
             }
 
             $sortAsc = true;
@@ -1404,7 +1404,7 @@ class Hierarchy extends Base
             $routeEntities[$item->get('id')] = $item;
         }
 
-        $name = Language::getLocalizedFieldName($this->getInjection('container'), $collection->getEntityName(), 'name');
+        $name = Language::getLocalizedFieldName($this->container, $collection->getEntityName(), 'name');
 
         foreach ($collection as $entity) {
             $routesNames = [];
@@ -1598,7 +1598,7 @@ class Hierarchy extends Base
         ])->find();
 
         if (count($children) > 0) {
-            $service = $this->getInjection('serviceFactory')->create($relationEntityName);
+            $service = $this->container->get('serviceFactory')->create($relationEntityName);
 
             foreach ($children->toArray() as $child) {
                 $data = $service->getDuplicateAttributes($child['id']);
@@ -1838,21 +1838,13 @@ class Hierarchy extends Base
         return $res;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency(AttributeFieldConverter::class);
-    }
-
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
-        return $this->getInjection(AttributeFieldConverter::class);
+        return $this->container->get(AttributeFieldConverter::class);
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 }

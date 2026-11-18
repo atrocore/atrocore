@@ -104,20 +104,13 @@ class Language extends ReferenceData
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
     protected function clearCache(): void
     {
-        $this->getInjection('dataManager')->clearCache();
+        $this->container->get('dataManager')->clearCache();
     }
 
     protected function rebuild(): void
     {
-        $this->getInjection('dataManager')->rebuild();
+        $this->container->get('dataManager')->rebuild();
     }
 }

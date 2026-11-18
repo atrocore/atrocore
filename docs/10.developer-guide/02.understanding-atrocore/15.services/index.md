@@ -95,6 +95,14 @@ class Manufacturer extends Base
 
 > To learn more about making complex queries, check the section [Select Manager](../10.select-manager/index.md).
 
+## Dependencies
+
+A service takes the services it needs from the container when it needs them: `$this->container->get(...)`. The frequently used ones have typed getters, e.g. `getEntityManager()`, `getConfig()`, `getMetadata()`. Nothing has to be registered.
+
+```php
+$thumbnail = $this->container->get(\Atro\Core\Utils\Thumbnail::class);
+```
+
 ## Replace Services
 
 To replace an existing service, create (or change) the `app/Resources/metadata/app/services.json` file in your custom module:

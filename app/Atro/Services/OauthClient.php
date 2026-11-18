@@ -32,7 +32,7 @@ class OauthClient extends Base
 
         // the redirect URI of the user interface follows the site URL
         if ($isUiClient) {
-            $entity->set('redirectUris', [$this->getInjection('container')->get(UiClient::class)->getRedirectUri()]);
+            $entity->set('redirectUris', [$this->container->get(UiClient::class)->getRedirectUri()]);
         }
     }
 
@@ -59,12 +59,5 @@ class OauthClient extends Base
         }
 
         return $this->getRepository()->generateSecret($client);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
     }
 }

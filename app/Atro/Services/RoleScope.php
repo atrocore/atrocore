@@ -83,7 +83,7 @@ class RoleScope extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('nameLabel', $this->getInjection('language')->translate($entity->get('name'), 'scopeNames'));
+        $entity->set('nameLabel', $this->container->get('language')->translate($entity->get('name'), 'scopeNames'));
 
         $entity->set('accessData', null);
         if ($entity->get('hasAccess')) {

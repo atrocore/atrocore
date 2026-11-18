@@ -15,7 +15,6 @@ namespace Atro\ActionTypes;
 
 use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class Set extends AbstractAction
@@ -167,7 +166,7 @@ class Set extends AbstractAction
 
         if (count($exist) == 0 && !empty($next = $this->getNextAction($current))) {
             $data = $entity->get('payload');
-            $data = empty($data) ? [] : Json::decode(Json::encode($data), true);
+            $data = empty($data) ? [] : json_decode(json_encode($data), true);
 
             // continue with the selection the set was started with, an action can have its own filter (where) in the payload
             $initialInput = $this->searchValueByKey($data, 'actionSetInitialInput');

@@ -17,7 +17,7 @@ use Atro\Core\SelectManagers\Base;
 
 class SavedSearch extends Base
 {
-    protected function accessOnlyOwn(&$result)
+    protected function accessOnlyOwn(&$result): void
     {
         $result['whereClause'][]=  ['userId' => $this->getUser()->id] ;
     }

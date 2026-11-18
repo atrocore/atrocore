@@ -77,17 +77,9 @@ class Action extends Base
             ->getArgument('result');
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('actionManager');
-    }
-
     protected function getLanguage(): Language
     {
-        return $this->getInjection('container')->get('language');
+        return $this->container->get('language');
     }
 
     public function getDynamicActions(string $scope, ?string $id, ?string $type, ?string $display)
@@ -135,7 +127,6 @@ class Action extends Base
                 $data['displayField'] = $action['displayField'] ?? null;
             }
 
-
             if ($data['type'] === 'previewTemplate') {
                 if (!empty($action['data']['where']) && !empty($action['data']['whereScope']) && $action['data']['whereScope'] === $scope) {
                     $where = $action['data']['where'];
@@ -175,7 +166,6 @@ class Action extends Base
             }
         }
 
-
         if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']) && $type === 'record') {
             $result = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('id')
@@ -214,6 +204,6 @@ class Action extends Base
 
     protected function getActionManager(): ActionManager
     {
-        return $this->getInjection('actionManager');
+        return $this->container->get('actionManager');
     }
 }

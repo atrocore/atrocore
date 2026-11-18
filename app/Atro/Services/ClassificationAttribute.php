@@ -268,10 +268,4 @@ class ClassificationAttribute extends Base
         return true;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-    }
 }

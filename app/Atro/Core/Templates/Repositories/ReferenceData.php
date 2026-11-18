@@ -18,27 +18,20 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
-use Espo\Core\Interfaces\Injectable;
-use Espo\Core\Utils\File\Manager as FileManager;
+use Atro\Core\Container;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Espo\ORM\Repository;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityManager;
 
-class ReferenceData extends Repository implements Injectable
+class ReferenceData extends Repository
 {
     public const DIR_PATH = 'data/reference-data';
 
-    protected array $dependencies = [];
-    protected array $injections = [];
-    protected FileManager $fileManager;
 
     protected string $filePath;
 
@@ -52,13 +45,11 @@ class ReferenceData extends Repository implements Injectable
      */
     protected array $whereClause = [];
 
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, Container $container)
     {
-        parent::__construct($entityType, $entityManager, $entityFactory);
+        parent::__construct($entityType, $container);
 
         $this->filePath = self::DIR_PATH . "/$this->entityName.json";
-
-        $this->init();
     }
 
     public function hasDeletedRecordsToClear(): bool
@@ -286,7 +277,7 @@ class ReferenceData extends Repository implements Injectable
 
     protected function getNewEntity()
     {
-        $entity = $this->entityFactory->create($this->entityName);
+        $entity = $this->getEntityFactory()->create($this->entityName);
         $entity->setIsNew(true);
         $entity->populateDefaults();
 
@@ -299,7 +290,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = $this->getAllItems();
         if (isset($items[$code])) {
-            $entity = $this->entityFactory->create($this->entityName);
+            $entity = $this->getEntityFactory()->create($this->entityName);
             $entity->set($items[$code]);
             $entity->setAsFetched();
 
@@ -314,7 +305,7 @@ class ReferenceData extends Repository implements Injectable
         $items = $this->getAllItems();
         foreach ($items as $item) {
             if ($item['id'] === $id && $this->isItemOfSubtype($item)) {
-                $entity = $this->entityFactory->create($this->entityName);
+                $entity = $this->getEntityFactory()->create($this->entityName);
                 $entity->set($item);
                 $entity->setAsFetched();
 
@@ -501,7 +492,7 @@ class ReferenceData extends Repository implements Injectable
             $items = $prepared;
         }
 
-        $collection = new EntityCollection($items, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($items, $this->entityName, $this->getEntityFactory());
         $collection->setAsFetched();
 
         $this->whereClause = [];
@@ -559,7 +550,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $result     = $this->getAllItems();
         $result     = array_filter(array_values($result), fn($item) => in_array($item['id'], $ids));
-        $collection = new EntityCollection($result, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($result, $this->entityName, $this->getEntityFactory());
         $collection->setAsFetched();
 
         return $collection;
@@ -587,7 +578,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function getAll()
     {
-        $collection = new EntityCollection(array_values($this->getAllItems()), $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection(array_values($this->getAllItems()), $this->entityName, $this->getEntityFactory());
         $collection->setAsFetched();
 
         return $collection;
@@ -635,34 +626,6 @@ class ReferenceData extends Repository implements Injectable
         return "entity_{$this->entityType}_{$id}";
     }
 
-    protected function init()
-    {
-        $this->addDependency('config');
-        $this->addDependency('metadata');
-        $this->addDependency('eventManager');
-        $this->addDependency('language');
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencies;
-    }
-
-    public function inject($name, $object): void
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function addDependency(string $name): void
-    {
-        $this->dependencies[] = $name;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
     protected function dispatch(string $action, Entity $entity, $options, $arg1 = null, $arg2 = null, $arg3 = null)
     {
         $event = new Event(
@@ -689,22 +652,22 @@ class ReferenceData extends Repository implements Injectable
 
     protected function getConfig(): Config
     {
-        return $this->getInjection('config');
+        return $this->container->get('config');
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('metadata');
+        return $this->container->get('metadata');
     }
 
     protected function getEventManager(): Manager
     {
-        return $this->getInjection('eventManager');
+        return $this->container->get('eventManager');
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 
     protected function translate(string $label, ?string $category = 'labels', ?string $scope = 'Global'): string

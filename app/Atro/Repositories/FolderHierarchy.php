@@ -29,7 +29,7 @@ class FolderHierarchy extends Relation
         $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
 
         if ($parentStorage->get('id') !== $entityStorage->get('id')) {
-            throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+            throw new BadRequest($this->container->get('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
         }
 
         if ($entity->isNew()) {
@@ -49,7 +49,7 @@ class FolderHierarchy extends Relation
 
         if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
             if (!$this->getStorage($entity)->moveFolder($entity->get('entityId'), $entity->getFetched('parentId'), $entity->get('parentId'))) {
-                throw new BadRequest($this->getInjection('language')->translate('folderMoveFailed', 'exceptions', 'Folder'));
+                throw new BadRequest($this->container->get('language')->translate('folderMoveFailed', 'exceptions', 'Folder'));
             }
         }
     }
@@ -61,7 +61,7 @@ class FolderHierarchy extends Relation
             $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
 
             if ($parentStorage->get('id') !== $entityStorage->get('id')) {
-                throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+                throw new BadRequest($this->container->get('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
             }
         }
 
@@ -69,7 +69,7 @@ class FolderHierarchy extends Relation
 
         if (!empty($options['move'])) {
             if (!$this->getStorage($entity)->moveFolder($entity->get('entityId'), $entity->get('parentId'), '')) {
-                throw new BadRequest($this->getInjection('language')->translate('folderMoveFailed', 'exceptions', 'Folder'));
+                throw new BadRequest($this->container->get('language')->translate('folderMoveFailed', 'exceptions', 'Folder'));
             }
         }
     }
@@ -111,7 +111,7 @@ class FolderHierarchy extends Relation
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -136,13 +136,12 @@ class FolderHierarchy extends Relation
             return;
         }
 
-
         $fileFolderLinker->set('parentId', $entity->get('parentId'));
 
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -172,15 +171,7 @@ class FolderHierarchy extends Relation
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('language');
     }
 }

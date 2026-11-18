@@ -14,19 +14,11 @@ declare(strict_types=1);
 namespace Atro\TwigFilter;
 
 use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Container;
 use Atro\Core\Twig\AbstractTwigFilter;
 use Espo\ORM\Entity;
 
 class PutAttributesToEntity extends AbstractTwigFilter
 {
-    protected Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     public function filter($value)
     {
         if (empty($value) || !is_object($value) || !($value instanceof Entity)) {

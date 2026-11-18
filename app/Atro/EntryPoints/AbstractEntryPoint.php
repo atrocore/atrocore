@@ -12,10 +12,9 @@
 namespace Atro\EntryPoints;
 
 use Espo\Core\Acl;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Atro\Core\Utils\ClientManager;
 use Atro\Core\Utils\Config;
-use Espo\Core\Utils\File\Manager;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
@@ -61,11 +60,6 @@ abstract class AbstractEntryPoint
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
-    }
-
-    protected function getFileManager(): Manager
-    {
-        return $this->container->get('fileManager');
     }
 
     protected function getLanguage(): Language

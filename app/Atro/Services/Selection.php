@@ -132,6 +132,6 @@ class Selection extends Base
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 }
