@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "",
+        "blockingRuleSet": "",
+        "blockingRules": "",
+        "operator": "",
+        "attribute": "",
+        "matchedWhereExpression": ""
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "",
+            "attributes": ""
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "",
+            "fieldSimilar": "",
+            "fieldContains": "",
+            "set": "",
+            "expression": ""
+        },
+        "operator": {
+            "and": "",
+            "or": ""
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "",
+        "notValidMatching": "",
+        "notValidMatchingRuleSet": "",
+        "notValidFieldType": "",
+        "notValidAttributeType": "",
+        "expressionCannotBeEmpty": ""
+    },
+    "tooltips": {
+        "matchedWhereExpression": ""
+    }
+}
