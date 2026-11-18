@@ -1,10 +1,10 @@
 {
     "fields": {
-        "name": "",
-        "record": "",
-        "entityName": ""
+        "name": "Név",
+        "record": "Rekord",
+        "entityName": "Entitás"
     },
     "messages": {
-        "selectionDisabledForEntity": ""
+        "selectionDisabledForEntity": "A kijelölés le van tiltva a(z) „%s” entitás esetében."
     }
 }
