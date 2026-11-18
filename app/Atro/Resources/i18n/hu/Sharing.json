@@ -1,11 +1,11 @@
 {
     "fields": {
-        "active": "",
-        "available": "",
-        "validTill": "",
-        "allowedUsage": "",
-        "used": "",
-        "link": "",
-        "viewLink": ""
+        "active": "Aktív",
+        "available": "Elérhető",
+        "validTill": "Érvényesség vége",
+        "allowedUsage": "Engedélyezett használat",
+        "used": "Felhasználva",
+        "link": "Hivatkozás",
+        "viewLink": "Megtekintési hivatkozás"
     }
 }
