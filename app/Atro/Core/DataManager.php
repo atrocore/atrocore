@@ -34,28 +34,20 @@ class DataManager
     public static function pushPublicData(string $key, $value): void
     {
         if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
-            $data = file_get_contents(self::PUBLIC_DATA_FILE_PATH);
-
-            if (JSON::isJSON($data)) {
-                $result = JSON::decode($data, true);
-            }
+            $result = json_decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
         }
 
         if (empty($result) || !is_array($result)) {
             $result = [];
         }
 
-        file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode(array_merge($result, [$key => $value])));
+        file_put_contents(self::PUBLIC_DATA_FILE_PATH, json_encode(array_merge($result, [$key => $value])));
     }
 
     public static function getPublicData(string $key)
     {
         if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
-            $data = file_get_contents(self::PUBLIC_DATA_FILE_PATH);
-
-            if (JSON::isJSON($data)) {
-                $result = JSON::decode($data, true);
-            }
+            $result = json_decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
         }
 
         if (empty($result) || !is_array($result) || empty($result[$key])) {
@@ -209,7 +201,7 @@ class DataManager
         $metadata = $this->container->get('metadata');
         $metadata->init(true);
 
-        $ormData = $this->container->get('ormMetadata')->getData(true);
+        $ormData = $this->container->get('ormConverter')->process();
 
         return !empty($ormData);
     }

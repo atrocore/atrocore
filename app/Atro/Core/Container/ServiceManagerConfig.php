@@ -62,7 +62,7 @@ class ServiceManagerConfig
         'aclManager'               => \Espo\Core\AclManager::class,
         'entityManager'            => \Espo\Core\Factories\EntityManager::class,
         'injectableFactory'        => \Espo\Core\InjectableFactory::class,
-        'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
+        'ormConverter'             => \Espo\Core\Utils\Database\Orm\Converter::class,
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
         'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
