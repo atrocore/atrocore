@@ -1,24 +1,24 @@
 {
     "fields": {
-        "post": "",
-        "attachments": "",
-        "type": "",
-        "createdByGender": "",
-        "data": ""
+        "post": "Bejegyzés",
+        "attachments": "Mellékletek",
+        "type": "Típus",
+        "createdByGender": "Létrehozó neme",
+        "data": "Adat"
     },
     "filters": {
-        "all": "",
-        "posts": "",
-        "updates": "",
-        "notes": "",
-        "emails": ""
+        "all": "Összes",
+        "posts": "Bejegyzések",
+        "updates": "Frissítések",
+        "notes": "Jegyzetek",
+        "emails": "E-mailek"
     },
     "options": {
         "type": {
-            "Post": ""
+            "Post": "Bejegyzés"
         }
     },
     "messages": {
-        "writeMessage": ""
+        "writeMessage": "Írja ide az üzenetét"
     }
 }
