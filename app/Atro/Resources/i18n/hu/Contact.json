@@ -1,25 +1,25 @@
 {
     "fields": {
-        "name": "",
-        "firstName": "",
-        "secondName": "",
-        "gender": "",
-        "title": "",
-        "jobPosition": "",
-        "email": "",
-        "phone": "",
-        "mobile": "",
-        "street": "",
-        "zip": "",
-        "box": "",
-        "city": "",
-        "accounts": ""
+        "name": "Név",
+        "firstName": "Keresztnév",
+        "secondName": "Második név",
+        "gender": "Nem",
+        "title": "Cím",
+        "jobPosition": "Munkakör",
+        "email": "E-mail",
+        "phone": "Telefon",
+        "mobile": "Mobiltelefon",
+        "street": "Utca",
+        "zip": "Irányítószám",
+        "box": "Postafiók",
+        "city": "Város",
+        "accounts": "Fiókok"
     },
     "options": {
         "gender": {
-            "Male": "",
-            "Female": "",
-            "Neutral": ""
+            "Male": "Férfi",
+            "Female": "Nő",
+            "Neutral": "Semleges"
         }
     }
 }
