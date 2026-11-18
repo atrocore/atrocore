@@ -1,7 +1,15 @@
 {
-  "fields": {
-    "code": "Код",
-    "itemType": "Тип предмета",
-    "products": "Продукты"
-  }
+    "fields": {
+        "code": "Код",
+        "itemType": "Тип предмета",
+        "products": "Продукты"
+    },
+    "options": {
+        "itemType": {
+            "physical_goods": "Материальные товары",
+            "services": "Услуги",
+            "digital_products": "Цифровые продукты",
+            "legal_rights": "Юридические права"
+        }
+    }
 }
