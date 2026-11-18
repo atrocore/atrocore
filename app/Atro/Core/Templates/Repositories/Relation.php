@@ -101,7 +101,7 @@ class Relation extends Base
 
     public function deleteAlreadyDeleted(Entity $entity): void
     {
-        $uniqueColumns = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityName(), 'uniqueIndexes', 'unique_relation']);
+        $uniqueColumns = $this->getEntityManager()->getSystemMetadata()->get(['entityDefs', $entity->getEntityName(), 'uniqueIndexes', 'unique_relation']);
         if (empty($uniqueColumns)) {
             throw new \Error('No unique column found.');
         }

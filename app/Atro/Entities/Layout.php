@@ -27,7 +27,7 @@ class Layout extends Base
 
     public function getData(bool $withIds = true): array
     {
-        $reelType = $this->getEntityManager()->getEspoMetadata()->get("clientDefs.{$this->get('entity')}.additionalLayouts.{$this->get('viewType')}", $this->get('viewType'));
+        $reelType = $this->getEntityManager()->getSystemMetadata()->get("clientDefs.{$this->get('entity')}.additionalLayouts.{$this->get('viewType')}", $this->get('viewType'));
         switch ($reelType) {
             case 'list';
             case 'navigation':

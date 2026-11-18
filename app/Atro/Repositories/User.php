@@ -299,7 +299,7 @@ class User extends RDB
                 if (!in_array($item, ['.', '..'])) {
                     $extension = strtolower((string)pathinfo($item, PATHINFO_EXTENSION));
 
-                    if (in_array($extension, $this->getEntityManager()->getEspoMetadata()->get(['app', 'file', 'image', 'extensions'], []))) {
+                    if (in_array($extension, $this->getEntityManager()->getSystemMetadata()->get(['app', 'file', 'image', 'extensions'], []))) {
                         return $dir . DIRECTORY_SEPARATOR . $item;
                     }
                 }
