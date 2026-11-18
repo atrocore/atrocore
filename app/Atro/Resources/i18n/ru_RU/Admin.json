@@ -199,7 +199,6 @@
     "varchar": "Строка",
     "image": "Изображение",
     "multiEnum": "Многозначный список",
-    "attachmentMultiple": "Многочисленные насадки",
     "rangeInt": "Целочисленный диапазон",
     "rangeFloat": "Диапазон поплавков",
     "wysiwyg": "HTML",

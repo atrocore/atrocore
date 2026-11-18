@@ -123,7 +123,6 @@
     "file": "File",
     "image": "Image",
     "multiEnum": "Multi-value list",
-    "attachmentMultiple": "Multiple attachment",
     "rangeInt": "Integer Range",
     "rangeFloat": "Float Range",
     "wysiwyg": "HTML",

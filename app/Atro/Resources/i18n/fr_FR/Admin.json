@@ -100,7 +100,6 @@
     "file": "Fichier",
     "image": "Image",
     "multiEnum": "Liste multi-valeurs",
-    "attachmentMultiple": "Attachement multiple",
     "rangeInt": "Plage d’entiers",
     "rangeFloat": "Plage de flottant",
     "wysiwyg": "HTML",

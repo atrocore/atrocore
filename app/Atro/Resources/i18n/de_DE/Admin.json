@@ -124,7 +124,6 @@
     "file": "Datei",
     "image": "Bild",
     "multiEnum": "Liste mit Mehrfachauswahl",
-    "attachmentMultiple": "Anhang mit Mehrfachauswahl",
     "rangeInt": "Ganzzahlbereich",
     "rangeFloat": "Gleitkommabereich",
     "wysiwyg": "HTML",

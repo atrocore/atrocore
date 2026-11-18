@@ -121,7 +121,6 @@
     "file": "Soubor",
     "image": "Obrázek",
     "multiEnum": "Seznam s více hodnotami",
-    "attachmentMultiple": "Vícenásobné připojení",
     "rangeInt": "Rozsah celých čísel",
     "rangeFloat": "Rozsah plováku",
     "wysiwyg": "HTML",
