@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "user": "",
+        "action": "",
+        "createdAt": "",
+        "controllerName": "",
+        "ipAddress": "",
+        "target": "",
+        "targetName": "",
+        "targetId": "",
+        "data": "",
+        "oauthClient": ""
+    },
+    "links": {
+        "oauthClient": ""
+    }
+}
