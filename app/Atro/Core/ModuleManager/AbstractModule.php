@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\ModuleManager;
 
-use Espo\Core\Utils\DataUtil;
+use Atro\Core\Utils\DataUtil;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Json;
 use Atro\Core\Container;

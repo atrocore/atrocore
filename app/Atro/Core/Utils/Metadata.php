@@ -21,7 +21,6 @@ use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata\Helper;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\DataUtil;
 
 class Metadata
 {
