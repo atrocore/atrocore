@@ -1,95 +1,96 @@
 {
-  "fields": {
-    "isActive": "Aktiv",
-    "type": "Typ",
-    "sourceEntity": "Quellentität",
-    "inBackground": "Im Hintergrund ausführen",
-    "usage": "Verwendung",
-    "massAction": "Massenaktion",
-    "display": "Anzeige",
-    "actionsSet": "Actions Set",
-    "actions": "Aktionen",
-    "executeAs": "Ausführen als",
-    "targetEntity": "Ziel-Entität",
-    "mode": "Modus",
-    "emailScript": "Script",
-    "showEmailPreview": "Vorschau vor dem Senden",
-    "emailTemplate": "E-Mail-Vorlage",
-    "emailTo": "E-Mail an",
-    "emailCc": "E-Mail CC",
-    "emailBcc": "E-Mail BCC",
-    "focusField": "Feld",
-    "displayField": "Anzeigefeld",
-    "webhookUrl": "URL",
-    "hideTextLabel": "Text auf der Schaltfläche ausblenden",
-    "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
-    "updateType": "Aktualisierungstyp",
-    "updateScript": "Script",
-    "updateFields": "Felder aktualisieren",
-    "changeFields": "Felder",
-    "searchEntity": "Suchentität",
-    "executions": "Läufe",
-    "deletePermanently": "Dauerhaft löschen"
-  },
-  "labels": {
-    "execute": "Ausführen",
-    "Parameters": "Parameter",
-    "fieldsPanel": "Aktualisieren"
-  },
-  "actions": {
-    "allLogs": "Alle Protokolle"
-  },
-  "massActions": {
-    "execute": "Ausführen"
-  },
-  "messages": {
-    "executeNow": "Sind Sie sicher, dass Sie die ausgewählte Aktion ausführen möchten?"
-  },
-  "options": {
-    "display": {
-      "dropdown": "Auswahlliste",
-      "single": "Einzeln"
+    "fields": {
+        "isActive": "Aktiv",
+        "type": "Typ",
+        "sourceEntity": "Quellentität",
+        "inBackground": "Im Hintergrund ausführen",
+        "usage": "Verwendung",
+        "massAction": "Massenaktion",
+        "display": "Anzeige",
+        "actionsSet": "Actions Set",
+        "actions": "Aktionen",
+        "executeAs": "Ausführen als",
+        "targetEntity": "Ziel-Entität",
+        "mode": "Modus",
+        "emailScript": "Script",
+        "showEmailPreview": "Vorschau vor dem Senden",
+        "emailTemplate": "E-Mail-Vorlage",
+        "emailTo": "E-Mail an",
+        "emailCc": "E-Mail CC",
+        "emailBcc": "E-Mail BCC",
+        "focusField": "Feld",
+        "displayField": "Anzeigefeld",
+        "webhookUrl": "URL",
+        "hideTextLabel": "Text auf der Schaltfläche ausblenden",
+        "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
+        "updateType": "Aktualisierungstyp",
+        "updateScript": "Script",
+        "updateFields": "Felder aktualisieren",
+        "changeFields": "Felder",
+        "searchEntity": "Suchentität",
+        "executions": "Läufe",
+        "deletePermanently": "Dauerhaft löschen",
+        "handler": "Handler"
     },
-    "type": {
-      "create": "Erstellen",
-      "update": "Aktualisierung",
-      "delete": "Löschen",
-      "set": "Aktionsset",
-      "email": "E-Mail senden",
-      "webhook": "Webhook",
-      "customCode": "Benutzerdefinierter Code",
-      "createOrUpdate": "Erstellen oder Aktualisieren",
-      "custom": "Benutzerdefinierter Code"
+    "labels": {
+        "execute": "Ausführen",
+        "Parameters": "Parameter",
+        "fieldsPanel": "Aktualisieren"
     },
-    "executeAs": {
-      "system": "System",
-      "sameUser": "Gleicher Benutzer"
+    "actions": {
+        "allLogs": "Alle Protokolle"
     },
-    "usage": {
-      "onFieldFocus": "Beim Fokus auf das Feld",
-      "onFieldChange": "Auf dem Feld ändern",
-      "onRecordLoad": "Bei Datensatzerstellung/-aktualisierung",
-      "record": "Datensatz-Aktionsbutton",
-      "field": "Feld-Aktionsbutton",
-      "entity": "Entitäts-Aktionsbutton"
+    "massActions": {
+        "execute": "Ausführen"
     },
-    "mode": {
-      "basic": "Grundlegend",
-      "script": "Skript"
+    "messages": {
+        "executeNow": "Sind Sie sicher, dass Sie die ausgewählte Aktion ausführen möchten?"
     },
-    "updateType": {
-      "basic": "Grundlegend",
-      "script": "Skript"
+    "options": {
+        "display": {
+            "dropdown": "Auswahlliste",
+            "single": "Einzeln"
+        },
+        "type": {
+            "create": "Erstellen",
+            "update": "Aktualisierung",
+            "delete": "Löschen",
+            "set": "Aktionsset",
+            "email": "E-Mail senden",
+            "webhook": "Webhook",
+            "customCode": "Benutzerdefinierter Code",
+            "createOrUpdate": "Erstellen oder Aktualisieren",
+            "custom": "Benutzerdefinierter Code"
+        },
+        "executeAs": {
+            "system": "System",
+            "sameUser": "Gleicher Benutzer"
+        },
+        "usage": {
+            "onFieldFocus": "Beim Fokus auf das Feld",
+            "onFieldChange": "Auf dem Feld ändern",
+            "onRecordLoad": "Bei Datensatzerstellung/-aktualisierung",
+            "record": "Datensatz-Aktionsbutton",
+            "field": "Feld-Aktionsbutton",
+            "entity": "Entitäts-Aktionsbutton"
+        },
+        "mode": {
+            "basic": "Grundlegend",
+            "script": "Skript"
+        },
+        "updateType": {
+            "basic": "Grundlegend",
+            "script": "Skript"
+        }
+    },
+    "tooltips": {
+        "inBackground": "Die Aktion wird im Hintergrund ausgeführt, ohne dass eine direkte Erfolgs-/Fehlermeldung erscheint. Verwenden Sie diese Option, wenn die Ausführung der Aktion mehr als 30 Sekunden dauern soll.",
+        "usage": "Die Verwendung schreibt die Platzierung der Aktion vor. Bei einer Record Action müssen die betroffenen Datensätze vorausgewählt werden.",
+        "executeAs": "Geben Sie an, welchen Benutzer das System zum Ausführen der Aktion verwenden soll"
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein.",
+        "forEditModeOnly": "Die Aktion '%s' ist nur im Bearbeitungsmodus verfügbar und kann hier nicht verwendet werden.",
+        "actionTypeDisabledForTargetEntity": "Der Aktionstyp \"%1$s\" kann nicht verwendet werden, da diese Aktion für die Entität \"%2$s\" deaktiviert ist."
     }
-  },
-  "tooltips": {
-    "inBackground": "Die Aktion wird im Hintergrund ausgeführt, ohne dass eine direkte Erfolgs-/Fehlermeldung erscheint. Verwenden Sie diese Option, wenn die Ausführung der Aktion mehr als 30 Sekunden dauern soll.",
-    "usage": "Die Verwendung schreibt die Platzierung der Aktion vor. Bei einer Record Action müssen die betroffenen Datensätze vorausgewählt werden.",
-    "executeAs": "Geben Sie an, welchen Benutzer das System zum Ausführen der Aktion verwenden soll"
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein.",
-    "forEditModeOnly": "Die Aktion '%s' ist nur im Bearbeitungsmodus verfügbar und kann hier nicht verwendet werden.",
-    "actionTypeDisabledForTargetEntity": "Der Aktionstyp \"%1$s\" kann nicht verwendet werden, da diese Aktion für die Entität \"%2$s\" deaktiviert ist."
-  }
 }
