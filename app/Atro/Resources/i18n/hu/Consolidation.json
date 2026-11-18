@@ -1,0 +1,35 @@
+{
+    "labels": {
+        "sourceEntities": ""
+    },
+    "fields": {
+        "consolidationScript": "",
+        "updateMasterAutomatically": "",
+        "minimumMatchingScore": "",
+        "consolidateAutomatically": "",
+        "deleteInvalidMastersAutomatically": "",
+        "executeConsolidationAs": "",
+        "skipCondition": ""
+    },
+    "tooltips": {
+        "name": "",
+        "consolidationScript": "",
+        "executeConsolidationAs": "",
+        "skipCondition": ""
+    },
+    "options": {
+        "executeConsolidationAs": {
+            "system": "",
+            "sameUser": ""
+        }
+    },
+    "exceptions": {
+        "consolidationScriptIsMissing": "",
+        "consolidationScriptIsNotValid": "",
+        "consolidationScriptReturnedNoValues": "",
+        "entityTypeInvalid": "",
+        "consolidationAlreadyExists": "",
+        "skipConditionFailed": "",
+        "allCandidatesSkipped": ""
+    }
+}
