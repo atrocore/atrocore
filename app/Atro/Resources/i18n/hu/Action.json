@@ -1,96 +1,96 @@
 {
     "fields": {
-        "searchEntity": "",
-        "isActive": "",
-        "type": "",
-        "sourceEntity": "",
-        "inBackground": "",
-        "usage": "",
-        "massAction": "",
-        "display": "",
-        "actionsSet": "",
-        "actions": "",
-        "webhookUrl": "",
-        "executeAs": "",
-        "displayField": "",
-        "focusField": "",
-        "changeFields": "",
-        "targetEntity": "",
-        "mode": "",
-        "emailScript": "",
-        "showEmailPreview": "",
-        "emailTemplate": "",
-        "emailTo": "",
-        "emailCc": "",
-        "emailBcc": "",
-        "hideTextLabel": "",
-        "applyToPreselectedRecords": "",
-        "updateType": "",
-        "updateFields": "",
-        "updateScript": "",
-        "executions": "",
-        "deletePermanently": "",
-        "handler": ""
+        "searchEntity": "Entitás keresése",
+        "isActive": "Aktív",
+        "type": "Típus",
+        "sourceEntity": "Forrásentitás",
+        "inBackground": "Háttérben végrehajtás",
+        "usage": "Használat",
+        "massAction": "Tömeges művelet",
+        "display": "Megjelenítés",
+        "actionsSet": "Műveletkészlet",
+        "actions": "Műveletek",
+        "webhookUrl": "URL",
+        "executeAs": "Végrehajtás mint",
+        "displayField": "Megjelenítési mező",
+        "focusField": "Mező",
+        "changeFields": "Mezők",
+        "targetEntity": "Célentitás",
+        "mode": "Mód",
+        "emailScript": "Szkript",
+        "showEmailPreview": "Előnézet küldés előtt",
+        "emailTemplate": "E-mail-sablon",
+        "emailTo": "E-mail címzett",
+        "emailCc": "Másolat",
+        "emailBcc": "Titkos másolat",
+        "hideTextLabel": "A gomb szöveges címkéjének elrejtése",
+        "applyToPreselectedRecords": "Előre kijelölt rekordokra alkalmazás",
+        "updateType": "Frissítés típusa",
+        "updateFields": "Mezők frissítése",
+        "updateScript": "Szkript",
+        "executions": "Végrehajtások",
+        "deletePermanently": "Végleges törlés",
+        "handler": "Kezelő"
     },
     "labels": {
-        "execute": "",
-        "Parameters": "",
-        "fieldsPanel": ""
+        "execute": "Végrehajtás",
+        "Parameters": "Paraméterek",
+        "fieldsPanel": "Frissítés"
     },
     "actions": {
-        "allLogs": ""
+        "allLogs": "Összes napló"
     },
     "massActions": {
-        "execute": ""
+        "execute": "Végrehajtás"
     },
     "messages": {
-        "executeNow": ""
+        "executeNow": "Biztosan végre kívánja hajtani a kiválasztott műveletet?"
     },
     "options": {
         "usage": {
-            "entity": "",
-            "record": "",
-            "field": "",
-            "onFieldFocus": "",
-            "onFieldChange": "",
-            "onRecordLoad": ""
+            "entity": "Entitásművelet-gomb",
+            "record": "Rekordművelet gomb",
+            "field": "Mezőművelet gomb",
+            "onFieldFocus": "Mező fókuszba helyezésekor",
+            "onFieldChange": "Mező módosításakor",
+            "onRecordLoad": "Rekord létrehozásakor / frissítésekor"
         },
         "display": {
-            "dropdown": "",
-            "single": ""
+            "dropdown": "Legördülő lista",
+            "single": "Egyedi"
         },
         "type": {
-            "create": "",
-            "update": "",
-            "createOrUpdate": "",
-            "delete": "",
-            "set": "",
-            "webhook": "",
-            "customCode": "",
-            "email": "",
-            "custom": ""
+            "create": "Létrehozás",
+            "update": "Frissítés",
+            "createOrUpdate": "Létrehozás vagy frissítés",
+            "delete": "Törlés",
+            "set": "Műveletkészlet",
+            "webhook": "Webhook",
+            "customCode": "Egyéni kód",
+            "email": "E-mail küldése",
+            "custom": "Egyéni kód"
         },
         "updateType": {
-            "basic": "",
-            "script": ""
+            "basic": "Alap",
+            "script": "Szkript"
         },
         "executeAs": {
-            "system": "",
-            "sameUser": ""
+            "system": "Rendszer",
+            "sameUser": "Ugyanaz a felhasználó"
         },
         "mode": {
-            "basic": "",
-            "script": ""
+            "basic": "Alap",
+            "script": "Szkript"
         }
     },
     "tooltips": {
-        "inBackground": "",
-        "usage": "",
-        "executeAs": ""
+        "inBackground": "A művelet a háttérben, közvetlen siker- vagy hibaüzenet nélkül fut le. Akkor használja, ha a művelet végrehajtása több mint 30 másodpercet vesz igénybe.",
+        "usage": "A használat határozza meg a művelet elhelyezését. A Rekordművelethez előzetesen ki kell jelölni az érintett rekordokat.",
+        "executeAs": "Adja meg, melyik felhasználót használja a rendszer a művelet végrehajtásához"
     },
     "exceptions": {
-        "expressionCannotBeEmpty": "",
-        "forEditModeOnly": "",
-        "actionTypeDisabledForTargetEntity": ""
+        "expressionCannotBeEmpty": "A kifejezés nem lehet üres.",
+        "forEditModeOnly": "A(z) „%s” művelet csak szerkesztési módban érhető el, itt nem használható.",
+        "actionTypeDisabledForTargetEntity": "A(z) „%1$s” művelettípus nem használható, mert ez a művelet le van tiltva a(z) „%2$s” entitás esetén."
     }
 }
