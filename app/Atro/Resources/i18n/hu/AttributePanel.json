@@ -1,9 +1,9 @@
 {
     "fields": {
-        "attributes": "",
-        "default": ""
+        "attributes": "Attribútumok",
+        "default": "Alapértelmezett érték"
     },
     "exceptions": {
-        "entityIsUsed": ""
+        "entityIsUsed": "Az attribútumpanel nem törölhető, mert egy vagy több attribútum használja."
     }
 }
