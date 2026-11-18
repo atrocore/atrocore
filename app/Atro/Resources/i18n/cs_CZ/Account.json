@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "name": "Jméno",
-    "emailAddress": "E-mail",
-    "phoneNumber": "Telefon",
-    "description": "Popis",
-    "type": "Typ",
-    "role": "Role",
-    "number": "Číslo",
-    "language": "Jazyk",
-    "addresses": "Adresy",
-    "contacts": "Kontakty"
-  },
-  "options": {
-    "type": {
-      "individual": "Individuální",
-      "company": "Společnost"
+    "fields": {
+        "name": "Jméno",
+        "emailAddress": "E-mail",
+        "phoneNumber": "Telefon",
+        "description": "Popis",
+        "type": "Typ",
+        "role": "Role",
+        "number": "Číslo",
+        "language": "Jazyk",
+        "addresses": "Adresy",
+        "contacts": "Kontakty",
+        "vatId": "DIČ",
+        "webUrl": "Webová adresa"
     },
-    "role": {
-      "supplier": "Dodavatel",
-      "customer": "Zákazník"
+    "options": {
+        "type": {
+            "individual": "Individuální",
+            "company": "Společnost"
+        },
+        "role": {
+            "supplier": "Dodavatel",
+            "customer": "Zákazník"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "Výchozí adresa pro účet již existuje."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "Výchozí adresa pro účet již existuje."
-  }
 }
