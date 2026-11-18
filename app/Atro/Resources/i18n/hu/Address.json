@@ -1,25 +1,25 @@
 {
     "fields": {
-        "buyer": "",
-        "email": "",
-        "phone": "",
-        "street": "",
-        "postalCode": "",
-        "box": "",
-        "city": "",
-        "country": "",
-        "type": "",
-        "account": "",
-        "contactName": "",
-        "name": "",
-        "prospect": "",
-        "accounts": "",
-        "contacts": ""
+        "buyer": "Vevő",
+        "email": "E-mail",
+        "phone": "Telefon",
+        "street": "Utca",
+        "postalCode": "Irányítószám",
+        "box": "Doboz",
+        "city": "Város",
+        "country": "Ország",
+        "type": "Típus",
+        "account": "Fiók",
+        "contactName": "Kapcsolattartó neve",
+        "name": "Cégnév",
+        "prospect": "Érdeklődők",
+        "accounts": "Ügyfelek",
+        "contacts": "Kapcsolatok"
     },
     "options": {
         "type": {
-            "billing": "",
-            "delivery": ""
+            "billing": "Számlázás",
+            "delivery": "Szállítás"
         }
     }
 }
