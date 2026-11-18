@@ -1,61 +1,61 @@
 {
     "fields": {
-        "sortOrder": "",
-        "currentVersion": "",
-        "latestVersion": "",
-        "targetVersion": "",
-        "targetVersions": "",
-        "usage": "",
-        "expirationDate": "",
-        "installed": ""
+        "sortOrder": "Rendezési sorrend",
+        "currentVersion": "Jelenlegi verzió",
+        "latestVersion": "Legújabb verzió",
+        "targetVersion": "Célverzió",
+        "targetVersions": "Célverziók",
+        "usage": "Használat",
+        "expirationDate": "Lejárati dátum",
+        "installed": "Telepítve"
     },
     "labels": {
-        "saveAndUpdate": "",
-        "latest": "",
-        "update": "",
-        "toStore": "",
-        "installModules": "",
-        "uninstallModules": "",
-        "lastUpdate": "",
-        "notInstalled": ""
+        "saveAndUpdate": "Mentés és frissítés",
+        "latest": "legújabb",
+        "update": "Rendszer frissítése",
+        "toStore": "AtroCore Store",
+        "installModules": "Modulok telepítése",
+        "uninstallModules": "Modul(ok) eltávolítása",
+        "lastUpdate": "Utolsó frissítés",
+        "notInstalled": "Nincs telepítve"
     },
     "lastUpdateStatuses": {
-        "Success": "",
-        "Failed": ""
+        "Success": "Sikeres",
+        "Failed": "Sikertelen"
     },
     "massActionConfirmMessages": {
-        "update": ""
+        "update": "A frissítés után minden felhasználó kijelentkezik a rendszerből. Biztosan frissíteni szeretné a rendszert?"
     },
     "actions": {
-        "showReleaseNotes": "",
-        "readDocs": "",
-        "updatePackage": "",
-        "installPackage": "",
-        "uninstallPackage": ""
+        "showReleaseNotes": "Kiadási megjegyzések",
+        "readDocs": "Dokumentáció",
+        "updatePackage": "Frissítés",
+        "installPackage": "Telepítés",
+        "uninstallPackage": "Eltávolítás"
     },
     "actionConfirms": {
-        "updatePackage": "",
-        "installPackage": "",
-        "uninstallPackage": ""
+        "updatePackage": "Biztosan frissíteni szeretné ezt a modult? A rendszer nem lesz elérhető a frissítés ideje alatt.",
+        "installPackage": "Biztosan telepíteni szeretné ezt a modult? A rendszer nem lesz elérhető a telepítés ideje alatt.",
+        "uninstallPackage": "Biztosan el szeretné távolítani ezt a modult? A modulhoz kapcsolódó összes adat elvész. Ez a művelet nem vonható vissza."
     },
     "options": {
         "usage": {
-            "Public": "",
-            "Rent": "",
-            "Purchase": ""
+            "Public": "Ingyenes",
+            "Rent": "Bérelt",
+            "Purchase": "Megvásárolva"
         }
     },
     "exceptions": {
-        "jobManagerRunning": "",
-        "daemonNotAlive": "",
-        "invalidTargetVersion": ""
+        "jobManagerRunning": "A rendszer nem frissíthető, mert futó feladatok vannak a Feladatkezelőben. Próbálja újra később.",
+        "daemonNotAlive": "A művelet nem hajtható végre, mert az ütemezett feladatok nem futnak. Valószínűleg a crontab nincs megfelelően konfigurálva, vagy probléma van a szerverrel. A szerver megfelelő konfigurálásáról a telepítési útmutatóban olvashat.",
+        "invalidTargetVersion": "A kiválasztott célverzió nem érhető el ehhez a modulhoz."
     },
     "notifications": {
-        "Module update": "",
-        "System update": "",
-        "Module install": "",
-        "Module delete": "",
-        "Module downgrade": "",
-        "System downgrade": ""
+        "Module update": "A(z) {module} modul frissült. Verzió: {from} → {to}.",
+        "System update": "A rendszer frissült. Verzió: {from} → {to}.",
+        "Module install": "A(z) {module} modul telepítése megtörtént, verzió: {version}.",
+        "Module delete": "A(z) {module} modul eltávolítása megtörtént.",
+        "Module downgrade": "A(z) {module} modul korábbi verzióra lett visszaállítva. Verzió: {from} → {to}.",
+        "System downgrade": "A rendszer verziója vissza lett állítva. A(z) {from} verzióról a(z) {to} verzióra."
     }
 }
