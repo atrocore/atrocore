@@ -1,0 +1,106 @@
+{
+    "fields": {
+        "number": "",
+        "masterEntity": "",
+        "clusterItems": "",
+        "rejectedClusterItems": "",
+        "stagingItemCount": "",
+        "masterItemCount": "",
+        "status": "",
+        "consolidationMethod": "",
+        "executionMode": ""
+    },
+    "options": {
+        "status": {
+            "empty": "",
+            "review": "",
+            "consolidated": "",
+            "invalid": ""
+        },
+        "consolidationMethod": {
+            "ruleBased": "",
+            "hybrid": "",
+            "manual": ""
+        },
+        "executionMode": {
+            "automatic": "",
+            "manual": ""
+        }
+    },
+    "actions": {
+        "reject": "",
+        "consolidate": "",
+        "unreject": "",
+        "deconsolidate": "",
+        "split": "",
+        "move": "",
+        "purge": ""
+    },
+    "massActions": {
+        "purge": ""
+    },
+    "massActionConfirmMessages": {
+        "purge": "",
+        "purgeAll": ""
+    },
+    "actionConfirms": {
+        "purge": ""
+    },
+    "exceptions": {
+        "cannotDelete": "",
+        "cannotMergeWithoutGoldenRecord": "",
+        "noClusterItemsToPreview": "",
+        "cannotPreviewInvalidCluster": "",
+        "clusterItemsNotInCluster": ""
+    },
+    "messages": {
+        "noClusterFound": "",
+        "consolidated": ""
+    },
+    "labels": {
+        "contributorRecord": "",
+        "contributorRecords": "",
+        "contributorRecordsPanel": "",
+        "masterRecord": "",
+        "masterRecords": "",
+        "masterRecordsPanel": "",
+        "consolidated": "",
+        "unconsolidated": "",
+        "rejected": "",
+        "consolidationPreview": "",
+        "standardView": "",
+        "comparisonView": "",
+        "manualConsolidationView": "",
+        "suggestedValues": "",
+        "selectAllSuggestedValues": "",
+        "consolidationPreviewHint": "",
+        "noConsolidationConfigured": "",
+        "discard": ""
+    },
+    "streamMessages": {
+        "clusterLinked": "",
+        "clusterLinkedThis": "",
+        "clusterUnlinked": "",
+        "clusterUnlinkedThis": "",
+        "clusterRejected": "",
+        "clusterRejectedThis": "",
+        "clusterReincluded": "",
+        "clusterReincludedThis": "",
+        "clusterMoved": "",
+        "clusterMovedThis": "",
+        "clusterConsolidated": "",
+        "clusterConsolidatedThis": "",
+        "clusterDeconsolidated": "",
+        "clusterDeconsolidatedThis": "",
+        "clusterGoldenRecord": "",
+        "clusterGoldenRecordThis": "",
+        "clusterDeleted": "",
+        "clusterDeletedThis": "",
+        "clusterRecordDeleted": "",
+        "clusterRecordDeletedThis": "",
+        "clusterMovedToCluster": "",
+        "clusterMovedToClusterThis": "",
+        "clusterMovedFromCluster": "",
+        "clusterMovedFromClusterThis": ""
+    }
+}
