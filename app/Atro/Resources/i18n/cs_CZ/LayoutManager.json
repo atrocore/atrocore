@@ -1,43 +1,44 @@
 {
-  "fields": {
-    "width": "Šířka (%)",
-    "widthPx": "Šířka (px)",
-    "link": "Odkaz",
-    "notSortable": "Nelze třídit",
-    "align": "Zarovnat",
-    "panelName": "Název panelu",
-    "style": "Styl",
-    "sticked": "Nalepený",
-    "isLarge": "Velká velikost písma",
-    "cssStyle": "Styly CSS",
-    "hiddenPerDefault": "Skryté ve výchozím nastavení"
-  },
-  "options": {
-    "align": {
-      "left": "Vlevo",
-      "right": "Vpravo",
-      "center": "Střed"
+    "fields": {
+        "width": "Šířka (%)",
+        "widthPx": "Šířka (px)",
+        "link": "Odkaz",
+        "notSortable": "Nelze třídit",
+        "align": "Zarovnat",
+        "panelName": "Název panelu",
+        "style": "Styl",
+        "sticked": "Nalepený",
+        "isLarge": "Velká velikost písma",
+        "cssStyle": "Styly CSS",
+        "hiddenPerDefault": "Skryté ve výchozím nastavení",
+        "label": "Popisek"
     },
-    "style": {
-      "default": "Výchozí",
-      "success": "Úspěch",
-      "danger": "Chyba",
-      "info": "Informace",
-      "warning": "Varování",
-      "primary": "Primární"
+    "options": {
+        "align": {
+            "left": "Vlevo",
+            "right": "Vpravo",
+            "center": "Střed"
+        },
+        "style": {
+            "default": "Výchozí",
+            "success": "Úspěch",
+            "danger": "Chyba",
+            "info": "Informace",
+            "warning": "Varování",
+            "primary": "Primární"
+        }
+    },
+    "labels": {
+        "New panel": "Nový panel",
+        "Layout": "Rozložení",
+        "Current Layout": "Aktuální rozložení",
+        "Add Dynamic Fields": "Přidat dynamická pole",
+        "reset": "Obnovení rozložení",
+        "fullEdit": "Úplná úprava",
+        "resetToSystem": "Obnovení rozložení systému",
+        "layoutManagement": "Správa rozložení",
+        "layoutSelection": "Výběr rozvržení",
+        "layoutCustomization": "Přizpůsobení rozvržení",
+        "configure": "Konfigurace"
     }
-  },
-  "labels": {
-    "New panel": "Nový panel",
-    "Layout": "Rozložení",
-    "Current Layout": "Aktuální rozložení",
-    "Add Dynamic Fields": "Přidat dynamická pole",
-    "reset": "Obnovení rozložení",
-    "fullEdit": "Úplná úprava",
-    "resetToSystem": "Obnovení rozložení systému",
-    "layoutManagement": "Správa rozložení",
-    "layoutSelection": "Výběr rozvržení",
-    "layoutCustomization": "Přizpůsobení rozvržení",
-    "configure": "Konfigurace"
-  }
 }
