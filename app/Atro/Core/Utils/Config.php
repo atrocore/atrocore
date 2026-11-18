@@ -61,11 +61,50 @@ final class Config
     private array $removeData = [];
 
     /**
-     * Config data as stored on disk. Falls back to the defaults before the
+     * Runtime config with environment references resolved. Uses defaults before the
      * installation has created the file - that is a normal state, unlike a
      * file that exists but does not hold an array.
      */
     public static function load(): array
+    {
+        return self::resolveEnvironment(self::loadStored());
+    }
+
+    public static function env(string $variable, string $type = 'string'): EnvironmentVariable
+    {
+        return new EnvironmentVariable($variable, $type);
+    }
+
+    private static function resolveEnvironment(mixed $value): mixed
+    {
+        if ($value instanceof EnvironmentVariable) {
+            return $value->resolve();
+        }
+        if (is_array($value)) {
+            return array_map(self::resolveEnvironment(...), $value);
+        }
+        if ($value instanceof \stdClass) {
+            return (object) self::resolveEnvironment(get_object_vars($value));
+        }
+        return $value;
+    }
+
+    private static function containsEnvironment(mixed $value): bool
+    {
+        if ($value instanceof EnvironmentVariable) {
+            return true;
+        }
+        if (is_array($value) || $value instanceof \stdClass) {
+            foreach ($value as $item) {
+                if (self::containsEnvironment($item)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static function loadStored(): array
     {
         if (!file_exists(self::CONFIG_PATH)) {
             return self::getDefaults();
@@ -202,24 +241,24 @@ final class Config
             return false;
         }
 
-        $data = self::load();
-
-        if (empty($data) || !is_array($data)) {
-            return false;
-        }
+        $data = self::loadStored();
+        self::resolveEnvironment($data);
 
         // change config data
         foreach ($this->changedData as $key => $value) {
+            $this->assertWritable($key);
             $data[$key] = $value;
         }
 
         // remove config data
         foreach ($this->removeData as $key) {
+            $this->assertWritable($key);
             if (array_key_exists($key, $data)) {
                 unset($data[$key]);
             }
         }
 
+        self::resolveEnvironment($data);
         if (!self::writeAtomically(self::exportPhp($data))) {
             return false;
         }
@@ -413,21 +452,27 @@ final class Config
 
     private function assertWritable(string $name): void
     {
-        if (in_array($name, $this->getReadOnlyKeys(), true)) {
+        $root = explode('.', $name, 2)[0];
+        if (in_array($root, $this->getReadOnlyKeys(), true)) {
             throw new \LogicException(
-                sprintf("Config key '%s' is computed on load and cannot be written.", $name)
+                sprintf("Config key '%s' is managed at runtime and cannot be written.", $name)
             );
         }
     }
 
     /**
      * Keys that may not be written: the ones the core derives on load, plus
-     * everything contributed by the providers. A segmented contributed key
+     * environment-bound entries and everything contributed by the providers. A segmented contributed key
      * protects its root, since set() only ever writes top-level keys.
      */
     private function getReadOnlyKeys(): array
     {
         $keys = self::COMPUTED_KEYS;
+        foreach (self::loadStored() as $key => $value) {
+            if (self::containsEnvironment($value)) {
+                $keys[] = $key;
+            }
+        }
 
         foreach (array_keys($this->getAdditionalConfigData()) as $path) {
             $keys[] = strtok($path, '.');
@@ -447,6 +492,11 @@ final class Config
 
     private static function exportValue(mixed $value, int $level = 0): string
     {
+        if ($value instanceof EnvironmentVariable) {
+            return '\\Atro\\Core\\Utils\\Config::env(' . var_export($value->variable, true)
+                . ', ' . var_export($value->type, true) . ')';
+        }
+
         if ($value instanceof \stdClass) {
             return '(object) ' . self::exportValue(get_object_vars($value), $level);
         }
