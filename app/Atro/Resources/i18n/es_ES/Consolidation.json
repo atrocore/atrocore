@@ -1,29 +1,35 @@
 {
-  "labels": {
-    "sourceEntities": "Pipelines de origen a staging"
-  },
-  "fields": {
-    "consolidationScript": "Script de consolidación",
-    "updateMasterAutomatically": "Actualizar maestro automáticamente",
-    "executeConsolidationAs": "Ejecutar fusión como",
-    "minimumMatchingScore": "Puntuación mínima de concordancia",
-    "deleteInvalidMastersAutomatically": "Eliminar automáticamente los maestros no válidos"
-  },
-  "tooltips": {
-    "name": "Solo se pueden seleccionar entidades maestras que ya tengan un derivado con el rol «Contribuidor».",
-    "consolidationScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro.",
-    "executeConsolidationAs": "La cuenta de usuario que se utilizará para ejecutar el script de consolidación."
-  },
-  "exceptions": {
-    "consolidationScriptIsMissing": "Falta el script de consolidación para la entidad maestra",
-    "consolidationScriptIsNotValid": "El script de consolidación devuelve una carga útil no válida: %s",
-    "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la consolidación",
-    "consolidationAlreadyExists": "La consolidación para \"%s\" ya existe"
-  },
-  "options": {
-    "executeConsolidationAs": {
-      "sameUser": "Mismo usuario",
-      "system": "Sistema"
+    "labels": {
+        "sourceEntities": "Pipelines de origen a staging"
+    },
+    "fields": {
+        "consolidationScript": "Script de consolidación",
+        "updateMasterAutomatically": "Actualizar maestro automáticamente",
+        "executeConsolidationAs": "Ejecutar fusión como",
+        "minimumMatchingScore": "Puntuación mínima de concordancia",
+        "deleteInvalidMastersAutomatically": "Eliminar automáticamente los maestros no válidos",
+        "consolidateAutomatically": "Consolidar automáticamente",
+        "skipCondition": "Condición para omitir"
+    },
+    "tooltips": {
+        "name": "Solo se pueden seleccionar entidades maestras que ya tengan un derivado con el rol «Contribuidor».",
+        "consolidationScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro.",
+        "executeConsolidationAs": "La cuenta de usuario que se utilizará para ejecutar el script de consolidación.",
+        "skipCondition": "Una expresión de ExpressionLanguage que se evalúa para cada candidato y tiene acceso a `candidate` y `masterRecord` (vacío mientras aún no se haya creado el registro maestro). Los candidatos para los que devuelve true se excluyen de `candidates` del script de consolidación. Si no quedan candidatos, el registro maestro no se crea ni se actualiza; por ejemplo, candidate.get('name') == null."
+    },
+    "exceptions": {
+        "consolidationScriptIsMissing": "Falta el script de consolidación para la entidad maestra",
+        "consolidationScriptIsNotValid": "El script de consolidación devuelve una carga útil no válida: %s",
+        "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la consolidación",
+        "consolidationAlreadyExists": "La consolidación para \"%s\" ya existe",
+        "consolidationScriptReturnedNoValues": "El script de consolidación no devolvió valores",
+        "skipConditionFailed": "Error en la condición para omitir: %s",
+        "allCandidatesSkipped": "La condición para omitir excluye a todos los candidatos; no hay nada que consolidar"
+    },
+    "options": {
+        "executeConsolidationAs": {
+            "sameUser": "Mismo usuario",
+            "system": "Sistema"
+        }
     }
-  }
 }
