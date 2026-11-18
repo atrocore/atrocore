@@ -5,23 +5,48 @@
         "record": "Record",
         "cluster": "Cluster",
         "matchedRecord": "Record abbinato",
-        "matchedScore": "Punteggio abbinato"
+        "matchedScore": "Punteggio abbinato",
+        "confirmedAutomatically": "Confermato automaticamente"
     },
     "exceptions": {
         "notFound": "Il record dell'articolo del cluster non è stato trovato",
         "cannotUnreject": "Questo articolo del cluster non può essere rifiutato",
-        "idOrIdListOrWhereRequired": "Fornire almeno uno dei seguenti: un ID, un elenco di ID o un filtro di ricerca."
+        "idOrIdListOrWhereRequired": "Fornire almeno uno dei seguenti: un ID, un elenco di ID o un filtro di ricerca.",
+        "itemsMustBelongToTheSameCluster": "Tutti gli elementi selezionati devono appartenere allo stesso cluster.",
+        "cannotDeconsolidateMasterEntityItem": "Impossibile deconsolidare l’elemento dell’entità master.",
+        "cannotDeconsolidateAllItems": "Impossibile deconsolidare tutti gli elementi consolidati: almeno un elemento deve rimanere collegato al record master.",
+        "cannotSplitMasterEntityItem": "Impossibile dividere l’elemento dell’entità master.",
+        "targetClusterIdRequired": "Il cluster di destinazione è obbligatorio."
     },
     "massActions": {
-        "reject": "Rifiuta"
+        "reject": "Rifiuta",
+        "deconsolidate": "Deconsolida",
+        "split": "Dividi",
+        "move": "Sposta",
+        "consolidate": "Consolida"
     },
     "massActionSuccessMessages": {
-        "reject": "Gli elementi del cluster selezionati vengono eliminati in background"
+        "reject": "Gli elementi del cluster selezionati vengono eliminati in background",
+        "deconsolidate": "Gli elementi selezionati del cluster sono stati deconsolidati",
+        "split": "Gli elementi selezionati del cluster sono stati spostati in un nuovo cluster",
+        "move": "Gli elementi selezionati del cluster sono stati spostati",
+        "consolidate": "Gli elementi del cluster selezionati sono stati consolidati"
     },
     "massActionConfirmMessages": {
-        "reject": "Sei sicuro di voler rifiutare gli elementi selezionati?"
+        "reject": "Sei sicuro di voler rifiutare gli elementi selezionati?",
+        "deconsolidate": "Disconsolidare gli elementi selezionati?",
+        "split": "Spostare gli elementi selezionati in un nuovo cluster?"
     },
     "actions": {
-        "reject": "Rifiuta"
+        "reject": "Rifiuta",
+        "consolidate": "Consolida",
+        "deconsolidate": "Deconsolida",
+        "split": "Dividi",
+        "move": "Sposta"
+    },
+    "labels": {
+        "confirmedAutomatically": "Confermato automaticamente",
+        "selectTargetCluster": "Seleziona il cluster di destinazione",
+        "moveToCluster": "Sposta nel cluster"
     }
 }
