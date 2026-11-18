@@ -1,0 +1,61 @@
+{
+    "fields": {
+        "sortOrder": "",
+        "currentVersion": "",
+        "latestVersion": "",
+        "targetVersion": "",
+        "targetVersions": "",
+        "usage": "",
+        "expirationDate": "",
+        "installed": ""
+    },
+    "labels": {
+        "saveAndUpdate": "",
+        "latest": "",
+        "update": "",
+        "toStore": "",
+        "installModules": "",
+        "uninstallModules": "",
+        "lastUpdate": "",
+        "notInstalled": ""
+    },
+    "lastUpdateStatuses": {
+        "Success": "",
+        "Failed": ""
+    },
+    "massActionConfirmMessages": {
+        "update": ""
+    },
+    "actions": {
+        "showReleaseNotes": "",
+        "readDocs": "",
+        "updatePackage": "",
+        "installPackage": "",
+        "uninstallPackage": ""
+    },
+    "actionConfirms": {
+        "updatePackage": "",
+        "installPackage": "",
+        "uninstallPackage": ""
+    },
+    "options": {
+        "usage": {
+            "Public": "",
+            "Rent": "",
+            "Purchase": ""
+        }
+    },
+    "exceptions": {
+        "jobManagerRunning": "",
+        "daemonNotAlive": "",
+        "invalidTargetVersion": ""
+    },
+    "notifications": {
+        "Module update": "",
+        "System update": "",
+        "Module install": "",
+        "Module delete": "",
+        "Module downgrade": "",
+        "System downgrade": ""
+    }
+}
