@@ -1,6 +1,8 @@
 {
     "labels": {
-        "confirmedAutomatically": "Automatisch bestätigt"
+        "confirmedAutomatically": "Automatisch bestätigt",
+        "selectTargetCluster": "Ziel-Cluster auswählen",
+        "moveToCluster": "In Cluster verschieben"
     },
     "fields": {
         "entityName": "Entitäts-Name",
@@ -18,19 +20,22 @@
         "itemsMustBelongToTheSameCluster": "Alle ausgewählten Elemente müssen zum selben Cluster gehören.",
         "cannotDeconsolidateMasterEntityItem": "Das Element der Master-Entität kann nicht entkonsolidiert werden.",
         "cannotDeconsolidateAllItems": "Es können nicht alle konsolidierten Einträge dekonsolidiert werden: Mindestens ein Eintrag muss mit dem Golden Record verknüpft bleiben.",
-        "cannotSplitMasterEntityItem": "Das Element der Master-Entität kann nicht aufgeteilt werden."
+        "cannotSplitMasterEntityItem": "Das Element der Master-Entität kann nicht aufgeteilt werden.",
+        "targetClusterIdRequired": "Ziel-Cluster ist erforderlich."
     },
     "massActions": {
         "reject": "Ablehnen",
         "deconsolidate": "Entkonsolidieren",
         "split": "Aufteilen",
-        "consolidate": "Konsolidieren"
+        "consolidate": "Konsolidieren",
+        "move": "Verschieben"
     },
     "massActionSuccessMessages": {
         "reject": "Die ausgewählten Cluster-Elemente werden im Hintergrund gelöscht",
         "deconsolidate": "Die ausgewählten Cluster-Elemente wurden entkonsolidiert",
         "split": "Die ausgewählten Cluster-Elemente wurden in einen neuen Cluster verschoben",
-        "consolidate": "Die ausgewählten Cluster-Elemente wurden konsolidiert"
+        "consolidate": "Die ausgewählten Cluster-Elemente wurden konsolidiert",
+        "move": "Die ausgewählten Cluster-Elemente wurden verschoben"
     },
     "massActionConfirmMessages": {
         "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?",
@@ -41,6 +46,7 @@
         "consolidate": "Konsolidieren",
         "reject": "Ablehnen",
         "deconsolidate": "Entkonsolidieren",
-        "split": "Aufteilen"
+        "split": "Aufteilen",
+        "move": "Verschieben"
     }
 }
