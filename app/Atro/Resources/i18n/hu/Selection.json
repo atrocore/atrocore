@@ -1,0 +1,33 @@
+{
+    "fields": {
+        "name": "",
+        "description": "",
+        "selectionItems": ""
+    },
+    "options": {
+        "type": {
+            "single": "",
+            "multiple": ""
+        }
+    },
+    "labels": {
+        "createSelection": ""
+    },
+    "messages": {
+        "cannotSetToSingle": "",
+        "youNeedAtLeastTwoItem": "",
+        "entityIsRequired": "",
+        "entityTypeMismatch": ""
+    },
+    "customActions": {
+        "replaceItem": ""
+    },
+    "streamMessages": {
+        "selectionLinked": "",
+        "selectionLinkedThis": "",
+        "selectionUnlinked": "",
+        "selectionUnlinkedThis": "",
+        "selectionDeleted": "",
+        "selectionDeletedThis": ""
+    }
+}
