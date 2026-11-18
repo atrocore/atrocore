@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "languageCode": "",
+        "fallbackLanguageCode": "",
+        "timeZone": "",
+        "dateFormat": "",
+        "weekStart": "",
+        "timeFormat": "",
+        "thousandSeparator": "",
+        "decimalMark": "",
+        "displayLabelsInContentLanguage": "",
+        "disableForUi": ""
+    },
+    "tooltips": {
+        "disableForUi": ""
+    },
+    "labels": {
+        "sunday": "",
+        "monday": ""
+    },
+    "exceptions": {
+        "localeIsUsed": ""
+    }
+}
