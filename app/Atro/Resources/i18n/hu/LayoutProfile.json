@@ -1,29 +1,29 @@
 {
     "fields": {
-        "isActive": "",
-        "isDefault": "",
-        "description": "",
-        "hideShowFullList": "",
-        "layouts": "",
-        "parent": "",
-        "navigation": "",
-        "favoritesList": "",
-        "dashboardLayout": ""
+        "isActive": "Aktív",
+        "isDefault": "Alapértelmezett",
+        "description": "Leírás",
+        "hideShowFullList": "A „Teljes lista megjelenítése” elrejtése a kapcsolati paneleken",
+        "layouts": "Elrendezések",
+        "parent": "Szülő elrendezési profil",
+        "navigation": "Navigációs menü",
+        "favoritesList": "Kedvencek",
+        "dashboardLayout": "Irányítópult-elrendezés"
     },
     "labels": {
-        "addGroup": "",
-        "Menu": "",
-        "Dashboards": "",
-        "Favorites": ""
+        "addGroup": "Csoport hozzáadása",
+        "Menu": "Menü",
+        "Dashboards": "Irányítópultok",
+        "Favorites": "Kedvencek"
     },
     "exceptions": {
-        "defaultIsRequired": ""
+        "defaultIsRequired": "A rendszerben léteznie kell egy alapértelmezett elrendezési profilnak."
     },
     "messages": {
-        "profileWillBeNewDefault": "",
-        "navigationUpdate": ""
+        "profileWillBeNewDefault": "Ez a profil lesz az új alapértelmezett. Biztos benne?",
+        "navigationUpdate": "A navigációs menüt a rendszer módosította."
     },
     "boolFilters": {
-        "withLayouts": ""
+        "withLayouts": "Tárolt elrendezéssel"
     }
 }
