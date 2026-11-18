@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\TwigFilter;
 
 use Atro\Core\Twig\AbstractTwigFilter;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 
 use Espo\ORM\Entity;
 

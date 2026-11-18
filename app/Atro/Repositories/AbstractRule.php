@@ -47,13 +47,13 @@ abstract class AbstractRule extends Base
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         if (!empty($entity->get('matchingId')) && empty($this->getEntityManager()->getRepository('Matching')->get($entity->get('matchingId')))) {
-            throw new BadRequest($this->getInjection('language')->translate('notValidMatching', 'exceptions', $this->entityType));
+            throw new BadRequest($this->container->get('language')->translate('notValidMatching', 'exceptions', $this->entityType));
         }
 
         if (!empty($entity->get(static::RULE_SET_FIELD))) {
             $set = $this->get($entity->get(static::RULE_SET_FIELD));
             if (empty($set) || $set->get('type') !== 'set') {
-                throw new BadRequest($this->getInjection('language')->translate('notValidMatchingRuleSet', 'exceptions', $this->entityType));
+                throw new BadRequest($this->container->get('language')->translate('notValidMatchingRuleSet', 'exceptions', $this->entityType));
             }
         }
 
@@ -123,7 +123,7 @@ abstract class AbstractRule extends Base
             }
 
             if (empty($rule->get($field))) {
-                throw new BadRequest($this->getInjection('language')->translate('expressionCannotBeEmpty', 'exceptions', $this->entityType));
+                throw new BadRequest($this->container->get('language')->translate('expressionCannotBeEmpty', 'exceptions', $this->entityType));
             }
 
             try {
@@ -227,7 +227,7 @@ abstract class AbstractRule extends Base
 
     protected function getExpressionLanguage(): ExpressionLanguage
     {
-        return $this->getInjection('expressionLanguage');
+        return $this->container->get('expressionLanguage');
     }
 
     public function getMatching(OrmEntity $rule): ?MatchingEntity
@@ -251,7 +251,7 @@ abstract class AbstractRule extends Base
     {
         $matching = $this->getMatching($entity);
         if (!empty($matching) && !empty($matching->get('isActive'))) {
-            throw new BadRequest($this->getInjection('language')->translate('notValidMatchingActivation', 'exceptions', $this->entityType));
+            throw new BadRequest($this->container->get('language')->translate('notValidMatchingActivation', 'exceptions', $this->entityType));
         }
     }
 
@@ -262,7 +262,7 @@ abstract class AbstractRule extends Base
             return;
         }
 
-        $className = $this->getInjection('metadata')->get(['app', static::RULE_TYPES_METADATA_KEY, $type, 'className']);
+        $className = $this->container->get('metadata')->get(['app', static::RULE_TYPES_METADATA_KEY, $type, 'className']);
         if (!$className || !class_exists($className)) {
             return;
         }
@@ -272,7 +272,7 @@ abstract class AbstractRule extends Base
         if (!empty($entity->get('attributeId'))) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             if ($attribute && !in_array($attribute->get('type'), $supportedTypes)) {
-                throw new BadRequest($this->getInjection('language')->translate('notValidAttributeType', 'exceptions', $this->entityType));
+                throw new BadRequest($this->container->get('language')->translate('notValidAttributeType', 'exceptions', $this->entityType));
             }
             return;
         }
@@ -288,24 +288,14 @@ abstract class AbstractRule extends Base
         }
 
         $entityName = $matching->get('masterEntity');
-        $fieldType  = $this->getInjection('metadata')->get(['entityDefs', $entityName, 'fields', $field, 'type']);
+        $fieldType  = $this->container->get('metadata')->get(['entityDefs', $entityName, 'fields', $field, 'type']);
         if (empty($fieldType)) {
             return;
         }
 
         if (!in_array($fieldType, $supportedTypes)) {
-            throw new BadRequest($this->getInjection('language')->translate('notValidFieldType', 'exceptions', $this->entityType));
+            throw new BadRequest($this->container->get('language')->translate('notValidFieldType', 'exceptions', $this->entityType));
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('matchingManager');
-        $this->addDependency('language');
-        $this->addDependency('metadata');
-        $this->addDependency('expressionLanguage');
     }
 
     /**

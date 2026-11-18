@@ -22,7 +22,7 @@ use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
-use Espo\Core\Interfaces\Injectable;
+use Atro\Core\Container;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -31,12 +31,11 @@ use Espo\ORM\Repository;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 
-class ReferenceData extends Repository implements Injectable
+class ReferenceData extends Repository
 {
     public const DIR_PATH = 'data/reference-data';
 
-    protected array $dependencies = [];
-    protected array $injections = [];
+    protected readonly Container $container;
 
     protected string $filePath;
 
@@ -54,9 +53,8 @@ class ReferenceData extends Repository implements Injectable
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
+        $this->container = $entityManager->getContainer();
         $this->filePath = self::DIR_PATH . "/$this->entityName.json";
-
-        $this->init();
     }
 
     public function hasDeletedRecordsToClear(): bool
@@ -633,34 +631,6 @@ class ReferenceData extends Repository implements Injectable
         return "entity_{$this->entityType}_{$id}";
     }
 
-    protected function init()
-    {
-        $this->addDependency('config');
-        $this->addDependency('metadata');
-        $this->addDependency('eventManager');
-        $this->addDependency('language');
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencies;
-    }
-
-    public function inject($name, $object): void
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function addDependency(string $name): void
-    {
-        $this->dependencies[] = $name;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
     protected function dispatch(string $action, Entity $entity, $options, $arg1 = null, $arg2 = null, $arg3 = null)
     {
         $event = new Event(
@@ -687,22 +657,22 @@ class ReferenceData extends Repository implements Injectable
 
     protected function getConfig(): Config
     {
-        return $this->getInjection('config');
+        return $this->container->get('config');
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('metadata');
+        return $this->container->get('metadata');
     }
 
     protected function getEventManager(): Manager
     {
-        return $this->getInjection('eventManager');
+        return $this->container->get('eventManager');
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 
     protected function translate(string $label, ?string $category = 'labels', ?string $scope = 'Global'): string

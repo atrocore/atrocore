@@ -23,7 +23,7 @@ use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Interfaces\Injectable;
+use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
@@ -32,82 +32,34 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 
-class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
+class RDB extends \Espo\ORM\Repositories\RDB
 {
-    protected $dependencies
-        = [
-            'container',
-            'dbal',
-            'metadata',
-            'config',
-            'fieldManagerUtil',
-            'eventManager',
-            'aclManager'
-        ];
-
-    protected $injections = [];
+    protected readonly Container $container;
 
     protected $processFieldsAfterSaveDisabled = false;
     protected $processFieldsBeforeSaveDisabled = false;
     protected $processFieldsAfterRemoveDisabled = false;
 
-    protected function addDependency($name): void
+    protected function getMetadata(): Metadata
     {
-        $this->dependencies[] = $name;
+        return $this->container->get('metadata');
     }
 
-    protected function addDependencyList(array $list): void
+    protected function getConfig(): Config
     {
-        foreach ($list as $item) {
-            $this->addDependency($item);
-        }
-    }
-
-    public function inject($name, $object): void
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencies;
-    }
-
-    /**
-     * @return Metadata
-     */
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    /**
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
+        return $this->container->get('config');
     }
 
     protected function getFieldManagerUtil()
     {
-        return $this->getInjection('fieldManagerUtil');
+        return $this->container->get('fieldManagerUtil');
     }
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
-        $this->init();
-    }
-
-    protected function init()
-    {
+        $this->container = $entityManager->getContainer();
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -143,7 +95,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $data->modifiedAt           = (new \DateTime())->format('Y-m-d H:i') . ':00';
                 $data->_skipIsEntityUpdated = true;
 
-                $this->getInjection('container')->get('pseudoTransactionManager')
+                $this->container->get('pseudoTransactionManager')
                     ->pushUpdateEntityJob($defs['entity'], $entity->get($relation . 'Id'), $data);
             }
         }
@@ -497,7 +449,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $htmlSanitizer = $this->getEntityManager()->getRepository('HtmlSanitizer')->get($fieldData['htmlSanitizerId']);
 
             /** @var \Atro\Core\Utils\HTMLSanitizer $htmlSanitizerUtil */
-            $htmlSanitizerUtil = $this->getInjection('container')->get('htmlSanitizer');
+            $htmlSanitizerUtil = $this->container->get('htmlSanitizer');
 
             $safeHtml = $htmlSanitizerUtil->sanitize($entity->get($fieldName), $htmlSanitizer->get('configuration'));
             $entity->set($fieldName, $safeHtml);
@@ -660,12 +612,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         } elseif (!isset($fieldData['notNull']) || $fieldData['notNull'] === true) {
             $entity->set($fieldName, !empty($fieldData['default']));
         }
-
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('container')->get('language');
+        return $this->container->get('language');
     }
 
     /**
@@ -728,7 +679,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (($defs['type'] ?? null) === 'belongsTo'
                 && $entity->isAttributeChanged($relation . 'Id')
                 && !empty($previousId = $entity->getFetched($relation . 'Id'))) {
-                $this->getInjection('container')->get('pseudoTransactionManager')
+                $this->container->get('pseudoTransactionManager')
                     ->pushUpdateEntityJob($defs['entity'], $previousId, $data);
             }
 
@@ -742,7 +693,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 ]
             ];
 
-            $this->getInjection('container')->get('pseudoTransactionManager')->pushMassUpdateEntityJob($defs['entity'], $data, $params);
+            $this->container->get('pseudoTransactionManager')->pushMassUpdateEntityJob($defs['entity'], $data, $params);
         }
     }
 
@@ -900,7 +851,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         $columnData = $entity->_input->$columnsFieldsName;
                     }
                 }
-
 
                 if ($entity->has($fieldName) || $entity->has($columnsFieldsName)) {
                     if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
@@ -1072,7 +1022,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         );
 
         // dispatch an event
-        $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
+        $this->container->get('eventManager')->dispatch('Entity', $action, $event);
     }
 
     /**
@@ -1082,7 +1032,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
      */
     public function getDbal(): Connection
     {
-        return $this->getInjection('dbal');
+        return $this->container->get('dbal');
     }
 
     /**
@@ -1104,7 +1054,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($userChanged) {
             $this->getEntityManager()->setUser($systemUser);
-            $this->getInjection('container')->get(UserContext::class)->set($systemUser);
+            $this->container->get(UserContext::class)->set($systemUser);
         }
 
         try {
@@ -1113,7 +1063,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $fieldDefs = $entity->entityDefs['fields'][$field];
 
                 if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
-                    $contents = $this->getInjection('container')->get('twig')
+                    $contents = $this->container->get('twig')
                         ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
 
                     if ($entity->get($field) === $contents) {
@@ -1134,7 +1084,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         } finally {
             if ($userChanged && $currentUser !== null) {
                 $this->getEntityManager()->setUser($currentUser);
-                $this->getInjection('container')->get(UserContext::class)->set($currentUser);
+                $this->container->get(UserContext::class)->set($currentUser);
             }
         }
     }
@@ -1277,7 +1227,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->orderby('created_at', 'DESC')
             ->fetchAllAssociative();
     }
-
 
     public function getVersionData(string $entityId, string $versionId): array
     {

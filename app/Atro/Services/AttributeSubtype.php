@@ -53,17 +53,10 @@ class AttributeSubtype extends Subtype
                 if (empty($translatedOptions)) {
                     $translatedOptions = new \stdClass();
                 }
-                $translatedOptions->$option = $this->getInjection('language')->translateOption($option, $entity->get('systemName'), $entity->get('entityId'));
+                $translatedOptions->$option = $this->container->get('language')->translateOption($option, $entity->get('systemName'), $entity->get('entityId'));
             }
             $entity->set('translatedOptions', $translatedOptions);
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 
     protected function getAttributeService(): Attribute

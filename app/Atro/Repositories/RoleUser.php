@@ -25,13 +25,13 @@ class RoleUser extends Relation
     {
         parent::afterSave($entity, $options);
 
-        $this->getInjection('aclManager')->clearAclCache();
+        $this->container->get('aclManager')->clearAclCache();
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        $this->getInjection('aclManager')->clearAclCache();
+        $this->container->get('aclManager')->clearAclCache();
     }
 }

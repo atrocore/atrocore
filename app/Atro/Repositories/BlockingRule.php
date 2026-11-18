@@ -41,7 +41,7 @@ class BlockingRule extends AbstractRule
 
     public function createBlockingType(BlockingRuleEntity $rule): AbstractBlockingRule
     {
-        return $this->getInjection('matchingManager')->createBlockingType($rule);
+        return $this->container->get('matchingManager')->createBlockingType($rule);
     }
 
     protected function afterRemove(OrmEntity $entity, array $options = [])

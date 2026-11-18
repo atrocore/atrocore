@@ -188,7 +188,6 @@ class Entity extends ReferenceData
             'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
         ]);
 
-
         return $this->getEventManager()->dispatch('EntityEntity', 'afterPrepareItem', new Event(['result' => $res]))->getArgument('result');
     }
 
@@ -364,7 +363,6 @@ class Entity extends ReferenceData
                     }
                 }
             }
-
 
             $data = [
                 'primaryEntityId' => $entity->get('primaryEntityId'),
@@ -950,16 +948,9 @@ class Entity extends ReferenceData
         return $res;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function getTranslationRepository(): Translation

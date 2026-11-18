@@ -191,7 +191,7 @@ class Subtype extends Base
      */
     protected function hasOwnChanges(Entity $entity): bool
     {
-        $fieldManager = $this->getInjection('container')->get('fieldManager');
+        $fieldManager = $this->container->get('fieldManager');
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
             if (empty($defs['type']) || !empty($defs['supertypeField']) || in_array($field, ['supertype', '_meta'], true)) {

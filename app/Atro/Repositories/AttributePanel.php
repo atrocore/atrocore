@@ -111,7 +111,7 @@ class AttributePanel extends ReferenceData
 
         if (!empty($attribute)) {
             throw new BadRequest(
-                $this->getInjection('language')->translate('entityIsUsed', 'exceptions', 'AttributePanel')
+                $this->container->get('language')->translate('entityIsUsed', 'exceptions', 'AttributePanel')
             );
         }
     }
@@ -147,16 +147,8 @@ class AttributePanel extends ReferenceData
         return $res;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-        $this->addDependency('language');
-    }
-
     protected function clearCache(): void
     {
-        $this->getInjection('dataManager')->clearCache();
+        $this->container->get('dataManager')->clearCache();
     }
 }

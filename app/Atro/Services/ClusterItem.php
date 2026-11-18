@@ -77,7 +77,7 @@ class ClusterItem extends Base
         $contributorItems = [];
         foreach ($clusterItems as $clusterItem) {
             if ($clusterItem->get('clusterId') !== $cluster->get('id')) {
-                throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
+                throw new BadRequest($this->container->get('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
             }
 
             if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
@@ -116,7 +116,7 @@ class ClusterItem extends Base
             $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $entityId);
 
             if (empty($record)) {
-                throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
+                throw new NotFound($this->container->get('language')->translate("notFound", "exceptions", "ClusterItem"));
             }
 
             if (!empty($goldenRecord) && $record->get('masterRecordId') === $goldenRecord->get('id')) {
@@ -144,7 +144,7 @@ class ClusterItem extends Base
                 return false;
             }
 
-            throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
+            throw new BadRequest($this->container->get('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
         }
 
         $cluster->set('consolidationMethod', 'ruleBased');
@@ -206,7 +206,6 @@ class ClusterItem extends Base
             try {
                 $this->rejectItem($id);
             } catch (NotModified $e) {
-
             }
         });
 
@@ -313,20 +312,20 @@ class ClusterItem extends Base
         // All items must belong to the same cluster
         $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
         if (count($clusterIds) > 1) {
-            throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
+            throw new BadRequest($this->container->get('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
         }
 
         $cluster = $entities[0]->get('cluster');
         foreach ($entities as $entity) {
             if ($entity->get('entityName') === $cluster->get('masterEntity')) {
-                throw new BadRequest($this->getInjection('language')->translate('cannotDeconsolidateMasterEntityItem', 'exceptions', 'ClusterItem'));
+                throw new BadRequest($this->container->get('language')->translate('cannotDeconsolidateMasterEntityItem', 'exceptions', 'ClusterItem'));
             }
         }
 
         $consolidatedItemIds = $this->getConsolidatedContributorItemIds($cluster);
         $selectedItemIds = array_map(fn($e) => $e->get('id'), $entities);
         if (!empty($consolidatedItemIds) && empty(array_diff($consolidatedItemIds, $selectedItemIds))) {
-            throw new BadRequest($this->getInjection('language')->translate('cannotDeconsolidateAllItems', 'exceptions', 'ClusterItem'));
+            throw new BadRequest($this->container->get('language')->translate('cannotDeconsolidateAllItems', 'exceptions', 'ClusterItem'));
         }
 
         return new MassActionResultDTO($this->deconsolidateItems($cluster, $entities));
@@ -390,13 +389,13 @@ class ClusterItem extends Base
 
         $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
         if (count($clusterIds) > 1) {
-            throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
+            throw new BadRequest($this->container->get('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
         }
 
         $cluster = $entities[0]->get('cluster');
         foreach ($entities as $entity) {
             if ($entity->get('entityName') === $cluster->get('masterEntity')) {
-                throw new BadRequest($this->getInjection('language')->translate('cannotSplitMasterEntityItem', 'exceptions', 'ClusterItem'));
+                throw new BadRequest($this->container->get('language')->translate('cannotSplitMasterEntityItem', 'exceptions', 'ClusterItem'));
             }
         }
 
@@ -528,7 +527,6 @@ class ClusterItem extends Base
             $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId')) :
             null;
 
-
         $canConsolidate = !$isConsolidated && !in_array($entity->get('cluster')?->get('consolidationMethod'), ['manual', 'hybrid']);
 
         $canDeconsolidate = $isStaging
@@ -548,7 +546,6 @@ class ClusterItem extends Base
             }
             return;
         }
-
 
         $entity->setAvailableAction('consolidate', false);
         $entity->setAvailableAction('reject', $this->getAcl()->check($entity, 'edit'));

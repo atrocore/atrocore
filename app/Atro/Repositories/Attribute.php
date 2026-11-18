@@ -40,15 +40,6 @@ class Attribute extends Base
         'dropdown', 'selectPageSize',
     ];
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('dataManager');
-        $this->addDependency('container');
-    }
-
     public function getAllAttributesIdsForEntity(string $entityName, array $where, array $channels = []): array
     {
         if (!$this->getMetadata()->get("scopes.$entityName.hasAttribute")) {
@@ -60,7 +51,7 @@ class Attribute extends Base
         /* @var $repository Base */
         $repository = $this->getEntityManager()->getRepository($entityName);
 
-        $sp           = $this->getInjection('container')->get('serviceFactory')->create($entityName)->getSelectParams([
+        $sp           = $this->container->get('serviceFactory')->create($entityName)->getSelectParams([
             'where' => json_decode(json_encode($where), true),
         ]);
         $sp['select'] = ['id'];
@@ -123,7 +114,7 @@ class Attribute extends Base
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
-        return $this->getInjection('container')->get(AttributeFieldConverter::class);
+        return $this->container->get(AttributeFieldConverter::class);
     }
 
     public function getAttributeIdsByIdOrCode(string $entityName, array $values): array
@@ -207,7 +198,7 @@ class Attribute extends Base
 
     public function clearCache(): void
     {
-        $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
+        $this->container->get('dataManager')->setCacheData('attribute_product_fields', null);
     }
 
     public function inheritAllAttributeValuesFromParents(Entity $entity): void
@@ -239,7 +230,6 @@ class Attribute extends Base
                     ->setParameter('recordId', $entity->get('id'))
                     ->setParameter('attributeId', $attr['attribute_id'])
                     ->executeQuery();
-
 
                 $attr['id']              = IdGenerator::uuid();
                 $attr["{$tableName}_id"] = $entity->get('id');
@@ -322,7 +312,6 @@ class Attribute extends Base
 
         $qb->executeQuery();
 
-
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
             'type'       => 'Relate',
@@ -379,7 +368,7 @@ class Attribute extends Base
                 $input                   = new \stdClass();
                 $input->classificationId = $classification->get('id');
                 $input->attributeId      = $attributeId;
-                $this->getInjection('container')->get('serviceFactory')->create('ClassificationAttribute')->createEntity($input);
+                $this->container->get('serviceFactory')->create('ClassificationAttribute')->createEntity($input);
             }
         }
     }
@@ -531,7 +520,6 @@ class Attribute extends Base
         if (empty($attribute)) {
             return false;
         }
-
 
         if ($attribute->get('type') === 'composite') {
             $childrenIds = [];
@@ -699,7 +687,6 @@ class Attribute extends Base
         }
     }
 
-
     public function clearAttributeValue(string $scope, string $attributeId, string $column): void
     {
         $table = Util::toUnderScore(lcfirst($scope) . '_attribute_value');
@@ -772,7 +759,7 @@ class Attribute extends Base
 
     protected function getAcl()
     {
-        return $this->getInjection('container')->get('acl');
+        return $this->container->get('acl');
     }
 
     /**
@@ -787,11 +774,11 @@ class Attribute extends Base
 
     protected function getEventManager(): Manager
     {
-        return $this->getInjection('container')->get('eventManager');
+        return $this->container->get('eventManager');
     }
 
     protected function getAclManager(): AclManager
     {
-        return $this->getInjection('container')->get('aclManager');
+        return $this->container->get('aclManager');
     }
 }

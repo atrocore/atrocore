@@ -118,7 +118,7 @@ class Relation extends AbstractRecordService implements
                             $this->getRepository()->save($entity, ['skipAll' => true]);
                         } catch (\Throwable $e) {
                             $classname = get_class($e);
-                            throw new $classname(sprintf($this->getInjection('language')->translate('reverseAssociationError', 'exceptions', $scope), $e->getMessage()));
+                            throw new $classname(sprintf($this->container->get('language')->translate('reverseAssociationError', 'exceptions', $scope), $e->getMessage()));
                         }
                     }
                 }
@@ -158,7 +158,7 @@ class Relation extends AbstractRecordService implements
                         $this->updateReverseAssociation($entity, $data);
                     } catch (\Throwable $e) {
                         $classname = get_class($e);
-                        throw new $classname(sprintf($this->getInjection('language')->translate('reverseAssociationError', 'exceptions', $this->getAssociatesScope()), $e->getMessage()));
+                        throw new $classname(sprintf($this->container->get('language')->translate('reverseAssociationError', 'exceptions', $this->getAssociatesScope()), $e->getMessage()));
                     }
                 }
 
@@ -196,7 +196,6 @@ class Relation extends AbstractRecordService implements
 
     protected function beforeDeleteEntity(Entity $entity)
     {
-
         $this->validateArchivedRelationSides($entity);
     }
 
@@ -205,7 +204,7 @@ class Relation extends AbstractRecordService implements
         foreach ($this->getRepository()->getRelationFields() as $field) {
             $foreignEntityName = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
             if (!empty($foreignEntityName) && $this->hasArchivedRecords($foreignEntityName, [$entity->get("{$field}Id")])) {
-                throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
+                throw new BadRequest($this->container->get('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
             }
         }
     }
@@ -216,7 +215,7 @@ class Relation extends AbstractRecordService implements
             try {
                 $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
             } catch (UniqueConstraintViolationException $e) {
-                throw new BadRequest($this->getInjection('language')->translate('productAssociationAlreadyExists', 'exceptions', $this->getAssociatesScope()));
+                throw new BadRequest($this->container->get('language')->translate('productAssociationAlreadyExists', 'exceptions', $this->getAssociatesScope()));
             }
 
             return $result;

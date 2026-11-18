@@ -415,15 +415,8 @@ class SoftwarePackage extends ReferenceData
         return [];
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('moduleManager');
-    }
-
     protected function getModuleManager(): ModuleManager
     {
-        return $this->getInjection('moduleManager');
+        return $this->container->get('moduleManager');
     }
 }

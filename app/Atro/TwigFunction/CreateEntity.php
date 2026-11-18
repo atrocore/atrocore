@@ -21,11 +21,9 @@ class CreateEntity extends AbstractTwigFunction
 {
     protected EntityManager $entityManager;
 
-    protected array $dependencyList = ['entityManager'];
-
     public function run(string $entityName, array $data): ?Entity
     {
-        $entityManager = $this->getInjection('entityManager');
+        $entityManager = $this->container->get('entityManager');
         $nowString = date('Y-m-d H:i:s');
         $user = $entityManager->getUser();
 

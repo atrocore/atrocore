@@ -11,7 +11,6 @@
 
 namespace Atro\Services;
 
-use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\Error;
@@ -422,8 +421,8 @@ class User extends Base
      */
     private function invalidateUserTokens(string $userId): void
     {
-        $this->getContainer()->get(BrowserSession::class)->endUserSessions($userId);
-        $this->getContainer()->get(TokenRevoker::class)->revokeUserTokens($userId);
+        $this->container->get(BrowserSession::class)->endUserSessions($userId);
+        $this->container->get(TokenRevoker::class)->revokeUserTokens($userId);
     }
 
     protected function sendChangePasswordLink(
@@ -447,7 +446,7 @@ class User extends Base
             throw new Error("EmailTemplate does not exist.");
         }
 
-        $twig = $this->getContainer()->get('twig');
+        $twig = $this->container->get('twig');
         $data = ['link' => $link, 'user' => $user];
 
         $this->getMailSender()->send([
@@ -495,35 +494,23 @@ class User extends Base
         return $user;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     protected function getMailSender()
     {
-        return $this->getContainer()->get('mailSender');
+        return $this->container->get('mailSender');
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getContainer()->get('language');
-    }
-
-    protected function getContainer(): Container
-    {
-        return $this->getInjection('container');
+        return $this->container->get('language');
     }
 
     protected function getPasswordChangeRequests(): PasswordChangeRequests
     {
-        return $this->getContainer()->get(PasswordChangeRequests::class);
+        return $this->container->get(PasswordChangeRequests::class);
     }
 
     protected function getPasswordHash(): PasswordHash
     {
-        return $this->getContainer()->get(PasswordHash::class);
+        return $this->container->get(PasswordHash::class);
     }
 }

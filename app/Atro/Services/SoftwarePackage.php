@@ -230,22 +230,14 @@ class SoftwarePackage extends ReferenceData
         return $result;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('moduleManager');
-        $this->addDependency('language');
-    }
-
     protected function getModuleManager(): Manager
     {
-        return $this->getInjection('moduleManager');
+        return $this->container->get('moduleManager');
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 
     private function assertInstallerAvailable(): void

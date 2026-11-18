@@ -74,29 +74,29 @@ class File extends Base
             : $entity->isAttributeChanged('replacementReason');
 
         if ($replacementReasonChanged && empty($entity->_input?->reupload)) {
-            throw new BadRequest($this->getInjection('language')->translate('replacementReasonCanBeSetOnReuploadOnly', 'exceptions', 'File'));
+            throw new BadRequest($this->container->get('language')->translate('replacementReasonCanBeSetOnReuploadOnly', 'exceptions', 'File'));
         }
 
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
-                throw (new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File')))->setDataItem('skipOnScan', true);
+                throw (new BadRequest($this->container->get('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File')))->setDataItem('skipOnScan', true);
             }
 
             if ($entity->isAttributeChanged('folderId')) {
                 $storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('folderId') ?? '')->get('id');
                 if ($storageId !== $entity->get('storageId')) {
-                    throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+                    throw new BadRequest($this->container->get('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
                 }
                 if (empty($options['scanning'])) {
                     if (!$this->getStorage($entity)->moveFile($entity)) {
-                        throw new BadRequest($this->getInjection('language')->translate('fileMoveFailed', 'exceptions', 'File'));
+                        throw new BadRequest($this->container->get('language')->translate('fileMoveFailed', 'exceptions', 'File'));
                     }
                 }
             }
 
             if (!empty($entity->_input) && !empty($entity->_input->reupload)) {
                 if ($entity->isAttributeChanged('folderId')) {
-                    throw new BadRequest($this->getInjection('language')->translate('fileFolderCannotBeChanged', 'exceptions', 'File'));
+                    throw new BadRequest($this->container->get('language')->translate('fileFolderCannotBeChanged', 'exceptions', 'File'));
                 }
 
                 if ($entity->isAttributeChanged('name')) {
@@ -107,7 +107,7 @@ class File extends Base
                 try {
                     // recreate origin file
                     if (!$this->getStorage($entity)->reupload($entity, $localPath)) {
-                        throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
+                        throw new BadRequest($this->container->get('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                     }
 
                     // old thumbnails must be removed
@@ -135,7 +135,7 @@ class File extends Base
                 try {
                     // create origin file
                     if (!$this->getStorage($entity)->createFile($entity, $localPath)) {
-                        throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
+                        throw new BadRequest($this->container->get('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                     }
 
                     if ($this->getConfig()->get('automaticFileExtensionCorrection')) {
@@ -361,7 +361,7 @@ class File extends Base
         $storage = $this->getStorage($entity);
         if (empty($entity->get('hidden')) && $storage instanceof HasBasketInterface) {
             if (!$storage->deleteFile($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
+                throw new BadRequest($this->container->get('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
             }
         } else {
             if (property_exists($entity, '_scan')) {
@@ -388,7 +388,7 @@ class File extends Base
         if (!empty($rec['folder_id']) && !empty($rec['folder_deleted'])) {
             try {
                 // restore folder
-                $this->getInjection('container')->get('serviceFactory')->create('Folder')->restoreEntity($rec['folder_id']);
+                $this->container->get('serviceFactory')->create('Folder')->restoreEntity($rec['folder_id']);
             } catch (\Throwable $e) {
                 $this->changeFileFolderToStorageRoot($id);
             }
@@ -437,17 +437,17 @@ class File extends Base
     public function rename(FileEntity $file): void
     {
         if ($this->isExtensionChanged($file)) {
-            throw new BadRequest($this->getInjection('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
+            throw new BadRequest($this->container->get('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
         }
 
         if (!$this->isNameValid($file)) {
             throw new BadRequest(
-                sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern'))
+                sprintf($this->container->get('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern'))
             );
         }
 
         if (!$this->getStorage($file)->renameFile($file)) {
-            throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
+            throw new BadRequest($this->container->get('language')->translate('fileRenameFailed', 'exceptions', 'File'));
         }
     }
 
@@ -521,7 +521,6 @@ class File extends Base
             'thumbnails' => [],
         ];
         try {
-
             if ($res['download'] !== null) {
                 foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
                     $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
@@ -555,7 +554,7 @@ class File extends Base
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -584,7 +583,7 @@ class File extends Base
         try {
             $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
     }
 
@@ -621,7 +620,7 @@ class File extends Base
         if ($name === '' || $name === '.' || $name === '..'
             || strpbrk($name, "/\\\0") !== false
             || basename($name) !== $name) {
-            throw new BadRequest($this->getInjection('language')->translate('fileNameNotValid', 'exceptions', 'File'));
+            throw new BadRequest($this->container->get('language')->translate('fileNameNotValid', 'exceptions', 'File'));
         }
     }
 
@@ -652,7 +651,7 @@ class File extends Base
             }
 
             if (!empty($qb->fetchAssociative())) {
-                throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+                throw new NotUnique($this->container->get('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
             }
         }
     }
@@ -834,7 +833,6 @@ class File extends Base
                 break;
             } catch (\Throwable $e) {
                 if (!empty($message)) {
-
                     $message .= ' | ';
                 }
                 $message .= $e->getMessage();
@@ -880,19 +878,11 @@ class File extends Base
 
     protected function getFileValidator(): FileValidator
     {
-        return $this->getInjection('container')->get(FileValidator::class);
+        return $this->container->get(FileValidator::class);
     }
 
     protected function getThumbnailCreator(): Thumbnail
     {
-        return $this->getInjection('container')->get(Thumbnail::class);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('language');
+        return $this->container->get(Thumbnail::class);
     }
 }

@@ -81,15 +81,8 @@ class RoleScopeAttributePanel extends Base
             ->clearAclCache();
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     protected function getAclManager(): AclManager
     {
-        return $this->getInjection('container')->get('aclManager');
+        return $this->container->get('aclManager');
     }
 }

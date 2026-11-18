@@ -41,7 +41,7 @@ class Entity extends ReferenceData
         ]);
         $this->getMetadata()->save();
 
-        $this->getInjection('dataManager')->clearCache();
+        $this->container->get('dataManager')->clearCache();
 
         return true;
     }
@@ -71,7 +71,7 @@ class Entity extends ReferenceData
         if (!empty($attachment->_duplicatingEntityId)) {
             $duplicating = $this->getRepository()->get($attachment->_duplicatingEntityId);
             if (!empty($duplicating) && !empty($duplicating->get('primaryEntityId'))) {
-                throw new BadRequest($this->getInjection('language')->translate('derivativeCannotBeDuplicated', 'exceptions', 'Entity'));
+                throw new BadRequest($this->container->get('language')->translate('derivativeCannotBeDuplicated', 'exceptions', 'Entity'));
             }
         }
 
@@ -180,15 +180,8 @@ class Entity extends ReferenceData
         return [];
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 }

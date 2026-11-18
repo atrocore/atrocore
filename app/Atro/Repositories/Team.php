@@ -26,7 +26,7 @@ class Team extends RDB
             if ($entity->get('languageRestricted')) {
                 $this->createMainLanguageEntry($entity->get('id'));
             }
-            $this->getInjection('aclManager')->clearAclCache();
+            $this->container->get('aclManager')->clearAclCache();
         }
     }
 

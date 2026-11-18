@@ -23,7 +23,7 @@ class EmailTemplate extends ReferenceData
     {
         $systemTemplates = $this->getMetadata()->get(['app', 'systemEmailTemplates'], []);
         if (!$entity->isNew() && $entity->isAttributeChanged('code') && in_array($entity->getFetched('code'), $systemTemplates)) {
-            throw new BadRequest($this->getInjection('language')->translate("systemTemplateCodeChanged", "exceptions", 'EmailTemplate'));
+            throw new BadRequest($this->container->get('language')->translate("systemTemplateCodeChanged", "exceptions", 'EmailTemplate'));
         }
 
         parent::beforeSave($entity, $options);
@@ -33,16 +33,9 @@ class EmailTemplate extends ReferenceData
     {
         $systemTemplates = $this->getMetadata()->get(['app', 'systemEmailTemplates'], []);
         if (in_array($entity->get('code'), $systemTemplates)) {
-            throw new BadRequest($this->getInjection('language')->translate("systemTemplatesCannotBeDeleted", "exceptions", 'EmailTemplate'));
+            throw new BadRequest($this->container->get('language')->translate("systemTemplatesCannotBeDeleted", "exceptions", 'EmailTemplate'));
         }
 
         parent::beforeRemove($entity, $options);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

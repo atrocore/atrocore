@@ -210,14 +210,14 @@ class File extends Base
         $storageEntity = $this->getEntityManager()->getRepository('Storage')->get($entity->get('storageId'));
         if (empty($storageEntity)) {
             throw new BadRequest(
-                sprintf($this->getInjection('language')->translate('fieldIsRequired', 'exceptions'), $this->getInjection('language')->translate('storage', 'fields', 'File'))
+                sprintf($this->container->get('language')->translate('fieldIsRequired', 'exceptions'), $this->container->get('language')->translate('storage', 'fields', 'File'))
             );
         }
 
         $this->getRepository()->validateItemName($entity);
 
         /** @var FileStorageInterface $storage */
-        $storage = $this->getInjection('container')->get($storageEntity->get('type') . 'Storage');
+        $storage = $this->container->get($storageEntity->get('type') . 'Storage');
 
         $chunks = $storage->createChunk($attachment, $storageEntity);
 
@@ -358,12 +358,5 @@ class File extends Base
         $this->executeMassAction($params);
 
         return true;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
     }
 }

@@ -38,15 +38,8 @@ class AttributeGroup extends Base
 
         if (!empty($attribute)) {
             throw new BadRequest(
-                $this->getInjection('language')->translate('entityIsUsed', 'exceptions', 'AttributeGroup')
+                $this->container->get('language')->translate('entityIsUsed', 'exceptions', 'AttributeGroup')
             );
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

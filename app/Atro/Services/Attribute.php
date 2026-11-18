@@ -38,14 +38,14 @@ class Attribute extends Base
         $attributes = $this->getRepository()->getAttributesByIds($attributesIds);
 
         /** @var AttributeFieldConverter $converter */
-        $converter = $this->getInjection(AttributeFieldConverter::class);
+        $converter = $this->container->get(AttributeFieldConverter::class);
 
         $attributesDefs = [];
         foreach ($attributes as $row) {
             $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
         }
 
-        return $this->getInjection('eventManager')->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $attributes, 'attributesDefs' => $attributesDefs]))
+        return $this->container->get('eventManager')->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $attributes, 'attributesDefs' => $attributesDefs]))
             ->getArgument('attributesDefs');
     }
 
@@ -131,7 +131,7 @@ class Attribute extends Base
         }
 
         /** @var AttributeFieldConverter $converter */
-        $converter = $this->getInjection(AttributeFieldConverter::class);
+        $converter = $this->container->get(AttributeFieldConverter::class);
 
         $attributesDefs = [];
         $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
@@ -167,7 +167,7 @@ class Attribute extends Base
         }
 
         if ($this->hasArchivedRecords($entityName, [$entityId])) {
-            throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeChanged', 'exceptions', 'Global'));
+            throw new BadRequest($this->container->get('language')->translate('archivedRecordCannotBeChanged', 'exceptions', 'Global'));
         }
 
         if ($where !== null) {
@@ -258,18 +258,9 @@ class Attribute extends Base
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        // add dependencies
-        $this->addDependency('language');
-        $this->addDependency(AttributeFieldConverter::class);
-    }
-
     protected function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 
     /**
@@ -287,7 +278,7 @@ class Attribute extends Base
 
     protected function checkFieldsWithPattern(Entity $entity): void
     {
-        $attributeList = array_keys($this->getInjection('metadata')->get(['attributes']));
+        $attributeList = array_keys($this->container->get('metadata')->get(['attributes']));
         if (!in_array($entity->get('type'), $attributeList)) {
             throw new Forbidden(str_replace('{type}', $entity->get('type'), $this->getLanguage()->translate('invalidType', 'exceptions', 'Attribute')));
         }

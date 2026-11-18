@@ -60,7 +60,7 @@ class Locale extends ReferenceData
 
     public function refreshCache(): void
     {
-        $this->getInjection('dataManager')->clearCache(true);
+        $this->container->get('dataManager')->clearCache(true);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -85,7 +85,7 @@ class Locale extends ReferenceData
             $this->getEntityManager()->getRepository('User')->where(['localeId' => $entity->get('id')])->findOne()
             || $systemLocale === $entity->get('id')
         ) {
-            throw new BadRequest($this->getInjection('language')->translate('localeIsUsed', 'exceptions', 'Locale'));
+            throw new BadRequest($this->container->get('language')->translate('localeIsUsed', 'exceptions', 'Locale'));
         }
 
         parent::beforeRemove($entity, $options);
@@ -104,13 +104,5 @@ class Locale extends ReferenceData
         parent::afterRemove($entity, $options);
 
         $this->refreshCache();
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('dataManager');
     }
 }

@@ -180,18 +180,11 @@ class NotificationRule extends Base
 
     protected function getDataManager(): DataManager
     {
-        return $this->getInjection('dataManager');
+        return $this->container->get('dataManager');
     }
 
     protected function getAclManager(): AclManager
     {
-        return $this->getInjection('aclManager');
-    }
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('dataManager');
-        $this->addDependency('aclManager');
+        return $this->container->get('aclManager');
     }
 }

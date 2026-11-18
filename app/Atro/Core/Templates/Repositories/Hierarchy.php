@@ -141,7 +141,7 @@ class Hierarchy extends Base
             if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
                 throw new BadRequest('Restore prohibited for entity with possible multiple parents.');
             }
-            $this->getInjection('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
+            $this->container->get('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
         }
     }
 
@@ -527,7 +527,6 @@ class Hierarchy extends Base
             }
         }
 
-
         return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
     }
 
@@ -546,7 +545,6 @@ class Hierarchy extends Base
                 'value'     => '%|' . $parentId . '|"%'
             ];
         }
-
 
         $sp = $this->convertToSelectParams($params);
         return $this->getMapper()->count($this->get(), $sp);
@@ -628,7 +626,6 @@ class Hierarchy extends Base
     {
         return !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasArchive']));
     }
-
 
     protected function validateIsArchived(Entity $entity): void
     {
@@ -767,14 +764,6 @@ class Hierarchy extends Base
 
     public function convertToSelectParams($params): array
     {
-        return $this->getInjection('selectManagerFactory')->create($this->entityType)->getSelectParams($params, true, true);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
-        $this->addDependency('selectManagerFactory');;
+        return $this->container->get('selectManagerFactory')->create($this->entityType)->getSelectParams($params, true, true);
     }
 }

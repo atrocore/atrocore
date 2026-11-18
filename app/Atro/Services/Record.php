@@ -82,10 +82,10 @@ class Record extends RecordService
     {
         $entity = $this->getRepository()->order('id', 'ASC')->findOne();
         if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']))) {
-            $this->getInjection(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($entity);
+            $this->container->get(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($entity);
         }
 
-        $preview = $this->getInjection('twig')->renderTemplate($script, ['entity' => $entity], $outputType);
+        $preview = $this->container->get('twig')->renderTemplate($script, ['entity' => $entity], $outputType);
         if (is_string($preview) && $outputType !== 'wysiwyg') {
             $outputType = 'text';
         }
@@ -129,19 +129,19 @@ class Record extends RecordService
             return $event;
         }
 
-        return $this->getInjection('eventManager')->dispatch($supertype . 'Service', $action, $event);
+        return $this->container->get('eventManager')->dispatch($supertype . 'Service', $action, $event);
     }
 
     public function createEntity(\stdClass $attachment): string
     {
         // the records of such an entity cannot be created at all, also not as duplicates
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'createDisabled']))) {
-            throw new NotFound($this->getInjection('language')->translate('recordCannotBeCreated', 'exceptions'));
+            throw new NotFound($this->container->get('language')->translate('recordCannotBeCreated', 'exceptions'));
         }
 
         // each record of an entity with subtypes belongs to one of them, so it is created via the subtype
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasSubtypes']))) {
-            throw new BadRequest($this->getInjection('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
+            throw new BadRequest($this->container->get('language')->translate('recordCanBeCreatedViaSubtypeOnly', 'exceptions'));
         }
 
         return parent::createEntity($attachment);
@@ -472,7 +472,7 @@ class Record extends RecordService
             if (!empty($errors)) {
                 $label = "mass" . ucfirst($action);
                 $label .= count($errors) === count($ids) ? "NoRecordProceed" : "SomeRecordNotProceed";
-                array_unshift($errors, $this->getInjection('language')->translate($label, 'exceptions'));
+                array_unshift($errors, $this->container->get('language')->translate($label, 'exceptions'));
             }
 
             return [$total, $errors, true];
@@ -482,8 +482,8 @@ class Record extends RecordService
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
                 'name'     => sprintf(
-                    $this->getInjection('language')->translate('massActionCreatorJobName'),
-                    empty($actionEntity) ? $this->getInjection('language')->translate($action, 'massActions', $this->entityType) : $actionEntity->get('name'),
+                    $this->container->get('language')->translate('massActionCreatorJobName'),
+                    empty($actionEntity) ? $this->container->get('language')->translate($action, 'massActions', $this->entityType) : $actionEntity->get('name'),
                     $this->entityType
                 ),
                 'type'     => 'MassActionCreator',
@@ -636,7 +636,6 @@ class Record extends RecordService
         }
         unset($params['foreignWhere']);
 
-
         return $params;
     }
 
@@ -673,7 +672,6 @@ class Record extends RecordService
         if (!empty($localizedNameField)) {
             $fields[] = $localizedNameField;
         }
-
 
         if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
             $fields[] = $selectParams['orderBy'];
@@ -831,7 +829,6 @@ class Record extends RecordService
                 $attributes->input->_sourceEntities        = $sourceList;
                 $this->updateEntity($id, $attributes->input);
             } catch (NotModified $e) {
-
             }
         }
 
@@ -840,7 +837,6 @@ class Record extends RecordService
                 $this->getEntityManager()->removeEntity($source);
             }
         }
-
 
         $this->afterMerge($entity, $sourceList, $attributes);
 
@@ -977,7 +973,6 @@ class Record extends RecordService
                 $idsField     = $link . 'Ids';
                 $columnsField = $link . 'Columns';
 
-
                 foreach ($relationEntities as $item) {
                     $input->$idsField[] = $item->get($defs['midKeys'][1]);
 
@@ -993,7 +988,6 @@ class Record extends RecordService
                             continue;
                         }
 
-
                         if (!isset($input->$columnsField->{$item->get($defs['midKeys'][1])})) {
                             $input->$columnsField->{$item->get($defs['midKeys'][1])} = new \stdClass();
                         }
@@ -1008,7 +1002,6 @@ class Record extends RecordService
 
         return $this->getEntityManager()->getEntity($this->getEntityType(), $id);
     }
-
 
     public function getDuplicateAttributes($id)
     {

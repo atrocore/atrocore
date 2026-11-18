@@ -26,7 +26,7 @@ class Classification extends Hierarchy
     {
         if (!empty($classificationAttributes = $duplicatingEntity->get('classificationAttributes')->toArray())) {
             // get service
-            $service = $this->getInjection('serviceFactory')->create('ClassificationAttribute');
+            $service = $this->container->get('serviceFactory')->create('ClassificationAttribute');
 
             foreach ($classificationAttributes as $classificationAttribute) {
                 // prepare data
@@ -42,12 +42,5 @@ class Classification extends Hierarchy
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
     }
 }

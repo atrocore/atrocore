@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Services;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Container;
 use Atro\Core\ConditionChecker;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
@@ -27,7 +28,6 @@ use Atro\Core\Http\RequestHeaders;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
-use Atro\Core\Utils\UniqueIndexDescriber;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
@@ -44,26 +44,6 @@ use Atro\Core\Utils\NameField;
  */
 abstract class AbstractRecordService extends AbstractService
 {
-    protected $dependencies = array(
-        'entityManager',
-        'user',
-        'metadata',
-        'acl',
-        'aclManager',
-        'config',
-        'serviceFactory',
-        'selectManagerFactory',
-        'injectableFactory',
-        'fieldManagerUtil',
-        'eventManager',
-        'language',
-        'pseudoTransactionManager',
-        'memoryStorage',
-        'condition',
-        AttributeFieldConverter::class,
-        UniqueIndexDescriber::class
-    );
-
     protected array $cachedOptionData = [];
 
     protected $entityName;
@@ -94,9 +74,9 @@ abstract class AbstractRecordService extends AbstractService
 
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
-        parent::__construct();
+        parent::__construct($container);
         if (empty($this->entityType)) {
             $name = get_class($this);
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
@@ -135,22 +115,22 @@ abstract class AbstractRecordService extends AbstractService
 
     protected function getServiceFactory()
     {
-        return $this->injections['serviceFactory'];
+        return $this->container->get('serviceFactory');
     }
 
     protected function getSelectManagerFactory()
     {
-        return $this->injections['selectManagerFactory'];
+        return $this->container->get('selectManagerFactory');
     }
 
     protected function getAcl()
     {
-        return $this->getInjection('acl');
+        return $this->container->get('acl');
     }
 
     protected function getAclManager()
     {
-        return $this->getInjection('aclManager');
+        return $this->container->get('aclManager');
     }
 
     /**
@@ -158,12 +138,12 @@ abstract class AbstractRecordService extends AbstractService
      */
     protected function getMetadata()
     {
-        return $this->getInjection('metadata');
+        return $this->container->get('metadata');
     }
 
     protected function getFieldManagerUtil()
     {
-        return $this->getInjection('fieldManagerUtil');
+        return $this->container->get('fieldManagerUtil');
     }
 
     protected function getRepository()
@@ -222,7 +202,7 @@ abstract class AbstractRecordService extends AbstractService
         if (empty($entity)) {
             return null;
         }
-        $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+        $this->container->get(AttributeFieldConverter::class)->putAttributesToEntity($entity);
         $this->loadAdditionalFields($entity, $withRelationships !== null);
         if ($withRelationships !== null) {
             $this->loadWithRelationships($entity, $withRelationships);
@@ -1383,10 +1363,10 @@ abstract class AbstractRecordService extends AbstractService
         $event->setArgument('target', $this->entityType . 'Service');
 
         // dispatch common listener
-        $this->getInjection('eventManager')->dispatch('Service', $action, $event);
+        $this->container->get('eventManager')->dispatch('Service', $action, $event);
 
         // dispatch target listener
-        $event = $this->getInjection('eventManager')->dispatch($event->getArgument('target'), $action, $event);
+        $event = $this->container->get('eventManager')->dispatch($event->getArgument('target'), $action, $event);
 
         // a subtype record is the supertype record, the listeners of the supertype service apply to it as well
         $supertype = $this->getMetadata()->get(['scopes', $this->entityType, 'supertypeId']);
@@ -1394,12 +1374,12 @@ abstract class AbstractRecordService extends AbstractService
             return $event;
         }
 
-        return $this->getInjection('eventManager')->dispatch($supertype . 'Service', $action, $event);
+        return $this->container->get('eventManager')->dispatch($supertype . 'Service', $action, $event);
     }
 
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
-        return $this->getInjection('pseudoTransactionManager');
+        return $this->container->get('pseudoTransactionManager');
     }
 
     protected function getMeasureUnits(string $measureId): array
@@ -1412,13 +1392,6 @@ abstract class AbstractRecordService extends AbstractService
         return $this->measureUnits[$measureId];
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('twig');
-    }
-
     protected function getNameFieldUtil(): NameField
     {
         return $this->getEntityManager()->getContainer()->get(NameField::class);
@@ -1426,7 +1399,7 @@ abstract class AbstractRecordService extends AbstractService
 
     protected function getConditionChecker(): ConditionChecker
     {
-        return $this->getInjection('condition');
+        return $this->container->get('condition');
     }
 
     /**
@@ -1478,10 +1451,10 @@ abstract class AbstractRecordService extends AbstractService
     {
         $entity = $this->getRepository()->order('id', 'ASC')->findOne();
         if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']))) {
-            $this->getInjection(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($entity);
+            $this->container->get(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($entity);
         }
 
-        $preview = $this->getInjection('twig')->renderTemplate($script, ['entity' => $entity], $outputType);
+        $preview = $this->container->get('twig')->renderTemplate($script, ['entity' => $entity], $outputType);
         if (is_string($preview) && $outputType !== 'wysiwyg') {
             $outputType = 'text';
         }
@@ -1596,7 +1569,7 @@ abstract class AbstractRecordService extends AbstractService
             if (!empty($errors)) {
                 $label = "mass" . ucfirst($action);
                 $label .= count($errors) === count($ids) ? "NoRecordProceed" : "SomeRecordNotProceed";
-                array_unshift($errors, $this->getInjection('language')->translate($label, 'exceptions'));
+                array_unshift($errors, $this->container->get('language')->translate($label, 'exceptions'));
             }
 
             return [$total, $errors, true];
@@ -1606,8 +1579,8 @@ abstract class AbstractRecordService extends AbstractService
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
                 'name'     => sprintf(
-                    $this->getInjection('language')->translate('massActionCreatorJobName'),
-                    empty($actionEntity) ? $this->getInjection('language')->translate($action, 'massActions', $this->entityType) : $actionEntity->get('name'),
+                    $this->container->get('language')->translate('massActionCreatorJobName'),
+                    empty($actionEntity) ? $this->container->get('language')->translate($action, 'massActions', $this->entityType) : $actionEntity->get('name'),
                     $this->entityType
                 ),
                 'type'     => 'MassActionCreator',

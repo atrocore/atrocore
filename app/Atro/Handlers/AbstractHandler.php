@@ -23,7 +23,7 @@ use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Atro\Core\Services\AbstractService;
 use Espo\Core\Acl;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Espo\ORM\EntityManager;
 use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;

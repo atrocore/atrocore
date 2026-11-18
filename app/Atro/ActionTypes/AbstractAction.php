@@ -26,7 +26,7 @@ use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Atro\Repositories\Action as ActionRepository;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Espo\ORM\Entity;
 
 abstract class AbstractAction implements TypeInterface

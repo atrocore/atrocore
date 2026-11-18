@@ -42,7 +42,7 @@ class MatchingRule extends AbstractRule
 
     public function createMatchingType(MatchingRuleEntity $rule): AbstractMatchingRule
     {
-        return $this->getInjection('matchingManager')->createMatchingType($rule);
+        return $this->container->get('matchingManager')->createMatchingType($rule);
     }
 
     protected function beforeSave(OrmEntity $entity, array $options = [])
@@ -50,8 +50,8 @@ class MatchingRule extends AbstractRule
         if ($entity->get('type') === 'attributesSimilar') {
             $matching = $this->getMatching($entity);
             foreach (empty($matching) ? [] : [$matching->get('entity'), $matching->get('masterEntity')] as $entityName) {
-                if (empty($this->getInjection('metadata')->get("scopes.{$entityName}.hasAttribute"))) {
-                    throw new BadRequest($this->getInjection('language')->translate('notValidAttributesSimilar', 'exceptions', $this->entityType));
+                if (empty($this->container->get('metadata')->get("scopes.{$entityName}.hasAttribute"))) {
+                    throw new BadRequest($this->container->get('language')->translate('notValidAttributesSimilar', 'exceptions', $this->entityType));
                 }
             }
         }

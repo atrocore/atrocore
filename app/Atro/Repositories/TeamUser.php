@@ -38,6 +38,6 @@ class TeamUser extends Relation
     private function afterMembershipChanged(): void
     {
         $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
-        $this->getInjection('aclManager')->clearAclCache();
+        $this->container->get('aclManager')->clearAclCache();
     }
 }

@@ -19,14 +19,6 @@ use Espo\ORM\Entity;
 
 class HtmlSanitizer extends ReferenceData
 {
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
-        $this->addDependency('htmlSanitizer');
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -47,6 +39,6 @@ class HtmlSanitizer extends ReferenceData
 
     protected function getHtmlSanitizer(): \Atro\Core\Utils\HTMLSanitizer
     {
-        return $this->getInjection('htmlSanitizer');
+        return $this->container->get('htmlSanitizer');
     }
 }

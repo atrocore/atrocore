@@ -22,7 +22,7 @@ use Atro\Core\Utils\Util;
 use Atro\Entities\User as UserEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Espo\ORM\Entity;
 
 class User extends RDB
@@ -334,12 +334,12 @@ class User extends RDB
         if ($entity->isAttributeChanged('localeId')
             || $entity->isAttributeChanged('styleId')
         ) {
-            $this->getInjection('container')->get('dataManager')->clearCache(true);
+            $this->container->get('dataManager')->clearCache(true);
         }
 
         // a deactivated user loses the sessions and the OAuth tokens
         if ($entity->isAttributeChanged('isActive') && empty($entity->get('isActive'))) {
-            $container = $this->getInjection('container');
+            $container = $this->container;
             $container->get(BrowserSession::class)->endUserSessions($entity->id);
             $container->get(TokenRevoker::class)->revokeUserTokens($entity->id);
         }
@@ -387,18 +387,11 @@ class User extends RDB
 
     protected function getAclManager(): AclManager
     {
-        return $this->getInjection('container')->get('aclManager');
+        return $this->container->get('aclManager');
     }
 
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->getInjection('container')->get('serviceFactory');
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
+        return $this->container->get('serviceFactory');
     }
 }

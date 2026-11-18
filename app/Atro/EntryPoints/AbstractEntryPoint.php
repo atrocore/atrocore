@@ -12,7 +12,7 @@
 namespace Atro\EntryPoints;
 
 use Espo\Core\Acl;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Atro\Core\Utils\ClientManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;

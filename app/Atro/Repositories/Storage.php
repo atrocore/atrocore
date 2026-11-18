@@ -32,7 +32,7 @@ class Storage extends Base
             throw new BadRequest("Storage '{$storage->get('name')}' is not active.");
         }
 
-        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
+        return $this->container->get($storage->get('type') . 'Storage');
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -179,16 +179,8 @@ class Storage extends Base
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('language');
-    }
-
     protected function translate(string $key, string $category, string $scope): string
     {
-        return $this->getInjection('language')->translate($key, $category, $scope);
+        return $this->container->get('language')->translate($key, $category, $scope);
     }
 }

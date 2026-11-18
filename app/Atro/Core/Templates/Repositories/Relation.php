@@ -145,7 +145,7 @@ class Relation extends Base
         $additionalFields = $this->getAdditionalFieldsNames();
 
         /** @var \Atro\Core\Templates\Services\Relation $service */
-        $service = $this->getInjection('container')->get('serviceFactory')->create($this->entityType);
+        $service = $this->container->get('serviceFactory')->create($this->entityType);
 
         foreach ($children as $child) {
             $input = new \stdClass();
@@ -183,7 +183,7 @@ class Relation extends Base
         }
 
         /** @var \Atro\Core\Templates\Services\Relation $service */
-        $service = $this->getInjection('container')->get('serviceFactory')->create($this->entityType);
+        $service = $this->container->get('serviceFactory')->create($this->entityType);
 
         foreach ($childrenRecords as $childrenRecord) {
             try {
@@ -209,7 +209,7 @@ class Relation extends Base
         }
 
         /** @var \Atro\Core\Templates\Services\Relation $service */
-        $service = $this->getInjection('container')->get('serviceFactory')->create($this->entityType);
+        $service = $this->container->get('serviceFactory')->create($this->entityType);
 
         foreach ($childrenRecords as $childrenRecord) {
             try {
@@ -402,7 +402,6 @@ class Relation extends Base
         return $res;
     }
 
-
     public function getAdditionalFieldsNames(): array
     {
         $res = [];
@@ -583,16 +582,9 @@ class Relation extends Base
         return $result;
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('pseudoTransactionManager');
-    }
-
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
-        return $this->getInjection('pseudoTransactionManager');
+        return $this->container->get('pseudoTransactionManager');
     }
 
     public function getRelatedLink(string $entityName): ?string

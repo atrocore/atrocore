@@ -19,7 +19,7 @@ use Atro\Core\Utils\Metadata;
 use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\User;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Atro\Core\Utils\Config;
 use Espo\ORM\Entity;
 
