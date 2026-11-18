@@ -1,26 +1,34 @@
 {
-  "fields": {
-    "minimumScore": "Minimalny wynik, %",
-    "entity": "Encja",
-    "masterEntity": "Podmiot główny",
-    "matchingRules": "Zasady dopasowywania",
-    "matchedRecords": "Dopasowane rekordy",
-    "matchedRecordsMax": "Maksymalna liczba dopasowanych rekordów"
-  },
-  "options": {
-    "type": {
-      "duplicate": "Duplikat - Duplikat",
-      "masterRecord": "Kontrybutor - Master"
+    "fields": {
+        "minimumScore": "Minimalny wynik, %",
+        "entity": "Encja",
+        "masterEntity": "Podmiot główny",
+        "matchingRules": "Zasady dopasowywania",
+        "matchedRecords": "Dopasowane rekordy",
+        "matchedRecordsMax": "Maksymalna liczba dopasowanych rekordów",
+        "blockingRules": "Reguły blokujące",
+        "blockingOperator": "Operator reguł blokujących"
+    },
+    "options": {
+        "type": {
+            "duplicate": "Duplikat - Duplikat",
+            "masterRecord": "Kontrybutor - Master"
+        },
+        "blockingOperator": {
+            "or": "LUB",
+            "and": "I"
+        }
+    },
+    "labels": {
+        "configureMatching": "Konfiguracja dopasowania"
+    },
+    "tooltips": {
+        "matchedRecordsMax": "Jeśli liczba dopasowanych rekordów dla dowolnego rekordu przekroczy tę wartość, dopasowanie zostanie wyłączone. Proszę pozostawić to pole puste, aby zezwolić na nieograniczoną liczbę dopasowanych rekordów. ",
+        "blockingOperator": "Sposób łączenia reguł blokujących najwyższego poziomu w celu wybrania kandydatów. W przypadku operatora I reguła, której wartość w rekordzie jest pusta, nie dopasowuje żadnych rekordów, więc rekord nie otrzymuje żadnych kandydatów."
+    },
+    "exceptions": {
+        "noRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł dopasowania dla tego dopasowania.",
+        "masterRecordEntityInvalid": "Encji %s nie można użyć dla dopasowania typu Główny rekord. Dozwolona jest tylko encja pochodna z rolą Staging.",
+        "noBlockingRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł blokujących dla tego dopasowania."
     }
-  },
-  "labels": {
-    "configureMatching": "Konfiguracja dopasowania"
-  },
-  "tooltips": {
-    "matchedRecordsMax": "Jeśli liczba dopasowanych rekordów dla dowolnego rekordu przekroczy tę wartość, dopasowanie zostanie wyłączone. Proszę pozostawić to pole puste, aby zezwolić na nieograniczoną liczbę dopasowanych rekordów. "
-  },
-  "exceptions": {
-    "noRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł dopasowania dla tego dopasowania.",
-    "masterRecordEntityInvalid": "Encji %s nie można użyć dla dopasowania typu Główny rekord. Dozwolona jest tylko encja pochodna z rolą Staging."
-  }
 }
