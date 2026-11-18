@@ -1,22 +1,22 @@
 {
     "fields": {
-        "name": "",
-        "entity": "",
-        "fields": "",
-        "isCustom": ""
+        "name": "Név",
+        "entity": "Entitás",
+        "fields": "Mezők",
+        "isCustom": "Egyéni"
     },
     "tooltips": {
-        "name": "",
-        "fields": ""
+        "name": "Az egyedi index neve, például unique_relationship. Csak kisbetűs latin betűk, számjegyek és aláhúzásjelek használhatók.",
+        "fields": "Az egyedi indexet alkotó mezők. A `deleted` oszlop mindig elsőként kerül az indexbe. Legalább két mező szükséges."
     },
     "exceptions": {
-        "indexNameIsInvalid": "",
-        "atLeastTwoFieldsRequired": "",
-        "indexFieldsShouldBeUnique": "",
-        "fieldCannotBeUsedInUniqueIndex": "",
-        "fieldTypeCannotBeUsedInUniqueIndex": "",
-        "duplicateValuesExist": "",
-        "indexNameAlreadyUsed": "",
-        "entityTypeIsNotSuitableForUniqueIndexes": ""
+        "indexNameIsInvalid": "Az egyedi index neve érvénytelen. Kisbetűs latin betűvel kell kezdődnie, nem végződhet aláhúzásjellel, és csak kisbetűs latin betűket, számjegyeket és aláhúzásjeleket tartalmazhat.",
+        "atLeastTwoFieldsRequired": "Az egyedi indexnek legalább két mezőből kell állnia. Ha egyetlen mezőt szeretne egyedivé tenni, jelölje be az „Egyedi” jelölőnégyzetet a mező beállításaiban.",
+        "indexFieldsShouldBeUnique": "Ugyanaz a mező nem használható kétszer egyedi indexben.",
+        "fieldCannotBeUsedInUniqueIndex": "A(z) %s mezőnek nincs saját oszlopa a táblában, ezért nem használható egyedi indexben.",
+        "fieldTypeCannotBeUsedInUniqueIndex": "A(z) %s mező típusa nem támogatott az egyedi indexekben.",
+        "duplicateValuesExist": "Az egyedi index nem hozható létre: a táblában már vannak ismétlődő értékek a kiválasztott mezők esetén: %s",
+        "indexNameAlreadyUsed": "Már létezik a(z) %s nevű index ennél az entitásnál.",
+        "entityTypeIsNotSuitableForUniqueIndexes": "Egyedi indexek csak az Alap és Hierarchia entitásokhoz konfigurálhatók."
     }
 }
