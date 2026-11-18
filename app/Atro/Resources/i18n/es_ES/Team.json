@@ -1,11 +1,14 @@
 {
-  "fields": {
-    "name": "Nombre",
-    "users": "Usuarios",
-    "notes": "Notas",
-    "roles": "Roles"
-  },
-  "tooltips": {
-    "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados"
-  }
+    "fields": {
+        "name": "Nombre",
+        "users": "Usuarios",
+        "notes": "Notas",
+        "roles": "Roles",
+        "languageRestricted": "Idioma restringido",
+        "languages": "Idiomas"
+    },
+    "tooltips": {
+        "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados",
+        "languageRestricted": "Cuando está activada, solo los idiomas indicados explícitamente están disponibles para los usuarios de este equipo. Cuando está desactivada, no se aplica ningún filtro de idioma."
+    }
 }
