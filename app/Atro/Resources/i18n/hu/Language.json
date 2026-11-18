@@ -1,20 +1,20 @@
 {
     "fields": {
-        "role": ""
+        "role": "Szerep"
     },
     "options": {
         "role": {
-            "main": "",
-            "additional": ""
+            "main": "Fő",
+            "additional": "Kiegészítő"
         }
     },
     "tooltips": {
-        "role": ""
+        "role": "Válassza a Fő lehetőséget, ha ezt a nyelvet szeretné a tartalom fő nyelveként beállítani. A Kiegészítő lehetőséget olyan nyelvekhez használja, amelyekre fordítani szeretne."
     },
     "exceptions": {
-        "mainLanguageIsAlreadyExists": "",
-        "roleCannotBeChanged": "",
-        "codeForAdditionalCannotBeChanged": "",
-        "mainLanguageCannotBeRemoved": ""
+        "mainLanguageIsAlreadyExists": "Már létezik fő nyelv.",
+        "roleCannotBeChanged": "A szerep nem módosítható.",
+        "codeForAdditionalCannotBeChanged": "A kiegészítő nyelv kódja nem módosítható.",
+        "mainLanguageCannotBeRemoved": "A fő nyelv nem távolítható el."
     }
 }
