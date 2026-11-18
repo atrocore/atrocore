@@ -18,7 +18,6 @@ use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\Core\Utils\Metadata\Helper;
-use Espo\Core\Utils\Json;
 
 class Metadata
 {
@@ -103,7 +102,7 @@ class Metadata
         }
 
         if ($isJSON) {
-            return Json::encode($this->data);
+            return json_encode($this->data);
         }
 
         return $this->data;
@@ -187,7 +186,7 @@ class Metadata
     {
         $this->objData = $this->dataManager->getCacheData('metadata');
         if ($this->objData === null || $reload) {
-            $this->objData = Json::decode(Json::encode($this->loadData()), true);
+            $this->objData = json_decode(json_encode($this->loadData()), true);
             $this->objData = $this
                 ->getEventManager()
                 ->dispatch('Metadata', 'loadData', new Event(['data' => $this->objData]))
@@ -209,7 +208,7 @@ class Metadata
         $this->clearMetadata($data);
 
         // set object data
-        $this->objData = Json::decode(Json::encode($data));
+        $this->objData = json_decode(json_encode($data));
 
         // clearing metadata
         $this->clearingMetadata();
@@ -350,7 +349,7 @@ class Metadata
             return $default;
         }
 
-        return Json::decode(file_get_contents($filePath), true) ?: $default;
+        return json_decode(file_get_contents($filePath), true) ?: $default;
     }
 
     /**
@@ -516,7 +515,7 @@ class Metadata
                 foreach ($keyData as $key2 => $data) {
                     if (!empty($data)) {
                         $filePath = $this->getCustomFilePath($key1, $key2);
-                        $result &= $this->writeCustomFile($filePath, Util::merge($this->readCustomFile($filePath), Json::getArrayData($data)));
+                        $result &= $this->writeCustomFile($filePath, Util::merge($this->readCustomFile($filePath), is_array($data) ? $data : json_decode($data, true)));
                     }
                 }
             }
@@ -556,7 +555,7 @@ class Metadata
             return [];
         }
 
-        return Json::decode(file_get_contents($filePath), true) ?: [];
+        return json_decode(file_get_contents($filePath), true) ?: [];
     }
 
     private function writeCustomFile(string $filePath, mixed $data): bool
@@ -565,7 +564,7 @@ class Metadata
             mkdir(dirname($filePath), 0777, true);
         }
 
-        $content = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         return file_put_contents($filePath, $content, LOCK_EX) !== false;
     }

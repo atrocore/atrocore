@@ -11,7 +11,6 @@
 
 namespace Atro\Core\Utils;
 
-use Espo\Core\Utils\Json;
 use Espo\ORM\EntityCollection;
 
 class Util
@@ -108,7 +107,7 @@ class Util
 
         if (is_array($value)) {
             sort($value);
-            $value = Json::encode(array_map([Util::class, 'toString'], $value));
+            $value = json_encode(array_map([Util::class, 'toString'], $value));
         }
 
         if (is_object($value)) {

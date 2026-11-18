@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Entities\Job;
-use Espo\Core\Utils\Json;
 
 class Upsert extends AbstractJob implements JobInterface
 {
@@ -23,8 +22,8 @@ class Upsert extends AbstractJob implements JobInterface
         $data = $job->getPayload();
 
         try {
-            $result = $this->getServiceFactory()->create('Global')->upsert((array)Json::decode(Json::encode($data)));
-            $message = Json::encode($result);
+            $result = $this->getServiceFactory()->create('Global')->upsert((array)json_decode(json_encode($data)));
+            $message = json_encode($result);
         } catch (\Throwable $e) {
             $message = $e->getMessage();
         }

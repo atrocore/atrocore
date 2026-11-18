@@ -27,7 +27,6 @@ use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\UniqueIndexDescriber;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Utils\Json;
 use Atro\Core\Services\AbstractRecordService;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -1637,10 +1636,10 @@ trait EditableTrait
 
         if (in_array($type, [Entity::JSON_ARRAY, Entity::JSON_OBJECT])) {
             if (is_string($value1)) {
-                $value1 = Json::decode($value1, true);
+                $value1 = json_decode($value1, true);
             }
             if (is_string($value2)) {
-                $value2 = Json::decode($value2, true);
+                $value2 = json_decode($value2, true);
             }
         }
 

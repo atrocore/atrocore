@@ -16,7 +16,6 @@ use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Util;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Database\Schema\Schema;
-use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 
 class DataManager
@@ -101,7 +100,7 @@ class DataManager
         }
 
         self::createCacheDir();
-        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
+        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", json_encode($data));
 
         return true;
     }

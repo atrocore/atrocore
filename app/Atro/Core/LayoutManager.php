@@ -22,7 +22,6 @@ use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
 use Atro\Core\Http\RequestHeaders;
 
@@ -525,7 +524,7 @@ class LayoutManager
                     $fileData = file_get_contents($fileFullPath);
 
                     // prepare data
-                    $data = Json::decode($fileData, true);
+                    $data = json_decode($fileData, true);
                 }
             }
         }
@@ -568,7 +567,7 @@ class LayoutManager
             $fileData = file_get_contents($fileFullPath);
 
             // prepare data
-            $data = Json::decode($fileData, true);
+            $data = json_decode($fileData, true);
         }
 
         // from modules data
