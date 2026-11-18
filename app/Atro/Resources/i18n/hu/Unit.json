@@ -1,19 +1,19 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "measure": "",
-        "isMain": "",
-        "multiplier": "",
-        "convertTo": "",
-        "symbol": "",
-        "isActive": ""
+        "name": "Név",
+        "description": "Leírás",
+        "measure": "Mérték",
+        "isMain": "Fő",
+        "multiplier": "Szorzó",
+        "convertTo": "Átalakítás erre",
+        "symbol": "Szimbólum",
+        "isActive": "Aktív"
     },
     "exceptions": {
-        "defaultIsRequired": "",
-        "unitIsUsed": "",
-        "unitIsUsedOnClassificationAttribute": "",
-        "unitIsUsedOnEntityAttribute": "",
-        "multiplierCannotBeZero": ""
+        "defaultIsRequired": "A mértéknek rendelkeznie kell alapértelmezett mértékegységgel.",
+        "unitIsUsed": "A(z) „%s” mértékegységet a(z) „%s” mező használja a(z) „%s” entitásban, a(z) „%s” rekord esetében.",
+        "unitIsUsedOnClassificationAttribute": "A(z) „%s” mértékegységet a(z) „%s” attribútum használja a(z) „%s” osztályozásban.",
+        "unitIsUsedOnEntityAttribute": "A(z) „%s” mértékegységet a(z) „%s” attribútum használja a(z) %s típusú „%s” entitásban.",
+        "multiplierCannotBeZero": "A mértékegység-szorzó nem lehet nulla."
     }
 }
