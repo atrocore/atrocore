@@ -1,0 +1,47 @@
+{
+    "fields": {
+        "matching": "",
+        "weight": "",
+        "matchingRuleSet": "",
+        "matchingRules": "",
+        "operator": "",
+        "attribute": "",
+        "matchScoreExpression": "",
+        "ignoreUnavailableAttributes": ""
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "",
+            "attributes": ""
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "",
+            "fieldSimilar": "",
+            "fieldContains": "",
+            "set": "",
+            "expression": "",
+            "fieldsSimilar": "",
+            "attributesSimilar": ""
+        },
+        "operator": {
+            "and": "",
+            "or": ""
+        }
+    },
+    "exceptions": {
+        "notValidCode": "",
+        "notValidMatchingActivation": "",
+        "notValidMatching": "",
+        "notValidMatchingRuleSet": "",
+        "notValidFieldType": "",
+        "notValidAttributeType": "",
+        "expressionCannotBeEmpty": "",
+        "notValidAttributesSimilar": ""
+    },
+    "tooltips": {
+        "matchScoreExpression": "",
+        "ignoreUnavailableAttributes": ""
+    }
+}
