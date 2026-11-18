@@ -1,33 +1,47 @@
 {
-  "fields": {
-    "matching": "Abbinamento",
-    "weight": "Peso",
-    "matchingRuleSet": "Set",
-    "matchingRules": "Regole di abbinamento",
-    "operator": "Operatore",
-    "matchScoreExpression": "Espressione del punteggio"
-  },
-  "options": {
-    "type": {
-      "fieldEqual": "Il campo è uguale",
-      "fieldSimilar": "Il campo è simile",
-      "fieldContains": "Il campo contiene",
-      "set": "Set",
-      "expression": "Espressione"
+    "fields": {
+        "matching": "Abbinamento",
+        "weight": "Peso",
+        "matchingRuleSet": "Set",
+        "matchingRules": "Regole di abbinamento",
+        "operator": "Operatore",
+        "matchScoreExpression": "Espressione del punteggio",
+        "attribute": "Attributo",
+        "ignoreUnavailableAttributes": "Ignora attributi non disponibili"
     },
-    "operator": {
-      "and": "E",
-      "or": "O"
+    "options": {
+        "type": {
+            "fieldEqual": "Il campo è uguale",
+            "fieldSimilar": "Il campo è simile",
+            "fieldContains": "Il campo contiene",
+            "set": "Set",
+            "expression": "Espressione",
+            "fieldsSimilar": "I campi sono simili",
+            "attributesSimilar": "Gli attributi sono simili"
+        },
+        "operator": {
+            "and": "E",
+            "or": "O"
+        }
+    },
+    "exceptions": {
+        "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi.",
+        "notValidMatchingActivation": "La regola di abbinamento può essere modificata solo per un abbinamento inattivo.",
+        "notValidMatching": "La corrispondenza non è valida",
+        "notValidMatchingRuleSet": "Il set di regole di corrispondenza non è valido",
+        "expressionCannotBeEmpty": "L'espressione non può essere vuota.",
+        "notValidFieldType": "Il tipo di campo non è supportato dal tipo di regola selezionato.",
+        "notValidAttributeType": "Il tipo di attributo non è supportato dal tipo di regola selezionato.",
+        "notValidAttributesSimilar": "Le entità della corrispondenza non hanno attributi."
+    },
+    "tooltips": {
+        "matchScoreExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo) e `masterEntity` (i valori grezzi dei campi del candidato, come array - es. masterEntity['name']). Deve restituire un numero tra 0 e 1, moltiplicato per il peso della regola per produrre il punteggio di corrispondenza - es. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 assegna il punteggio 1 a una corrispondenza esatta e 0 a tutto il resto.",
+        "ignoreUnavailableAttributes": "Se abilitata, un attributo associato a un solo dei record confrontati non viene confrontato. Altrimenti, a tale attributo viene assegnato un grado di similarità pari a 0."
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Campi",
+            "attributes": "Attributi"
+        }
     }
-  },
-  "exceptions": {
-    "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi.",
-    "notValidMatchingActivation": "La regola di abbinamento può essere modificata solo per un abbinamento inattivo.",
-    "notValidMatching": "La corrispondenza non è valida",
-    "notValidMatchingRuleSet": "Il set di regole di corrispondenza non è valido",
-    "expressionCannotBeEmpty": "L'espressione non può essere vuota."
-  },
-  "tooltips": {
-    "matchScoreExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo) e `masterEntity` (i valori grezzi dei campi del candidato, come array - es. masterEntity['name']). Deve restituire un numero tra 0 e 1, moltiplicato per il peso della regola per produrre il punteggio di corrispondenza - es. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 assegna il punteggio 1 a una corrispondenza esatta e 0 a tutto il resto."
-  }
 }
