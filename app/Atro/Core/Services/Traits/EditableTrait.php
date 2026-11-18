@@ -825,9 +825,7 @@ trait EditableTrait
                 }
             }
 
-            // The entity that was just stored has no original (fetched) values, so the relates of the steps below (e.g. duplicating the links)
-            // would see all its attributes as changed and run the update workflows again. When the workflows did not provide a fresh entity,
-            // the stored values are the original ones (no need to read the record again).
+            // A stored entity has no original values: mark it as fetched so the relates below do not see every attribute as changed.
             if (!isset($entity->_freshEntity)) {
                 $entity->setAsFetched();
             }
