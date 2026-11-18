@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "code": "",
+        "itemType": "",
+        "products": ""
+    },
+    "options": {
+        "itemType": {
+            "physical_goods": "",
+            "services": "",
+            "digital_products": "",
+            "legal_rights": ""
+        }
+    }
+}
