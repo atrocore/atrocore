@@ -1,38 +1,38 @@
 {
     "fields": {
-        "description": "",
-        "entity": "",
-        "notificationProfile": "",
-        "occurrence": "",
-        "isActive": "",
-        "ignoreSelfAction": "",
-        "asOwner": "",
-        "asFollower": "",
-        "asAssignee": "",
-        "asTeamMember": "",
-        "asNotificationProfile": "",
-        "emailActive": "",
-        "systemActive": "",
-        "emailTemplateId": "",
-        "systemTemplateId": ""
+        "description": "Leírás",
+        "entity": "Entitás",
+        "notificationProfile": "Értesítési profil",
+        "occurrence": "Esemény",
+        "isActive": "Aktív",
+        "ignoreSelfAction": "Saját műveletek mellőzése",
+        "asOwner": "Tulajdonosként",
+        "asFollower": "Követőként",
+        "asAssignee": "Kijelöltként",
+        "asTeamMember": "Csapattagként",
+        "asNotificationProfile": "Értesítési profil felhasználójaként",
+        "emailActive": "E-mail-értesítés",
+        "systemActive": "Rendszerértesítés",
+        "emailTemplateId": "E-mail-sablon",
+        "systemTemplateId": "Rendszersablon"
     },
     "options": {
         "occurrence": {
-            "creation": "",
-            "updating": "",
-            "linking": "",
-            "unlinking": "",
-            "deletion": "",
-            "note_created": "",
-            "note_updated": "",
-            "note_deleted": "",
-            "ownership_assignment": "",
-            "unlinking_ownership_assignment": "",
-            "mentioned": ""
+            "creation": "Létrehozás",
+            "updating": "Frissítés",
+            "linking": "Összekapcsolás",
+            "unlinking": "Leválasztás",
+            "deletion": "Törlés",
+            "note_created": "Jegyzet létrehozása",
+            "note_updated": "Jegyzet frissítése",
+            "note_deleted": "Jegyzet törlése",
+            "ownership_assignment": "Tulajdonos/kijelölt felhasználó beállítása",
+            "unlinking_ownership_assignment": "Tulajdonos/kijelölt felhasználó leválasztása",
+            "mentioned": "Megemlítés"
         }
     },
     "labels": {
-        "Notify User": "",
-        "Transport": ""
+        "Notify User": "Felhasználó értesítése",
+        "Transport": "Szállítás"
     }
 }
