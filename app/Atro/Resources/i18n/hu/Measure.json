@@ -1,20 +1,20 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "units": "",
-        "displayFormat": ""
+        "name": "Név",
+        "description": "Leírás",
+        "units": "Mértékegységek",
+        "displayFormat": "Megjelenítési formátum"
     },
     "options": {
         "displayFormat": {
-            "format1": "",
-            "format2": ""
+            "format1": "10€",
+            "format2": "€10"
         }
     },
     "actions": {
-        "setDefault": ""
+        "setDefault": "Beállítás alapértelmezettként"
     },
     "exceptions": {
-        "measureIsUsed": ""
+        "measureIsUsed": "A(z) '%s' mértéket a(z) '%s' mező használja a(z) '%s' Entitásban."
     }
 }
