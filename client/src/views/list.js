@@ -228,7 +228,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 {
                     url: '#' + this.scope,
                     label: this.getLanguage().translate(this.scope, 'scopeNamesPlural'),
-                    className: 'header-title'
+                    className: 'header-title',
+                    tooltip: this.getLanguage().has(this.scope, 'scopeDescriptions', 'Global')
+                        ? this.getLanguage().translate(this.scope, 'scopeDescriptions', 'Global')
+                        : null
                 }
             ];
         },

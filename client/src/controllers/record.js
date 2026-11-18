@@ -440,6 +440,10 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         createSubtypeRecord: function (options) {
             let selected = false;
 
+            this.listenToOnce(this.getRouter(), 'routed', () => {
+                selected = true;
+            });
+
             this.master(master => master.createView('selectSubtype', 'views/modals/select-subtype', {scope: this.name}, view => {
                 view.render();
 

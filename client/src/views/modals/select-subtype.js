@@ -26,6 +26,8 @@ Espo.define('views/modals/select-subtype', 'view', Dep => Dep.extend({
                 this.svelteComponent = null;
             }
         });
+
+        this.listenToOnce(this.getRouter(), 'routed', () => this.close());
     },
 
     afterRender() {

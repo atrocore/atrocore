@@ -1695,6 +1695,16 @@
     "medium": "Medium",
     "large": "Large"
   },
+  "scopeDescriptions": {
+    "Action": "Performs an operation with records, e.g. creates, updates or deletes them, sends an email or calls a webhook. It can be run manually, by a workflow or on schedule.",
+    "Attribute": "A property of a record that is added to the records individually or via a classification, instead of a field that every record of the entity has.",
+    "BlockingRule": "Selects the candidate records that are then compared with the matching rules. It does not score the candidates.",
+    "Connection": "Stores the access data to an external system, e.g. a database, a file server, a mail server or an API.",
+    "Entity": "A type of data records, e.g. products or brands, with its own fields, relations and layouts.",
+    "EntityField": "A property that every record of the entity has. The type defines what data the field keeps and how it is displayed.",
+    "MatchingRule": "Compares a record with a candidate record and scores the candidate if they match. The sum of the scores defines whether the records are duplicates.",
+    "Storage": "A place where the files are kept, e.g. a folder on the AtroCore server or an external file storage."
+  },
   "subtypeDescriptions": {
     "ActionTypeCreate": "Creates records of the target entity with values from fields or a script.",
     "ActionTypeUpdate": "Updates the selected or found records of the target entity.",
