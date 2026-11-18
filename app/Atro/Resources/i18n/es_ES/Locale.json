@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "languageCode": "Código de idioma",
-    "fallbackLanguageCode": "Código de lengua de reserva",
-    "timeZone": "Zona horaria",
-    "dateFormat": "Formato de fecha",
-    "weekStart": "Primer día de la semana",
-    "timeFormat": "Formato de hora",
-    "thousandSeparator": "Separador de mil",
-    "decimalMark": "Marca decimal",
-    "displayLabelsInContentLanguage": "Mostrar etiquetas en el idioma del contenido"
-  },
-  "labels": {
-    "sunday": "Domingo",
-    "monday": "Lunes"
-  },
-  "exceptions": {
-    "localeIsUsed": "La localización en uso no puede eliminarse."
-  }
+    "fields": {
+        "languageCode": "Código de idioma",
+        "fallbackLanguageCode": "Código de lengua de reserva",
+        "timeZone": "Zona horaria",
+        "dateFormat": "Formato de fecha",
+        "weekStart": "Primer día de la semana",
+        "timeFormat": "Formato de hora",
+        "thousandSeparator": "Separador de mil",
+        "decimalMark": "Marca decimal",
+        "displayLabelsInContentLanguage": "Mostrar etiquetas en el idioma del contenido",
+        "disableForUi": "Deshabilitar en la interfaz"
+    },
+    "labels": {
+        "sunday": "Domingo",
+        "monday": "Lunes"
+    },
+    "exceptions": {
+        "localeIsUsed": "La localización en uso no puede eliminarse."
+    },
+    "tooltips": {
+        "disableForUi": "Al habilitar esta opción, este idioma no aparecerá en el selector de idioma de la barra de herramientas ni en el menú desplegable del perfil de usuario. Seguirá disponible para configurar los feeds de exportación, los canales y los feeds de importación."
+    }
 }
