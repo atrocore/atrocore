@@ -1291,6 +1291,7 @@
     "entityRemoved": "{utente} ha cancellato {entityType} {entità}"
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "I dati personali di questo record sono stati cancellati automaticamente il {datetime}.",
     "eraseThis": "{user} ha cancellato i dati personali di questo record il {datetime}.",
     "erase": "{user} ha cancellato i dati personali di {entityType} {entity} il {datetime}.",
     "composerUpdate": "{user} ha modificato i pacchetti software installati",

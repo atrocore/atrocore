@@ -3,7 +3,9 @@
     "scheduling": "Planung",
     "jobs": "Aufträge",
     "name": "Name",
-    "action": "Aktion"
+    "action": "Aktion",
+    "entity": "Entität",
+    "searchFilter": "Suchfilter"
   },
   "links": {
     "action": "Aktion"
@@ -26,7 +28,8 @@
       "CalculateScriptFieldsForEntities": "Skriptfelder berechnen",
       "SendReports": "Anonyme Fehlerberichte senden",
       "CreateClusters": "Cluster erstellen",
-      "Action": "Aktion"
+      "Action": "Aktion",
+      "Erasure": "Personenbezogene Daten löschen"
     }
   },
   "tooltips": {
@@ -34,6 +37,7 @@
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Falsche Crontab-Konfiguration",
-    "onlyOneJobTypeAllowed": "Nur ein '%s' Auftrag ist erlaubt"
+    "onlyOneJobTypeAllowed": "Nur ein '%s' Auftrag ist erlaubt",
+    "entityDoesNotContainPersonalData": "Die Entität '%s' enthält keine personenbezogenen Daten"
   }
 }

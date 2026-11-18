@@ -29,6 +29,12 @@
       ],
       [
         {
+          "name": "entity"
+        },
+        false
+      ],
+      [
+        {
           "name": "scheduling"
         },
         false

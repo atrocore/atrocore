@@ -98,6 +98,40 @@
         }
       }
     },
+    "entity": {
+      "type": "varchar",
+      "view": "views/scheduled-job/fields/entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Erasure"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Erasure"
+            }
+          ]
+        }
+      }
+    },
+    "searchFilter": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "jobs": {
       "type": "linkMultiple"
     }

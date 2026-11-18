@@ -3,7 +3,9 @@
     "name": "Назва",
     "scheduling": "Планування",
     "jobs": "Завдання",
-    "action": "Дія"
+    "action": "Дія",
+    "entity": "Сутність",
+    "searchFilter": "Фільтр пошуку"
   },
   "links": {
     "action": "Дія"
@@ -13,7 +15,8 @@
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильна конфігурація crontab",
-    "onlyOneJobTypeAllowed": "Допускається лише одна робота '%s'"
+    "onlyOneJobTypeAllowed": "Допускається лише одна робота '%s'",
+    "entityDoesNotContainPersonalData": "Сутність '%s' не містить персональних даних"
   },
   "options": {
     "type": {
@@ -26,7 +29,8 @@
       "CalculateScriptFieldsForEntities": "Обчислити поля скриптів",
       "SendReports": "Надсилати анонімні повідомлення про помилки",
       "CreateClusters": "Створити кластери",
-      "Action": "Дія"
+      "Action": "Дія",
+      "Erasure": "Стерти персональні дані"
     }
   },
   "tooltips": {

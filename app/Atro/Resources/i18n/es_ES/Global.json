@@ -975,6 +975,7 @@
     "own": "You were set as Owner for {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Los datos personales de este registro se borraron automáticamente el {datetime}.",
     "eraseThis": "{user} borró los datos personales de este registro el {datetime}.",
     "erase": "{user} borró los datos personales de {entityType} {entity} el {datetime}.",
     "composerUpdate": "{user} ha cambiado los paquetes de software instalados",

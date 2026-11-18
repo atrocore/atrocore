@@ -1060,6 +1060,7 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Personal data in this record were erased automatically on {datetime}.",
     "eraseThis": "{user} erased personal data for this record on {datetime}.",
     "erase": "{user} erased personal data for {entityType} {entity} on {datetime}.",
     "createRecordAssociationThis": "{user} associated {relatedRecord} as {association}",

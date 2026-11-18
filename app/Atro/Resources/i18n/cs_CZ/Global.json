@@ -978,6 +978,7 @@
     "own": "Byl jste nastaven jako vlastník pro {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Osobní údaje v tomto záznamu byly automaticky vymazány dne {datetime}.",
     "eraseThis": "{user} vymazal osobní údaje tohoto záznamu dne {datetime}.",
     "erase": "{user} vymazal osobní údaje {entityType} {entity} dne {datetime}.",
     "composerUpdate": "{user} změnil nainstalované softwarové balíčky",

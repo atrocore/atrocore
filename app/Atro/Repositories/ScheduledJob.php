@@ -51,6 +51,15 @@ class ScheduledJob extends Base
 
     protected function validateByType(Entity $entity): void
     {
+        if ($entity->get('type') === 'Erasure') {
+            $entityName = $entity->get('entity');
+            if (empty($entityName) || empty($this->getMetadata()->get(['scopes', $entityName, 'containsPersonalData']))) {
+                $message = $this->getInjection('language')->translate('entityDoesNotContainPersonalData', 'exceptions', 'ScheduledJob');
+
+                throw new BadRequest(sprintf($message, (string)$entityName));
+            }
+        }
+
         // validation for unique job types
         if ($this->getMetadata()->get("app.jobTypes.{$entity->get('type')}.unique")) {
             $where = ['type' => $entity->get('type')];
