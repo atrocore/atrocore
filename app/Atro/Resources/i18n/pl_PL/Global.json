@@ -1757,6 +1757,26 @@
         "BlockingRuleTypeFieldSimilar": "Wybiera kandydatów, których wartości pola są takie same bez względu na wielkość liter i spacje.",
         "BlockingRuleTypeFieldContains": "Wybiera kandydatów, których wartość pola zawiera wartość rekordu.",
         "BlockingRuleTypeSet": "Łączy kilka reguł za pomocą AND lub OR.",
-        "BlockingRuleTypeExpression": "Wybiera kandydatów za pomocą wyrażenia ExpressionLanguage."
+        "BlockingRuleTypeExpression": "Wybiera kandydatów za pomocą wyrażenia ExpressionLanguage.",
+        "EntityFieldTypeEnum": "Jedna wartość wybrana z listy opcji.",
+        "EntityFieldTypeMultiEnum": "Kilka wartości wybranych z listy opcji.",
+        "EntityFieldTypeScript": "Wartość obliczana przez skrypt na podstawie danych rekordu.",
+        "EntityFieldTypeLink": "Łącze do jednego rekordu innej Encji.",
+        "EntityFieldTypeLinkMultiple": "Łącza do kilku rekordów innej Encji.",
+        "EntityFieldTypeMeasure": "Jednostka wybrana spośród jednostek miary.",
+        "AttributeTypeVarchar": "Krótki tekst w jednej linii.",
+        "AttributeTypeText": "Długi tekst w wielu wierszach.",
+        "AttributeTypeWysiwyg": "Sformatowany tekst zapisany jako HTML, edytowany w edytorze wizualnym.",
+        "AttributeTypeArray": "Lista wartości tekstowych.",
+        "AttributeTypeComposite": "Grupuje kilka atrybutów, aby można je było wypełnić razem.",
+        "AttributeTypeEnum": "Jedna wartość wybrana z listy opcji.",
+        "AttributeTypeMultiEnum": "Kilka wartości wybranych z listy opcji.",
+        "AttributeTypeLink": "Łącze do jednego rekordu innej encji.",
+        "AttributeTypeLinkMultiple": "Łącza do kilku rekordów innej encji.",
+        "ConnectionTypeApiKey": "Wysyła stały klucz API w nagłówku żądania o ustawionej nazwie.",
+        "ConnectionTypeAtrocore": "Łączy się z inną instancją AtroCore 2.x za pomocą jej tokenu API.",
+        "ConnectionTypeCookie": "Loguje się za pomocą żądania logowania i wysyła otrzymane pliki cookie z każdym żądaniem.",
+        "ConnectionTypeTokenAuthApi": "Loguje się za pomocą żądania logowania i tworzy nagłówki żądania na podstawie odpowiedzi, np. tokenu.",
+        "ConnectionTypeOtto": "Łączy się z API OTTO Market za pomocą OAuth."
     }
 }
