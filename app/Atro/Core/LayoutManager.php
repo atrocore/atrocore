@@ -989,7 +989,7 @@ class LayoutManager
         return $this->container->get('config');
     }
 
-    protected function getEntityManager(): \Espo\Core\Orm\EntityManager
+    protected function getEntityManager(): \Espo\ORM\EntityManager
     {
         return $this->container->get('entityManager');
     }
