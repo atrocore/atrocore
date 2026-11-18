@@ -109,7 +109,7 @@ class Entity extends ReferenceData
     {
         $item = $this->prepareItem($id);
         if (!empty($item) && $this->isItemOfSubtype($item)) {
-            $entity = $this->entityFactory->create($this->entityName);
+            $entity = $this->getEntityFactory()->create($this->entityName);
             $entity->set($item);
             $this->prepareVirtualFields($entity);
             $entity->setAsFetched();

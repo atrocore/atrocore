@@ -13,28 +13,23 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
-use Atro\Core\Utils\Language;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityManager;
 
 class Hierarchy extends Base
 {
     protected string $tableName;
     protected string $hierarchyTableName;
 
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, Container $container)
     {
-        parent::__construct($entityType, $entityManager, $entityFactory);
+        parent::__construct($entityType, $container);
 
-        $this->tableName = $entityManager->getMapper()->toDb($this->entityType);
+        $this->tableName = $this->getEntityManager()->getMapper()->toDb($this->entityType);
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 

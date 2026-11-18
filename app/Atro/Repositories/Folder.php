@@ -444,7 +444,7 @@ SQL;
         /** @var \Atro\Entities\Folder $folder */
         $folder = $this
             ->getMapper()
-            ->selectById($this->entityFactory->create($this->entityType), $folderId, ['withDeleted' => true]);
+            ->selectById($this->getEntityFactory()->create($this->entityType), $folderId, ['withDeleted' => true]);
         if (!empty($folder)) {
             if (!empty($this->isScanning)) {
                 $folder->_scan = true;

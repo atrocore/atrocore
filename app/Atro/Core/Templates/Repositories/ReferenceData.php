@@ -18,7 +18,6 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
@@ -28,14 +27,11 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Espo\ORM\Repository;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityManager;
 
 class ReferenceData extends Repository
 {
     public const DIR_PATH = 'data/reference-data';
 
-    protected readonly Container $container;
 
     protected string $filePath;
 
@@ -49,11 +45,10 @@ class ReferenceData extends Repository
      */
     protected array $whereClause = [];
 
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct(string $entityType, Container $container)
     {
-        parent::__construct($entityType, $entityManager, $entityFactory);
+        parent::__construct($entityType, $container);
 
-        $this->container = $entityManager->getContainer();
         $this->filePath = self::DIR_PATH . "/$this->entityName.json";
     }
 
@@ -282,7 +277,7 @@ class ReferenceData extends Repository
 
     protected function getNewEntity()
     {
-        $entity = $this->entityFactory->create($this->entityName);
+        $entity = $this->getEntityFactory()->create($this->entityName);
         $entity->setIsNew(true);
         $entity->populateDefaults();
 
@@ -295,7 +290,7 @@ class ReferenceData extends Repository
     {
         $items = $this->getAllItems();
         if (isset($items[$code])) {
-            $entity = $this->entityFactory->create($this->entityName);
+            $entity = $this->getEntityFactory()->create($this->entityName);
             $entity->set($items[$code]);
             $entity->setAsFetched();
 
@@ -310,7 +305,7 @@ class ReferenceData extends Repository
         $items = $this->getAllItems();
         foreach ($items as $item) {
             if ($item['id'] === $id && $this->isItemOfSubtype($item)) {
-                $entity = $this->entityFactory->create($this->entityName);
+                $entity = $this->getEntityFactory()->create($this->entityName);
                 $entity->set($item);
                 $entity->setAsFetched();
 
@@ -497,7 +492,7 @@ class ReferenceData extends Repository
             $items = $prepared;
         }
 
-        $collection = new EntityCollection($items, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($items, $this->entityName, $this->getEntityFactory());
         $collection->setAsFetched();
 
         $this->whereClause = [];
@@ -555,7 +550,7 @@ class ReferenceData extends Repository
     {
         $result     = $this->getAllItems();
         $result     = array_filter(array_values($result), fn($item) => in_array($item['id'], $ids));
-        $collection = new EntityCollection($result, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($result, $this->entityName, $this->getEntityFactory());
         $collection->setAsFetched();
 
         return $collection;
@@ -583,7 +578,7 @@ class ReferenceData extends Repository
 
     public function getAll()
     {
-        $collection = new EntityCollection(array_values($this->getAllItems()), $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection(array_values($this->getAllItems()), $this->entityName, $this->getEntityFactory());
         $collection->setAsFetched();
 
         return $collection;

@@ -23,19 +23,14 @@ use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityManager;
 
 class RDB extends \Espo\ORM\Repositories\RDB
 {
-    protected readonly Container $container;
-
     protected $processFieldsAfterSaveDisabled = false;
     protected $processFieldsBeforeSaveDisabled = false;
     protected $processFieldsAfterRemoveDisabled = false;
@@ -53,13 +48,6 @@ class RDB extends \Espo\ORM\Repositories\RDB
     protected function getFieldManagerUtil()
     {
         return $this->container->get('fieldManagerUtil');
-    }
-
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
-    {
-        parent::__construct($entityType, $entityManager, $entityFactory);
-
-        $this->container = $entityManager->getContainer();
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -109,7 +97,7 @@ class RDB extends \Espo\ORM\Repositories\RDB
 
         if (!$deleteRelEntities) {
             /** @var Entity $entity */
-            $entity = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
+            $entity = $this->getMapper()->selectById($this->getEntityFactory()->create($this->entityType), $id, ['withDeleted' => true]);
         }
 
         $res = parent::deleteFromDb($id);

@@ -422,7 +422,7 @@ class File extends Base
     public function deleteFromDb(string $id): bool
     {
         /** @var \Atro\Entities\File $file */
-        $file = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
+        $file = $this->getMapper()->selectById($this->getEntityFactory()->create($this->entityType), $id, ['withDeleted' => true]);
         if (!empty($file)) {
             if (!empty($this->isScanning)) {
                 $file->_scan = true;

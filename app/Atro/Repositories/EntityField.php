@@ -134,7 +134,7 @@ class EntityField extends ReferenceData
 
         $item = $this->prepareItem($parts[0], $parts[1]);
         if (!empty($item) && $this->isItemOfSubtype($item)) {
-            $entity = $this->entityFactory->create($this->entityName);
+            $entity = $this->getEntityFactory()->create($this->entityName);
             $entity->set($item);
             $this->prepareVirtualBoolFields($entity);
             $entity->setAsFetched();

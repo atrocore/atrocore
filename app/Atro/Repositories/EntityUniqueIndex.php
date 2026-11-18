@@ -53,7 +53,7 @@ class EntityUniqueIndex extends ReferenceData
             return null;
         }
 
-        $entity = $this->entityFactory->create($this->entityName);
+        $entity = $this->getEntityFactory()->create($this->entityName);
         $entity->set($item);
         $entity->setAsFetched();
 
