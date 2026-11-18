@@ -1,7 +1,15 @@
 {
-  "fields": {
-    "code": "Kód",
-    "itemType": "Type položky",
-    "products": "Produkty"
-  }
+    "fields": {
+        "code": "Kód",
+        "itemType": "Type položky",
+        "products": "Produkty"
+    },
+    "options": {
+        "itemType": {
+            "physical_goods": "Hmotné zboží",
+            "services": "Služby",
+            "digital_products": "Digitální produkty",
+            "legal_rights": "Právní nároky"
+        }
+    }
 }
