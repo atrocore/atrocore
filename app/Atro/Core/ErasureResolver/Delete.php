@@ -29,7 +29,7 @@ class Delete extends AbstractErasureResolver
         return empty($foreignEntityType) || $this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) !== 'Subtype';
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
     {
         $linkedEntities = $this->getLinkedEntities($entity, $field);
 

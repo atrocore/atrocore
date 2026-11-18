@@ -22,7 +22,7 @@ class Retain extends AbstractErasureResolver
         return true;
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
     {
         return false;
     }

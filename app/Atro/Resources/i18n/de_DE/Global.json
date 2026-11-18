@@ -1092,6 +1092,7 @@
     "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Die personenbezogenen Daten in diesem Datensatz wurden am {datetime} automatisch gelöscht.",
     "eraseThis": "{user} hat am {datetime} personenbezogene Daten dieses Datensatzes gelöscht.",
     "erase": "{user} hat am {datetime} personenbezogene Daten von {entityType} {entity} gelöscht.",
     "composerUpdate": "{user} hat die installierten Softwarepakete geändert",

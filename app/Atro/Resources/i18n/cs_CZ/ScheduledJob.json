@@ -3,7 +3,9 @@
     "name": "Jméno",
     "scheduling": "Plánování",
     "jobs": "Úlohy",
-    "action": "Akce"
+    "action": "Akce",
+    "entity": "Entita",
+    "searchFilter": "Vyhledávací filtr"
   },
   "links": {
     "action": "Akce"
@@ -13,7 +15,8 @@
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Špatná konfigurace crontabu",
-    "onlyOneJobTypeAllowed": "Je povolena pouze jedna úloha '%s'"
+    "onlyOneJobTypeAllowed": "Je povolena pouze jedna úloha '%s'",
+    "entityDoesNotContainPersonalData": "Entita '%s' neobsahuje osobní údaje"
   },
   "messages": {
     "jobLaunched": "Pracovní místo bylo vytvořeno",
@@ -30,7 +33,8 @@
       "CalculateScriptFieldsForEntities": "Výpočet polí skriptu",
       "SendReports": "Odesílání anonymních chybových hlášení",
       "CreateClusters": "Vytváření klastrů",
-      "Action": "Akce"
+      "Action": "Akce",
+      "Erasure": "Vymazat osobní údaje"
     }
   },
   "tooltips": {

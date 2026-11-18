@@ -1041,6 +1041,7 @@
     "own": "Вас було призначено власником для {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Персональні дані в цьому записі були автоматично стерті {datetime}.",
     "eraseThis": "{user} стер персональні дані цього запису {datetime}.",
     "erase": "{user} стер персональні дані {entityType} {entity} {datetime}.",
     "composerUpdate": "{user} змінив встановлені програмні пакети",

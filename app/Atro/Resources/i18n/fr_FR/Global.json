@@ -1034,6 +1034,7 @@
     "assign": "{entityType} {entity} vous a été attribué."
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Les données personnelles de cet enregistrement ont été effacées automatiquement le {datetime}.",
     "eraseThis": "{user} a effacé les données personnelles de cet enregistrement le {datetime}.",
     "erase": "{user} a effacé les données personnelles de {entityType} {entity} le {datetime}.",
     "composerUpdate": "{user} a modifié les paquets logiciels installés",

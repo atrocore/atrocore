@@ -3,7 +3,9 @@
     "name": "Name",
     "scheduling": "Scheduling",
     "jobs": "Jobs",
-    "action": "Action"
+    "action": "Action",
+    "entity": "Entity",
+    "searchFilter": "Search Filter"
   },
   "links": {
     "action": "Action"
@@ -13,7 +15,8 @@
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Wrong crontab configuration",
-    "onlyOneJobTypeAllowed": "Only one '%s' job is allowed"
+    "onlyOneJobTypeAllowed": "Only one '%s' job is allowed",
+    "entityDoesNotContainPersonalData": "Entity '%s' does not contain personal data"
   },
   "messages": {
     "jobLaunched": "The job has been created",
@@ -30,7 +33,8 @@
       "CalculateScriptFieldsForEntities": "Calculate script fields",
       "SendReports": "Send anonymous error reports",
       "CreateClusters": "Create Clusters",
-      "Action": "Action"
+      "Action": "Action",
+      "Erasure": "Erase personal data"
     }
   },
   "tooltips": {

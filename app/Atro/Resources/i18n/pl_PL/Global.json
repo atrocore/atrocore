@@ -975,6 +975,7 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Dane osobowe w tym rekordzie zostały automatycznie usunięte {datetime}.",
     "eraseThis": "{user} usunął dane osobowe tego rekordu {datetime}.",
     "erase": "{user} usunął dane osobowe {entityType} {entity} {datetime}.",
     "composerUpdate": "{user} zmienił zainstalowane pakiety oprogramowania",

@@ -168,5 +168,9 @@
   "InheritAllFromParentChunk": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\InheritAllFromParentChunk"
+  },
+  "Erasure": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\Erasure"
   }
 }

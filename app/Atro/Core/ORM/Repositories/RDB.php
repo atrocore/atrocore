@@ -1418,9 +1418,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     }
 
     /**
-     * @param array $processed records that are already erased, prevents endless loops for cascade erasure
+     * @param array $processed     records that are already erased, prevents endless loops for cascade erasure
+     * @param bool  $automatically whether the data are erased without a user action, e.g. by the scheduled job "Erasure"
      */
-    public function erasePersonalData(Entity $entity, array &$processed = []): void
+    public function erasePersonalData(Entity $entity, array &$processed = [], bool $automatically = false): void
     {
         if (isset($processed[$this->entityType][$entity->id])) {
             return;
@@ -1440,7 +1441,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 throw new Error("No erasure resolver supports field '$field' of entity '$this->entityType' for record '$entity->id'.");
             }
 
-            if ($resolver->resolve($entity, $field, $processed)) {
+            if ($resolver->resolve($entity, $field, $processed, $automatically)) {
                 $erasedFields[] = $field;
             }
         }
@@ -1448,7 +1449,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if (!empty($erasedFields)) {
             $entity->set('erasedAt', (new \DateTime())->format('Y-m-d H:i:s'));
 
-            $this->getEntityManager()->saveEntity($entity, ['erasePersonalData' => true, 'erasedFields' => $erasedFields]);
+            $this->getEntityManager()->saveEntity($entity, [
+                'erasePersonalData'   => true,
+                'erasedFields'        => $erasedFields,
+                'erasedAutomatically' => $automatically,
+            ]);
         }
     }
 

@@ -34,11 +34,12 @@ abstract class AbstractErasureResolver
     /**
      * Anonymize the value of the field in the record.
      *
-     * @param array $processed records that are already erased, prevents endless loops for cascade erasure
+     * @param array $processed     records that are already erased, prevents endless loops for cascade erasure
+     * @param bool  $automatically whether the data are erased without a user action, e.g. by the scheduled job "Erasure"
      *
      * @return bool whether the value of the field is erased
      */
-    abstract public function resolve(Entity $entity, string $field, array &$processed = []): bool;
+    abstract public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool;
 
     protected function getFieldDefs(Entity $entity, string $field): array
     {
