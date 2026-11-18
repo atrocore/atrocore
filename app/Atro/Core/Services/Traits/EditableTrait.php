@@ -824,6 +824,11 @@ trait EditableTrait
                 }
             }
 
+            // A stored entity has no original values: mark it as fetched so the relates below do not see every attribute as changed.
+            if (!isset($entity->_freshEntity)) {
+                $entity->setAsFetched();
+            }
+
             $entity = $entity->_freshEntity ?? $entity;
 
             $this->afterCreateEntity($entity, $attachment);
