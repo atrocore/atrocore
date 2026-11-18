@@ -909,6 +909,10 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             return data;
         },
 
+        getValueAttributeList: function () {
+            return [this.idName];
+        },
+
         clearSearch: function () {
             this.searchData.idValue = null;
             this.searchData.nameValue = null;

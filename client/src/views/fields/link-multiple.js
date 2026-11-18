@@ -920,6 +920,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return data;
         },
 
+        getValueAttributeList: function () {
+            return [this.idsName];
+        },
+
         fetchFromDom: function () {
             this.ids = [];
             this.$el.find('.link-container').children().each(function (i, li) {

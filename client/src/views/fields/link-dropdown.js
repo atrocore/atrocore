@@ -147,5 +147,9 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             return data;
         },
 
+        getValueAttributeList: function () {
+            return [this.name];
+        },
+
     });
 });
