@@ -1,0 +1,52 @@
+{
+    "labels": {
+        "confirmedAutomatically": "",
+        "selectTargetCluster": "",
+        "moveToCluster": ""
+    },
+    "fields": {
+        "entityName": "",
+        "entityId": "",
+        "record": "",
+        "cluster": "",
+        "matchedRecord": "",
+        "confirmedAutomatically": "",
+        "matchedScore": ""
+    },
+    "actions": {
+        "reject": "",
+        "consolidate": "",
+        "deconsolidate": "",
+        "split": "",
+        "move": ""
+    },
+    "exceptions": {
+        "notFound": "",
+        "cannotUnreject": "",
+        "itemsMustBelongToTheSameCluster": "",
+        "cannotDeconsolidateMasterEntityItem": "",
+        "cannotDeconsolidateAllItems": "",
+        "cannotSplitMasterEntityItem": "",
+        "idOrIdListOrWhereRequired": "",
+        "targetClusterIdRequired": ""
+    },
+    "massActions": {
+        "reject": "",
+        "deconsolidate": "",
+        "split": "",
+        "move": "",
+        "consolidate": ""
+    },
+    "massActionSuccessMessages": {
+        "reject": "",
+        "deconsolidate": "",
+        "split": "",
+        "move": "",
+        "consolidate": ""
+    },
+    "massActionConfirmMessages": {
+        "reject": "",
+        "deconsolidate": "",
+        "split": ""
+    }
+}
