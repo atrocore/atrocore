@@ -13,7 +13,8 @@
         "name": "Название компании",
         "prospect": "Перспективы",
         "accounts": "Контрагенты",
-        "contacts": "Контакты"
+        "contacts": "Контакты",
+        "postalCode": "Почтовый индекс"
     },
     "options": {
         "type": {
