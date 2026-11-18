@@ -18,7 +18,8 @@
         }
     },
     "actions": {
-        "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers"
+        "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers",
+        "unlinkRelatedAttribute": "Supprimer et conserver pour les enregistrements"
     },
     "exceptions": {
         "entityCannotBeChanged": "L'entité ne peut être modifiée.",
