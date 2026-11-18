@@ -1,33 +1,33 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "selectionItems": ""
+        "name": "Név",
+        "description": "Leírás",
+        "selectionItems": "Kijelölés elemei"
     },
     "options": {
         "type": {
-            "single": "",
-            "multiple": ""
+            "single": "Egységes",
+            "multiple": "Vegyes"
         }
     },
     "labels": {
-        "createSelection": ""
+        "createSelection": "Kijelölés létrehozása"
     },
     "messages": {
-        "cannotSetToSingle": "",
-        "youNeedAtLeastTwoItem": "",
-        "entityIsRequired": "",
-        "entityTypeMismatch": ""
+        "cannotSetToSingle": "Nem állíthatja be az „Egységes” értéket",
+        "youNeedAtLeastTwoItem": "Az összehasonlításhoz legalább két elem szükséges.",
+        "entityIsRequired": "Az „Entitás” mező megadása kötelező.",
+        "entityTypeMismatch": "Ez a kijelölés csak a(z) %s típusú rekordokat fogadja el."
     },
     "customActions": {
-        "replaceItem": ""
+        "replaceItem": "Elem cseréje"
     },
     "streamMessages": {
-        "selectionLinked": "",
-        "selectionLinkedThis": "",
-        "selectionUnlinked": "",
-        "selectionUnlinkedThis": "",
-        "selectionDeleted": "",
-        "selectionDeletedThis": ""
+        "selectionLinked": "{user} ehhez a kijelöléshez kapcsolta a(z) {relatedEntity} rekordot",
+        "selectionLinkedThis": "A(z) {user} összekapcsolta a(z) {relatedEntity} entitást ezzel a kijelöléssel",
+        "selectionUnlinked": "{user} leválasztotta a(z) {relatedEntity} rekordot erről a kijelölésről",
+        "selectionUnlinkedThis": "A(z) {user} leválasztotta a(z) {relatedEntity} entitást erről a kijelölésről",
+        "selectionDeleted": "{user} törölte a(z) {relatedEntity} rekordot a kijelölésből",
+        "selectionDeletedThis": "Ezt a kijelölést a(z) {user} törölte"
     }
 }
