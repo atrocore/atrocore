@@ -1,6 +1,8 @@
 {
     "labels": {
-        "confirmedAutomatically": "Automatiquement confirmé"
+        "confirmedAutomatically": "Automatiquement confirmé",
+        "selectTargetCluster": "Sélectionner le cluster cible",
+        "moveToCluster": "Déplacer vers un cluster"
     },
     "fields": {
         "entityName": "Nom de l'entité",
@@ -18,19 +20,22 @@
         "itemsMustBelongToTheSameCluster": "Tous les éléments sélectionnés doivent appartenir au même cluster.",
         "cannotDeconsolidateMasterEntityItem": "Impossible de déconsolider l'élément de l'entité maître.",
         "cannotDeconsolidateAllItems": "Impossible de déconsolider tous les éléments consolidés : au moins un élément doit rester lié au golden record.",
-        "cannotSplitMasterEntityItem": "Impossible de scinder l'élément de l'entité maître."
+        "cannotSplitMasterEntityItem": "Impossible de scinder l'élément de l'entité maître.",
+        "targetClusterIdRequired": "Le cluster cible est obligatoire."
     },
     "massActions": {
         "reject": "Rejeter",
         "deconsolidate": "Déconsolider",
         "split": "Scinder",
-        "consolidate": "Consolider"
+        "consolidate": "Consolider",
+        "move": "Déplacer"
     },
     "massActionSuccessMessages": {
         "reject": "Les éléments de cluster sélectionnés sont en cours de suppression en arrière-plan",
         "deconsolidate": "Les éléments de cluster sélectionnés ont été déconsolidés",
         "split": "Les éléments de cluster sélectionnés ont été déplacés vers un nouveau cluster",
-        "consolidate": "Les éléments de cluster sélectionnés ont été consolidés"
+        "consolidate": "Les éléments de cluster sélectionnés ont été consolidés",
+        "move": "Les éléments de cluster sélectionnés ont été déplacés"
     },
     "massActionConfirmMessages": {
         "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?",
@@ -41,6 +46,7 @@
         "reject": "Rejeter",
         "consolidate": "Consolider",
         "deconsolidate": "Déconsolider",
-        "split": "Scinder"
+        "split": "Scinder",
+        "move": "Déplacer"
     }
 }
