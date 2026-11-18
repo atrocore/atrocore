@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "name": "",
+        "description": "",
+        "units": "",
+        "displayFormat": ""
+    },
+    "options": {
+        "displayFormat": {
+            "format1": "",
+            "format2": ""
+        }
+    },
+    "actions": {
+        "setDefault": ""
+    },
+    "exceptions": {
+        "measureIsUsed": ""
+    }
+}
