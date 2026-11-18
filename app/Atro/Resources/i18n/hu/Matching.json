@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "minimumScore": "",
+        "entity": "",
+        "masterEntity": "",
+        "matchingRules": "",
+        "matchedRecords": "",
+        "matchedRecordsMax": "",
+        "blockingRules": "",
+        "blockingOperator": ""
+    },
+    "options": {
+        "type": {
+            "duplicate": "",
+            "masterRecord": ""
+        },
+        "blockingOperator": {
+            "or": "",
+            "and": ""
+        }
+    },
+    "labels": {
+        "configureMatching": ""
+    },
+    "tooltips": {
+        "matchedRecordsMax": "",
+        "blockingOperator": ""
+    },
+    "exceptions": {
+        "noRules": "",
+        "masterRecordEntityInvalid": "",
+        "noBlockingRules": ""
+    }
+}
