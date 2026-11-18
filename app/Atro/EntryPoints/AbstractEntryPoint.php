@@ -27,7 +27,6 @@ abstract class AbstractEntryPoint
     protected ContainerInterface $container;
 
     public static bool $authRequired = true;
-    public static bool $notStrictAuth = false;
 
     public function __construct(ContainerInterface $container)
     {

@@ -18,7 +18,6 @@ use Espo\Core\ORM\Entity;
 class Oauth1Callback extends AbstractEntryPoint
 {
     public static bool $authRequired = false;
-    public static bool $notStrictAuth = false;
 
     private string $consumerKey;
     private string $consumerSecret;
