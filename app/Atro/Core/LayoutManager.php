@@ -17,7 +17,6 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Config;
-use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
@@ -523,7 +522,7 @@ class LayoutManager
 
                 if (file_exists($fileFullPath)) {
                     // get file data
-                    $fileData = $this->getFileManager()->getContents($fileFullPath);
+                    $fileData = file_get_contents($fileFullPath);
 
                     // prepare data
                     $data = Json::decode($fileData, true);
@@ -566,7 +565,7 @@ class LayoutManager
         $fileFullPath = $this->concatPath($filePath, $name . '.json');
         if (file_exists($fileFullPath)) {
             // get file data
-            $fileData = $this->getFileManager()->getContents($fileFullPath);
+            $fileData = file_get_contents($fileFullPath);
 
             // prepare data
             $data = Json::decode($fileData, true);
@@ -979,11 +978,6 @@ class LayoutManager
     protected function sanitizeInput(string $name): string
     {
         return preg_replace("([\.]{2,})", '', $name);
-    }
-
-    protected function getFileManager(): FileManager
-    {
-        return $this->container->get('fileManager');
     }
 
     protected function getMetadata(): \Atro\Core\Utils\Metadata

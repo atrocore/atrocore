@@ -52,7 +52,6 @@ abstract class AbstractRecordService extends AbstractService
         'aclManager',
         'config',
         'serviceFactory',
-        'fileManager',
         'selectManagerFactory',
         'injectableFactory',
         'fieldManagerUtil',
@@ -152,11 +151,6 @@ abstract class AbstractRecordService extends AbstractService
     protected function getAclManager()
     {
         return $this->getInjection('aclManager');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getInjection('fileManager');
     }
 
     /**

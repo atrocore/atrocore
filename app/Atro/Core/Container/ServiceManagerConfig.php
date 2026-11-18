@@ -27,7 +27,6 @@ class ServiceManagerConfig
 {
     private array $classAliases = [
         'userContext'              => \Atro\Core\UserContext::class,
-        'fileManager'              => \Atro\Core\Utils\FileManager::class,
         'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
         'consoleManager'           => \Atro\Core\ConsoleManager::class,
         'migration'                => \Atro\Core\Migration\Migration::class,
@@ -82,8 +81,6 @@ class ServiceManagerConfig
         \Atro\Core\Utils\Metadata::class                => 'metadata',
         \Atro\Core\Utils\Language::class                => 'language',
         \Atro\Core\Utils\UniqueIndexDescriber::class    => 'uniqueIndexDescriber',
-        \Atro\Core\Utils\FileManager::class             => 'fileManager',
-        \Espo\Core\Utils\File\Manager::class            => 'fileManager',
         \Atro\Core\DataManager::class                   => 'dataManager',
         \Atro\Core\ModuleManager\Manager::class         => 'moduleManager',
         \Atro\Core\Utils\ThemeManager::class            => 'themeManager',

@@ -23,7 +23,6 @@ use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -38,7 +37,6 @@ class ReferenceData extends Repository implements Injectable
 
     protected array $dependencies = [];
     protected array $injections = [];
-    protected FileManager $fileManager;
 
     protected string $filePath;
 

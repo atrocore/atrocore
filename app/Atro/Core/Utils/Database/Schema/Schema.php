@@ -41,7 +41,7 @@ class Schema
         $this->schemaConverter = $container->get(Converter::class);
         $this->comparator = new Comparator();
 
-        $this->ormConverter = new OrmConverter($container->get('metadata'), $container->get('fileManager'), $container->get('config'));
+        $this->ormConverter = new OrmConverter($container->get('metadata'), $container->get('config'));
     }
 
     public function rebuild(): bool

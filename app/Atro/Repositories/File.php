@@ -23,13 +23,13 @@ use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
-use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\PDFLib;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\UrlGuard;
+use Atro\Core\Utils\Util;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -170,10 +170,12 @@ class File extends Base
         // basename(): the name is user-supplied and only names the scratch copy here, so it must
         // not be able to steer where that copy lands
         $localPath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . IdGenerator::uuid() . DIRECTORY_SEPARATOR . basename((string)$file->get('name'));
-        $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($localPath), 0777, true);
+        if (!is_dir(dirname($localPath))) {
+            mkdir(dirname($localPath), 0777, true);
+        }
 
         if (property_exists($input, 'fileContents')) {
-            $this->getFileManager()->putContents($localPath, LocalStorage::parseInputFileContent((string)$input->fileContents));
+            file_put_contents($localPath, LocalStorage::parseInputFileContent((string)$input->fileContents));
         } elseif (property_exists($input, 'allChunks')) {
             $chunkDirPath = $this->getStorage($file)->getChunksDir($file->getStorage())
                 . DIRECTORY_SEPARATOR . LocalStorage::assertChunkHash($input->fileUniqueHash ?? null);
@@ -188,7 +190,7 @@ class File extends Base
             }
             fclose($f);
 
-            $this->getFileManager()->removeAllInDir($chunkDirPath);
+            Util::removeDir($chunkDirPath);
         } elseif (property_exists($input, 'remoteUrl')) {
             $allowedHosts = (array)$this->getConfig()->get('fetchAllowedHosts', []);
             $remoteUrl    = UrlGuard::assertFetchable((string)$input->remoteUrl, $allowedHosts);
@@ -269,7 +271,7 @@ class File extends Base
     protected function cleanupLocalTmpFile(string $localPath): void
     {
         if (str_starts_with($localPath, LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR) && file_exists($localPath)) {
-            $this->getFileManager()->removeAllInDir($this->getFileManager()->getFileDir($localPath));
+            Util::removeDir(dirname($localPath));
         }
     }
 
@@ -717,9 +719,9 @@ class File extends Base
         } else {
             $filePath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . $file->get('name');
             if (!is_dir(LocalStorage::TMP_DIR)) {
-                @mkdir(LocalStorage::TMP_DIR, 0777, true);
+                mkdir(LocalStorage::TMP_DIR, 0777, true);
             }
-            $this->getFileManager()->putContents($filePath, $file->getContents());
+            file_put_contents($filePath, $file->getContents());
             $isTempFile = true;
         }
 
@@ -729,7 +731,7 @@ class File extends Base
 
         if ($file->isPdf()) {
             if (!is_dir(LocalStorage::TMP_DIR)) {
-                @mkdir(LocalStorage::TMP_DIR, 0777, true);
+                mkdir(LocalStorage::TMP_DIR, 0777, true);
             }
 
             $firstPagePath = LocalStorage::TMP_DIR . '/page-1.png';
@@ -741,11 +743,11 @@ class File extends Base
             $pdflib->setFilePrefix('page-');
             $pdflib->convert();
             $this->addDimensionFromImage($file, $firstPagePath);
-            $this->getFileManager()->removeFile([$firstPagePath]);
+            @unlink($firstPagePath);
         }
 
         if (!empty($isTempFile)) {
-            $this->getFileManager()->removeFile([$filePath]);
+            @unlink($filePath);
         }
     }
 
@@ -881,11 +883,6 @@ class File extends Base
         return $this->getInjection('container')->get(FileValidator::class);
     }
 
-    protected function getFileManager(): FileManager
-    {
-        return $this->getInjection('fileManager');
-    }
-
     protected function getThumbnailCreator(): Thumbnail
     {
         return $this->getInjection('container')->get(Thumbnail::class);
@@ -897,6 +894,5 @@ class File extends Base
 
         $this->addDependency('container');
         $this->addDependency('language');
-        $this->addDependency('fileManager');
     }
 }

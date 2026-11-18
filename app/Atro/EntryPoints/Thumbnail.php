@@ -49,7 +49,9 @@ class Thumbnail extends AbstractEntryPoint
                 try {
                     $localPath = $file->findOrCreateLocalFilePath($tmpDir);
                     $target    = 'public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $size);
-                    $this->getFileManager()->mkdir(dirname($target), 0777, true);
+                    if (!is_dir(dirname($target))) {
+                        mkdir(dirname($target), 0777, true);
+                    }
                     copy($localPath, $target);
                 } finally {
                     Util::removeDir($tmpDir);

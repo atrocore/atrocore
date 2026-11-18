@@ -17,14 +17,12 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata\Helper;
 use Espo\Core\Utils\Json;
 
 class Metadata
 {
     private Container $container;
-    private FileManager $fileManager;
     private ModuleManager $moduleManager;
     private EventManager $eventManager;
     private DataManager $dataManager;
@@ -39,7 +37,6 @@ class Metadata
     public function __construct(Container $container)
     {
         $this->container     = $container;
-        $this->fileManager   = $container->get('fileManager');
         $this->dataManager   = $container->get('dataManager');
         $this->moduleManager = $container->get('moduleManager');
         $this->eventManager  = $container->get('eventManager');
@@ -348,14 +345,12 @@ class Metadata
      */
     public function getCustom($key1, $key2, $default = null)
     {
-        $filePath    = [$this->customPath, $key1, $key2 . '.json'];
-        $fileContent = $this->fileManager->getContents($filePath);
-
-        if ($fileContent) {
-            return Json::decode($fileContent, true);
+        $filePath = $this->getCustomFilePath($key1, $key2);
+        if (!file_exists($filePath)) {
+            return $default;
         }
 
-        return $default;
+        return Json::decode(file_get_contents($filePath), true) ?: $default;
     }
 
     /**
@@ -377,10 +372,7 @@ class Metadata
             }
         }
 
-        $filePath    = [$this->customPath, $key1, $key2 . '.json'];
-        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-        $result = $this->fileManager->putContents($filePath, $changedData);
+        $this->writeCustomFile($this->getCustomFilePath($key1, $key2), $data);
 
         $this->init(true);
 
@@ -518,14 +510,13 @@ class Metadata
      */
     public function save()
     {
-        $path = $this->customPath;
-
         $result = true;
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $data) {
                     if (!empty($data)) {
-                        $result &= $this->fileManager->mergeContents(array($path, $key1, $key2 . '.json'), $data, true);
+                        $filePath = $this->getCustomFilePath($key1, $key2);
+                        $result &= $this->writeCustomFile($filePath, Util::merge($this->readCustomFile($filePath), Json::getArrayData($data)));
                     }
                 }
             }
@@ -535,8 +526,7 @@ class Metadata
             foreach ($this->deletedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $unsetData) {
                     if (!empty($unsetData)) {
-                        $rowResult = $this->fileManager->unsetContents(array($path, $key1, $key2 . '.json'),
-                            $unsetData, true);
+                        $rowResult = $this->unsetInCustomFile($this->getCustomFilePath($key1, $key2), $unsetData);
                         if ($rowResult == false) {
                             $GLOBALS['log']->warning('Metadata items [' . $key1 . '.' . $key2 . '] can be deleted for custom code only.');
                         }
@@ -553,6 +543,44 @@ class Metadata
         $this->clearChanges();
 
         return (bool)$result;
+    }
+
+    private function getCustomFilePath(string $key1, string $key2): string
+    {
+        return "{$this->customPath}/$key1/$key2.json";
+    }
+
+    private function readCustomFile(string $filePath): array
+    {
+        if (!file_exists($filePath)) {
+            return [];
+        }
+
+        return Json::decode(file_get_contents($filePath), true) ?: [];
+    }
+
+    private function writeCustomFile(string $filePath, mixed $data): bool
+    {
+        if (!is_dir(dirname($filePath))) {
+            mkdir(dirname($filePath), 0777, true);
+        }
+
+        $content = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        return file_put_contents($filePath, $content, LOCK_EX) !== false;
+    }
+
+    /**
+     * Removes the keys from the custom file; the file left without data is deleted.
+     */
+    private function unsetInCustomFile(string $filePath, array|string $unsets): bool
+    {
+        $data = Util::unsetInArray($this->readCustomFile($filePath), $unsets, true);
+        if (!empty($data)) {
+            return $this->writeCustomFile($filePath, $data);
+        }
+
+        return !file_exists($filePath) || unlink($filePath);
     }
 
     public function getEntityPath(string $entityName, string $delim = '\\'): string

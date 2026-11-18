@@ -473,28 +473,6 @@ class User extends Base
         return parent::deleteEntity($id);
     }
 
-    public function afterUpdate(Entity $entity, array $data = array())
-    {
-        parent::afterUpdate($entity, $data);
-
-        if (
-            array_key_exists('rolesIds', $data)
-            || array_key_exists('teamsIds', $data)
-            || array_key_exists('isAdmin', $data)
-            || array_key_exists('isEntityAdmin', $data)
-            || array_key_exists('isRoleAdmin', $data)
-            || array_key_exists('isUserAdmin', $data)
-            || array_key_exists('isDataPrivacyAdmin', $data)
-        ) {
-            $this->clearRoleCache($entity->id);
-        }
-    }
-
-    protected function clearRoleCache($id)
-    {
-        $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
-    }
-
     /**
      * @inheritDoc
      */
@@ -532,11 +510,6 @@ class User extends Base
     protected function getLanguage(): Language
     {
         return $this->getContainer()->get('language');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
     }
 
     protected function getContainer(): Container

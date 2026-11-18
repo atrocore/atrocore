@@ -214,7 +214,7 @@ abstract class AbstractModule
 
         if (file_exists($fileFullPath)) {
             // get file data
-            $fileData = $this->getContainer()->get('fileManager')->getContents($fileFullPath);
+            $fileData = file_get_contents($fileFullPath);
 
             // prepare data
             $data = array_merge_recursive($data, Json::decode($fileData, true));
