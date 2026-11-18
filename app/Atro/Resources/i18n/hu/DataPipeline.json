@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "targetEntity": "",
+        "sourceEntity": "",
+        "transformationScript": "",
+        "executeTransformationAs": ""
+    },
+    "tooltips": {
+        "transformationScript": "",
+        "executeTransformationAs": ""
+    },
+    "exceptions": {
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "",
+        "sourceEntityTypeNotAllowed": "",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "",
+        "sourceAndTargetEntityCannotBeSame": "",
+        "dataPipelineAlreadyExists": "",
+        "transformationScriptIsMissing": "",
+        "transformationScriptIsNotValid": "",
+        "noSourceRecordIsLinked": ""
+    },
+    "labels": {
+        "targetRecordPreviewHint": "",
+        "noDataPipelineConfigured": "",
+        "noSourceRecords": "",
+        "discard": "",
+        "transformationPreview": "",
+        "targetRecordNotExists": "",
+        "applyToRecords": "",
+        "transformTo": ""
+    },
+    "messages": {
+        "transformConfirmation": "",
+        "updateFromSourceConfirmation": "",
+        "recordsTransformed": "",
+        "recordsNotTransformed": ""
+    },
+    "options": {
+        "executeTransformationAs": {
+            "system": "",
+            "sameUser": ""
+        }
+    }
+}
