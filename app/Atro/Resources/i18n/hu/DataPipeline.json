@@ -1,44 +1,44 @@
 {
     "fields": {
-        "targetEntity": "",
-        "sourceEntity": "",
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "targetEntity": "Célentitás",
+        "sourceEntity": "Forrásentitás",
+        "transformationScript": "Transzformációs szkript",
+        "executeTransformationAs": "Transzformáció végrehajtása a következőként"
     },
     "tooltips": {
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "transformationScript": "Konfigurálja, hogyan alakulnak át a forrásrekord adatai, és hogyan kerülnek leképezésre a célrekordra.",
+        "executeTransformationAs": "Az a felhasználói fiók, amelyet a rendszer a transzformációs szkript végrehajtásához használ."
     },
     "exceptions": {
-        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "",
-        "sourceEntityTypeNotAllowed": "",
-        "targetEntityCannotBePrimaryOfContributorDerivative": "",
-        "sourceAndTargetEntityCannotBeSame": "",
-        "dataPipelineAlreadyExists": "",
-        "transformationScriptIsMissing": "",
-        "transformationScriptIsNotValid": "",
-        "noSourceRecordIsLinked": ""
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "A(z) „%s” Entitás közreműködő vagy módosítási kérelem leszármazottja, ezért nem használható forrás-Entitásként.",
+        "sourceEntityTypeNotAllowed": "A(z) %s entitás nem használható forrásentitásként: csak Alap és Hierarchia típus engedélyezett.",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "A(z) %s entitás egy közreműködői származtatás elsődleges entitása, ezért nem használható célentitásként.",
+        "sourceAndTargetEntityCannotBeSame": "A forrás- és célentitás nem lehet azonos.",
+        "dataPipelineAlreadyExists": "Ehhez az entitáspárhoz már létezik adatfolyam.",
+        "transformationScriptIsMissing": "Az adatfolyam átalakítási szkriptje hiányzik.",
+        "transformationScriptIsNotValid": "A transzformációs szkript érvénytelen adatcsomagot ad vissza: %s",
+        "noSourceRecordIsLinked": "Nincs forrásrekord összekapcsolva a rekorddal."
     },
     "labels": {
-        "targetRecordPreviewHint": "",
-        "noDataPipelineConfigured": "",
-        "noSourceRecords": "",
-        "discard": "",
-        "transformationPreview": "",
-        "targetRecordNotExists": "",
-        "applyToRecords": "",
-        "transformTo": ""
+        "targetRecordPreviewHint": "Megmutatja, hogyan nézne ki a célrekord az átalakítás után. A rendszer nem menti az adatokat.",
+        "noDataPipelineConfigured": "Ehhez az entitáspárhoz nincs konfigurálva adatfolyam",
+        "noSourceRecords": "A forrásentitásnak még nincsenek rekordjai",
+        "discard": "Elvetés",
+        "transformationPreview": "Transzformáció előnézete",
+        "targetRecordNotExists": "A célrekord még nem létezik. Alkalmazza az előnézetet, hogy lássa, hogyan nézne ki az átalakítás után.",
+        "applyToRecords": "Alkalmazás rekordokra",
+        "transformTo": "A(z) {entity} átalakítása"
     },
     "messages": {
-        "transformConfirmation": "",
-        "updateFromSourceConfirmation": "",
-        "recordsTransformed": "",
-        "recordsNotTransformed": ""
+        "transformConfirmation": "A transzformációs szkript végrehajtása megtörténik a kiválasztott rekordokon, a célrekordok pedig létrejönnek vagy frissülnek. Folytatja?",
+        "updateFromSourceConfirmation": "A transzformációs szkript végrehajtása megtörténik a kiválasztott rekordokhoz kapcsolt forrásrekordokon, a kiválasztott rekordok pedig frissülnek. Folytatja?",
+        "recordsTransformed": "%s / %s rekord átalakítva",
+        "recordsNotTransformed": "%s rekord átalakítása nem sikerült. A részletekért tekintse meg a naplót."
     },
     "options": {
         "executeTransformationAs": {
-            "system": "",
-            "sameUser": ""
+            "system": "Rendszer",
+            "sameUser": "Ugyanaz a felhasználó"
         }
     }
 }
