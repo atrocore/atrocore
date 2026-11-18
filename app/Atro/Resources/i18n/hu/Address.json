@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "buyer": "",
+        "email": "",
+        "phone": "",
+        "street": "",
+        "postalCode": "",
+        "box": "",
+        "city": "",
+        "country": "",
+        "type": "",
+        "account": "",
+        "contactName": "",
+        "name": "",
+        "prospect": "",
+        "accounts": "",
+        "contacts": ""
+    },
+    "options": {
+        "type": {
+            "billing": "",
+            "delivery": ""
+        }
+    }
+}
