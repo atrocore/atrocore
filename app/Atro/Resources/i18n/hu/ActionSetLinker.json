@@ -1,6 +1,6 @@
 {
     "fields": {
-        "sortOrder": "",
-        "isActive": ""
+        "sortOrder": "Rendezési sorrend",
+        "isActive": "Aktív a műveletkészletben"
     }
 }
