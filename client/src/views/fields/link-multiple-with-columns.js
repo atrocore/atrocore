@@ -310,6 +310,10 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
             return data;
         },
 
+        getValueAttributeList: function () {
+            return [...Dep.prototype.getValueAttributeList.call(this), this.columnsName];
+        },
+
     });
 });
 

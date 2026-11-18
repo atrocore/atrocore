@@ -1359,6 +1359,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
         },
 
+        getValueAttributeList: function () {
+            return Object.keys(this.fetch() || {});
+        },
+
         inlineEditSave: function () {
             var data = this.fetch();
 
@@ -1421,6 +1425,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(this.translate('Record cannot be saved'), 'error');
                 model.set(prev, { silent: true });
                 return;
+            }
+
+            const lockedFields = attrs._lockedFields || {};
+            const valueChanged = this.getValueAttributeList().some(attribute => attribute in attrs);
+            if (valueChanged && this.hasLockedControls() && !this.readOnly && !this.isLocked() && !(this.getLockedFieldName() in lockedFields)) {
+                attrs._lockedFields = {...lockedFields, [this.getLockedFieldName()]: true};
             }
 
             let _prev = {};

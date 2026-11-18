@@ -4253,6 +4253,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             this._markRowFieldsInvalid(rowView, result.message);
                         } else {
                             model.set(changedAttrs);
+                            if (!_.isEmpty(changedAttrs._lockedFields)) {
+                                const lockedMeta = Espo.Utils.cloneDeep(model.get('_meta') || {});
+                                lockedMeta.locked = lockedMeta.locked || {};
+                                lockedMeta.locked.fields = {...(lockedMeta.locked.fields || {}), ...changedAttrs._lockedFields};
+                                model.set('_meta', lockedMeta);
+                            }
                             model.unset('_lockedFields', {silent: true});
                             if (model !== mainModel) {
                                 const meta = mainModel.get('_meta') || {};
@@ -4301,11 +4307,16 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (!model) return;
 
                 const fetchedData = {};
+                const lockableViews = [];
                 for (const key in rowView.nestedViews) {
                     const fv = rowView.nestedViews[key];
                     if (fv.mode === 'edit' && !fv.disabled && !fv.readOnly && fv.isFullyRendered()) {
                         if (!!fv.options?.useRelationModel === useRelationModel) {
-                            Object.assign(fetchedData, fv.fetch());
+                            const fetched = fv.fetch();
+                            Object.assign(fetchedData, fetched);
+                            if (!useRelationModel && typeof fv.hasLockedControls === 'function' && fv.hasLockedControls() && !fv.isLocked()) {
+                                lockableViews.push({ field: fv.getLockedFieldName(), attributes: fv.getValueAttributeList() });
+                            }
                         }
                     }
                 }
@@ -4319,8 +4330,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
                 });
 
-                if (!useRelationModel && !_.isEmpty(model.get('_lockedFields'))) {
-                    changedAttrs._lockedFields = model.get('_lockedFields');
+                const lockedFields = {...(useRelationModel ? {} : (model.get('_lockedFields') || {}))};
+                lockableViews.forEach(({ field, attributes }) => {
+                    if (!(field in lockedFields) && attributes.some(attribute => attribute in changedAttrs)) {
+                        lockedFields[field] = true;
+                    }
+                });
+
+                if (!_.isEmpty(lockedFields)) {
+                    changedAttrs._lockedFields = lockedFields;
                     hasChanges = true;
                 }
 
