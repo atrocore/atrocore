@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "languageCode": "Kód jazyka",
-    "fallbackLanguageCode": "Kód náhradního jazyka",
-    "timeZone": "Časové pásmo",
-    "dateFormat": "Formát data",
-    "weekStart": "První den týdne",
-    "timeFormat": "Časový formát",
-    "thousandSeparator": "Tisíc oddělovačů",
-    "decimalMark": "Desetinná značka",
-    "displayLabelsInContentLanguage": "Zobrazení štítků v jazyce obsahu"
-  },
-  "labels": {
-    "sunday": "Neděle",
-    "monday": "Pondělí"
-  },
-  "exceptions": {
-    "localeIsUsed": "Používaný Locale nelze odstranit."
-  }
+    "fields": {
+        "languageCode": "Kód jazyka",
+        "fallbackLanguageCode": "Kód náhradního jazyka",
+        "timeZone": "Časové pásmo",
+        "dateFormat": "Formát data",
+        "weekStart": "První den týdne",
+        "timeFormat": "Časový formát",
+        "thousandSeparator": "Tisíc oddělovačů",
+        "decimalMark": "Desetinná značka",
+        "displayLabelsInContentLanguage": "Zobrazení štítků v jazyce obsahu",
+        "disableForUi": "Zakázat pro uživatelské rozhraní"
+    },
+    "labels": {
+        "sunday": "Neděle",
+        "monday": "Pondělí"
+    },
+    "exceptions": {
+        "localeIsUsed": "Používaný Locale nelze odstranit."
+    },
+    "tooltips": {
+        "disableForUi": "Po zapnutí se tato lokalizace nebude zobrazovat v přepínači lokalizací na panelu nástrojů ani v rozevíracím seznamu uživatelského profilu. Nadále bude dostupná v konfiguraci exportního feedu, kanálu a importního feedu."
+    }
 }
