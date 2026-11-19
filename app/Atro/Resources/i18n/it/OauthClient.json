@@ -1,58 +1,58 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "isActive": "",
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "secretHash": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "name": "Nome",
+        "description": "Descrizione",
+        "isActive": "Attivo",
+        "isConfidential": "Riservato",
+        "clientCredentialsGrant": "Credenziali client",
+        "authorizationCodeGrant": "Codice di autorizzazione",
+        "refreshTokenGrant": "Token di aggiornamento",
+        "user": "Utente",
+        "secretHash": "Hash del segreto",
+        "redirectUris": "URI di reindirizzamento",
+        "isConsentRequired": "Consenso richiesto",
+        "isUiClient": "Client dell'interfaccia utente"
     },
     "links": {
-        "user": ""
+        "user": "Utente"
     },
     "labels": {
-        "Grant Types": "",
-        "authorizationRequest": "",
-        "Allow": "",
-        "signedInAs": "",
-        "Deny": ""
+        "Grant Types": "Tipi di concessione",
+        "authorizationRequest": "{clientName} richiede l'accesso al tuo account. Acceda per consentirlo.",
+        "Allow": "Consenti",
+        "signedInAs": "L'accesso è stato effettuato come {userName}.",
+        "Deny": "Nega"
     },
     "tooltips": {
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "isConfidential": "Un client riservato si autentica tramite il proprio segreto client. Un client pubblico, come un browser o un'applicazione mobile, non può custodire un segreto.",
+        "clientCredentialsGrant": "Il client ottiene un token di accesso per conto proprio usando il proprio ID client e il segreto, senza un utente. Agisce come l'utente selezionato.",
+        "authorizationCodeGrant": "Il client ottiene un token di accesso per conto di un utente che effettua l'accesso tramite il modulo di accesso di AtroCore (con PKCE).",
+        "refreshTokenGrant": "Insieme al token di accesso, il client riceve un token di aggiornamento, che utilizza per ottenere un nuovo token di accesso senza che l'utente debba accedere di nuovo.",
+        "user": "L'utente come cui agisce il client quando ottiene un token di accesso con le proprie credenziali (flusso delle credenziali client).",
+        "redirectUris": "Gli indirizzi a cui viene reindirizzato l'utente dopo l'accesso. Il redirect_uri di una richiesta di autorizzazione deve corrispondere esattamente a uno di questi indirizzi.",
+        "isConsentRequired": "L'utente conferma nel modulo di accesso di AtroCore che l'applicazione può accedere all'account. Disattivare questa opzione solo per le applicazioni della propria organizzazione, come l'interfaccia utente di AtroCore.",
+        "isUiClient": "L'interfaccia utente di AtroCore effettua l'accesso tramite questo client. Viene configurato durante l'installazione; il comando della console \"restore ui client\" lo ripristina."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "",
-        "grantRequired": "",
-        "redirectUrisRequired": "",
-        "invalidRedirectUri": "",
-        "uiClientProtected": "",
-        "uiClientNotRemovable": ""
+        "userRequiredForClientCredentials": "Un client che usa il flusso delle credenziali client deve agire come un utente.",
+        "grantRequired": "Selezionare almeno un metodo per ottenere un token di accesso: credenziali client o codice di autorizzazione.",
+        "redirectUrisRequired": "Un client che utilizza il flusso del codice di autorizzazione deve avere almeno un URI di reindirizzamento.",
+        "invalidRedirectUri": "\"%s\" non è un URI di reindirizzamento valido: è richiesto un URI http o https oppure uno schema personalizzato di un'applicazione nativa in notazione a dominio inverso (ad es. com.example.app:/callback), senza frammento.",
+        "uiClientProtected": "L'interfaccia utente di AtroCore accede tramite questo client: è possibile modificare solo il nome, la descrizione e lo stato attivo.",
+        "uiClientNotRemovable": "L'interfaccia utente di AtroCore accede tramite questo client, che non può essere eliminato. Disattivarlo per impedire l'accesso all'interfaccia utente."
     },
     "actions": {
-        "generateSecret": ""
+        "generateSecret": "Genera segreto"
     },
     "actionConfirms": {
-        "generateSecret": ""
+        "generateSecret": "Verrà generato un nuovo segreto client. Il segreto attuale smetterà di funzionare e i token rilasciati al client verranno revocati. Continuare?"
     },
     "actionResults": {
-        "generateSecret": ""
+        "generateSecret": "Il segreto client viene mostrato una sola volta. Copiarlo ora:"
     },
     "messages": {
-        "uiClientDisabled": "",
-        "signInFailed": "",
-        "signInExpired": ""
+        "uiClientDisabled": "L'amministratore ha disattivato l'accesso all'interfaccia utente.",
+        "signInFailed": "Accesso non riuscito. Effettuare nuovamente l'accesso.",
+        "signInExpired": "L'accesso è scaduto. Avviarlo di nuovo nell'applicazione."
     }
 }
