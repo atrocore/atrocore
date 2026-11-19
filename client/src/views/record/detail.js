@@ -2040,11 +2040,36 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         togglePanelsVisibility() {
+            const headerNames = [];
+            $.each(this.getFieldViews(), (key, fieldView) => {
+                if (fieldView.isAttributeGroupLayoutItem) {
+                    headerNames.push(fieldView.name || key);
+                }
+            });
+
             this.$el.find('.middle > .panel').each((k, el) => {
                 const $panel = $(el);
+                const $cells = $panel.find('> .panel-body > .row > .cell');
 
-                const shown = $panel.find('> .panel-body > .row > .cell').length;
-                const hidden = $panel.find('> .panel-body > .row > .cell').filter(function () {
+                // the header of an attribute group is shown only while a cell of its group is shown
+                const cells = $cells.toArray().map(cell => {
+                    const $cell = $(cell);
+                    return {
+                        $cell: $cell,
+                        isHeader: headerNames.includes($cell.attr('data-name')),
+                        hidden: $cell.css('display') === 'none'
+                    };
+                });
+
+                const emptyHeaders = this.findEmptyGroupHeaders(cells);
+                cells.forEach((cell, index) => {
+                    if (cell.isHeader) {
+                        this.toggleGroupHeader(cell.$cell, !emptyHeaders.includes(index));
+                    }
+                });
+
+                const shown = $cells.length;
+                const hidden = $cells.filter(function () {
                     return $(this).css('display') === 'none';
                 }).length;
 
@@ -2054,6 +2079,50 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     $panel.hide();
                 }
             });
+        },
+
+        /**
+         * The indexes of the headers of the attribute groups that have no shown cell: a group ends at the next header,
+         * and the cells of the headers are not counted.
+         *
+         * @param {{isHeader: boolean, hidden: boolean}[]} cells the cells of a panel in the order they are shown
+         * @returns {number[]}
+         */
+        findEmptyGroupHeaders(cells) {
+            const result = [];
+            let header = null;
+            let hasShownCell = false;
+
+            cells.forEach((cell, index) => {
+                if (cell.isHeader) {
+                    if (header !== null && !hasShownCell) {
+                        result.push(header);
+                    }
+                    header = index;
+                    hasShownCell = false;
+                } else if (!cell.hidden) {
+                    hasShownCell = true;
+                }
+            });
+
+            if (header !== null && !hasShownCell) {
+                result.push(header);
+            }
+
+            return result;
+        },
+
+        /**
+         * A header that the overview filters hide is left as it is: only the header that is hidden here is shown again.
+         */
+        toggleGroupHeader($cell, shown) {
+            if (shown) {
+                if ($cell.data('groupEmpty')) {
+                    $cell.removeData('groupEmpty').css('display', '');
+                }
+            } else if ($cell.css('display') !== 'none') {
+                $cell.data('groupEmpty', true).hide();
+            }
         },
 
         initDynamicHandler: function () {
