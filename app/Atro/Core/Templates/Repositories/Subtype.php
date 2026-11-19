@@ -33,7 +33,12 @@ class Subtype extends Base
     {
         $connection = $this->getDbal();
 
-        $connection->beginTransaction();
+        // a transaction opened directly via PDO (e.g. by an import) is invisible to DBAL, the record is saved within it
+        $ownTransaction = $connection->isTransactionActive() || !$this->getEntityManager()->getPDO()->inTransaction();
+
+        if ($ownTransaction) {
+            $connection->beginTransaction();
+        }
         try {
             $supertypeRecord = $this->saveSupertypeRecord($entity, $options);
 
@@ -53,9 +58,13 @@ class Subtype extends Base
             // any change of the record is a change of the supertype record, its after-save logic sees the saved subtype data
             $this->getEntityManager()->getRepository($this->getSupertypeName())->completeDeferredSave($supertypeRecord, $options);
 
-            $connection->commit();
+            if ($ownTransaction) {
+                $connection->commit();
+            }
         } catch (\Throwable $e) {
-            $connection->rollBack();
+            if ($ownTransaction) {
+                $connection->rollBack();
+            }
             throw $e;
         }
 
