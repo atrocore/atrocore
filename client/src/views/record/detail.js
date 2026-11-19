@@ -881,6 +881,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         case 'type':
                             check = this.type === condition.value;
                             break;
+                        case 'hasAttributes':
+                            check = Object.keys(this.model.get('attributesDefs') || {}).length > 0;
+                            break;
                         default:
                             check = true;
                             break;

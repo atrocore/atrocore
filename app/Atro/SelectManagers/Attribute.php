@@ -11,8 +11,10 @@
 
 namespace Atro\SelectManagers;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 use Atro\Core\SelectManagers\Base;
@@ -33,6 +35,32 @@ class Attribute extends Base
         parent::applyAdditional($result, $params);
 
         $result['callbacks'][] = [$this, 'filterByType'];
+    }
+
+    protected function boolFilterOnlyMultilang(array &$result): void
+    {
+        $result['callbacks'][] = [$this, 'filterOnlyMultilang'];
+    }
+
+    /**
+     * The multilingual flag is a setting of the attribute type, it is stored in the table of the subtype.
+     */
+    public function filterOnlyMultilang(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $queryConverter = $mapper->getQueryConverter();
+        $tableAlias = $queryConverter->getMainTableAlias();
+
+        // the table of a subtype is read only if there are attributes of its type, and only once for all of them
+        $conditions = [];
+        foreach ($this->getEntityManager()->getContainer()->get(AttributeFieldConverter::class)->getSubtypeColumns() as $type => $subtype) {
+            if (in_array('is_multilang', $subtype['columns'])) {
+                $conditions[] = "({$tableAlias}.type = :multilangType_{$type} AND {$tableAlias}.id IN (SELECT supertype_id FROM " . $queryConverter->quoteIdentifier($subtype['table']) . ' WHERE is_multilang = :onlyMultilang))';
+                $qb->setParameter("multilangType_{$type}", $type);
+            }
+        }
+
+        $qb->andWhere(empty($conditions) ? '1 = 0' : '(' . implode(' OR ', $conditions) . ')');
+        $qb->setParameter('onlyMultilang', true, ParameterType::BOOLEAN);
     }
 
     protected function boolFilterNotForbiddenForEditFields(array &$result): void
