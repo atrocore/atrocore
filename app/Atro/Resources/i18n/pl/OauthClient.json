@@ -1,58 +1,58 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "isActive": "",
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "secretHash": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "name": "Nazwa",
+        "description": "Opis",
+        "isActive": "Aktywny",
+        "isConfidential": "Poufny",
+        "clientCredentialsGrant": "Dane uwierzytelniające klienta",
+        "authorizationCodeGrant": "Kod autoryzacyjny",
+        "refreshTokenGrant": "Token odświeżania",
+        "user": "Użytkownik",
+        "secretHash": "Skrót sekretu",
+        "redirectUris": "URI przekierowania",
+        "isConsentRequired": "Wymagana zgoda",
+        "isUiClient": "Klient interfejsu użytkownika"
     },
     "links": {
-        "user": ""
+        "user": "Użytkownik"
     },
     "labels": {
-        "Grant Types": "",
-        "authorizationRequest": "",
-        "Allow": "",
-        "signedInAs": "",
-        "Deny": ""
+        "Grant Types": "Typy przyznawania uprawnień",
+        "authorizationRequest": "{clientName} prosi o dostęp do Twojego konta. Zaloguj się, aby udzielić zgody.",
+        "Allow": "Zezwól",
+        "signedInAs": "Zalogowano jako {userName}.",
+        "Deny": "Odrzuć"
     },
     "tooltips": {
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "isConfidential": "Klient poufny uwierzytelnia się za pomocą swojego tajnego klucza. Klient publiczny, taki jak aplikacja przeglądarkowa lub mobilna, nie może przechowywać tajnego klucza.",
+        "clientCredentialsGrant": "Klient uzyskuje token dostępu we własnym imieniu, używając swojego identyfikatora i sekretu klienta, bez udziału użytkownika. Działa jako wybrany użytkownik.",
+        "authorizationCodeGrant": "Klient uzyskuje token dostępu w imieniu użytkownika, który loguje się na formularzu logowania AtroCore (z PKCE).",
+        "refreshTokenGrant": "Wraz z tokenem dostępu klient otrzymuje token odświeżania, którego używa do uzyskania nowego tokenu dostępu bez konieczności ponownego logowania użytkownika.",
+        "user": "Użytkownik, w którego imieniu działa klient, gdy uzyskuje token dostępu przy użyciu własnych danych uwierzytelniających (tryb danych uwierzytelniających klienta).",
+        "redirectUris": "Adresy, na które użytkownik jest przekierowywany po zalogowaniu. Wartość redirect_uri w żądaniu autoryzacji musi dokładnie odpowiadać jednemu z tych adresów.",
+        "isConsentRequired": "Użytkownik potwierdza na formularzu logowania AtroCore, że aplikacja może uzyskać dostęp do jego konta. Wyłącz tę opcję tylko dla aplikacji własnej organizacji, takich jak interfejs użytkownika AtroCore.",
+        "isUiClient": "Interfejs użytkownika AtroCore loguje się za pomocą tego klienta. Jest on ustawiany podczas instalacji; przywraca go polecenie konsoli „restore ui client”."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "",
-        "grantRequired": "",
-        "redirectUrisRequired": "",
-        "invalidRedirectUri": "",
-        "uiClientProtected": "",
-        "uiClientNotRemovable": ""
+        "userRequiredForClientCredentials": "Klient korzystający z trybu danych uwierzytelniających klienta musi mieć przypisanego użytkownika, w którego imieniu działa.",
+        "grantRequired": "Wybierz co najmniej jeden sposób uzyskania tokenu dostępu: dane uwierzytelniające klienta lub kod autoryzacyjny.",
+        "redirectUrisRequired": "Klient korzystający z grant typu kod autoryzacyjny musi mieć co najmniej jeden URI przekierowania.",
+        "invalidRedirectUri": "„%s” nie jest prawidłowym URI przekierowania. Oczekiwany jest URI HTTP lub HTTPS albo niestandardowy schemat aplikacji natywnej zapisany w odwrotnej notacji domenowej (np. com.example.app:/callback), bez fragmentu.",
+        "uiClientProtected": "Do logowania do interfejsu użytkownika AtroCore używany jest ten klient. Można zmieniać tylko jego nazwę, opis i stan aktywności.",
+        "uiClientNotRemovable": "Do logowania do interfejsu użytkownika AtroCore używany jest ten klient. Nie można go usunąć. Dezaktywuj go, aby wyłączyć logowanie do interfejsu użytkownika."
     },
     "actions": {
-        "generateSecret": ""
+        "generateSecret": "Wygeneruj tajny klucz"
     },
     "actionConfirms": {
-        "generateSecret": ""
+        "generateSecret": "Zostanie wygenerowany nowy tajny klucz klienta. Obecny klucz przestanie działać, a tokeny wydane klientowi zostaną unieważnione. Kontynuować?"
     },
     "actionResults": {
-        "generateSecret": ""
+        "generateSecret": "Sekret klienta jest wyświetlany tylko raz. Skopiuj go teraz:"
     },
     "messages": {
-        "uiClientDisabled": "",
-        "signInFailed": "",
-        "signInExpired": ""
+        "uiClientDisabled": "Administrator wyłączył logowanie do interfejsu użytkownika.",
+        "signInFailed": "Logowanie nie powiodło się. Zaloguj się ponownie.",
+        "signInExpired": "Sesja logowania wygasła. Rozpocznij ją ponownie w aplikacji."
     }
 }
