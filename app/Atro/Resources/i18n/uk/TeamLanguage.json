@@ -1,14 +1,14 @@
 {
     "fields": {
-        "language": "",
-        "team": "",
-        "editAction": ""
+        "language": "Мова",
+        "team": "Команда",
+        "editAction": "Редагувати"
     },
     "labels": {
-        "yes": "",
-        "no": ""
+        "yes": "Так",
+        "no": "Ні"
     },
     "exceptions": {
-        "cannotRemoveLanguageWhenRestricted": ""
+        "cannotRemoveLanguageWhenRestricted": "Не можна видалити основну мову, якщо для команди ввімкнено обмеження мов."
     }
 }
