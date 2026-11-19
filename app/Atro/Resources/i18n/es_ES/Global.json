@@ -1781,5 +1781,15 @@
         "BlockingRuleTypeFieldContains": "Selecciona los candidatos cuyo valor del campo contenga el valor del registro.",
         "BlockingRuleTypeSet": "Combina varias reglas con AND u OR.",
         "BlockingRuleTypeExpression": "Selecciona los candidatos mediante una expresión de ExpressionLanguage."
+    },
+    "scopeDescriptions": {
+        "Action": "Realiza una operación con registros, p. ej., los crea, actualiza o elimina, envía un correo electrónico o llama a un webhook. Puede ejecutarse manualmente, mediante un flujo de trabajo o según una programación.",
+        "Attribute": "Propiedad de un registro que se añade a los registros de forma individual o mediante una clasificación, en lugar de ser un campo que tengan todos los registros de la entidad.",
+        "BlockingRule": "Selecciona los registros candidatos que luego se comparan con las reglas de coincidencia. No asigna puntuaciones a los candidatos.",
+        "Connection": "Almacena los datos de acceso a un sistema externo, p. ej., una base de datos, un servidor de archivos, un servidor de correo o una API.",
+        "Entity": "Un tipo de registros de datos, p. ej., productos o marcas, con sus propios campos, relaciones y diseños.",
+        "EntityField": "Propiedad que tienen todos los registros de la entidad. El tipo define qué datos almacena el campo y cómo se muestran.",
+        "MatchingRule": "Compara un registro con un registro candidato y asigna una puntuación al candidato si coinciden. La suma de las puntuaciones determina si los registros son duplicados.",
+        "Storage": "Lugar donde se almacenan los archivos, p. ej., una carpeta en el servidor de AtroCore o un almacenamiento externo de archivos."
     }
 }
