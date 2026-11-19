@@ -1,13 +1,17 @@
 {
-  "fields": {
-    "user": "Uživatel",
-    "action": "Akce",
-    "createdAt": "Datum",
-    "controllerName": "Název ovladače",
-    "ipAddress": "IP adresa",
-    "target": "Cíl",
-    "targetName": "Název cíle",
-    "targetId": "ID cíle",
-    "data": "Data"
-  }
+    "fields": {
+        "user": "Uživatel",
+        "action": "Akce",
+        "createdAt": "Datum",
+        "controllerName": "Název ovladače",
+        "ipAddress": "IP adresa",
+        "target": "Cíl",
+        "targetName": "Název cíle",
+        "targetId": "ID cíle",
+        "data": "Data",
+        "oauthClient": "Klient OAuth"
+    },
+    "links": {
+        "oauthClient": "Klient OAuth"
+    }
 }

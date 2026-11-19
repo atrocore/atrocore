@@ -1,0 +1,19 @@
+{
+    "fields": {
+        "actionExecution": "Művelet végrehajtása",
+        "type": "Típus",
+        "entityRecord": "Entitásrekord",
+        "entityName": "Entitás neve",
+        "entityId": "Entitás ID",
+        "message": "Üzenet",
+        "payload": "Adattartalom"
+    },
+    "options": {
+        "type": {
+            "create": "Létrehozás",
+            "update": "Frissítés",
+            "delete": "Törlés",
+            "error": "Hiba"
+        }
+    }
+}

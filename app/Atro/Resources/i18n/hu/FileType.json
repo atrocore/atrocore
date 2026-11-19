@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "files": "Fájlok",
+        "aspectRatio": "Képarány",
+        "minSize": "Minimális méret, Kb",
+        "maxSize": "Maximális méret, Kb",
+        "minWidth": "Minimális szélesség, px",
+        "minHeight": "Minimális magasság, px",
+        "extensions": "Kiterjesztések",
+        "mimeTypes": "MIME-típusok"
+    },
+    "exceptions": {
+        "fileTypeCannotBeDeleted": "A rekord nem törölhető, mert használatban van a(z) „%s” mezőben, amely a(z) „%s” entitáshoz tartozik.",
+        "aspectRatioMustBeInFormat": "Érvénytelen képarányformátum. Használja a szélesség:magasság formátumot, például 16:9."
+    },
+    "labels": {
+        "General Settings": "Általános beállítások",
+        "Image Settings": "Képbeállítások"
+    }
+}

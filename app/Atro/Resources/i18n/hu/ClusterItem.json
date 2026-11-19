@@ -1,0 +1,52 @@
+{
+    "labels": {
+        "confirmedAutomatically": "Automatikusan megerősítve",
+        "selectTargetCluster": "Célklaszter kiválasztása",
+        "moveToCluster": "Áthelyezés klaszterbe"
+    },
+    "fields": {
+        "entityName": "Entitás neve",
+        "entityId": "Entitás ID",
+        "record": "Rekord",
+        "cluster": "Klaszter",
+        "matchedRecord": "Egyező rekord",
+        "confirmedAutomatically": "Automatikusan megerősítve",
+        "matchedScore": "Egyezési pontszám"
+    },
+    "actions": {
+        "reject": "Elutasítás",
+        "consolidate": "Konszolidálás",
+        "deconsolidate": "Szétválasztás",
+        "split": "Szétválasztás",
+        "move": "Áthelyezés"
+    },
+    "exceptions": {
+        "notFound": "A klaszterelem rekordja nem található",
+        "cannotUnreject": "A klaszterelem elutasítása nem vonható vissza",
+        "itemsMustBelongToTheSameCluster": "Minden kiválasztott elemnek ugyanahhoz a klaszterhez kell tartoznia.",
+        "cannotDeconsolidateMasterEntityItem": "A mesterentitás eleme nem választható szét.",
+        "cannotDeconsolidateAllItems": "Nem bontható fel az összes összevont elem kapcsolata: legalább egy elemnek az aranyrekordhoz kapcsolva kell maradnia.",
+        "cannotSplitMasterEntityItem": "A fő Entitás eleme nem bontható szét.",
+        "idOrIdListOrWhereRequired": "Adjon meg legalább egyet a következők közül: egy ID-t, ID-k listáját vagy keresési szűrőt.",
+        "targetClusterIdRequired": "A célklaszter megadása kötelező."
+    },
+    "massActions": {
+        "reject": "Elutasítás",
+        "deconsolidate": "Kapcsolat bontása",
+        "split": "Felosztás",
+        "move": "Áthelyezés",
+        "consolidate": "Összevonás"
+    },
+    "massActionSuccessMessages": {
+        "reject": "A kiválasztott klaszterelemek törlése a háttérben történik",
+        "deconsolidate": "A kiválasztott klaszterelemek konszolidációja megszűnt",
+        "split": "A kiválasztott klaszterelemek új klaszterbe kerültek",
+        "move": "A kiválasztott klaszterelemek áthelyezése megtörtént",
+        "consolidate": "A kiválasztott klaszterelemek konszolidációja megtörtént"
+    },
+    "massActionConfirmMessages": {
+        "reject": "Biztosan el szeretné utasítani a kiválasztott elemeket?",
+        "deconsolidate": "Biztosan meg szeretné szüntetni a kiválasztott elemek összevonását?",
+        "split": "Biztosan új klaszterbe szeretné áthelyezni a kiválasztott elemeket?"
+    }
+}

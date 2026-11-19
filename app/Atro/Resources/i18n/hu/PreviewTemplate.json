@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "entityType": "Entitástípus",
+        "isActive": "Aktív",
+        "template": "HTML/CSS-sablon"
+    }
+}

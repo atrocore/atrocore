@@ -1,14 +1,20 @@
 {
-  "fields": {
-    "score": "Puntuación",
-    "hash": "Hash único",
-    "hasCluster": "Tiene Cluster",
-    "clusterItems": "Partidas agrupadas"
-  },
-  "options": {
-    "type": {
-      "masterRecord": "Registro maestro",
-      "duplicate": "Duplicar"
+    "fields": {
+        "score": "Puntuación",
+        "hash": "Hash único",
+        "hasCluster": "Tiene Cluster",
+        "clusterItems": "Partidas agrupadas",
+        "matchSubject": "Sujeto de coincidencia",
+        "matchSubjectEntity": "Entidad del sujeto de coincidencia",
+        "matchSubjectEntityId": "ID de entidad del sujeto de coincidencia",
+        "matchCandidate": "Candidato de coincidencia",
+        "matchCandidateEntity": "Entidad del candidato de coincidencia",
+        "matchCandidateEntityId": "ID de entidad del candidato de coincidencia"
+    },
+    "options": {
+        "type": {
+            "masterRecord": "Registro maestro",
+            "duplicate": "Duplicar"
+        }
     }
-  }
 }

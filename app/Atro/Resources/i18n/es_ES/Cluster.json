@@ -1,55 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Partidas agrupadas",
-    "number": "Número",
-    "masterEntity": "Entidad principal",
-    "rejectedClusterItems": "Partidas agrupadas rechazadas",
-    "stagingItemCount": "Número de registros contribuidores",
-    "masterItemCount": "Recuento maestro de artículos",
-    "status": "Estado"
-  },
-  "actions": {
-    "reject": "Rechace",
-    "unreject": "Rechazar"
-  },
-  "options": {
-    "status": {
-      "empty": "Vacío",
-      "review": "Revise",
-      "invalid": "No válido"
+    "fields": {
+        "clusterItems": "Partidas agrupadas",
+        "number": "Número",
+        "masterEntity": "Entidad principal",
+        "rejectedClusterItems": "Partidas agrupadas rechazadas",
+        "stagingItemCount": "Número de registros contribuidores",
+        "masterItemCount": "Recuento maestro de artículos",
+        "status": "Estado",
+        "consolidationMethod": "Método de consolidación",
+        "executionMode": "Modo de ejecución"
+    },
+    "actions": {
+        "reject": "Rechace",
+        "unreject": "Rechazar",
+        "consolidate": "Consolidar",
+        "deconsolidate": "Desconsolidar",
+        "split": "Dividir",
+        "move": "Mover",
+        "purge": "Purgar"
+    },
+    "options": {
+        "status": {
+            "empty": "Vacío",
+            "review": "Revise",
+            "invalid": "No válido",
+            "consolidated": "Consolidado"
+        },
+        "consolidationMethod": {
+            "ruleBased": "Basado en reglas",
+            "hybrid": "Híbrido",
+            "manual": "Manual"
+        },
+        "executionMode": {
+            "automatic": "Automático",
+            "manual": "Manual"
+        }
+    },
+    "exceptions": {
+        "cannotMergeWithoutGoldenRecord": "No es posible fusionar sin un registro maestro",
+        "cannotDelete": "Solo se pueden eliminar los clústeres vacíos",
+        "noClusterItemsToPreview": "No hay nada que previsualizar: el clúster no tiene elementos contribuyentes",
+        "cannotPreviewInvalidCluster": "No es posible previsualizar la consolidación de un clúster no válido",
+        "clusterItemsNotInCluster": "Los elementos del clúster %s no pertenecen a este clúster"
+    },
+    "labels": {
+        "contributorRecord": "registro contribuidor",
+        "contributorRecords": "registros contribuidores",
+        "contributorRecordsPanel": "Registros contribuidores",
+        "masterRecord": "registro maestro",
+        "masterRecords": "registros maestros",
+        "rejected": "Rechazado",
+        "masterRecordsPanel": "Registros maestros",
+        "consolidated": "Consolidado",
+        "unconsolidated": "No consolidado",
+        "consolidationPreview": "Vista previa de consolidación",
+        "standardView": "Estándar",
+        "comparisonView": "Comparación",
+        "manualConsolidationView": "Consolidación manual",
+        "suggestedValues": "Valores sugeridos",
+        "selectAllSuggestedValues": "Seleccionar todos los valores sugeridos",
+        "consolidationPreviewHint": "Muestra cómo se vería el registro dorado después de la consolidación. No se guarda nada.",
+        "noConsolidationConfigured": "No hay ninguna consolidación configurada para esta entidad",
+        "discard": "Descartar"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} vinculó {relatedEntity} a este clúster",
+        "clusterLinkedThis": "{user} vinculó {relatedEntity} a este clúster",
+        "clusterUnlinked": "{user} desvinculó {relatedEntity} de este clúster",
+        "clusterUnlinkedThis": "{user} desvinculó {relatedEntity} de este clúster",
+        "clusterRejected": "{user} rechazó {relatedEntity} en este clúster",
+        "clusterRejectedThis": "{user} rechazó {relatedEntity} en este clúster",
+        "clusterReincluded": "{user} reincorporó {relatedEntity} en este clúster",
+        "clusterReincludedThis": "{user} reincorporó {relatedEntity} en este clúster",
+        "clusterMoved": "{user} movió {relatedEntity} fuera de este clúster",
+        "clusterMovedThis": "{user} movió {relatedEntity} fuera de este clúster",
+        "clusterGoldenRecord": "{user} estableció {relatedEntity} como registro dorado en este clúster",
+        "clusterGoldenRecordThis": "{user} estableció {relatedEntity} como registro dorado en este clúster",
+        "clusterDeleted": "{user} eliminó este clúster",
+        "clusterDeletedThis": "{user} eliminó este clúster",
+        "clusterRecordDeleted": "{user} eliminó {relatedEntity} de este clúster",
+        "clusterRecordDeletedThis": "{user} eliminó {relatedEntity} de este clúster",
+        "clusterMovedToCluster": "{user} movió {records} del clúster {clusterLink} a {entity}",
+        "clusterMovedToClusterThis": "{user} movió {records} del clúster {clusterLink} a este clúster",
+        "clusterMovedFromCluster": "{user} movió {records} de {entity} al clúster {clusterLink}",
+        "clusterMovedFromClusterThis": "{user} movió {records} de este clúster al clúster {clusterLink}",
+        "clusterConsolidated": "{user} consolidó {relatedEntity} en este clúster",
+        "clusterConsolidatedThis": "{user} consolidó {relatedEntity} en este clúster",
+        "clusterDeconsolidated": "{user} deshizo la consolidación de {relatedEntity} en este clúster",
+        "clusterDeconsolidatedThis": "{user} desconsolidó {relatedEntity} en este clúster"
+    },
+    "massActions": {
+        "purge": "Purgar"
+    },
+    "massActionConfirmMessages": {
+        "purge": "¿Está seguro de que desea purgar los clústeres seleccionados? Esta acción no se puede deshacer.",
+        "purgeAll": "¿Está seguro de que desea purgar todos los clústeres? Esta acción no se puede deshacer."
+    },
+    "actionConfirms": {
+        "purge": "¿Está seguro de que desea purgar este clúster? Esta acción no se puede deshacer."
+    },
+    "messages": {
+        "noClusterFound": "No se encontró ningún clúster para este registro",
+        "consolidated": "Consolidado"
     }
-  },
-  "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "No es posible fusionar sin un registro maestro"
-  },
-  "labels": {
-    "contributorRecord": "registro contribuidor",
-    "contributorRecords": "registros contribuidores",
-    "contributorRecordsPanel": "Registros contribuidores",
-    "masterRecord": "registro maestro",
-    "masterRecords": "registros maestros",
-    "rejected": "Rechazado"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} vinculó {relatedEntity} a este clúster",
-    "clusterLinkedThis": "{user} vinculó {relatedEntity} a este clúster",
-    "clusterUnlinked": "{user} desvinculó {relatedEntity} de este clúster",
-    "clusterUnlinkedThis": "{user} desvinculó {relatedEntity} de este clúster",
-    "clusterRejected": "{user} rechazó {relatedEntity} en este clúster",
-    "clusterRejectedThis": "{user} rechazó {relatedEntity} en este clúster",
-    "clusterReincluded": "{user} reincorporó {relatedEntity} en este clúster",
-    "clusterReincludedThis": "{user} reincorporó {relatedEntity} en este clúster",
-    "clusterMoved": "{user} movió {relatedEntity} fuera de este clúster",
-    "clusterMovedThis": "{user} movió {relatedEntity} fuera de este clúster",
-    "clusterGoldenRecord": "{user} estableció {relatedEntity} como registro dorado en este clúster",
-    "clusterGoldenRecordThis": "{user} estableció {relatedEntity} como registro dorado en este clúster",
-    "clusterDeleted": "{user} eliminó este clúster",
-    "clusterDeletedThis": "{user} eliminó este clúster",
-    "clusterRecordDeleted": "{user} eliminó {relatedEntity} de este clúster",
-    "clusterRecordDeletedThis": "{user} eliminó {relatedEntity} de este clúster",
-    "clusterMovedToCluster": "{user} movió {records} del clúster {clusterLink} a {entity}",
-    "clusterMovedToClusterThis": "{user} movió {records} del clúster {clusterLink} a este clúster",
-    "clusterMovedFromCluster": "{user} movió {records} de {entity} al clúster {clusterLink}",
-    "clusterMovedFromClusterThis": "{user} movió {records} de este clúster al clúster {clusterLink}"
-  }
 }

@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "timeZone": "Fuseau horaire",
-    "dateFormat": "Format de la date",
-    "weekStart": "Premier jour de la semaine",
-    "timeFormat": "Format de l'heure",
-    "thousandSeparator": "Séparateur de milliers",
-    "decimalMark": "Symbole du décimal",
-    "languageCode": "Code langue",
-    "fallbackLanguageCode": "Code de la langue de secours",
-    "displayLabelsInContentLanguage": "Afficher les étiquettes dans la langue du contenu"
-  },
-  "labels": {
-    "sunday": "Dimanche",
-    "monday": "Lundi"
-  },
-  "exceptions": {
-    "localeIsUsed": "Le paramètre régional utilisé ne peut pas être supprimée."
-  }
+    "fields": {
+        "timeZone": "Fuseau horaire",
+        "dateFormat": "Format de la date",
+        "weekStart": "Premier jour de la semaine",
+        "timeFormat": "Format de l'heure",
+        "thousandSeparator": "Séparateur de milliers",
+        "decimalMark": "Symbole du décimal",
+        "languageCode": "Code langue",
+        "fallbackLanguageCode": "Code de la langue de secours",
+        "displayLabelsInContentLanguage": "Afficher les étiquettes dans la langue du contenu",
+        "disableForUi": "Désactiver pour l’interface utilisateur"
+    },
+    "labels": {
+        "sunday": "Dimanche",
+        "monday": "Lundi"
+    },
+    "exceptions": {
+        "localeIsUsed": "Le paramètre régional utilisé ne peut pas être supprimée."
+    },
+    "tooltips": {
+        "disableForUi": "Lorsque cette option est activée, cette langue n’apparaît pas dans le sélecteur de langue de la barre d’outils ni dans la liste déroulante du profil utilisateur. Elle reste disponible pour la configuration des flux d’exportation, des canaux et des flux d’importation."
+    }
 }

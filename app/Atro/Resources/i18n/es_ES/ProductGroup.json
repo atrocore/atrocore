@@ -1,7 +1,15 @@
 {
-  "fields": {
-    "code": "Código",
-    "itemType": "Tipo de artículo",
-    "products": "Productos"
-  }
+    "fields": {
+        "code": "Código",
+        "itemType": "Tipo de artículo",
+        "products": "Productos"
+    },
+    "options": {
+        "itemType": {
+            "physical_goods": "Bienes físicos",
+            "services": "Servicios",
+            "digital_products": "Productos digitales",
+            "legal_rights": "Derechos legales"
+        }
+    }
 }

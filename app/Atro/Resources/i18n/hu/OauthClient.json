@@ -1,0 +1,58 @@
+{
+    "fields": {
+        "name": "Név",
+        "description": "Leírás",
+        "isActive": "Aktív",
+        "isConfidential": "Bizalmas",
+        "clientCredentialsGrant": "Kliens-hitelesítő adatok",
+        "authorizationCodeGrant": "Engedélyezési kód",
+        "refreshTokenGrant": "Frissítési token",
+        "user": "Felhasználó",
+        "secretHash": "Titok hash",
+        "redirectUris": "Átirányítási URI-k",
+        "isConsentRequired": "Hozzájárulás szükséges",
+        "isUiClient": "UI-kliens"
+    },
+    "links": {
+        "user": "Felhasználó"
+    },
+    "labels": {
+        "Grant Types": "Engedélyezési módok",
+        "authorizationRequest": "A(z) {clientName} hozzáférést kér a fiókjához. Jelentkezzen be az engedélyezéshez.",
+        "Allow": "Engedélyezés",
+        "signedInAs": "Bejelentkezve: {userName}.",
+        "Deny": "Elutasítás"
+    },
+    "tooltips": {
+        "isConfidential": "A bizalmas kliens a kliens titkával hitelesíti magát. A nyilvános kliens, például egy böngésző vagy mobilalkalmazás, nem tud titkot biztonságosan tárolni.",
+        "clientCredentialsGrant": "A kliens saját nevében, a kliensazonosítójával és titkával, felhasználó nélkül szerez hozzáférési tokent. A kiválasztott felhasználó nevében jár el.",
+        "authorizationCodeGrant": "A kliens egy olyan felhasználó nevében szerez hozzáférési tokent, aki az AtroCore bejelentkezési űrlapján jelentkezik be (PKCE használatával).",
+        "refreshTokenGrant": "A hozzáférési token mellett a kliens frissítési tokent is kap, amelyet új hozzáférési tokenre vált be anélkül, hogy a felhasználónak újra be kellene jelentkeznie.",
+        "user": "Az a felhasználó, akinek a nevében a kliens eljár, amikor saját hitelesítő adataival szerez hozzáférési tokent (kliens-hitelesítő adatok használata).",
+        "redirectUris": "Azok a címek, amelyekre a felhasználó a bejelentkezés után visszakerül. Az engedélyezési kérelem redirect_uri értékének pontosan meg kell egyeznie az egyik címmel.",
+        "isConsentRequired": "A felhasználó az AtroCore bejelentkezési űrlapján megerősíti, hogy az alkalmazás hozzáférhet a fiókhoz. Csak a saját szervezete alkalmazásainál kapcsolja ki, például az AtroCore felhasználói felületénél.",
+        "isUiClient": "Az AtroCore felhasználói felület ezzel a klienssel jelentkezik be. A telepítés során van beállítva; a „restore ui client” konzolparancs állítja vissza."
+    },
+    "exceptions": {
+        "userRequiredForClientCredentials": "A kliens-hitelesítő adatokat használó kliensnek szüksége van egy felhasználóra, akinek a nevében eljárhat.",
+        "grantRequired": "Válasszon legalább egy módot a hozzáférési token beszerzéséhez: kliens-hitelesítő adatok vagy engedélyezési kód.",
+        "redirectUrisRequired": "Az engedélyezési kód folyamatot használó klienshez legalább egy átirányítási URI szükséges.",
+        "invalidRedirectUri": "A(z) „%s” nem érvényes átirányítási URI: HTTP- vagy HTTPS-URI, illetve egy natív alkalmazás egyedi sémájú, fordított tartományneves formátumú URI-ja (pl. com.example.app:/callback) várható, töredék nélkül.",
+        "uiClientProtected": "Az AtroCore felhasználói felülete ezen a kliensen keresztül jelentkezik be: csak a név, a leírás és az aktivitás módosítható.",
+        "uiClientNotRemovable": "Az AtroCore felhasználói felülete ezen a kliensen keresztül jelentkezik be, ezért a kliens nem törölhető. A felhasználói felületre történő bejelentkezés kikapcsolásához deaktiválja a klienst."
+    },
+    "actions": {
+        "generateSecret": "Titok generálása"
+    },
+    "actionConfirms": {
+        "generateSecret": "Új kliens titok jön létre. A jelenlegi titok érvénytelenné válik, és a kliens számára kiadott tokenek visszavonásra kerülnek. Folytatja?"
+    },
+    "actionResults": {
+        "generateSecret": "A kliens titka csak egyszer jelenik meg, másolja ki most:"
+    },
+    "messages": {
+        "uiClientDisabled": "Az adminisztrátor letiltotta a felhasználói felületre történő bejelentkezést.",
+        "signInFailed": "A bejelentkezés nem sikerült. Kérjük, jelentkezzen be újra.",
+        "signInExpired": "A bejelentkezés lejárt. Indítsa újra az alkalmazásban."
+    }
+}

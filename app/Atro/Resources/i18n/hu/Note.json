@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "post": "Bejegyzés",
+        "attachments": "Mellékletek",
+        "type": "Típus",
+        "createdByGender": "Létrehozó neme",
+        "data": "Adat"
+    },
+    "filters": {
+        "all": "Összes",
+        "posts": "Bejegyzések",
+        "updates": "Frissítések",
+        "notes": "Jegyzetek",
+        "emails": "E-mailek"
+    },
+    "options": {
+        "type": {
+            "Post": "Bejegyzés"
+        }
+    },
+    "messages": {
+        "writeMessage": "Írja ide az üzenetét"
+    }
+}

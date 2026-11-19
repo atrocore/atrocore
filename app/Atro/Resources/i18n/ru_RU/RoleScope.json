@@ -1,25 +1,28 @@
 {
-  "fields": {
-    "name": "Область применения",
-    "role": "Роль",
-    "hasAccess": "Доступ",
-    "createAction": "Создать",
-    "readAction": "Чтение",
-    "editAction": "Редактировать",
-    "deleteAction": "Удалить",
-    "streamAction": "Действия",
-    "fields": "Поля",
-    "accessData": "Данные доступа",
-    "createAttributeValueAction": "Создайте значение атрибута",
-    "deleteAttributeValueAction": "Удалить значение атрибута",
-    "attributes": "Атрибуты",
-    "attributePanels": "Панели атрибутов"
-  },
-  "labels": {
-    "all": "Все",
-    "team": "Группа",
-    "own": "Собственный",
-    "no": "Нет",
-    "yes": "Да"
-  }
+    "fields": {
+        "name": "Область применения",
+        "role": "Роль",
+        "hasAccess": "Доступ",
+        "createAction": "Создать",
+        "readAction": "Чтение",
+        "editAction": "Редактировать",
+        "deleteAction": "Удалить",
+        "streamAction": "Действия",
+        "fields": "Поля",
+        "accessData": "Данные доступа",
+        "createAttributeValueAction": "Создайте значение атрибута",
+        "deleteAttributeValueAction": "Удалить значение атрибута",
+        "attributes": "Атрибуты",
+        "attributePanels": "Панели атрибутов"
+    },
+    "labels": {
+        "all": "Все",
+        "team": "Группа",
+        "own": "Собственный",
+        "no": "Нет",
+        "yes": "Да"
+    },
+    "exceptions": {
+        "roleScopeActionDisabled": "Действие \"%1$s\" не может быть разрешено, поскольку оно отключено для сущности \"%2$s\"."
+    }
 }

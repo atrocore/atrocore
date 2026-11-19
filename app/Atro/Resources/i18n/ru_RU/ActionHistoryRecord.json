@@ -1,13 +1,17 @@
 {
-  "fields": {
-    "user": "Пользователь",
-    "action": "Действие",
-    "createdAt": "Дата",
-    "target": "Цель",
-    "ipAddress": "IP адрес",
-    "controllerName": "Имя контроллера",
-    "targetName": "Название цели",
-    "targetId": "ID цели",
-    "data": "Данные"
-  }
+    "fields": {
+        "user": "Пользователь",
+        "action": "Действие",
+        "createdAt": "Дата",
+        "target": "Цель",
+        "ipAddress": "IP адрес",
+        "controllerName": "Имя контроллера",
+        "targetName": "Название цели",
+        "targetId": "ID цели",
+        "data": "Данные",
+        "oauthClient": "Клиент OAuth"
+    },
+    "links": {
+        "oauthClient": "Клиент OAuth"
+    }
 }

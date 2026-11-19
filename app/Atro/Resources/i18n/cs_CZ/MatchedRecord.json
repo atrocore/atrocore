@@ -1,14 +1,20 @@
 {
-  "fields": {
-    "score": "Skóre",
-    "hash": "Jedinečný kód Hash",
-    "hasCluster": "Má cluster",
-    "clusterItems": "Položky klastru"
-  },
-  "options": {
-    "type": {
-      "masterRecord": "Hlavní záznam",
-      "duplicate": "Duplikovat"
+    "fields": {
+        "score": "Skóre",
+        "hash": "Jedinečný kód Hash",
+        "hasCluster": "Má cluster",
+        "clusterItems": "Položky klastru",
+        "matchSubject": "Předmět párování",
+        "matchSubjectEntity": "Entita předmětu párování",
+        "matchSubjectEntityId": "ID entity předmětu párování",
+        "matchCandidate": "Kandidát párování",
+        "matchCandidateEntity": "Entita kandidáta párování",
+        "matchCandidateEntityId": "ID entity kandidáta párování"
+    },
+    "options": {
+        "type": {
+            "masterRecord": "Hlavní záznam",
+            "duplicate": "Duplikovat"
+        }
     }
-  }
 }

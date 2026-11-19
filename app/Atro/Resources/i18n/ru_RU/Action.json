@@ -1,94 +1,96 @@
 {
-  "fields": {
-    "isActive": "Активный",
-    "type": "Тип",
-    "sourceEntity": "Исходная сущность",
-    "inBackground": "Выполнение в фоновом режиме",
-    "usage": "Использование",
-    "massAction": "Массовое действие",
-    "display": "Дисплей",
-    "actionsSet": "Набор действий",
-    "actions": "Действия",
-    "webhookUrl": "URL",
-    "executeAs": "Выполнить как",
-    "displayField": "Поле отображения",
-    "focusField": "Поле",
-    "changeFields": "Поля",
-    "targetEntity": "Целевая организация",
-    "mode": "Режим",
-    "emailScript": "Скрипт",
-    "showEmailPreview": "Предварительный просмотр перед отправкой",
-    "emailTemplate": "Шаблон электронной почты",
-    "emailTo": "Email To",
-    "emailCc": "Email CC",
-    "emailBcc": "Email BCC",
-    "hideTextLabel": "Скрыть текстовую метку на кнопке",
-    "applyToPreselectedRecords": "Применить к предварительно выбранным записям",
-    "updateType": "Тип обновления",
-    "updateFields": "Обновление полей",
-    "updateScript": "Скрипт",
-    "searchEntity": "Объект поиска",
-    "executions": "Казни",
-    "deletePermanently": "Удалить навсегда"
-  },
-  "labels": {
-    "execute": "Выполнить",
-    "Parameters": "Параметры",
-    "fieldsPanel": "Обновить"
-  },
-  "actions": {
-    "allLogs": "Все журналы"
-  },
-  "massActions": {
-    "execute": "Выполнить"
-  },
-  "messages": {
-    "executeNow": "Вы уверены, что хотите выполнить выбранное действие?"
-  },
-  "options": {
-    "usage": {
-      "entity": "Кнопка на уровне сущности",
-      "record": "Кнопка на уровне записи сущности",
-      "field": "Кнопка в поле",
-      "onFieldFocus": "Фокус на поле",
-      "onFieldChange": "Изменение поля",
-      "onRecordLoad": "Создание / обновление записей"
+    "fields": {
+        "isActive": "Активный",
+        "type": "Тип",
+        "sourceEntity": "Исходная сущность",
+        "inBackground": "Выполнение в фоновом режиме",
+        "usage": "Использование",
+        "massAction": "Массовое действие",
+        "display": "Дисплей",
+        "actionsSet": "Набор действий",
+        "actions": "Действия",
+        "webhookUrl": "URL",
+        "executeAs": "Выполнить как",
+        "displayField": "Поле отображения",
+        "focusField": "Поле",
+        "changeFields": "Поля",
+        "targetEntity": "Целевая организация",
+        "mode": "Режим",
+        "emailScript": "Скрипт",
+        "showEmailPreview": "Предварительный просмотр перед отправкой",
+        "emailTemplate": "Шаблон электронной почты",
+        "emailTo": "Email To",
+        "emailCc": "Email CC",
+        "emailBcc": "Email BCC",
+        "hideTextLabel": "Скрыть текстовую метку на кнопке",
+        "applyToPreselectedRecords": "Применить к предварительно выбранным записям",
+        "updateType": "Тип обновления",
+        "updateFields": "Обновление полей",
+        "updateScript": "Скрипт",
+        "searchEntity": "Объект поиска",
+        "executions": "Казни",
+        "deletePermanently": "Удалить навсегда",
+        "handler": "Обработчик"
     },
-    "display": {
-      "dropdown": "Выпадающий список",
-      "single": "Одиночный"
+    "labels": {
+        "execute": "Выполнить",
+        "Parameters": "Параметры",
+        "fieldsPanel": "Обновить"
     },
-    "type": {
-      "set": "Набор действий",
-      "webhook": "Webhook",
-      "customCode": "Пользовательский код",
-      "email": "Отправить электронную почту",
-      "create": "Создать",
-      "update": "Обновить",
-      "delete": "Удалить",
-      "createOrUpdate": "Создать или обновить",
-      "custom": "Пользовательский код"
+    "actions": {
+        "allLogs": "Все журналы"
     },
-    "executeAs": {
-      "system": "Система",
-      "sameUser": "Тот же пользователь"
+    "massActions": {
+        "execute": "Выполнить"
     },
-    "mode": {
-      "basic": "Basic",
-      "script": "Скрипт"
+    "messages": {
+        "executeNow": "Вы уверены, что хотите выполнить выбранное действие?"
     },
-    "updateType": {
-      "basic": "Basic",
-      "script": "Скрипт"
+    "options": {
+        "usage": {
+            "entity": "Кнопка на уровне сущности",
+            "record": "Кнопка на уровне записи сущности",
+            "field": "Кнопка в поле",
+            "onFieldFocus": "Фокус на поле",
+            "onFieldChange": "Изменение поля",
+            "onRecordLoad": "Создание / обновление записей"
+        },
+        "display": {
+            "dropdown": "Выпадающий список",
+            "single": "Одиночный"
+        },
+        "type": {
+            "set": "Набор действий",
+            "webhook": "Webhook",
+            "customCode": "Пользовательский код",
+            "email": "Отправить электронную почту",
+            "create": "Создать",
+            "update": "Обновить",
+            "delete": "Удалить",
+            "createOrUpdate": "Создать или обновить",
+            "custom": "Пользовательский код"
+        },
+        "executeAs": {
+            "system": "Система",
+            "sameUser": "Тот же пользователь"
+        },
+        "mode": {
+            "basic": "Basic",
+            "script": "Скрипт"
+        },
+        "updateType": {
+            "basic": "Basic",
+            "script": "Скрипт"
+        }
+    },
+    "tooltips": {
+        "inBackground": "Действие будет выполняться в фоновом режиме без прямого сообщения об успехе/ошибке. Используйте его, если выполнение действия займет более 30 секунд.",
+        "usage": "Использование предписывает размещение действия. Действие с записью требует предварительного выбора затрагиваемых записей.",
+        "executeAs": "Укажите, какого пользователя система будет использовать для выполнения действия"
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "Выражение не может быть пустым.",
+        "forEditModeOnly": "Действие '%s' доступно только в режиме редактирования и не может быть использовано здесь.",
+        "actionTypeDisabledForTargetEntity": "Type действия «%1$s» нельзя использовать, поскольку это действие отключено для сущности «%2$s»."
     }
-  },
-  "tooltips": {
-    "inBackground": "Действие будет выполняться в фоновом режиме без прямого сообщения об успехе/ошибке. Используйте его, если выполнение действия займет более 30 секунд.",
-    "usage": "Использование предписывает размещение действия. Действие с записью требует предварительного выбора затрагиваемых записей.",
-    "executeAs": "Укажите, какого пользователя система будет использовать для выполнения действия"
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "Выражение не может быть пустым.",
-    "forEditModeOnly": "Действие '%s' доступно только в режиме редактирования и не может быть использовано здесь."
-  }
 }

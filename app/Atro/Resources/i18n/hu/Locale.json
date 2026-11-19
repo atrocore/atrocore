@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "languageCode": "Nyelvkód",
+        "fallbackLanguageCode": "Tartalék nyelvi kód",
+        "timeZone": "Időzóna",
+        "dateFormat": "Dátumformátum",
+        "weekStart": "A hét első napja",
+        "timeFormat": "Időformátum",
+        "thousandSeparator": "Ezreselválasztó",
+        "decimalMark": "Tizedesjel",
+        "displayLabelsInContentLanguage": "Címkék megjelenítése a tartalom nyelvén",
+        "disableForUi": "Kizárás a felhasználói felületről"
+    },
+    "tooltips": {
+        "disableForUi": "Ha engedélyezett, ez a területi beállítás nem jelenik meg az eszköztár területi beállításváltójában vagy a felhasználói profil legördülő menüjében. Továbbra is elérhető marad az exportadatfolyam, a Csatorna és az importadatfolyam beállításainál."
+    },
+    "labels": {
+        "sunday": "Vasárnap",
+        "monday": "Hétfő"
+    },
+    "exceptions": {
+        "localeIsUsed": "A használatban lévő területi beállítás nem távolítható el."
+    }
+}

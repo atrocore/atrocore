@@ -1,91 +1,96 @@
 {
-  "fields": {
-    "isActive": "Attivo",
-    "type": "Tipo",
-    "sourceEntity": "Entità sorgente",
-    "inBackground": "Eseguire in background",
-    "usage": "Utilizzo",
-    "massAction": "Azione di massa",
-    "display": "Display",
-    "actionsSet": "Set di azioni",
-    "actions": "Azioni",
-    "webhookUrl": "URL",
-    "executeAs": "Esegui come",
-    "displayField": "Campo di visualizzazione",
-    "focusField": "Campo",
-    "changeFields": "Campi",
-    "targetEntity": "Entità target",
-    "mode": "Modalità",
-    "emailScript": "Scrittura",
-    "showEmailPreview": "Anteprima prima dell'invio",
-    "emailTemplate": "Modello di e-mail",
-    "emailTo": "Invia un'e-mail a",
-    "emailCc": "Email CC",
-    "emailBcc": "Email BCC",
-    "hideTextLabel": "Nasconda l'etichetta di testo sul pulsante",
-    "applyToPreselectedRecords": "Applica ai record preselezionati",
-    "updateType": "Tipo di aggiornamento",
-    "updateFields": "Campi di aggiornamento",
-    "updateScript": "Scrittura",
-    "searchEntity": "Entità di ricerca",
-    "executions": "Esecuzioni",
-    "deletePermanently": "Cancellare in modo permanente"
-  },
-  "labels": {
-    "execute": "Eseguire",
-    "Parameters": "Parametri",
-    "fieldsPanel": "Aggiornamento"
-  },
-  "actions": {
-    "allLogs": "Tutti i registri"
-  },
-  "massActions": {
-    "execute": "Eseguire"
-  },
-  "messages": {
-    "executeNow": "È sicuro di voler eseguire l'azione selezionata?"
-  },
-  "options": {
-    "usage": {
-      "entity": "Pulsante d'azione dell'entità",
-      "record": "Pulsante di registrazione dell'azione",
-      "field": "Pulsante di azione del campo",
-      "onFieldFocus": "Focus sul campo",
-      "onFieldChange": "Cambio campo",
-      "onRecordLoad": "Creazione/aggiornamento del record"
+    "fields": {
+        "isActive": "Attivo",
+        "type": "Tipo",
+        "sourceEntity": "Entità sorgente",
+        "inBackground": "Eseguire in background",
+        "usage": "Utilizzo",
+        "massAction": "Azione di massa",
+        "display": "Display",
+        "actionsSet": "Set di azioni",
+        "actions": "Azioni",
+        "webhookUrl": "URL",
+        "executeAs": "Esegui come",
+        "displayField": "Campo di visualizzazione",
+        "focusField": "Campo",
+        "changeFields": "Campi",
+        "targetEntity": "Entità target",
+        "mode": "Modalità",
+        "emailScript": "Scrittura",
+        "showEmailPreview": "Anteprima prima dell'invio",
+        "emailTemplate": "Modello di e-mail",
+        "emailTo": "Invia un'e-mail a",
+        "emailCc": "Email CC",
+        "emailBcc": "Email BCC",
+        "hideTextLabel": "Nasconda l'etichetta di testo sul pulsante",
+        "applyToPreselectedRecords": "Applica ai record preselezionati",
+        "updateType": "Tipo di aggiornamento",
+        "updateFields": "Campi di aggiornamento",
+        "updateScript": "Scrittura",
+        "searchEntity": "Entità di ricerca",
+        "executions": "Esecuzioni",
+        "deletePermanently": "Cancellare in modo permanente",
+        "handler": "Gestore"
     },
-    "display": {
-      "dropdown": "A discesa",
-      "single": "Singolo"
+    "labels": {
+        "execute": "Eseguire",
+        "Parameters": "Parametri",
+        "fieldsPanel": "Aggiornamento"
     },
-    "type": {
-      "create": "Creare",
-      "update": "Aggiornamento",
-      "delete": "Cancellare",
-      "set": "Set d'azione",
-      "webhook": "Webhook",
-      "customCode": "Codice personalizzato",
-      "email": "Invii l'e-mail",
-      "createOrUpdate": "Creare o aggiornare",
-      "custom": "Codice personalizzato"
+    "actions": {
+        "allLogs": "Tutti i registri"
     },
-    "executeAs": {
-      "system": "Sistema",
-      "sameUser": "Stesso utente"
+    "massActions": {
+        "execute": "Eseguire"
     },
-    "mode": {
-      "basic": "Basic",
-      "script": "Scrittura"
+    "messages": {
+        "executeNow": "È sicuro di voler eseguire l'azione selezionata?"
+    },
+    "options": {
+        "usage": {
+            "entity": "Pulsante d'azione dell'entità",
+            "record": "Pulsante di registrazione dell'azione",
+            "field": "Pulsante di azione del campo",
+            "onFieldFocus": "Focus sul campo",
+            "onFieldChange": "Cambio campo",
+            "onRecordLoad": "Creazione/aggiornamento del record"
+        },
+        "display": {
+            "dropdown": "A discesa",
+            "single": "Singolo"
+        },
+        "type": {
+            "create": "Creare",
+            "update": "Aggiornamento",
+            "delete": "Cancellare",
+            "set": "Set d'azione",
+            "webhook": "Webhook",
+            "customCode": "Codice personalizzato",
+            "email": "Invii l'e-mail",
+            "createOrUpdate": "Creare o aggiornare",
+            "custom": "Codice personalizzato"
+        },
+        "executeAs": {
+            "system": "Sistema",
+            "sameUser": "Stesso utente"
+        },
+        "mode": {
+            "basic": "Basic",
+            "script": "Scrittura"
+        },
+        "updateType": {
+            "basic": "Base",
+            "script": "Script"
+        }
+    },
+    "tooltips": {
+        "inBackground": "L'azione verrà eseguita in background senza alcun messaggio diretto di successo/errore. Lo utilizzi se l'esecuzione dell'azione richiederà più di 30 secondi.",
+        "usage": "L'uso prescrive la collocazione dell'azione. Un'Azione Record richiede che i record interessati siano preselezionati.",
+        "executeAs": "Specifica l'utente che il sistema utilizzerà per eseguire l'azione."
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "L'espressione non può essere vuota.",
+        "forEditModeOnly": "L'azione '%s' è disponibile solo in modalità di modifica e non può essere utilizzata qui.",
+        "actionTypeDisabledForTargetEntity": "Il tipo di azione \"%1$s\" non può essere utilizzato, perché questa azione è disabilitata per l'entità \"%2$s\"."
     }
-  },
-  "tooltips": {
-    "inBackground": "L'azione verrà eseguita in background senza alcun messaggio diretto di successo/errore. Lo utilizzi se l'esecuzione dell'azione richiederà più di 30 secondi.",
-    "usage": "L'uso prescrive la collocazione dell'azione. Un'Azione Record richiede che i record interessati siano preselezionati.",
-    "executeAs": "Specifica l'utente che il sistema utilizzerà per eseguire l'azione."
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "L'espressione non può essere vuota.",
-    "forEditModeOnly": "L'azione '%s' è disponibile solo in modalità di modifica e non può essere utilizzata qui.",
-    "actionTypeDisabledForTargetEntity": "Il tipo di azione \"%1$s\" non può essere utilizzato, perché questa azione è disabilitata per l'entità \"%2$s\"."
-  }
 }

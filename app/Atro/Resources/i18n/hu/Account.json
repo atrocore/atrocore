@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Név",
+        "emailAddress": "E-mail",
+        "phoneNumber": "Telefonszám",
+        "description": "Leírás",
+        "type": "Típus",
+        "role": "Szerep",
+        "number": "Szám",
+        "language": "Nyelv",
+        "addresses": "Címek",
+        "contacts": "Kapcsolatok",
+        "vatId": "Adószám",
+        "webUrl": "Webcím"
+    },
+    "options": {
+        "type": {
+            "individual": "Magánszemély",
+            "company": "Cég"
+        },
+        "role": {
+            "supplier": "Beszállító",
+            "customer": "Ügyfél"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "A fiók alapértelmezett címe már létezik."
+    }
+}

@@ -1,14 +1,20 @@
 {
-  "fields": {
-    "score": "Wynik",
-    "hash": "Unikalny skrót",
-    "hasCluster": "Ma klaster",
-    "clusterItems": "Elementy klastra"
-  },
-  "options": {
-    "type": {
-      "masterRecord": "Główny rekord",
-      "duplicate": "Duplikat"
+    "fields": {
+        "score": "Wynik",
+        "hash": "Unikalny skrót",
+        "hasCluster": "Ma klaster",
+        "clusterItems": "Elementy klastra",
+        "matchSubject": "Podmiot dopasowania",
+        "matchSubjectEntity": "Encja podmiotu dopasowania",
+        "matchSubjectEntityId": "ID encji podmiotu dopasowania",
+        "matchCandidate": "Kandydat dopasowania",
+        "matchCandidateEntity": "Encja kandydata dopasowania",
+        "matchCandidateEntityId": "ID encji kandydata dopasowania"
+    },
+    "options": {
+        "type": {
+            "masterRecord": "Główny rekord",
+            "duplicate": "Duplikat"
+        }
     }
-  }
 }

@@ -1,91 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Кластерні елементи",
-    "number": "Номер",
-    "masterEntity": "Майстер-сутність",
-    "rejectedClusterItems": "Відхилені елементи кластера",
-    "stagingItemCount": "Кількість Contributor-записів",
-    "masterItemCount": "Кількість основних елементів",
-    "status": "Статус",
-    "consolidationMethod": "Метод консолідації",
-    "executionMode": "Режим виконання"
-  },
-  "actions": {
-    "reject": "Відхилити",
-    "consolidate": "Консолідувати",
-    "unreject": "Скасувати відхилення",
-    "deconsolidate": "Розконсолідувати",
-    "split": "Розділити"
-  },
-  "options": {
-    "status": {
-      "empty": "Порожній",
-      "review": "На перевірці",
-      "invalid": "Недійсний",
-      "consolidated": "Консолідовано"
+    "fields": {
+        "clusterItems": "Кластерні елементи",
+        "number": "Номер",
+        "masterEntity": "Майстер-сутність",
+        "rejectedClusterItems": "Відхилені елементи кластера",
+        "stagingItemCount": "Кількість Contributor-записів",
+        "masterItemCount": "Кількість основних елементів",
+        "status": "Статус",
+        "consolidationMethod": "Метод консолідації",
+        "executionMode": "Режим виконання"
     },
-    "consolidationMethod": {
-      "ruleBased": "На основі правил",
-      "hybrid": "Гібридний",
-      "manual": "Ручний"
+    "actions": {
+        "reject": "Відхилити",
+        "consolidate": "Консолідувати",
+        "unreject": "Скасувати відхилення",
+        "deconsolidate": "Розконсолідувати",
+        "split": "Розділити",
+        "move": "Перемістити",
+        "purge": "Остаточно видалити"
     },
-    "executionMode": {
-      "automatic": "Автоматичний",
-      "manual": "Ручний"
+    "options": {
+        "status": {
+            "empty": "Порожній",
+            "review": "На перевірці",
+            "invalid": "Недійсний",
+            "consolidated": "Консолідовано"
+        },
+        "consolidationMethod": {
+            "ruleBased": "На основі правил",
+            "hybrid": "Гібридний",
+            "manual": "Ручний"
+        },
+        "executionMode": {
+            "automatic": "Автоматичний",
+            "manual": "Ручний"
+        }
+    },
+    "exceptions": {
+        "cannotDelete": "Можна видаляти лише порожні кластери",
+        "noClusterItemsToPreview": "Немає чого показати: у кластері немає contributor-записів",
+        "cannotPreviewInvalidCluster": "Неможливо показати прев'ю консолідації для невалідного кластера",
+        "clusterItemsNotInCluster": "Елементи кластера %s не належать до цього кластера",
+        "cannotMergeWithoutGoldenRecord": "Неможливо об'єднати без головного запису"
+    },
+    "labels": {
+        "contributorRecord": "contributor-запис",
+        "contributorRecords": "contributor-записи",
+        "contributorRecordsPanel": "Contributor-записи",
+        "masterRecord": "майстер-запис",
+        "masterRecords": "майстер-записи",
+        "consolidated": "Консолідовано",
+        "unconsolidated": "Не консолідовано",
+        "rejected": "Відхилено",
+        "consolidationPreview": "Прев’ю консолідації",
+        "standardView": "Стандартний",
+        "comparisonView": "Порівняння",
+        "manualConsolidationView": "Ручна консолідація",
+        "suggestedValues": "Запропоновані значення",
+        "selectAllSuggestedValues": "Обрати всі запропоновані значення",
+        "consolidationPreviewHint": "Показує, яким стане golden record після консолідації. Нічого не зберігається.",
+        "noConsolidationConfigured": "Для цієї сутності не налаштовано консолідацію",
+        "discard": "Скасувати зміни",
+        "masterRecordsPanel": "Головні записи"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",
+        "clusterLinkedThis": "{user} пов'язав {relatedEntity} з цим кластером",
+        "clusterUnlinked": "{user} відв'язав {relatedEntity} від цього кластера",
+        "clusterUnlinkedThis": "{user} відв'язав {relatedEntity} від цього кластера",
+        "clusterRejected": "{user} відхилив {relatedEntity} у цьому кластері",
+        "clusterRejectedThis": "{user} відхилив {relatedEntity} у цьому кластері",
+        "clusterReincluded": "{user} повторно включив {relatedEntity} у цей кластер",
+        "clusterReincludedThis": "{user} повторно включив {relatedEntity} у цей кластер",
+        "clusterMoved": "{user} перемістив {relatedEntity} з цього кластера",
+        "clusterMovedThis": "{user} перемістив {relatedEntity} з цього кластера",
+        "clusterConsolidated": "{user} консолідував {relatedEntity} у цьому кластері",
+        "clusterConsolidatedThis": "{user} консолідував {relatedEntity} у цьому кластері",
+        "clusterDeconsolidated": "{user} розконсолідував {relatedEntity} у цьому кластері",
+        "clusterDeconsolidatedThis": "{user} розконсолідував {relatedEntity} у цьому кластері",
+        "clusterGoldenRecord": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
+        "clusterGoldenRecordThis": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
+        "clusterDeleted": "{user} видалив цей кластер",
+        "clusterDeletedThis": "{user} видалив цей кластер",
+        "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
+        "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера",
+        "clusterMovedToCluster": "{user} перемістив {records} з кластера {clusterLink} до {entity}",
+        "clusterMovedToClusterThis": "{user} перемістив {records} з кластера {clusterLink} до цього кластера",
+        "clusterMovedFromCluster": "{user} перемістив {records} з {entity} до кластера {clusterLink}",
+        "clusterMovedFromClusterThis": "{user} перемістив {records} з цього кластера до кластера {clusterLink}"
+    },
+    "messages": {
+        "consolidated": "Консолідовано",
+        "noClusterFound": "Для цього запису не знайдено кластера"
+    },
+    "massActions": {
+        "purge": "Остаточно видалити"
+    },
+    "massActionConfirmMessages": {
+        "purge": "Ви впевнені, що хочете остаточно видалити вибрані кластери? Цю дію не можна скасувати.",
+        "purgeAll": "Ви впевнені, що хочете остаточно видалити всі кластери? Цю дію не можна скасувати."
+    },
+    "actionConfirms": {
+        "purge": "Ви впевнені, що хочете остаточно видалити цей кластер? Цю дію не можна скасувати."
     }
-  },
-  "exceptions": {
-    "cannotDelete": "Можна видаляти лише порожні кластери",
-    "noClusterItemsToPreview": "Немає чого показати: у кластері немає contributor-записів",
-    "cannotPreviewInvalidCluster": "Неможливо показати прев'ю консолідації для невалідного кластера",
-    "clusterItemsNotInCluster": "Елементи кластера %s не належать до цього кластера"
-  },
-  "labels": {
-    "contributorRecord": "contributor-запис",
-    "contributorRecords": "contributor-записи",
-    "contributorRecordsPanel": "Contributor-записи",
-    "masterRecord": "майстер-запис",
-    "masterRecords": "майстер-записи",
-    "consolidated": "Консолідовано",
-    "unconsolidated": "Не консолідовано",
-    "rejected": "Відхилено",
-    "consolidationPreview": "Прев’ю консолідації",
-    "standardView": "Стандартний",
-    "comparisonView": "Порівняння",
-    "manualConsolidationView": "Ручна консолідація",
-    "suggestedValues": "Запропоновані значення",
-    "selectAllSuggestedValues": "Обрати всі запропоновані значення",
-    "consolidationPreviewHint": "Показує, яким стане golden record після консолідації. Нічого не зберігається.",
-    "noConsolidationConfigured": "Для цієї сутності не налаштовано консолідацію",
-    "discard": "Скасувати зміни"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",
-    "clusterLinkedThis": "{user} пов'язав {relatedEntity} з цим кластером",
-    "clusterUnlinked": "{user} відв'язав {relatedEntity} від цього кластера",
-    "clusterUnlinkedThis": "{user} відв'язав {relatedEntity} від цього кластера",
-    "clusterRejected": "{user} відхилив {relatedEntity} у цьому кластері",
-    "clusterRejectedThis": "{user} відхилив {relatedEntity} у цьому кластері",
-    "clusterReincluded": "{user} повторно включив {relatedEntity} у цей кластер",
-    "clusterReincludedThis": "{user} повторно включив {relatedEntity} у цей кластер",
-    "clusterMoved": "{user} перемістив {relatedEntity} з цього кластера",
-    "clusterMovedThis": "{user} перемістив {relatedEntity} з цього кластера",
-    "clusterConsolidated": "{user} консолідував {relatedEntity} у цьому кластері",
-    "clusterConsolidatedThis": "{user} консолідував {relatedEntity} у цьому кластері",
-    "clusterDeconsolidated": "{user} розконсолідував {relatedEntity} у цьому кластері",
-    "clusterDeconsolidatedThis": "{user} розконсолідував {relatedEntity} у цьому кластері",
-    "clusterGoldenRecord": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
-    "clusterGoldenRecordThis": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
-    "clusterDeleted": "{user} видалив цей кластер",
-    "clusterDeletedThis": "{user} видалив цей кластер",
-    "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterMovedToCluster": "{user} перемістив {records} з кластера {clusterLink} до {entity}",
-    "clusterMovedToClusterThis": "{user} перемістив {records} з кластера {clusterLink} до цього кластера",
-    "clusterMovedFromCluster": "{user} перемістив {records} з {entity} до кластера {clusterLink}",
-    "clusterMovedFromClusterThis": "{user} перемістив {records} з цього кластера до кластера {clusterLink}"
-  },
-  "messages": {
-    "consolidated": "Консолідовано"
-  }
 }

@@ -1,0 +1,47 @@
+{
+    "fields": {
+        "matching": "Egyeztetés",
+        "weight": "Súly",
+        "matchingRuleSet": "Készlet",
+        "matchingRules": "Egyeztetési szabályok",
+        "operator": "Operátor",
+        "attribute": "Attribútum",
+        "matchScoreExpression": "Pontszámkifejezés",
+        "ignoreUnavailableAttributes": "Nem elérhető attribútumok figyelmen kívül hagyása"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Mezők",
+            "attributes": "Attribútumok"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "A mező egyenlő",
+            "fieldSimilar": "A mező hasonló",
+            "fieldContains": "A mező tartalmazza",
+            "set": "Halmaz",
+            "expression": "Kifejezés",
+            "fieldsSimilar": "A mezők hasonlók",
+            "attributesSimilar": "Az attribútumok hasonlóak"
+        },
+        "operator": {
+            "and": "ÉS",
+            "or": "VAGY"
+        }
+    },
+    "exceptions": {
+        "notValidCode": "A kód csak betűket, számokat, aláhúzásjeleket és kötőjeleket tartalmazhat.",
+        "notValidMatchingActivation": "A Párosítási szabály csak inaktív párosítás esetén módosítható.",
+        "notValidMatching": "Az egyeztetés érvénytelen",
+        "notValidMatchingRuleSet": "Az egyezési szabálykészlet érvénytelen",
+        "notValidFieldType": "A mezőtípus nem támogatott a kiválasztott szabálytípusban.",
+        "notValidAttributeType": "Az Attribútum típusa nem támogatott a kiválasztott szabálytípusban.",
+        "expressionCannotBeEmpty": "A kifejezés nem lehet üres.",
+        "notValidAttributesSimilar": "A párosítás entitásai nem rendelkeznek attribútumokkal."
+    },
+    "tooltips": {
+        "matchScoreExpression": "ExpressionLanguage-kifejezés, amely hozzáfér a `stageEntity` (hidratált rekord) és a `masterEntity` (a jelölt nyers mezőértékei tömbként, például masterEntity['name']) változóhoz. A kifejezésnek 0 és 1 közötti számot kell visszaadnia. A rendszer ezt megszorozza a szabály súlyával az egyezési pontszám kiszámításához. Például a stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 kifejezés pontos egyezés esetén 1-et, minden más esetben 0-t ad.",
+        "ignoreUnavailableAttributes": "Ha engedélyezve van, a csak az egyik összehasonlított rekordhoz kapcsolt attribútumot a rendszer nem hasonlítja össze. Ellenkező esetben az ilyen attribútum hasonlósága 0."
+    }
+}

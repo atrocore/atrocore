@@ -1,91 +1,96 @@
 {
-  "fields": {
-    "isActive": "Aktivní",
-    "type": "Typ",
-    "sourceEntity": "Zdrojová entita",
-    "inBackground": "Provést na pozadí",
-    "usage": "Použití",
-    "massAction": "Hromadná akce",
-    "display": "Zobrazit",
-    "actionsSet": "Sada akcí",
-    "actions": "Akce",
-    "webhookUrl": "URL",
-    "executeAs": "Provést jako",
-    "displayField": "Zobrazovací pole",
-    "focusField": "Pole",
-    "changeFields": "Pole",
-    "targetEntity": "Cílová entita",
-    "mode": "Režim",
-    "emailScript": "Skript",
-    "showEmailPreview": "Náhled před odesláním",
-    "emailTemplate": "Šablona e-mailu",
-    "emailTo": "Příjemce e-mailu",
-    "emailCc": "Kopie (CC)",
-    "emailBcc": "Skrytá kopie (BCC)",
-    "hideTextLabel": "Skrýt textový popis tlačítka",
-    "updateScript": "Skript",
-    "updateFields": "Aktualizace polí",
-    "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
-    "updateType": "Typ aktualizace",
-    "searchEntity": "Vyhledávání entit",
-    "executions": "Provedení",
-    "deletePermanently": "Trvale odstranit"
-  },
-  "labels": {
-    "execute": "Provést",
-    "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizovat"
-  },
-  "actions": {
-    "allLogs": "Všechny protokoly"
-  },
-  "massActions": {
-    "execute": "Provést"
-  },
-  "messages": {
-    "executeNow": "Jste si jisti, že chcete provést vybranou akci?"
-  },
-  "options": {
-    "usage": {
-      "entity": "Tlačítko akce Entita",
-      "record": "Tlačítko akce Záznam",
-      "field": "Akční tlačítko pole",
-      "onFieldFocus": "Při zaměření na pole",
-      "onFieldChange": "Při změně pole",
-      "onRecordLoad": "Při vytváření / aktualizaci záznamu"
+    "fields": {
+        "isActive": "Aktivní",
+        "type": "Typ",
+        "sourceEntity": "Zdrojová entita",
+        "inBackground": "Provést na pozadí",
+        "usage": "Použití",
+        "massAction": "Hromadná akce",
+        "display": "Zobrazit",
+        "actionsSet": "Sada akcí",
+        "actions": "Akce",
+        "webhookUrl": "URL",
+        "executeAs": "Provést jako",
+        "displayField": "Zobrazovací pole",
+        "focusField": "Pole",
+        "changeFields": "Pole",
+        "targetEntity": "Cílová entita",
+        "mode": "Režim",
+        "emailScript": "Skript",
+        "showEmailPreview": "Náhled před odesláním",
+        "emailTemplate": "Šablona e-mailu",
+        "emailTo": "Příjemce e-mailu",
+        "emailCc": "Kopie (CC)",
+        "emailBcc": "Skrytá kopie (BCC)",
+        "hideTextLabel": "Skrýt textový popis tlačítka",
+        "updateScript": "Skript",
+        "updateFields": "Aktualizace polí",
+        "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
+        "updateType": "Typ aktualizace",
+        "searchEntity": "Vyhledávání entit",
+        "executions": "Provedení",
+        "deletePermanently": "Trvale odstranit",
+        "handler": "Obslužná rutina"
     },
-    "display": {
-      "dropdown": "Rozbalovací nabídka",
-      "single": "Jednoduché"
+    "labels": {
+        "execute": "Provést",
+        "Parameters": "Parametry",
+        "fieldsPanel": "Aktualizovat"
     },
-    "type": {
-      "set": "Akční sada",
-      "webhook": "Webhook",
-      "customCode": "Vlastní kód",
-      "email": "Odeslat e-mail",
-      "update": "Aktualizovat",
-      "create": "Vytvořit",
-      "delete": "Odstranit",
-      "createOrUpdate": "Vytvořit nebo aktualizovat",
-      "custom": "Vlastní kód"
+    "actions": {
+        "allLogs": "Všechny protokoly"
     },
-    "executeAs": {
-      "system": "Systém",
-      "sameUser": "Stejný uživatel"
+    "massActions": {
+        "execute": "Provést"
     },
-    "mode": {
-      "basic": "Basic",
-      "script": "Skript"
+    "messages": {
+        "executeNow": "Jste si jisti, že chcete provést vybranou akci?"
+    },
+    "options": {
+        "usage": {
+            "entity": "Tlačítko akce Entita",
+            "record": "Tlačítko akce Záznam",
+            "field": "Akční tlačítko pole",
+            "onFieldFocus": "Při zaměření na pole",
+            "onFieldChange": "Při změně pole",
+            "onRecordLoad": "Při vytváření / aktualizaci záznamu"
+        },
+        "display": {
+            "dropdown": "Rozbalovací nabídka",
+            "single": "Jednoduché"
+        },
+        "type": {
+            "set": "Akční sada",
+            "webhook": "Webhook",
+            "customCode": "Vlastní kód",
+            "email": "Odeslat e-mail",
+            "update": "Aktualizovat",
+            "create": "Vytvořit",
+            "delete": "Odstranit",
+            "createOrUpdate": "Vytvořit nebo aktualizovat",
+            "custom": "Vlastní kód"
+        },
+        "executeAs": {
+            "system": "Systém",
+            "sameUser": "Stejný uživatel"
+        },
+        "mode": {
+            "basic": "Basic",
+            "script": "Skript"
+        },
+        "updateType": {
+            "basic": "Základní",
+            "script": "Skript"
+        }
+    },
+    "tooltips": {
+        "inBackground": "Akce bude provedena na pozadí bez přímé zprávy o úspěchu/chybě. Použijte to, pokud provedení akce bude trvat déle než 30 sekund.",
+        "usage": "Použití předepisuje umístění akce. Akce záznamu vyžaduje, aby byly předem vybrány záznamy, kterých se akce týká.",
+        "executeAs": "Určete uživatele, kterého systém použije k provedení akce"
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "Výraz nemůže být prázdný.",
+        "forEditModeOnly": "Akce \"%s\" je k dispozici pouze v režimu úprav a nelze ji zde použít.",
+        "actionTypeDisabledForTargetEntity": "Typ akce \"%1$s\" nelze použít, protože tato akce je pro entitu \"%2$s\" zakázána."
     }
-  },
-  "tooltips": {
-    "inBackground": "Akce bude provedena na pozadí bez přímé zprávy o úspěchu/chybě. Použijte to, pokud provedení akce bude trvat déle než 30 sekund.",
-    "usage": "Použití předepisuje umístění akce. Akce záznamu vyžaduje, aby byly předem vybrány záznamy, kterých se akce týká.",
-    "executeAs": "Určete uživatele, kterého systém použije k provedení akce"
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "Výraz nemůže být prázdný.",
-    "forEditModeOnly": "Akce \"%s\" je k dispozici pouze v režimu úprav a nelze ji zde použít.",
-    "actionTypeDisabledForTargetEntity": "Typ akce \"%1$s\" nelze použít, protože tato akce je pro entitu \"%2$s\" zakázána."
-  }
 }

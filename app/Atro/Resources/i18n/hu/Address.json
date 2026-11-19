@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "buyer": "Vevő",
+        "email": "E-mail",
+        "phone": "Telefon",
+        "street": "Utca",
+        "postalCode": "Irányítószám",
+        "box": "Doboz",
+        "city": "Város",
+        "country": "Ország",
+        "type": "Típus",
+        "account": "Fiók",
+        "contactName": "Kapcsolattartó neve",
+        "name": "Cégnév",
+        "prospect": "Érdeklődők",
+        "accounts": "Ügyfelek",
+        "contacts": "Kapcsolatok"
+    },
+    "options": {
+        "type": {
+            "billing": "Számlázás",
+            "delivery": "Szállítás"
+        }
+    }
+}

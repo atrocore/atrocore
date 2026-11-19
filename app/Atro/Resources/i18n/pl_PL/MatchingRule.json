@@ -1,33 +1,47 @@
 {
-  "fields": {
-    "matching": "Dopasowanie",
-    "weight": "Waga",
-    "matchingRuleSet": "Zestaw",
-    "matchingRules": "Zasady dopasowywania",
-    "operator": "Operator",
-    "matchScoreExpression": "Wyrażenie wyniku"
-  },
-  "options": {
-    "type": {
-      "fieldEqual": "Pole jest równe",
-      "fieldSimilar": "Pole jest podobne",
-      "fieldContains": "Pole zawiera",
-      "set": "Zestaw",
-      "expression": "Wyrażenie"
+    "fields": {
+        "matching": "Dopasowanie",
+        "weight": "Waga",
+        "matchingRuleSet": "Zestaw",
+        "matchingRules": "Zasady dopasowywania",
+        "operator": "Operator",
+        "matchScoreExpression": "Wyrażenie wyniku",
+        "attribute": "Atrybut",
+        "ignoreUnavailableAttributes": "Ignoruj niedostępne atrybuty"
     },
-    "operator": {
-      "and": "ORAZ",
-      "or": "LUB"
+    "options": {
+        "type": {
+            "fieldEqual": "Pole jest równe",
+            "fieldSimilar": "Pole jest podobne",
+            "fieldContains": "Pole zawiera",
+            "set": "Zestaw",
+            "expression": "Wyrażenie",
+            "fieldsSimilar": "Pola są podobne",
+            "attributesSimilar": "Atrybuty są podobne"
+        },
+        "operator": {
+            "and": "ORAZ",
+            "or": "LUB"
+        }
+    },
+    "exceptions": {
+        "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki.",
+        "notValidMatchingActivation": "Regułę dopasowania można zmienić tylko dla nieaktywnego dopasowania.",
+        "notValidMatching": "Dopasowanie jest nieprawidłowe",
+        "notValidMatchingRuleSet": "Zestaw reguł dopasowania jest nieprawidłowy",
+        "expressionCannotBeEmpty": "Wyrażenie nie może być puste.",
+        "notValidFieldType": "Typ pola nie jest obsługiwany przez wybrany typ reguły.",
+        "notValidAttributeType": "Typ atrybutu nie jest obsługiwany przez wybrany typ reguły.",
+        "notValidAttributesSimilar": "Encje w dopasowaniu nie mają atrybutów."
+    },
+    "tooltips": {
+        "matchScoreExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu) i `masterEntity` (surowych wartości pól kandydata jako tablicy - np. masterEntity['name']). Musi zwracać liczbę z zakresu od 0 do 1, mnożoną przez wagę reguły w celu uzyskania wyniku dopasowania - np. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 ocenia dokładne dopasowanie jako 1, a wszystko inne jako 0.",
+        "ignoreUnavailableAttributes": "Jeśli ta opcja jest włączona, atrybut przypisany tylko do jednego z porównywanych rekordów nie jest porównywany. W przeciwnym razie podobieństwo tego atrybutu wynosi 0."
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Pola",
+            "attributes": "Atrybuty"
+        }
     }
-  },
-  "exceptions": {
-    "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki.",
-    "notValidMatchingActivation": "Regułę dopasowania można zmienić tylko dla nieaktywnego dopasowania.",
-    "notValidMatching": "Dopasowanie jest nieprawidłowe",
-    "notValidMatchingRuleSet": "Zestaw reguł dopasowania jest nieprawidłowy",
-    "expressionCannotBeEmpty": "Wyrażenie nie może być puste."
-  },
-  "tooltips": {
-    "matchScoreExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu) i `masterEntity` (surowych wartości pól kandydata jako tablicy - np. masterEntity['name']). Musi zwracać liczbę z zakresu od 0 do 1, mnożoną przez wagę reguły w celu uzyskania wyniku dopasowania - np. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 ocenia dokładne dopasowanie jako 1, a wszystko inne jako 0."
-  }
 }

@@ -1,54 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Položky klastru",
-    "number": "Číslo",
-    "masterEntity": "Hlavní subjekt",
-    "rejectedClusterItems": "Odmítnuté položky klastru",
-    "stagingItemCount": "Počet záznamů přispěvatelů",
-    "masterItemCount": "Hlavní počet položek"
-  },
-  "actions": {
-    "reject": "Odmítnout",
-    "unreject": "Odmítnout"
-  },
-  "options": {
-    "status": {
-      "empty": "Prázdný",
-      "review": "Recenze",
-      "invalid": "Neplatný"
+    "fields": {
+        "clusterItems": "Položky klastru",
+        "number": "Číslo",
+        "masterEntity": "Hlavní subjekt",
+        "rejectedClusterItems": "Odmítnuté položky klastru",
+        "stagingItemCount": "Počet záznamů přispěvatelů",
+        "masterItemCount": "Hlavní počet položek",
+        "status": "Stav",
+        "consolidationMethod": "Metoda konsolidace",
+        "executionMode": "Režim spuštění"
+    },
+    "actions": {
+        "reject": "Odmítnout",
+        "unreject": "Odmítnout",
+        "consolidate": "Konsolidovat",
+        "deconsolidate": "Zrušit konsolidaci",
+        "split": "Rozdělit",
+        "move": "Přesunout",
+        "purge": "Trvale odstranit"
+    },
+    "options": {
+        "status": {
+            "empty": "Prázdný",
+            "review": "Recenze",
+            "invalid": "Neplatný",
+            "consolidated": "Konsolidováno"
+        },
+        "consolidationMethod": {
+            "ruleBased": "Na základě pravidel",
+            "hybrid": "Hybridní",
+            "manual": "Ruční"
+        },
+        "executionMode": {
+            "automatic": "Automatický",
+            "manual": "Ručně"
+        }
+    },
+    "exceptions": {
+        "cannotMergeWithoutGoldenRecord": "Sloučení bez zlatého záznamu není možné",
+        "cannotDelete": "Odstranit lze pouze prázdné clustery",
+        "noClusterItemsToPreview": "Není co zobrazit v náhledu: cluster neobsahuje žádné přispívající položky",
+        "cannotPreviewInvalidCluster": "Nelze zobrazit náhled konsolidace neplatného clusteru",
+        "clusterItemsNotInCluster": "Položky clusteru %s nepatří do tohoto clusteru"
+    },
+    "labels": {
+        "contributorRecord": "záznam přispěvatele",
+        "contributorRecords": "záznamy přispěvatelů",
+        "contributorRecordsPanel": "Záznamy přispěvatelů",
+        "masterRecord": "hlavní záznam",
+        "masterRecords": "hlavní záznamy",
+        "rejected": "Odmítnuto",
+        "masterRecordsPanel": "Hlavní záznamy",
+        "consolidated": "Sloučeno",
+        "unconsolidated": "Nekonsolidováno",
+        "consolidationPreview": "Náhled konsolidace",
+        "standardView": "Standardní",
+        "comparisonView": "Porovnání",
+        "manualConsolidationView": "Ruční konsolidace",
+        "suggestedValues": "Navrhované hodnoty",
+        "selectAllSuggestedValues": "Vybrat všechny navrhované hodnoty",
+        "consolidationPreviewHint": "Zobrazuje, jak by vypadal hlavní záznam po konsolidaci. Nic se neukládá.",
+        "noConsolidationConfigured": "Pro tuto entitu není nakonfigurována žádná konsolidace",
+        "discard": "Zahodit"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} propojil {relatedEntity} s tímto clusterem",
+        "clusterLinkedThis": "{user} propojil {relatedEntity} s tímto clusterem",
+        "clusterUnlinked": "{user} odpojil {relatedEntity} od tohoto clusteru",
+        "clusterUnlinkedThis": "{user} odpojil {relatedEntity} od tohoto clusteru",
+        "clusterRejected": "{user} zamítl {relatedEntity} v tomto clusteru",
+        "clusterRejectedThis": "{user} zamítl {relatedEntity} v tomto clusteru",
+        "clusterReincluded": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
+        "clusterReincludedThis": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
+        "clusterMoved": "{user} přesunul {relatedEntity} z tohoto clusteru",
+        "clusterMovedThis": "{user} přesunul {relatedEntity} z tohoto clusteru",
+        "clusterGoldenRecord": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
+        "clusterGoldenRecordThis": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
+        "clusterDeleted": "{user} smazal tento cluster",
+        "clusterDeletedThis": "{user} smazal tento cluster",
+        "clusterRecordDeleted": "{user} smazal {relatedEntity} z tohoto clusteru",
+        "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru",
+        "clusterMovedToCluster": "{user} přesunul {records} z clusteru {clusterLink} do {entity}",
+        "clusterMovedToClusterThis": "{user} přesunul {records} z clusteru {clusterLink} do tohoto clusteru",
+        "clusterMovedFromCluster": "{user} přesunul {records} z {entity} do clusteru {clusterLink}",
+        "clusterMovedFromClusterThis": "{user} přesunul {records} z tohoto clusteru do clusteru {clusterLink}",
+        "clusterConsolidated": "{user} konsolidoval {relatedEntity} v tomto clusteru",
+        "clusterConsolidatedThis": "{user} sloučil {relatedEntity} v tomto clusteru",
+        "clusterDeconsolidated": "{user} zrušil konsolidaci {relatedEntity} v tomto clusteru",
+        "clusterDeconsolidatedThis": "{user} zrušil sloučení {relatedEntity} v tomto clusteru"
+    },
+    "massActions": {
+        "purge": "Trvale odstranit"
+    },
+    "massActionConfirmMessages": {
+        "purge": "Opravdu chcete trvale odstranit vybrané clustery? Tuto akci nelze vrátit zpět.",
+        "purgeAll": "Opravdu chcete trvale odstranit všechny clustery? Tuto akci nelze vrátit zpět."
+    },
+    "actionConfirms": {
+        "purge": "Opravdu chcete trvale odstranit tento cluster? Tuto akci nelze vrátit zpět."
+    },
+    "messages": {
+        "noClusterFound": "Pro tento záznam nebyl nalezen žádný cluster",
+        "consolidated": "Konsolidováno"
     }
-  },
-  "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Sloučení bez zlatého záznamu není možné"
-  },
-  "labels": {
-    "contributorRecord": "záznam přispěvatele",
-    "contributorRecords": "záznamy přispěvatelů",
-    "contributorRecordsPanel": "Záznamy přispěvatelů",
-    "masterRecord": "hlavní záznam",
-    "masterRecords": "hlavní záznamy",
-    "rejected": "Odmítnuto"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} propojil {relatedEntity} s tímto clusterem",
-    "clusterLinkedThis": "{user} propojil {relatedEntity} s tímto clusterem",
-    "clusterUnlinked": "{user} odpojil {relatedEntity} od tohoto clusteru",
-    "clusterUnlinkedThis": "{user} odpojil {relatedEntity} od tohoto clusteru",
-    "clusterRejected": "{user} zamítl {relatedEntity} v tomto clusteru",
-    "clusterRejectedThis": "{user} zamítl {relatedEntity} v tomto clusteru",
-    "clusterReincluded": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
-    "clusterReincludedThis": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
-    "clusterMoved": "{user} přesunul {relatedEntity} z tohoto clusteru",
-    "clusterMovedThis": "{user} přesunul {relatedEntity} z tohoto clusteru",
-    "clusterGoldenRecord": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
-    "clusterGoldenRecordThis": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
-    "clusterDeleted": "{user} smazal tento cluster",
-    "clusterDeletedThis": "{user} smazal tento cluster",
-    "clusterRecordDeleted": "{user} smazal {relatedEntity} z tohoto clusteru",
-    "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru",
-    "clusterMovedToCluster": "{user} přesunul {records} z clusteru {clusterLink} do {entity}",
-    "clusterMovedToClusterThis": "{user} přesunul {records} z clusteru {clusterLink} do tohoto clusteru",
-    "clusterMovedFromCluster": "{user} přesunul {records} z {entity} do clusteru {clusterLink}",
-    "clusterMovedFromClusterThis": "{user} přesunul {records} z tohoto clusteru do clusteru {clusterLink}"
-  }
 }

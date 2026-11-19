@@ -1,14 +1,20 @@
 {
-  "fields": {
-    "score": "Оценка",
-    "hash": "Уникальный хэш",
-    "hasCluster": "Имеет кластер",
-    "clusterItems": "Предметы кластера"
-  },
-  "options": {
-    "type": {
-      "duplicate": "Дубликат",
-      "masterRecord": "Мастер запись"
+    "fields": {
+        "score": "Оценка",
+        "hash": "Уникальный хэш",
+        "hasCluster": "Имеет кластер",
+        "clusterItems": "Предметы кластера",
+        "matchSubject": "Субъект сопоставления",
+        "matchSubjectEntity": "Сущность субъекта сопоставления",
+        "matchSubjectEntityId": "ID сущности субъекта сопоставления",
+        "matchCandidate": "Кандидат сопоставления",
+        "matchCandidateEntity": "Сущность кандидата сопоставления",
+        "matchCandidateEntityId": "ID сущности кандидата сопоставления"
+    },
+    "options": {
+        "type": {
+            "duplicate": "Дубликат",
+            "masterRecord": "Мастер запись"
+        }
     }
-  }
 }

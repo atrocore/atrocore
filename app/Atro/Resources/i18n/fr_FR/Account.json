@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "name": "Nom",
-    "emailAddress": "Mail",
-    "phoneNumber": "Téléphone",
-    "description": "Description",
-    "type": "Type",
-    "role": "Rôle",
-    "number": "Nombre",
-    "language": "Langue",
-    "addresses": "Adresses",
-    "contacts": "Contacts"
-  },
-  "options": {
-    "type": {
-      "individual": "Individuel",
-      "company": "Entreprise"
+    "fields": {
+        "name": "Nom",
+        "emailAddress": "Mail",
+        "phoneNumber": "Téléphone",
+        "description": "Description",
+        "type": "Type",
+        "role": "Rôle",
+        "number": "Nombre",
+        "language": "Langue",
+        "addresses": "Adresses",
+        "contacts": "Contacts",
+        "vatId": "N° de TVA",
+        "webUrl": "URL du site web"
     },
-    "role": {
-      "supplier": "Fournisseur",
-      "customer": "Client"
+    "options": {
+        "type": {
+            "individual": "Individuel",
+            "company": "Entreprise"
+        },
+        "role": {
+            "supplier": "Fournisseur",
+            "customer": "Client"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "L'adresse par défaut du compte existe déjà."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "L'adresse par défaut du compte existe déjà."
-  }
 }

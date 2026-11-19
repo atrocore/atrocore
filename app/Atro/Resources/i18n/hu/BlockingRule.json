@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "Egyeztetés",
+        "blockingRuleSet": "Készlet",
+        "blockingRules": "Blokkolási szabályok",
+        "operator": "Operátor",
+        "attribute": "Attribútum",
+        "matchedWhereExpression": "Egyeztetési WHERE-kifejezés"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Mezők",
+            "attributes": "Attribútumok"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "A mező egyenlő",
+            "fieldSimilar": "A mező hasonló",
+            "fieldContains": "A mező tartalmazza",
+            "set": "Halmaz",
+            "expression": "Kifejezés"
+        },
+        "operator": {
+            "and": "ÉS",
+            "or": "VAGY"
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "A blokkolási szabály csak inaktív egyeztetés esetén módosítható.",
+        "notValidMatching": "Az egyeztetés érvénytelen",
+        "notValidMatchingRuleSet": "A blokkolási szabálykészlet érvénytelen",
+        "notValidFieldType": "A mezőtípus nem támogatott a kiválasztott szabálytípusban.",
+        "notValidAttributeType": "Az Attribútum típusa nem támogatott a kiválasztott szabálytípusban.",
+        "expressionCannotBeEmpty": "A kifejezés nem lehet üres."
+    },
+    "tooltips": {
+        "matchedWhereExpression": "Egy ExpressionLanguage-kifejezés, amely hozzáfér a `stageEntity`-hez (egy betöltött rekordhoz). Egy WHERE-feltétel tömböt kell visszaadnia, amely leírja, hogy mely törzsrekordokat kell jelöltként figyelembe venni. A kulcsok mezőnevek, az értékek pedig azok az értékek, amelyekkel egyeztetni kell (az operátorok a kulcsba is beágyazhatók, például `field>`, `field*`; az `OR`/`AND` csoportok pedig összetettebb feltételekhez egymásba ágyazhatók). Például a {nameFrFr: stageEntity.get('name')} azokat a törzsrekordokat találja meg, amelyek nameFrFr mezője megegyezik a szakaszrekord name mezőjével."
+    }
+}

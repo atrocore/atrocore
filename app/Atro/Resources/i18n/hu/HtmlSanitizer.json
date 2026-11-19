@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "configuration": "Konfiguráció"
+    },
+    "exceptions": {
+        "notValidYaml": "A konfiguráció nem érvényes YAML."
+    }
+}

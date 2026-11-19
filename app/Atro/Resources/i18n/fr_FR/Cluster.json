@@ -1,91 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Éléments de la grappe",
-    "number": "Numéro",
-    "masterEntity": "Entité de référence",
-    "rejectedClusterItems": "Éléments de la grappe rejetés",
-    "stagingItemCount": "Nombre d'enregistrements contributeurs",
-    "masterItemCount": "Nombre d'articles de référence",
-    "status": "Statut",
-    "consolidationMethod": "Méthode de consolidation",
-    "executionMode": "Mode d'exécution"
-  },
-  "actions": {
-    "reject": "Rejeter",
-    "consolidate": "Consolider",
-    "unreject": "Ne pas rejeter",
-    "deconsolidate": "Déconsolider",
-    "split": "Scinder"
-  },
-  "options": {
-    "status": {
-      "empty": "Vide",
-      "review": "Révision",
-      "invalid": "Invalide",
-      "consolidated": "Consolidé"
+    "fields": {
+        "clusterItems": "Éléments de la grappe",
+        "number": "Numéro",
+        "masterEntity": "Entité de référence",
+        "rejectedClusterItems": "Éléments de la grappe rejetés",
+        "stagingItemCount": "Nombre d'enregistrements contributeurs",
+        "masterItemCount": "Nombre d'articles de référence",
+        "status": "Statut",
+        "consolidationMethod": "Méthode de consolidation",
+        "executionMode": "Mode d'exécution"
     },
-    "consolidationMethod": {
-      "ruleBased": "Basée sur des règles",
-      "hybrid": "Hybride",
-      "manual": "Manuelle"
+    "actions": {
+        "reject": "Rejeter",
+        "consolidate": "Consolider",
+        "unreject": "Ne pas rejeter",
+        "deconsolidate": "Déconsolider",
+        "split": "Scinder",
+        "move": "Déplacer",
+        "purge": "Purger"
     },
-    "executionMode": {
-      "automatic": "Automatique",
-      "manual": "Manuel"
+    "options": {
+        "status": {
+            "empty": "Vide",
+            "review": "Révision",
+            "invalid": "Invalide",
+            "consolidated": "Consolidé"
+        },
+        "consolidationMethod": {
+            "ruleBased": "Basée sur des règles",
+            "hybrid": "Hybride",
+            "manual": "Manuelle"
+        },
+        "executionMode": {
+            "automatic": "Automatique",
+            "manual": "Manuel"
+        }
+    },
+    "exceptions": {
+        "cannotMergeWithoutGoldenRecord": "La fusion est impossible sans un enregistrement de référence",
+        "noClusterItemsToPreview": "Rien à prévisualiser : le cluster n'a aucun élément contributeur",
+        "cannotPreviewInvalidCluster": "Il est impossible de prévisualiser la consolidation pour un cluster non valide",
+        "clusterItemsNotInCluster": "Les éléments de cluster %s n'appartiennent pas à ce cluster",
+        "cannotDelete": "Seuls les clusters vides peuvent être supprimés"
+    },
+    "labels": {
+        "contributorRecord": "enregistrement contributeur",
+        "contributorRecords": "enregistrements contributeurs",
+        "contributorRecordsPanel": "Enregistrements contributeurs",
+        "masterRecord": "enregistrement de référence",
+        "masterRecords": "enregistrements de référence",
+        "consolidated": "Consolidé",
+        "unconsolidated": "Non consolidé",
+        "rejected": "Rejeté",
+        "consolidationPreview": "Aperçu de la consolidation",
+        "standardView": "Standard",
+        "comparisonView": "Comparaison",
+        "manualConsolidationView": "Consolidation manuelle",
+        "suggestedValues": "Valeurs suggérées",
+        "selectAllSuggestedValues": "Sélectionner toutes les valeurs suggérées",
+        "consolidationPreviewHint": "Montre à quoi ressemblerait l'enregistrement de référence après la consolidation. Rien n'est enregistré.",
+        "noConsolidationConfigured": "Aucune consolidation n'est configurée pour cette entité",
+        "discard": "Abandonner",
+        "masterRecordsPanel": "Enregistrements maîtres"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} a lié {relatedEntity} à ce cluster",
+        "clusterLinkedThis": "{user} a lié {relatedEntity} à ce cluster",
+        "clusterUnlinked": "{user} a dissocié {relatedEntity} de ce cluster",
+        "clusterUnlinkedThis": "{user} a dissocié {relatedEntity} de ce cluster",
+        "clusterRejected": "{user} a rejeté {relatedEntity} dans ce cluster",
+        "clusterRejectedThis": "{user} a rejeté {relatedEntity} dans ce cluster",
+        "clusterReincluded": "{user} a réintégré {relatedEntity} dans ce cluster",
+        "clusterReincludedThis": "{user} a réintégré {relatedEntity} dans ce cluster",
+        "clusterMoved": "{user} a déplacé {relatedEntity} hors de ce cluster",
+        "clusterMovedThis": "{user} a déplacé {relatedEntity} hors de ce cluster",
+        "clusterConsolidated": "{user} a consolidé {relatedEntity} dans ce cluster",
+        "clusterConsolidatedThis": "{user} a consolidé {relatedEntity} dans ce cluster",
+        "clusterDeconsolidated": "{user} a déconsolidé {relatedEntity} dans ce cluster",
+        "clusterDeconsolidatedThis": "{user} a déconsolidé {relatedEntity} dans ce cluster",
+        "clusterGoldenRecord": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
+        "clusterGoldenRecordThis": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
+        "clusterDeleted": "{user} a supprimé ce cluster",
+        "clusterDeletedThis": "{user} a supprimé ce cluster",
+        "clusterRecordDeleted": "{user} a supprimé {relatedEntity} de ce cluster",
+        "clusterRecordDeletedThis": "{user} a supprimé {relatedEntity} de ce cluster",
+        "clusterMovedToCluster": "{user} a déplacé {records} du cluster {clusterLink} vers {entity}",
+        "clusterMovedToClusterThis": "{user} a déplacé {records} du cluster {clusterLink} vers ce cluster",
+        "clusterMovedFromCluster": "{user} a déplacé {records} de {entity} vers le cluster {clusterLink}",
+        "clusterMovedFromClusterThis": "{user} a déplacé {records} de ce cluster vers le cluster {clusterLink}"
+    },
+    "messages": {
+        "consolidated": "Consolidé",
+        "noClusterFound": "Aucun cluster trouvé pour cet enregistrement"
+    },
+    "massActions": {
+        "purge": "Purger"
+    },
+    "massActionConfirmMessages": {
+        "purge": "Êtes-vous sûr de vouloir purger les clusters sélectionnés ? Cette action ne peut pas être annulée.",
+        "purgeAll": "Êtes-vous sûr de vouloir purger tous les clusters ? Cette action ne peut pas être annulée."
+    },
+    "actionConfirms": {
+        "purge": "Êtes-vous sûr de vouloir purger ce cluster ? Cette action ne peut pas être annulée."
     }
-  },
-  "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "La fusion est impossible sans un enregistrement de référence",
-    "noClusterItemsToPreview": "Rien à prévisualiser : le cluster n'a aucun élément contributeur",
-    "cannotPreviewInvalidCluster": "Il est impossible de prévisualiser la consolidation pour un cluster non valide",
-    "clusterItemsNotInCluster": "Les éléments de cluster %s n'appartiennent pas à ce cluster"
-  },
-  "labels": {
-    "contributorRecord": "enregistrement contributeur",
-    "contributorRecords": "enregistrements contributeurs",
-    "contributorRecordsPanel": "Enregistrements contributeurs",
-    "masterRecord": "enregistrement de référence",
-    "masterRecords": "enregistrements de référence",
-    "consolidated": "Consolidé",
-    "unconsolidated": "Non consolidé",
-    "rejected": "Rejeté",
-    "consolidationPreview": "Aperçu de la consolidation",
-    "standardView": "Standard",
-    "comparisonView": "Comparaison",
-    "manualConsolidationView": "Consolidation manuelle",
-    "suggestedValues": "Valeurs suggérées",
-    "selectAllSuggestedValues": "Sélectionner toutes les valeurs suggérées",
-    "consolidationPreviewHint": "Montre à quoi ressemblerait l'enregistrement de référence après la consolidation. Rien n'est enregistré.",
-    "noConsolidationConfigured": "Aucune consolidation n'est configurée pour cette entité",
-    "discard": "Abandonner"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} a lié {relatedEntity} à ce cluster",
-    "clusterLinkedThis": "{user} a lié {relatedEntity} à ce cluster",
-    "clusterUnlinked": "{user} a dissocié {relatedEntity} de ce cluster",
-    "clusterUnlinkedThis": "{user} a dissocié {relatedEntity} de ce cluster",
-    "clusterRejected": "{user} a rejeté {relatedEntity} dans ce cluster",
-    "clusterRejectedThis": "{user} a rejeté {relatedEntity} dans ce cluster",
-    "clusterReincluded": "{user} a réintégré {relatedEntity} dans ce cluster",
-    "clusterReincludedThis": "{user} a réintégré {relatedEntity} dans ce cluster",
-    "clusterMoved": "{user} a déplacé {relatedEntity} hors de ce cluster",
-    "clusterMovedThis": "{user} a déplacé {relatedEntity} hors de ce cluster",
-    "clusterConsolidated": "{user} a consolidé {relatedEntity} dans ce cluster",
-    "clusterConsolidatedThis": "{user} a consolidé {relatedEntity} dans ce cluster",
-    "clusterDeconsolidated": "{user} a déconsolidé {relatedEntity} dans ce cluster",
-    "clusterDeconsolidatedThis": "{user} a déconsolidé {relatedEntity} dans ce cluster",
-    "clusterGoldenRecord": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
-    "clusterGoldenRecordThis": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
-    "clusterDeleted": "{user} a supprimé ce cluster",
-    "clusterDeletedThis": "{user} a supprimé ce cluster",
-    "clusterRecordDeleted": "{user} a supprimé {relatedEntity} de ce cluster",
-    "clusterRecordDeletedThis": "{user} a supprimé {relatedEntity} de ce cluster",
-    "clusterMovedToCluster": "{user} a déplacé {records} du cluster {clusterLink} vers {entity}",
-    "clusterMovedToClusterThis": "{user} a déplacé {records} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedFromCluster": "{user} a déplacé {records} de {entity} vers le cluster {clusterLink}",
-    "clusterMovedFromClusterThis": "{user} a déplacé {records} de ce cluster vers le cluster {clusterLink}"
-  },
-  "messages": {
-    "consolidated": "Consolidé"
-  }
 }

@@ -1,0 +1,54 @@
+{
+    "fields": {
+        "classification": "Osztályozás",
+        "attribute": "Attribútum",
+        "isRequired": "Kötelező",
+        "isReadOnly": "Csak olvasható",
+        "isProtected": "Védett",
+        "maxLength": "Maximális hossz",
+        "countBytesInsteadOfCharacters": "Bájtok számolása karakterek helyett",
+        "value": "Alapértelmezett érték",
+        "valueFrom": "Alapértelmezett érték forrása",
+        "valueTo": "Alapértelmezett érték eddig",
+        "varcharValue": "Alapértelmezett érték: szöveg",
+        "referenceValue": "Alapértelmezett érték: hivatkozás",
+        "textValue": "Alapértelmezett érték: szöveg",
+        "intValue": "Alapértelmezett érték: egész szám",
+        "floatValue": "Alapértelmezett érték: lebegőpontos szám",
+        "dateValue": "Alapértelmezett érték: dátum",
+        "datetimeValue": "Alapértelmezett érték: dátum és idő",
+        "boolValue": "Alapértelmezett érték: logikai",
+        "min": "Minimum",
+        "max": "Maximum",
+        "enableConditionalRequired": "Kötelezővé tétel engedélyezése",
+        "enableConditionalVisible": "Látható állapot engedélyezése",
+        "enableConditionalReadOnly": "Írásvédett állapot engedélyezése",
+        "enableConditionalProtected": "Védett állapot engedélyezése",
+        "enableConditionalDisableOptions": "Letiltott opciók engedélyezése",
+        "conditionalRequired": "Kötelező",
+        "conditionalVisible": "Látható",
+        "conditionalReadOnly": "Csak olvasható",
+        "conditionalProtected": "Védett",
+        "conditionalDisableOptions": "Letiltott beállítások"
+    },
+    "labels": {
+        "classificationAttribute": "Attribútum osztályozásból",
+        "conditionalProperties": "Feltételes tulajdonságok"
+    },
+    "options": {
+        "scope": {
+            "Global": "Globális",
+            "Channel": "Csatorna"
+        }
+    },
+    "messages": {
+        "savedForNotAllChannels": "A(z) '%s' attribútum nem lett összekapcsolva az összes kiválasztott csatornával.",
+        "unlinkRelatedAttribute": "Biztosan törli a kiválasztott attribútumot a kiválasztott osztályozásból? Minden kapcsolódó rekord megtartja ezt az attribútumot.",
+        "cascadeUnlinkRelatedAttribute": "Biztosan törölni szeretné a kiválasztott attribútumot a kiválasztott osztályozásból és a kapcsolódó rekordokból? Minden kapcsolódó attribútumérték is törlődik.",
+        "removeRelatedAttributeGroup": "Biztosan törli a kiválasztott attribútumcsoport összes attribútumát a kiválasztott osztályozásból? Minden kapcsolódó rekord megtartja ezeket az attribútumokat.",
+        "removeRelatedAttributeGroupCascade": "Biztosan törli a kiválasztott attribútumcsoport összes attribútumát a kiválasztott osztályozásból és azok kapcsolódó rekordjaiból? Minden kapcsolódó attribútumérték is törlődik."
+    },
+    "exceptions": {
+        "attributeEntityMismatch": "A(z) „%s” attribútum a(z) %s entitáshoz tartozik, míg az osztályozás a(z) %s entitáshoz tartozik."
+    }
+}

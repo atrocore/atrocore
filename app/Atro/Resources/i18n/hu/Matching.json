@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "minimumScore": "Minimális pontszám, %",
+        "entity": "Entitás",
+        "masterEntity": "Mesterentitás",
+        "matchingRules": "Egyeztetési szabályok",
+        "matchedRecords": "Egyező rekordok",
+        "matchedRecordsMax": "Egyező rekordok maximális száma",
+        "blockingRules": "Blokkolási szabályok",
+        "blockingOperator": "Blokkolási operátor"
+    },
+    "options": {
+        "type": {
+            "duplicate": "Duplikátum - Duplikátum",
+            "masterRecord": "Közreműködő - Mester"
+        },
+        "blockingOperator": {
+            "or": "VAGY",
+            "and": "ÉS"
+        }
+    },
+    "labels": {
+        "configureMatching": "Egyeztetés konfigurálása"
+    },
+    "tooltips": {
+        "matchedRecordsMax": "Ha bármely rekordhoz tartozó egyező rekordok száma meghaladja ezt az értéket, az egyeztetés deaktiválódik. Hagyja üresen ezt a mezőt, ha korlátlan számú egyező rekordot szeretne engedélyezni. ",
+        "blockingOperator": "A felső szintű blokkolási szabályok kombinálásának módja a jelöltek kiválasztásához. ÉS esetén az a szabály, amelynek értéke üres a rekordban, nem talál egyezést, ezért a rekordhoz nem tartozik jelölt."
+    },
+    "exceptions": {
+        "noRules": "Az aktiválás le van tiltva. Ehhez az egyeztetéshez nincsenek egyeztetési szabályok meghatározva.",
+        "masterRecordEntityInvalid": "A(z) %s entitás nem használható mesterrekord-egyeztetéshez. Csak Staging szerepkörű származtatott entitás engedélyezett.",
+        "noBlockingRules": "Az aktiválás le van tiltva. Ehhez az egyeztetéshez nincsenek blokkolási szabályok meghatározva."
+    }
+}

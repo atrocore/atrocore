@@ -1,13 +1,17 @@
 {
-  "fields": {
-    "user": "Utente",
-    "action": "Azione",
-    "createdAt": "Data",
-    "controllerName": "Nome del controllore",
-    "ipAddress": "Indirizzo IP",
-    "target": "Obiettivo",
-    "targetName": "Nome dell'obiettivo",
-    "targetId": "ID obiettivo",
-    "data": "Dati"
-  }
+    "fields": {
+        "user": "Utente",
+        "action": "Azione",
+        "createdAt": "Data",
+        "controllerName": "Nome del controllore",
+        "ipAddress": "Indirizzo IP",
+        "target": "Obiettivo",
+        "targetName": "Nome dell'obiettivo",
+        "targetId": "ID obiettivo",
+        "data": "Dati",
+        "oauthClient": "Client OAuth"
+    },
+    "links": {
+        "oauthClient": "Client OAuth"
+    }
 }

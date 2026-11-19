@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "incomingWebhook": "Bejövő webhook",
+        "scheduledJob": "Ütemezett feladat",
+        "workflow": "Munkafolyamat",
+        "statusMessage": "Állapotüzenet",
+        "startedAt": "Indítás ideje",
+        "finishedAt": "Befejezés ideje",
+        "logs": "Naplók",
+        "createdCount": "Létrehozva",
+        "updatedCount": "Frissítve",
+        "failedCount": "Sikertelen"
+    },
+    "notifications": {
+        "actionExecutionFinished": "%s befejeződött. Az eredmény megtekintéséhez <a href=\"/#ActionExecution/view/%s\">kattintson ide</a>"
+    },
+    "options": {
+        "type": {
+            "manual": "Manuális",
+            "incomingWebhook": "Bejövő webhook",
+            "scheduledJob": "Ütemezett feladat",
+            "workflow": "Munkafolyamat"
+        },
+        "status": {
+            "running": "Folyamatban",
+            "done": "Kész",
+            "failed": "Sikertelen"
+        }
+    }
+}

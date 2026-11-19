@@ -1,0 +1,47 @@
+{
+    "fields": {
+        "name": "Név",
+        "roles": "Szerepkörök",
+        "assignmentPermission": "Hozzárendelési jogosultság",
+        "dataPrivacyPermission": "Adatvédelmi jogosultság",
+        "users": "Felhasználók",
+        "teams": "Csapatok",
+        "styleControlPermission": "Stílusvezérlés",
+        "scopes": "Hatókörök"
+    },
+    "tooltips": {
+        "assignmentPermission": "Lehetővé teszi a rekordok hozzárendelésének és a más felhasználóknak küldött üzeneteknek a korlátozását.\n\nösszes – nincs korlátozás\n\ncsapat – csak a csapattársakhoz rendelhet hozzá rekordokat, és csak nekik küldhet üzeneteket\n\nnem – csak saját magához rendelhet hozzá rekordokat, és csak saját magának küldhet üzeneteket",
+        "dataPrivacyPermission": "Lehetővé teszi a személyes adatok megtekintését és törlését."
+    },
+    "labels": {
+        "Access": "Hozzáférés",
+        "Scope Level": "Hatókör szintje",
+        "Field Level": "Mezőszint"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "Nincs beállítva",
+            "enabled": "engedélyezve",
+            "disabled": "letiltva"
+        },
+        "levelList": {
+            "all": "összes",
+            "team": "Csapat",
+            "account": "Fiók",
+            "own": "Saját",
+            "no": "Nincs",
+            "yes": "igen",
+            "not-set": "nincs beállítva"
+        }
+    },
+    "actions": {
+        "read": "Olvasás",
+        "edit": "Szerkesztés",
+        "delete": "Törlés",
+        "stream": "Tevékenységek",
+        "create": "Létrehozás"
+    },
+    "messages": {
+        "changesAfterClearCache": "A hozzáférés-vezérlés módosításai a gyorsítótár törlése után lépnek érvénybe."
+    }
+}

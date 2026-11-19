@@ -1,95 +1,96 @@
 {
-  "fields": {
-    "isActive": "Активний",
-    "type": "Тип",
-    "sourceEntity": "Вихідна сутність",
-    "inBackground": "Виконати у фоновому режимі",
-    "usage": "Використання",
-    "massAction": "Масова дія",
-    "display": "Відображання",
-    "actionsSet": "Набори дій",
-    "actions": "Дії",
-    "mode": "Режим",
-    "emailScript": "Скрипт",
-    "showEmailPreview": "Попередній перегляд перед надсиланням",
-    "emailTemplate": "Шаблон електронного листа",
-    "emailTo": "Кому",
-    "emailCc": "Копія",
-    "emailBcc": "Прихована копія",
-    "executeAs": "Виконати як",
-    "displayField": "Поле відображення",
-    "focusField": "Поле",
-    "changeFields": "Поля",
-    "webhookUrl": "URL",
-    "targetEntity": "Цільова сутність",
-    "hideTextLabel": "Приховати текст на кнопці",
-    "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
-    "updateType": "Тип оновлення",
-    "updateScript": "Скрипт",
-    "updateFields": "Оновити поля",
-    "searchEntity": "Сутність пошуку",
-    "executions": "Виконання",
-    "deletePermanently": "Видалити назавжди"
-  },
-  "labels": {
-    "execute": "Виконати",
-    "Parameters": "Параметри",
-    "fieldsPanel": "Оновлення"
-  },
-  "actions": {
-    "allLogs": "Всі журнали"
-  },
-  "massActions": {
-    "execute": "Виконати"
-  },
-  "messages": {
-    "executeNow": "Ви впевнені, що хочете виконати обрану дію?"
-  },
-  "options": {
-    "display": {
-      "dropdown": "Спадний список",
-      "single": "Поодиноко"
+    "fields": {
+        "isActive": "Активний",
+        "type": "Тип",
+        "sourceEntity": "Вихідна сутність",
+        "inBackground": "Виконати у фоновому режимі",
+        "usage": "Використання",
+        "massAction": "Масова дія",
+        "display": "Відображання",
+        "actionsSet": "Набори дій",
+        "actions": "Дії",
+        "mode": "Режим",
+        "emailScript": "Скрипт",
+        "showEmailPreview": "Попередній перегляд перед надсиланням",
+        "emailTemplate": "Шаблон електронного листа",
+        "emailTo": "Кому",
+        "emailCc": "Копія",
+        "emailBcc": "Прихована копія",
+        "executeAs": "Виконати як",
+        "displayField": "Поле відображення",
+        "focusField": "Поле",
+        "changeFields": "Поля",
+        "webhookUrl": "URL",
+        "targetEntity": "Цільова сутність",
+        "hideTextLabel": "Приховати текст на кнопці",
+        "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
+        "updateType": "Тип оновлення",
+        "updateScript": "Скрипт",
+        "updateFields": "Оновити поля",
+        "searchEntity": "Сутність пошуку",
+        "executions": "Виконання",
+        "deletePermanently": "Видалити назавжди",
+        "handler": "Обробник"
     },
-    "type": {
-      "create": "Створити",
-      "update": "Оновити",
-      "delete": "Видалити",
-      "set": "Набір дій",
-      "email": "Відправити лист",
-      "webhook": "Веб-гачок",
-      "customCode": "Користувацький код",
-      "createOrUpdate": "Створити або оновити",
-      "custom": "Користувацький код"
+    "labels": {
+        "execute": "Виконати",
+        "Parameters": "Параметри",
+        "fieldsPanel": "Оновлення"
     },
-    "usage": {
-      "entity": "Кнопка на рівні сутності",
-      "record": "Кнопка на рівні запису сутності",
-      "field": "Кнопка в полі",
-      "onFieldFocus": "Фокус на полі",
-      "onFieldChange": "Зміна поля",
-      "onRecordLoad": "Створення / оновлення запису"
+    "actions": {
+        "allLogs": "Всі журнали"
     },
-    "executeAs": {
-      "sameUser": "Той самий користувач",
-      "system": "Система"
+    "massActions": {
+        "execute": "Виконати"
     },
-    "mode": {
-      "basic": "Базовий",
-      "script": "Скрипт"
+    "messages": {
+        "executeNow": "Ви впевнені, що хочете виконати обрану дію?"
     },
-    "updateType": {
-      "basic": "Basic",
-      "script": "Скрипт"
+    "options": {
+        "display": {
+            "dropdown": "Спадний список",
+            "single": "Поодиноко"
+        },
+        "type": {
+            "create": "Створити",
+            "update": "Оновити",
+            "delete": "Видалити",
+            "set": "Набір дій",
+            "email": "Відправити лист",
+            "webhook": "Веб-гачок",
+            "customCode": "Користувацький код",
+            "createOrUpdate": "Створити або оновити",
+            "custom": "Користувацький код"
+        },
+        "usage": {
+            "entity": "Кнопка на рівні сутності",
+            "record": "Кнопка на рівні запису сутності",
+            "field": "Кнопка в полі",
+            "onFieldFocus": "Фокус на полі",
+            "onFieldChange": "Зміна поля",
+            "onRecordLoad": "Створення / оновлення запису"
+        },
+        "executeAs": {
+            "sameUser": "Той самий користувач",
+            "system": "Система"
+        },
+        "mode": {
+            "basic": "Базовий",
+            "script": "Скрипт"
+        },
+        "updateType": {
+            "basic": "Basic",
+            "script": "Скрипт"
+        }
+    },
+    "tooltips": {
+        "inBackground": "Дія буде виконана у фоновому режимі без прямого повідомлення про успіх/помилку. Використовуйте його, якщо виконання дії займає більше 30 секунд.",
+        "usage": "Використання визначає місце дії. Дія \"запис сутності\" вимагає попереднього вибору записів.",
+        "executeAs": "Вкажіть, якого користувача система буде використовувати для виконання дії"
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "Вираз не може бути порожнім.",
+        "forEditModeOnly": "Дія \"%s\" доступна лише в режимі редагування і не може бути використана тут.",
+        "actionTypeDisabledForTargetEntity": "Тип дії \"%1$s\" не можна використати, оскільки ця дія вимкнена для сутності \"%2$s\"."
     }
-  },
-  "tooltips": {
-    "inBackground": "Дія буде виконана у фоновому режимі без прямого повідомлення про успіх/помилку. Використовуйте його, якщо виконання дії займає більше 30 секунд.",
-    "usage": "Використання визначає місце дії. Дія \"запис сутності\" вимагає попереднього вибору записів.",
-    "executeAs": "Вкажіть, якого користувача система буде використовувати для виконання дії"
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "Вираз не може бути порожнім.",
-    "forEditModeOnly": "Дія \"%s\" доступна лише в режимі редагування і не може бути використана тут.",
-    "actionTypeDisabledForTargetEntity": "Тип дії \"%1$s\" не можна використати, оскільки ця дія вимкнена для сутності \"%2$s\"."
-  }
 }
