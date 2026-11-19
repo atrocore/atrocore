@@ -1,58 +1,58 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "isActive": "",
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "secretHash": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "name": "Имя",
+        "description": "Описание",
+        "isActive": "Активен",
+        "isConfidential": "Конфиденциальный",
+        "clientCredentialsGrant": "Учетные данные клиента",
+        "authorizationCodeGrant": "Код авторизации",
+        "refreshTokenGrant": "Токен обновления",
+        "user": "Пользователь",
+        "secretHash": "Хэш секрета",
+        "redirectUris": "URI перенаправления",
+        "isConsentRequired": "Требуется согласие",
+        "isUiClient": "Клиент интерфейса"
     },
     "links": {
-        "user": ""
+        "user": "Пользователь"
     },
     "labels": {
-        "Grant Types": "",
-        "authorizationRequest": "",
-        "Allow": "",
-        "signedInAs": "",
-        "Deny": ""
+        "Grant Types": "Типы предоставления",
+        "authorizationRequest": "{clientName} запрашивает доступ к вашей учетной записи. Войдите, чтобы разрешить доступ.",
+        "Allow": "Разрешить",
+        "signedInAs": "Вы вошли как {userName}.",
+        "Deny": "Запретить"
     },
     "tooltips": {
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "isConfidential": "Конфиденциальный клиент проходит аутентификацию с помощью секрета клиента. Публичный клиент, например браузерное или мобильное приложение, не может хранить секрет.",
+        "clientCredentialsGrant": "Клиент получает токен доступа от своего имени, используя свой идентификатор и секретный ключ, без участия пользователя. Он действует от имени выбранного пользователя.",
+        "authorizationCodeGrant": "Клиент получает токен доступа от имени пользователя, который входит в систему через форму входа AtroCore (с использованием PKCE).",
+        "refreshTokenGrant": "Вместе с токеном доступа клиент получает токен обновления, который можно обменять на новый токен доступа без повторного входа пользователя.",
+        "user": "Пользователь, от имени которого действует клиент при получении токена доступа с использованием собственных учетных данных (поток учетных данных клиента).",
+        "redirectUris": "Адреса, на которые пользователь перенаправляется после входа. Параметр redirect_uri запроса авторизации должен точно совпадать с одним из этих адресов.",
+        "isConsentRequired": "Пользователь подтверждает на форме входа AtroCore, что приложение получает доступ к учетной записи. Отключайте этот параметр только для приложений вашей организации, например для интерфейса AtroCore.",
+        "isUiClient": "Интерфейс AtroCore входит в систему через этот клиент. Клиент задается при установке; команда консоли «restore ui client» восстанавливает его."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "",
-        "grantRequired": "",
-        "redirectUrisRequired": "",
-        "invalidRedirectUri": "",
-        "uiClientProtected": "",
-        "uiClientNotRemovable": ""
+        "userRequiredForClientCredentials": "Для клиента, использующего учетные данные клиента, необходимо указать пользователя, от имени которого он будет действовать.",
+        "grantRequired": "Выберите хотя бы один способ получения токена доступа: учетные данные клиента или код авторизации.",
+        "redirectUrisRequired": "Клиенту, использующему поток авторизации с кодом, необходим как минимум один URI перенаправления.",
+        "invalidRedirectUri": "«%s» — недопустимый URI перенаправления: ожидается URI с протоколом http или https либо пользовательская схема нативного приложения в обратной доменной нотации (например, com.example.app:/callback), без фрагмента.",
+        "uiClientProtected": "Пользовательский интерфейс AtroCore выполняет вход через этот клиент: можно изменять только его название, описание и активность.",
+        "uiClientNotRemovable": "Пользовательский интерфейс AtroCore выполняет вход через этот клиент, поэтому его нельзя удалить. Деактивируйте его, чтобы отключить вход в пользовательский интерфейс."
     },
     "actions": {
-        "generateSecret": ""
+        "generateSecret": "Сгенерировать секрет"
     },
     "actionConfirms": {
-        "generateSecret": ""
+        "generateSecret": "Будет сгенерирован новый секрет клиента. Текущий секрет перестанет работать, а выданные клиенту токены будут отозваны. Продолжить?"
     },
     "actionResults": {
-        "generateSecret": ""
+        "generateSecret": "Секретный ключ клиента отображается только один раз. Скопируйте его сейчас:"
     },
     "messages": {
-        "uiClientDisabled": "",
-        "signInFailed": "",
-        "signInExpired": ""
+        "uiClientDisabled": "Администратор отключил вход в пользовательский интерфейс.",
+        "signInFailed": "Не удалось войти. Попробуйте войти снова.",
+        "signInExpired": "Срок действия входа истек. Начните процесс заново в приложении."
     }
 }
