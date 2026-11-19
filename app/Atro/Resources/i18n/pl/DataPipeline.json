@@ -1,44 +1,44 @@
 {
     "fields": {
-        "targetEntity": "",
-        "sourceEntity": "",
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "targetEntity": "Encja docelowa",
+        "sourceEntity": "Encja źródłowa",
+        "transformationScript": "Skrypt transformacji",
+        "executeTransformationAs": "Wykonaj transformację jako"
     },
     "tooltips": {
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "transformationScript": "Skonfiguruj sposób przekształcania danych rekordu źródłowego i mapowania ich na rekord docelowy.",
+        "executeTransformationAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu transformacji."
     },
     "exceptions": {
-        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "",
-        "sourceEntityTypeNotAllowed": "",
-        "targetEntityCannotBePrimaryOfContributorDerivative": "",
-        "sourceAndTargetEntityCannotBeSame": "",
-        "dataPipelineAlreadyExists": "",
-        "transformationScriptIsMissing": "",
-        "transformationScriptIsNotValid": "",
-        "noSourceRecordIsLinked": ""
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Encja „%s” jest współtwórcą lub pochodną zgłoszenia zmiany i nie może być używana jako encja źródłowa.",
+        "sourceEntityTypeNotAllowed": "Encja „%s” nie może być używana jako encja źródłowa: dozwolone są tylko typy Base i Hierarchy.",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "Encja „%s” jest encją główną pochodnej encji współtwórcy i nie może być używana jako encja docelowa.",
+        "sourceAndTargetEntityCannotBeSame": "Encja źródłowa i encja docelowa nie mogą być takie same.",
+        "dataPipelineAlreadyExists": "Potok danych dla tej pary encji już istnieje.",
+        "transformationScriptIsMissing": "Brakuje skryptu transformacji w potoku danych.",
+        "transformationScriptIsNotValid": "Skrypt transformacji zwrócił nieprawidłowe dane: %s",
+        "noSourceRecordIsLinked": "Do rekordu nie jest powiązany żaden rekord źródłowy."
     },
     "labels": {
-        "targetRecordPreviewHint": "",
-        "noDataPipelineConfigured": "",
-        "noSourceRecords": "",
-        "discard": "",
-        "transformationPreview": "",
-        "targetRecordNotExists": "",
-        "applyToRecords": "",
-        "transformTo": ""
+        "targetRecordPreviewHint": "Pokazuje wygląd rekordu docelowego po transformacji. Żadne dane nie zostaną zapisane.",
+        "noDataPipelineConfigured": "Nie skonfigurowano potoku danych dla tej pary encji",
+        "noSourceRecords": "Brak rekordów encji źródłowej",
+        "discard": "Odrzuć",
+        "transformationPreview": "Podgląd transformacji",
+        "targetRecordNotExists": "Rekord docelowy jeszcze nie istnieje. Zastosuj podgląd, aby zobaczyć, jak będzie wyglądał po transformacji.",
+        "applyToRecords": "Zastosuj do rekordów",
+        "transformTo": "Przekształć {entity}"
     },
     "messages": {
-        "transformConfirmation": "",
-        "updateFromSourceConfirmation": "",
-        "recordsTransformed": "",
-        "recordsNotTransformed": ""
+        "transformConfirmation": "Skrypt transformacji zostanie wykonany dla wybranych rekordów, a rekordy docelowe zostaną utworzone lub zaktualizowane. Kontynuować?",
+        "updateFromSourceConfirmation": "Skrypt transformacji zostanie wykonany dla rekordów źródłowych powiązanych z wybranymi rekordami, a wybrane rekordy zostaną zaktualizowane. Kontynuować?",
+        "recordsTransformed": "Przekształcono rekordy: %s / %s",
+        "recordsNotTransformed": "Nie udało się przekształcić %s rekordów. Szczegóły znajdują się w dzienniku."
     },
     "options": {
         "executeTransformationAs": {
-            "system": "",
-            "sameUser": ""
+            "system": "System",
+            "sameUser": "Ten sam użytkownik"
         }
     }
 }
