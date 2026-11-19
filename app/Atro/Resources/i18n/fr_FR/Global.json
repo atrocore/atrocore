@@ -1695,6 +1695,16 @@
     "actions": {
         "updateMasterRecord": "Mise à jour de la fiche"
     },
+    "scopeDescriptions": {
+        "Action": "Effectue une opération sur les enregistrements, p. ex. les crée, les met à jour ou les supprime, envoie un e-mail ou appelle un webhook. Elle peut être exécutée manuellement, par un workflow ou selon une planification.",
+        "Attribute": "Une propriété d'un enregistrement ajoutée aux enregistrements individuellement ou via une classification, au lieu d'un champ que possède chaque enregistrement de l'entité.",
+        "BlockingRule": "Sélectionne les enregistrements candidats qui sont ensuite comparés à l'aide des règles d'appariement. Elle n'attribue pas de score aux candidats.",
+        "Connection": "Stocke les données d'accès à un système externe, p. ex. une base de données, un serveur de fichiers, un serveur de messagerie ou une API.",
+        "Entity": "Un type d'enregistrements de données, p. ex. des produits ou des marques, avec ses propres champs, relations et mises en page.",
+        "EntityField": "Une propriété que possède chaque enregistrement de l'entité. Le type définit les données que le champ contient et la façon dont il est affiché.",
+        "MatchingRule": "Compare un enregistrement à un enregistrement candidat et attribue un score au candidat s'ils correspondent. La somme des scores détermine si les enregistrements sont des doublons.",
+        "Storage": "Un emplacement où les fichiers sont conservés, p. ex. un dossier sur le serveur AtroCore ou un stockage de fichiers externe."
+    },
     "subtypeDescriptions": {
         "ActionTypeCreate": "Crée des enregistrements de l'entité cible avec des valeurs issues de champs ou d'un script.",
         "ActionTypeUpdate": "Met à jour les enregistrements sélectionnés ou trouvés de l'entité cible.",

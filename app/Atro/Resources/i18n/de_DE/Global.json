@@ -1695,6 +1695,16 @@
     "actions": {
         "updateMasterRecord": "Stammsatz aktualisieren"
     },
+    "scopeDescriptions": {
+        "Action": "Führt eine Operation mit Datensätzen aus, z. B. erstellt, aktualisiert oder löscht sie, sendet eine E-Mail oder ruft einen Webhook auf. Sie kann manuell, durch einen Workflow oder nach Zeitplan ausgeführt werden.",
+        "Attribute": "Eine Eigenschaft eines Datensatzes, die den Datensätzen einzeln oder über eine Klassifikation hinzugefügt wird, anstelle eines Feldes, das jeder Datensatz der Entität hat.",
+        "BlockingRule": "Wählt die Kandidaten-Datensätze aus, die dann mit den Übereinstimmungs-Regeln verglichen werden. Sie bewertet die Kandidaten nicht.",
+        "Connection": "Speichert die Zugangsdaten zu einem externen System, z. B. einer Datenbank, einem Dateiserver, einem Mailserver oder einer API.",
+        "Entity": "Ein Typ von Datensätzen, z. B. Produkte oder Marken, mit eigenen Feldern, Beziehungen und Layouts.",
+        "EntityField": "Eine Eigenschaft, die jeder Datensatz der Entität hat. Der Typ bestimmt, welche Daten das Feld enthält und wie es angezeigt wird.",
+        "MatchingRule": "Vergleicht einen Datensatz mit einem Kandidaten-Datensatz und bewertet den Kandidaten bei Übereinstimmung. Die Summe der Werte bestimmt, ob die Datensätze Duplikate sind.",
+        "Storage": "Ein Ort, an dem die Dateien gespeichert werden, z. B. ein Ordner auf dem AtroCore-Server oder ein externer Dateispeicher."
+    },
     "subtypeDescriptions": {
         "ActionTypeCreate": "Erstellt Datensätze der Zielentität mit Werten aus Feldern oder einem Skript.",
         "ActionTypeUpdate": "Aktualisiert die ausgewählten oder gefundenen Datensätze der Zielentität.",

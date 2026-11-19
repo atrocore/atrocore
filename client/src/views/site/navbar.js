@@ -147,7 +147,19 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                     this.quickCreateFile();
                     return;
                 }
-                this.getRouter().navigate(`#${data.name}/create/new`, {trigger: true});
+                if (this.getMetadata().get(['scopes', data.name, 'hasSubtypes'])) {
+                    this.createView('selectSubtype', 'views/modals/select-subtype', {scope: data.name}, view => {
+                        view.render();
+
+                        this.listenToOnce(view, 'select', subtype => {
+                            view.close();
+                            this.getRouter().navigate(`#${data.name}/create`, {trigger: false});
+                            this.getRouter().dispatch(data.name, 'create', {subtype: subtype});
+                        });
+                    });
+                    return;
+                }
+                this.getRouter().navigate(`#${data.name}/create`, {trigger: true});
             }
         },
 
