@@ -293,9 +293,7 @@ class Base extends RDB
         $key = self::getSubtypeRecordCacheKey($this->entityName, (string)$entity->get('id'));
         $memoryStorage = $this->getEntityManager()->getMemoryStorage();
         if (!$memoryStorage->has($key)) {
-            $memoryStorage->set($key, $this->getEntityManager()->getRepository($subtype)
-                ->where(['supertypeId' => $entity->get('id')])
-                ->findOne());
+            $memoryStorage->set($key, $this->getEntityManager()->getRepository($subtype)->get($entity->get('id')));
         }
 
         return $memoryStorage->get($key);
@@ -337,7 +335,7 @@ class Base extends RDB
             $subtypeRecordId = $connection->createQueryBuilder()
                 ->select('id')
                 ->from($connection->quoteIdentifier($this->getMapper()->toDb($subtype)))
-                ->where('supertype_id = :id')
+                ->where('id = :id')
                 ->setParameter('id', $id)
                 ->fetchOne();
 

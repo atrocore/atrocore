@@ -94,7 +94,7 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
         prepareRelate: function (relate) {
             const model = relate.model;
             const supertype = model && typeof model.getSupertype === 'function' ? model.getSupertype() : null;
-            if (!supertype || !model.get('supertypeId')) {
+            if (!supertype || !model.id) {
                 return relate;
             }
 
@@ -102,8 +102,8 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
                 return relate;
             }
 
+            // a subtype record has the id of its supertype record
             const supertypeModel = model.clone();
-            supertypeModel.id = model.get('supertypeId');
             supertypeModel.name = supertype;
 
             return Object.assign({}, relate, {model: supertypeModel});

@@ -22,10 +22,10 @@ use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
 /**
- * Stores the type-specific data of a supertype record. A subtype record contains the fields of its supertype
- * record too: they are read through the "supertype" relation and are saved into the supertype record. The table
- * has no "deleted" column: a subtype record shares the lifecycle of its supertype record and is removed by the
- * database together with it.
+ * Stores the type-specific data of a supertype record. A subtype record has the id of its supertype record and
+ * contains its fields too: they are read through the "supertype" relation and are saved into the supertype record.
+ * The table has no "deleted" column: a subtype record shares the lifecycle of its supertype record and is removed
+ * by the database together with it.
  */
 class Subtype extends Base
 {
@@ -46,7 +46,7 @@ class Subtype extends Base
             $this->populateFromSupertypeRecord($entity, $supertypeRecord);
 
             $this->getEntityManager()->getMemoryStorage()->set(
-                Base::getSubtypeRecordCacheKey($this->getSupertypeName(), (string)$entity->get('supertypeId')),
+                Base::getSubtypeRecordCacheKey($this->getSupertypeName(), (string)$entity->get('id')),
                 $entity
             );
 
@@ -80,7 +80,7 @@ class Subtype extends Base
     {
         $dbal = $this->getDbal();
 
-        $qb->innerJoin($alias, $dbal->quoteIdentifier($this->getMapper()->toDb($this->getSupertypeName())), 'st', "st.id = $alias.supertype_id")
+        $qb->innerJoin($alias, $dbal->quoteIdentifier($this->getMapper()->toDb($this->getSupertypeName())), 'st', "st.id = $alias.id")
             ->andWhere('st.deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN);
     }
@@ -97,7 +97,7 @@ class Subtype extends Base
             ->update($table)
             ->set($column, ':null')
             ->where("$column IS NOT NULL")
-            ->andWhere("supertype_id IN (SELECT id FROM $supertypeTable WHERE deleted = :false)")
+            ->andWhere("id IN (SELECT id FROM $supertypeTable WHERE deleted = :false)")
             ->setParameter('null', null, ParameterType::NULL)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
@@ -148,7 +148,7 @@ class Subtype extends Base
 
         return $dbal->createQueryBuilder()
             ->from($dbal->quoteIdentifier($this->getMapper()->toDb($this->entityType)), 't')
-            ->innerJoin('t', $dbal->quoteIdentifier($this->getMapper()->toDb($this->getSupertypeName())), 's', 's.id = t.supertype_id')
+            ->innerJoin('t', $dbal->quoteIdentifier($this->getMapper()->toDb($this->getSupertypeName())), 's', 's.id = t.id')
             ->where('s.deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN);
     }
@@ -194,7 +194,7 @@ class Subtype extends Base
         $fieldManager = $this->container->get('fieldManager');
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
-            if (empty($defs['type']) || !empty($defs['supertypeField']) || in_array($field, ['supertype', '_meta'], true)) {
+            if (empty($defs['type']) || !empty($defs['supertypeField']) || $field === '_meta') {
                 continue;
             }
 
@@ -215,8 +215,12 @@ class Subtype extends Base
         if ($entity->isNew()) {
             $supertypeRecord = $repository->get();
             $supertypeRecord->set('type', $this->getTypeOption());
+            // the id given to a new subtype record is the id of the record
+            if ($entity->has('id')) {
+                $supertypeRecord->set('id', $entity->get('id'));
+            }
         } else {
-            $supertypeRecord = $repository->get($entity->get('supertypeId'));
+            $supertypeRecord = $repository->get($entity->get('id'));
             if (empty($supertypeRecord)) {
                 throw new NotFound($this->translateException('supertypeRecordIsNotFound'));
             }
@@ -238,7 +242,7 @@ class Subtype extends Base
             'skipUpdateFetchedValues' => true,
         ]));
 
-        $entity->set('supertypeId', $supertypeRecord->get('id'));
+        $entity->set('id', $supertypeRecord->get('id'));
 
         return $supertypeRecord;
     }
@@ -252,7 +256,7 @@ class Subtype extends Base
         $supertypeRecord->subtypeName = $this->entityType;
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
-            if (empty($defs['type']) || !empty($defs['supertypeField']) || in_array($field, ['supertype', '_meta'], true)) {
+            if (empty($defs['type']) || !empty($defs['supertypeField']) || $field === '_meta') {
                 continue;
             }
 
@@ -264,7 +268,7 @@ class Subtype extends Base
         }
 
         foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (isset($supertypeRecord->fields[$attribute]) || in_array($attribute, ['id', 'supertypeId', 'supertypeName'], true)) {
+            if (isset($supertypeRecord->fields[$attribute]) || $attribute === 'id') {
                 continue;
             }
 

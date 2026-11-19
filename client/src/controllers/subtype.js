@@ -33,19 +33,11 @@ Espo.define('controllers/subtype', 'controllers/record', Dep => Dep.extend({
         this.redirectToSupertypeRecord(options, 'edit');
     },
 
+    /**
+     * A subtype record has the id of its supertype record.
+     */
     redirectToSupertypeRecord(options, mode) {
-        const redirect = supertypeId => {
-            this.getRouter().navigate(`#${this.getSupertype()}/${mode}/${supertypeId}`, {trigger: true, replace: true});
-        };
-
-        if (options.model && options.model.get('supertypeId')) {
-            redirect(options.model.get('supertypeId'));
-            return;
-        }
-
-        Espo.Ajax.getRequest(`${this.name}/${options.id}`, {select: 'supertypeId'}).then(data => {
-            redirect(data.supertypeId);
-        });
+        this.getRouter().navigate(`#${this.getSupertype()}/${mode}/${options.id}`, {trigger: true, replace: true});
     },
 
 }));

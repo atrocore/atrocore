@@ -33,7 +33,7 @@ Espo.define('views/connection/record/detail-smtp', 'views/connection/record/deta
         actionAuthenticateSmtp() {
             if (!this.model.isNew() && this.model.get('smtpOauthAuthorizeUrl') && this.model.get('smtpClientId')) {
                 const redirectUri = this.getConfig().get('siteUrl') + '/?entryPoint=OauthSmtpCallback';
-                window.open(`${this.model.get('smtpOauthAuthorizeUrl')}?client_id=${this.model.get('smtpClientId')}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${this.model.get('smtpOauthScope')}&state=${this.model.get('supertypeId')}`);
+                window.open(`${this.model.get('smtpOauthAuthorizeUrl')}?client_id=${this.model.get('smtpClientId')}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${this.model.get('smtpOauthScope')}&state=${this.model.id}`);
             }
         },
 
@@ -51,7 +51,7 @@ Espo.define('views/connection/record/detail-smtp', 'views/connection/record/deta
                     view.close();
 
                     $.ajax({
-                        url: `Connection/${this.model.get('supertypeId')}/sendTestEmail`,
+                        url: `Connection/${this.model.id}/sendTestEmail`,
                         type: 'POST',
                         data: JSON.stringify({
                             email: emailAddress

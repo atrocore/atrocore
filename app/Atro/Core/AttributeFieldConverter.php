@@ -66,7 +66,7 @@ class AttributeFieldConverter
 
             $columns = [];
             foreach ($this->metadata->get(['entityDefs', $scope, 'fields'], []) as $field => $defs) {
-                if ($field === 'supertype' || !empty($defs['supertypeField']) || !empty($defs['notStorable'])
+                if (!empty($defs['supertypeField']) || !empty($defs['notStorable'])
                     || ($defs['type'] ?? null) === 'linkMultiple') {
                     continue;
                 }
@@ -90,7 +90,7 @@ class AttributeFieldConverter
     public function joinSubtypes(QueryBuilder $qb, string $alias): void
     {
         foreach ($this->getSubtypeColumns() as $subtype) {
-            $qb->leftJoin($alias, $this->conn->quoteIdentifier($subtype['table']), $subtype['alias'], "{$subtype['alias']}.supertype_id = $alias.id");
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier($subtype['table']), $subtype['alias'], "{$subtype['alias']}.id = $alias.id");
             foreach ($subtype['columns'] as $column) {
                 $qb->addSelect("{$subtype['alias']}." . $this->conn->quoteIdentifier($column) . " AS {$subtype['alias']}__$column");
             }

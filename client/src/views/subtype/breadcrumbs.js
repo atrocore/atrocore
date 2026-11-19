@@ -31,7 +31,7 @@ Espo.define('views/subtype/breadcrumbs', [], () => ({
             }
 
             if (item.url === `${subtypeUrl}/view/${view.model.id}`) {
-                return Object.assign({}, item, {url: `#${supertype}/view/${view.model.get('supertypeId')}`});
+                return Object.assign({}, item, {url: `#${supertype}/view/${view.model.id}`});
             }
 
             return Object.assign({}, item, {url: '#' + supertype + item.url.slice(subtypeUrl.length)});

@@ -551,11 +551,11 @@ class Metadata extends AbstractMetadataListener
                 $actions = $connection->createQueryBuilder()
                     ->select('a.*, COALESCE(tc.target_entity, tu.target_entity, tcu.target_entity, td.target_entity) AS target_entity, te.show_email_preview, te.email_template_id')
                     ->from($connection->quoteIdentifier('action'), 'a')
-                    ->leftJoin('a', 'action_type_create', 'tc', 'tc.supertype_id = a.id')
-                    ->leftJoin('a', 'action_type_update', 'tu', 'tu.supertype_id = a.id')
-                    ->leftJoin('a', 'action_type_create_or_update', 'tcu', 'tcu.supertype_id = a.id')
-                    ->leftJoin('a', 'action_type_delete', 'td', 'td.supertype_id = a.id')
-                    ->leftJoin('a', 'action_type_email', 'te', 'te.supertype_id = a.id')
+                    ->leftJoin('a', 'action_type_create', 'tc', 'tc.id = a.id')
+                    ->leftJoin('a', 'action_type_update', 'tu', 'tu.id = a.id')
+                    ->leftJoin('a', 'action_type_create_or_update', 'tcu', 'tcu.id = a.id')
+                    ->leftJoin('a', 'action_type_delete', 'td', 'td.id = a.id')
+                    ->leftJoin('a', 'action_type_email', 'te', 'te.id = a.id')
                     ->where('a.deleted = :false')
                     ->andWhere('a.is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -2582,27 +2582,12 @@ class Metadata extends AbstractMetadataListener
             // a subtype can define its own record view, it has to extend views/subtype/record/detail
             $data['clientDefs'][$scope]['recordViews']['detail'] ??= 'views/subtype/record/detail';
 
-            // the link to the supertype record is technical, it is used by the API only
-            $data['entityDefs'][$scope]['fields']['supertype'] = [
-                'type'                 => 'link',
-                'protected'            => true,
-                'customizable'         => false,
-                'duplicateIgnore'      => true,
-                'layoutListDisabled'   => true,
-                'layoutDetailDisabled' => true,
-                'massUpdateDisabled'   => true,
-                'filterDisabled'       => true,
-                'importDisabled'       => true,
-                'exportDisabled'       => true,
-                'emHidden'             => true,
-            ];
-
+            // a subtype record has the id of its supertype record: the technical link joins them by it
             $data['entityDefs'][$scope]['links']['supertype'] = [
                 'type'          => 'belongsTo',
                 'entity'        => $supertype,
-                'relationType'  => 'oneToOne',
+                'key'           => 'id',
                 'cascadeDelete' => true,
-                'noIndex'       => true,
             ];
 
             // a subtype of a reference data entity is served by the classes of the supertype

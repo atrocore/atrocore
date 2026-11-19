@@ -300,8 +300,8 @@ class V3Dot0Dot7 extends Base
     }
 
     /**
-     * The table of a subtype: its own id, the unique link to the supertype record that is removed together with
-     * it, the columns of the subtype fields. The table that exists without the link gets it.
+     * The table of a subtype: the id of the supertype record, which links the subtype record to it and removes it
+     * together with it, the columns of the subtype fields. The table that exists without the link gets it.
      */
     protected function createSubtypeTable(Schema $schema, string $supertypeTable, string $type, array $columns): void
     {
@@ -312,7 +312,6 @@ class V3Dot0Dot7 extends Base
         } else {
             $table = $schema->createTable($tableName);
             $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
-            $table->addColumn('supertype_id', 'string', ['length' => 36, 'notnull' => false]);
 
             foreach ($columns as $column) {
                 $options = self::COLUMNS[$column];
@@ -323,18 +322,14 @@ class V3Dot0Dot7 extends Base
             }
 
             $table->setPrimaryKey(['id']);
-            $table->addUniqueIndex(['supertype_id']);
         }
 
-        $foreignKeyName = $this->generateForeignKeyName($tableName . '_supertype_id');
+        $foreignKeyName = $this->generateForeignKeyName($tableName . '_id');
         if ($table->hasForeignKey($foreignKeyName)) {
             return;
         }
 
-        $table->addForeignKeyConstraint($supertypeTable, ['supertype_id'], ['id'], ['onDelete' => 'CASCADE'], $foreignKeyName);
-        if (!$table->hasIndex($foreignKeyName)) {
-            $table->addIndex(['supertype_id'], $foreignKeyName);
-        }
+        $table->addForeignKeyConstraint($supertypeTable, ['id'], ['id'], ['onDelete' => 'CASCADE'], $foreignKeyName);
     }
 
     /**
@@ -373,7 +368,7 @@ class V3Dot0Dot7 extends Base
         $exists = $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from($tableName)
-            ->where('supertype_id = :supertypeId')
+            ->where('id = :supertypeId')
             ->setParameter('supertypeId', $supertypeId)
             ->fetchOne();
 
@@ -384,9 +379,7 @@ class V3Dot0Dot7 extends Base
         $qb = $this->getDbal()->createQueryBuilder()
             ->insert($tableName)
             ->setValue('id', ':id')
-            ->setValue('supertype_id', ':supertypeId')
-            ->setParameter('id', IdGenerator::uuid())
-            ->setParameter('supertypeId', $supertypeId);
+            ->setParameter('id', $supertypeId);
 
         foreach ($values as $column => $value) {
             if ($value === null) {

@@ -26,7 +26,7 @@ Espo.define('views/storage/record/detail', 'views/subtype/record/detail', Dep =>
 
         actionScan() {
             this.notify('Please wait...');
-            this.ajaxPostRequest(`Storage/${this.model.get('supertypeId')}/createScanJob`).success(() => {
+            this.ajaxPostRequest(`Storage/${this.model.id}/createScanJob`).success(() => {
                 this.notify(this.translate('jobCreated'), 'success');
             });
         },
