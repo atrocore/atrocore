@@ -22,7 +22,7 @@ class ConnectionTypeOauth1 extends ConnectionSubtype
         parent::prepareEntityForOutput($entity);
 
         // the callback identifies the connection record, it is the supertype record
-        $connectionId = $this->getConnectionService()->encryptPassword((string)$entity->get('supertypeId'));
+        $connectionId = $this->getConnectionService()->encryptPassword((string)$entity->get('id'));
         $url = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $connectionId;
 
         $entity->set('callbackUrl', $url . '&type=callback');

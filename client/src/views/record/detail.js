@@ -407,7 +407,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
             Espo.ui.notify(this.translate('loading', 'messages'))
-            this.ajaxPostRequest(data.url || `Action/${data.id}/suggestValue`, {
+            this.ajaxPostRequest(data.url || `ActionTypeSuggestValue/${data.id}/suggestValue`, {
                 entityId: this.model.get('id'),
                 uiRecord: this.model.attributes,
                 uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,
@@ -437,7 +437,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 // show preview modal
                 Espo.ui.notify(this.translate('loading', 'messages'))
 
-                this.ajaxPostRequest(`Action/${data.id}/emailPreview`, {
+                this.ajaxPostRequest(`ActionTypeEmail/${data.id}/emailPreview`, {
                     entityId: this.model.get('id'),
                 }).success(response => {
                     this.getModelFactory().create('EmailTemplate', model => {
@@ -525,11 +525,40 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        /**
+         * The execution routes of an action belong to the subtype of its type.
+         */
+        getActionSubtype(type) {
+            const scopes = this.getMetadata().get('scopes') || {};
+
+            return Object.keys(scopes).find(scope => scopes[scope].supertypeId === 'Action'
+                && this.getMetadata().get(['entityDefs', scope, 'fields', 'type', 'default']) === type);
+        },
+
+        /**
+         * The name of the execution route of an action: a custom action is executed by the route of its handler.
+         */
+        getActionRouteName(actionId, type) {
+            if (type !== 'custom') {
+                return type;
+            }
+
+            for (const key of ['dynamicRecordActions', 'dynamicEntityActions', 'dynamicFieldActions', 'dynamicOnRecordLoadActions']) {
+                const defs = (this.getMetadata().get(['clientDefs', this.entityType, key]) || []).find(defs => defs.id === actionId);
+                if (defs) {
+                    return `custom${defs.handler || ''}`;
+                }
+            }
+
+            return type;
+        },
+
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
             const { actionId, actionType, inBackground, ...body } = payload;
-            const urlSuffix = inBackground ? `${actionType}Async` : actionType;
-            return this.ajaxPostRequest(`Action/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
+            const routeName = this.getActionRouteName(actionId, actionType);
+            const urlSuffix = inBackground ? `${routeName}Async` : routeName;
+            return this.ajaxPostRequest(`${this.getActionSubtype(actionType)}/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
                 if (response.link) {
                     window.open(response.link, '_blank');
                     this.model.fetch();

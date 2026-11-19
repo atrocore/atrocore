@@ -64,7 +64,7 @@ class StorageTypeLocal extends Subtype
             ->select("f.id, s.name, l.path, CONCAT(l.path, '/', f.path) as file_path")
             ->from('file', 'f')
             ->innerJoin('f', 'storage', 's', 's.id=f.storage_id')
-            ->innerJoin('s', 'storage_type_local', 'l', 'l.supertype_id=s.id')
+            ->innerJoin('s', 'storage_type_local', 'l', 'l.id = s.id')
             ->where('f.deleted=:false')
             ->andWhere('s.deleted=:false')
             ->andWhere('l.id!=:id')

@@ -235,8 +235,6 @@ class EntityField extends ReferenceData
 
         $result = array_merge($fieldDefs, [
             'id'                        => "{$entityName}_{$fieldName}",
-            // the record of a subtype is the record of the supertype "EntityField" with the same ID
-            'supertypeId'               => "{$entityName}_{$fieldName}",
             'code'                      => $fieldName,
             'name'                      => $label,
             'entityId'                  => $entityName,
@@ -332,7 +330,6 @@ class EntityField extends ReferenceData
             if (!$filterIsMultilang) {
                 $items[] = [
                     'id'          => "{$entityName}_id",
-                    'supertypeId' => "{$entityName}_id",
                     'code'        => 'id',
                     'name'       => 'ID',
                     'type'       => 'varchar',
@@ -824,7 +821,7 @@ class EntityField extends ReferenceData
             $query
                 ->select('t.id')
                 ->from($table, 't')
-                ->innerJoin('t', $dbal->quoteIdentifier($mapper->toDb($supertype)), 's', 's.id = t.supertype_id')
+                ->innerJoin('t', $dbal->quoteIdentifier($mapper->toDb($supertype)), 's', 's.id = t.id')
                 ->where('s.deleted = :false');
         } else {
             $query

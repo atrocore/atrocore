@@ -35,7 +35,7 @@ Espo.define('views/attribute/record/detail', 'views/subtype/record/detail',
                 return;
             }
 
-            const attributeId = this.model.get('supertypeId');
+            const attributeId = this.model.id;
             const params = {
                 queryBuilder: {
                     condition: 'AND',
@@ -68,7 +68,7 @@ Espo.define('views/attribute/record/detail', 'views/subtype/record/detail',
                 for (let filterField in item.data) {
                     let name = filterField.split('-')[0];
 
-                    if (name === this.model.get('supertypeId')) {
+                    if (name === this.model.id) {
                         delete obj[index].data[filterField]
                     }
                 }

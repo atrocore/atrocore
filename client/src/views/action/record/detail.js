@@ -43,7 +43,7 @@ Espo.define('views/action/record/detail', ['views/subtype/record/detail', 'views
                 const type = this.model.get('type') === 'custom' ? `custom${this.model.get('handler')}` : this.model.get('type');
                 const inBackground = this.model.get('inBackground');
                 const urlSuffix = inBackground ? `${type}Async` : type;
-                this.ajaxPostRequest(`Action/${this.model.get('supertypeId')}/${urlSuffix}`, {}).success(response => {
+                this.ajaxPostRequest(`${this.model.name}/${this.model.id}/${urlSuffix}`, {}).success(response => {
                     if (response.jobId) {
                         this.notify(this.translate('jobAdded', 'messages'), 'success');
                     } else {

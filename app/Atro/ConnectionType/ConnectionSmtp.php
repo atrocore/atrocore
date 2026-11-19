@@ -150,7 +150,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
             'to'      => $toEmail
         ],
             // the sender works with the connection record, the subtype record contains only its settings
-            $this->getEntityManager()->getEntity('Connection', $connectionEntity->get('supertypeId'))
+            $this->getEntityManager()->getEntity('Connection', $connectionEntity->get('id'))
         );
         return true;
     }

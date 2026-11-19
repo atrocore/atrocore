@@ -11,8 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeCustom;
 
+use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 use Atro\ActionTypes\AbstractAction;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Routing\Route;
@@ -21,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Action/{id}/custom{customAction}Async',
+    path: '/ActionTypeCustom/{id}/custom{customAction}Async',
     methods: [
         'POST',
     ],
@@ -29,7 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Schedules the specified custom action (from the CustomActions namespace) as a background job '
         . 'and returns immediately with the job ID. The class must exist in data/custom-code/CustomActions/ '
         . 'and extend AbstractAction.',
-    tag: 'Action',
+    tag: 'ActionTypeCustom',
     parameters: [
         [
             'name'        => 'id',

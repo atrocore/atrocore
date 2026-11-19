@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeCreateOrUpdate;
 
+use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/createOrUpdateAsync',
+    path: '/ActionTypeCreateOrUpdate/{id}/createOrUpdateAsync',
     methods: [
         'POST',
     ],
     summary: 'Execute CreateOrUpdate action asynchronously',
     description: 'Schedules the specified CreateOrUpdate action as a background job and returns immediately with the job ID.',
-    tag: 'Action',
+    tag: 'ActionTypeCreateOrUpdate',
     parameters: [
         [
             'name'        => 'id',

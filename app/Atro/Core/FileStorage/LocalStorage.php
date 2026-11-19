@@ -105,7 +105,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         // the paths of the local storages are stored in their subtype records
         $otherStorages = $this->getEntityManager()->getRepository('StorageTypeLocal')
             ->where([
-                'supertypeId!=' => $storage->get('id'),
+                'id!=' => $storage->get('id'),
                 'isActive'      => true
             ])
             ->find();

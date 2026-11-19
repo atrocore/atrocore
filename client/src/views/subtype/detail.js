@@ -31,7 +31,7 @@ Espo.define('views/subtype/detail', ['views/detail', 'views/subtype/breadcrumbs'
 
         this.indexOfRecord = this.options.indexOfRecord;
         if (this.indexOfRecord === undefined || this.indexOfRecord === null) {
-            this.indexOfRecord = collection.indexOf(collection.get(this.model.get('supertypeId')));
+            this.indexOfRecord = collection.indexOf(collection.get(this.model.id));
         }
 
         this.hasPrevious = this.indexOfRecord > 0;

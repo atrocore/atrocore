@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeDelete;
 
+use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/createOrUpdate',
+    path: '/ActionTypeDelete/{id}/deleteAsync',
     methods: [
         'POST',
     ],
-    summary: 'Execute CreateOrUpdate action',
-    description: 'Executes the specified CreateOrUpdate action synchronously. Updates the record if it already exists; otherwise creates it.',
-    tag: 'Action',
+    summary: 'Execute Delete action asynchronously',
+    description: 'Schedules the specified Delete action as a background job and returns immediately with the job ID.',
+    tag: 'ActionTypeDelete',
     parameters: [
         [
             'name'        => 'id',
@@ -57,29 +58,23 @@ use Atro\Core\Routing\Route;
     ],
     responses: [
         200 => [
-            'description' => 'Execution result.',
+            'description' => 'The action has been scheduled as a background job.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'success' => [
-                                'type' => 'boolean',
-                            ],
-                            'message' => [
-                                'type'     => 'string',
-                                'nullable' => true,
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job.',
                             ],
                         ],
                     ],
                 ],
             ],
         ],
-        404 => [
-            'description' => 'Action record not found.',
-        ],
     ],
 )]
-class CreateOrUpdateHandler extends AbstractActionTypeSyncHandler
+class DeleteAsyncHandler extends AbstractActionTypeAsyncHandler
 {
 }

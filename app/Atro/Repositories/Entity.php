@@ -97,7 +97,7 @@ class Entity extends ReferenceData
     /**
      * Fields reserved in a supertype for the generated "supertype" link of its subtypes.
      */
-    public const SUBTYPE_RESERVED_FIELDS = ['supertype', 'supertypeId', 'supertypeName'];
+    public const SUBTYPE_RESERVED_FIELDS = ['supertype'];
 
     /**
      * Parameters of a subtype that can be changed after creation. All other features belong to the supertype.
@@ -170,11 +170,10 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
-        $res = array_merge($row, [
+        // the supertype of the entity is the "supertypeEntity" field
+        $res = array_merge(array_diff_key($row, ['supertypeId' => true]), [
             'id'                    => $code,
             'code'                  => $code,
-            // the record of a subtype is the record of the supertype "Entity" with the same ID
-            'supertypeId'           => $code,
             'supertypeEntityId'     => $row['supertypeId'] ?? null,
             'name'                  => $this->translate($code, 'scopeNames'),
             'namePlural'            => $this->translate($code, 'scopeNamesPlural'),

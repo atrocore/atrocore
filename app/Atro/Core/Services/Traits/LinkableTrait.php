@@ -571,19 +571,8 @@ trait LinkableTrait
             return [$ids, $entityType];
         }
 
-        $supertypeIds = [];
-        if (!empty($ids)) {
-            $records = $this->getEntityManager()->getRepository($entityType)
-                ->select(['id', 'supertypeId'])
-                ->where(['id' => $ids])
-                ->find();
-
-            foreach ($records as $record) {
-                $supertypeIds[] = $record->get('supertypeId');
-            }
-        }
-
-        return [$supertypeIds, $this->getMetadata()->get(['scopes', $entityType, 'supertypeId'])];
+        // a subtype record has the id of its supertype record
+        return [$ids, $this->getMetadata()->get(['scopes', $entityType, 'supertypeId'])];
     }
 
     protected function addAssociateRecords(array $ids, array $foreignIds, string $entityType, ?array $relationData = null): array

@@ -57,7 +57,7 @@ abstract class AbstractAttributeTypeWithOptions extends Subtype
             ->select('id')
             ->from(Util::toUnderScore($entity->get('entityId')) . '_attribute_value')
             ->where('attribute_id=:attributeId')
-            ->setParameter('attributeId', $entity->get('supertypeId'));
+            ->setParameter('attributeId', $entity->get('id'));
 
         $conditions = [$query->expr()->in('varchar_value', ':options')];
         $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));

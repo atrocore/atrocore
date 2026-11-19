@@ -693,8 +693,8 @@ class RDB extends \Espo\ORM\Repositories\RDB
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
                 $entity->set('id', $this->generateId());
-            } elseif ($entity->getAttributeType('deleted') === 'bool') {
-                // delete deleted record
+            } elseif ($entity->getAttributeParam('deleted', 'type') === 'bool') {
+                // delete deleted record, a subtype has no "deleted" column of its own
                 $qb = $this->getConnection()->createQueryBuilder()
                     ->delete($this->getConnection()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())))
                     ->where('id = :id')
@@ -1134,7 +1134,7 @@ class RDB extends \Espo\ORM\Repositories\RDB
             $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn")
                 ->leftJoin('at', 'attribute', 'a', 'a.id = at.attribute_id AND a.deleted = :false AND a.type = :script AND a.entity_id = :entityId')
                 // the settings of the script attributes are stored in the table of their subtype
-                ->leftJoin('a', 'attribute_type_script', 'ast', 'ast.supertype_id = a.id')
+                ->leftJoin('a', 'attribute_type_script', 'ast', 'ast.id = a.id')
                 ->setParameter('script', 'script')
                 ->setParameter('entityId', $this->entityType);
 

@@ -34,22 +34,16 @@ class V3Dot0Dot8 extends Base
         if (!$toSchema->hasTable('matching_rule_type_fields_similar')) {
             $table = $toSchema->createTable('matching_rule_type_fields_similar');
             $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
-            $table->addColumn('supertype_id', 'string', ['length' => 36, 'notnull' => false]);
             $table->setPrimaryKey(['id']);
-            $table->addUniqueIndex(['supertype_id']);
-            $table->addForeignKeyConstraint('matching_rule', ['supertype_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_MATCHING_RULE_TYPE_FIELDS_SIMILAR_SUPERTYPE_ID');
-            $table->addIndex(['supertype_id'], 'FK_MATCHING_RULE_TYPE_FIELDS_SIMILAR_SUPERTYPE_ID');
+            $table->addForeignKeyConstraint('matching_rule', ['id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_MATCHING_RULE_TYPE_FIELDS_SIMILAR_ID');
         }
 
         if (!$toSchema->hasTable('matching_rule_type_attributes_similar')) {
             $table = $toSchema->createTable('matching_rule_type_attributes_similar');
             $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
-            $table->addColumn('supertype_id', 'string', ['length' => 36, 'notnull' => false]);
             $table->addColumn('ignore_unavailable_attributes', 'boolean', ['default' => false, 'notnull' => true]);
             $table->setPrimaryKey(['id']);
-            $table->addUniqueIndex(['supertype_id']);
-            $table->addForeignKeyConstraint('matching_rule', ['supertype_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_MATCHING_RULE_TYPE_ATTRIBUTES_SIMILAR_SUPERTYPE_ID');
-            $table->addIndex(['supertype_id'], 'FK_MATCHING_RULE_TYPE_ATTRIBUTES_SIMILAR_SUPERTYPE_ID');
+            $table->addForeignKeyConstraint('matching_rule', ['id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_MATCHING_RULE_TYPE_ATTRIBUTES_SIMILAR_ID');
         }
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {

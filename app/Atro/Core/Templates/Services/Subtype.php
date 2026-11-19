@@ -13,25 +13,31 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
-use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Atro\Core\Services\AbstractRecordService;
 use Atro\Core\Services\Interfaces\DeletableInterface;
 use Atro\Core\Services\Interfaces\EditableInterface;
 use Atro\Core\Services\Interfaces\LinkableInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
+use Atro\Core\Services\Interfaces\SoftDeletableInterface;
 use Atro\Core\Services\Interfaces\SortableInterface;
 use Atro\Core\Services\Traits\EditableTrait;
 use Atro\Core\Services\Traits\LinkableTrait;
+use Atro\Core\Services\Traits\MassActionsTrait;
 use Atro\Core\Services\Traits\SortableTrait;
 
 /**
  * A subtype record is the supertype record extended with the subtype fields, the repository splits the data
- * between both tables. The relations of the supertype are served by the supertype record.
+ * between both tables. The relations of the supertype are served by the supertype record, which is also deleted
+ * and restored for the subtype record.
  */
 class Subtype extends AbstractRecordService implements
     EditableInterface,
     LinkableInterface,
-    SortableInterface
+    SortableInterface,
+    DeletableInterface,
+    SoftDeletableInterface,
+    MassActionsInterface
 {
     use EditableTrait {
         filterInput as protected doFilterInput;
@@ -47,6 +53,7 @@ class Subtype extends AbstractRecordService implements
     use SortableTrait {
         updateRelationSortOrder as protected doUpdateRelationSortOrder;
     }
+    use MassActionsTrait;
 
     public function loadAdditionalFields(Entity $entity, bool $skipLinkMultiple = false)
     {
@@ -72,7 +79,7 @@ class Subtype extends AbstractRecordService implements
     public function findLinkedEntities($id, $link, $params)
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->findLinkedEntities($this->getSupertypeRecordId($id), $link, $params);
+            return $this->getSupertypeService()->findLinkedEntities($id, $link, $params);
         }
 
         return parent::findLinkedEntities($id, $link, $params);
@@ -81,7 +88,7 @@ class Subtype extends AbstractRecordService implements
     public function linkEntity($id, $link, $foreignId)
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->linkEntity($this->getSupertypeRecordId($id), $link, $foreignId);
+            return $this->getSupertypeService()->linkEntity($id, $link, $foreignId);
         }
 
         return $this->doLinkEntity($id, $link, $foreignId);
@@ -90,7 +97,7 @@ class Subtype extends AbstractRecordService implements
     public function duplicateAndLinkEntity($id, $link, $foreignId): bool
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->duplicateAndLinkEntity($this->getSupertypeRecordId($id), $link, $foreignId);
+            return $this->getSupertypeService()->duplicateAndLinkEntity($id, $link, $foreignId);
         }
 
         return $this->doDuplicateAndLinkEntity($id, $link, $foreignId);
@@ -99,7 +106,7 @@ class Subtype extends AbstractRecordService implements
     public function unlinkEntity($id, $link, $foreignId)
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->unlinkEntity($this->getSupertypeRecordId($id), $link, $foreignId);
+            return $this->getSupertypeService()->unlinkEntity($id, $link, $foreignId);
         }
 
         return $this->doUnlinkEntity($id, $link, $foreignId);
@@ -108,7 +115,7 @@ class Subtype extends AbstractRecordService implements
     public function linkEntityMass($id, $link, $where, $selectData = null)
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->linkEntityMass($this->getSupertypeRecordId($id), $link, $where, $selectData);
+            return $this->getSupertypeService()->linkEntityMass($id, $link, $where, $selectData);
         }
 
         return $this->doLinkEntityMass($id, $link, $where, $selectData);
@@ -117,7 +124,7 @@ class Subtype extends AbstractRecordService implements
     public function duplicateAndLinkEntityMass($id, $link, $where, $selectData = null)
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->duplicateAndLinkEntityMass($this->getSupertypeRecordId($id), $link, $where, $selectData);
+            return $this->getSupertypeService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
         }
 
         return $this->doDuplicateAndLinkEntityMass($id, $link, $where, $selectData);
@@ -126,7 +133,7 @@ class Subtype extends AbstractRecordService implements
     public function updateRelationSortOrder(string $id, string $link, array $ids, int $offset = 0): bool
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->updateRelationSortOrder($this->getSupertypeRecordId($id), $link, $ids, $offset);
+            return $this->getSupertypeService()->updateRelationSortOrder($id, $link, $ids, $offset);
         }
 
         return $this->doUpdateRelationSortOrder($id, $link, $ids, $offset);
@@ -135,7 +142,7 @@ class Subtype extends AbstractRecordService implements
     public function unlinkAll(string $id, string $link): bool
     {
         if ($this->isSupertypeLink($link)) {
-            return $this->getSupertypeService()->unlinkAll($this->getSupertypeRecordId($id), $link);
+            return $this->getSupertypeService()->unlinkAll($id, $link);
         }
 
         return $this->doUnlinkAll($id, $link);
@@ -149,8 +156,26 @@ class Subtype extends AbstractRecordService implements
             return;
         }
 
-        // the supertype record is linked by the repository and the subtype is defined by the entity itself
-        unset($data->supertypeId, $data->supertypeName, $data->type);
+        // the subtype is defined by the entity itself
+        unset($data->type);
+    }
+
+    /**
+     * A subtype record has the id of its supertype record and is deleted together with it.
+     */
+    public function deleteEntity(string $id): bool
+    {
+        return $this->getSupertypeService()->deleteEntity($id);
+    }
+
+    public function deleteEntityPermanently(string $id): bool
+    {
+        return $this->getSupertypeService()->deleteEntityPermanently($id);
+    }
+
+    public function restoreEntity($id)
+    {
+        return $this->getSupertypeService()->restoreEntity($id);
     }
 
     public function putAclMeta(Entity $entity): void
@@ -164,7 +189,7 @@ class Subtype extends AbstractRecordService implements
     protected function canDeleteSupertypeRecord(Entity $entity): bool
     {
         $supertypeService = $this->getSupertypeService();
-        if (!$supertypeService instanceof DeletableInterface || empty($entity->get('supertypeId'))) {
+        if (!$supertypeService instanceof DeletableInterface || empty($entity->get('id'))) {
             return false;
         }
 
@@ -176,7 +201,7 @@ class Subtype extends AbstractRecordService implements
             return true;
         }
 
-        $supertypeRecord = $this->getEntityManager()->getRepository($this->getSupertypeName())->get($entity->get('supertypeId'));
+        $supertypeRecord = $this->getEntityManager()->getRepository($this->getSupertypeName())->get($entity->get('id'));
 
         return !empty($supertypeRecord) && $this->getAcl()->check($supertypeRecord, 'delete');
     }
@@ -203,16 +228,6 @@ class Subtype extends AbstractRecordService implements
         return $this->getServiceFactory()->create($this->getSupertypeName());
     }
 
-    protected function getSupertypeRecordId(string $id): string
-    {
-        $record = $this->getRepository()->get($id);
-        if (empty($record) || empty($record->get('supertypeId'))) {
-            throw new NotFound();
-        }
-
-        return $record->get('supertypeId');
-    }
-
     /**
      * The relations to many records of the supertype, the ones that are loaded together with the record when
      * $onlyLoaded is true.
@@ -237,11 +252,11 @@ class Subtype extends AbstractRecordService implements
 
     protected function loadSupertypeLinkMultipleFields(Entity $entity, array $fields): void
     {
-        if (empty($fields) || empty($entity->get('supertypeId'))) {
+        if (empty($fields) || empty($entity->get('id'))) {
             return;
         }
 
-        $supertypeRecord = $this->getEntityManager()->getRepository($this->getSupertypeName())->get($entity->get('supertypeId'));
+        $supertypeRecord = $this->getEntityManager()->getRepository($this->getSupertypeName())->get($entity->get('id'));
         if (empty($supertypeRecord)) {
             return;
         }

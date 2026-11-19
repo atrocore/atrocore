@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeCreate;
 
+use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/delete',
+    path: '/ActionTypeCreate/{id}/create',
     methods: [
         'POST',
     ],
-    summary: 'Execute Delete action',
-    description: 'Executes the specified Delete action synchronously. Deletes one or more entity records according to the action configuration.',
-    tag: 'Action',
+    summary: 'Execute Create action',
+    description: 'Executes the specified Create action synchronously. Creates one or more entity records according to the action configuration.',
+    tag: 'ActionTypeCreate',
     parameters: [
         [
             'name'        => 'id',
@@ -80,6 +81,6 @@ use Atro\Core\Routing\Route;
         ],
     ],
 )]
-class DeleteHandler extends AbstractActionTypeSyncHandler
+class CreateHandler extends AbstractActionTypeSyncHandler
 {
 }

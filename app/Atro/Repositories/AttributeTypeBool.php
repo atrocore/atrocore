@@ -45,7 +45,7 @@ class AttributeTypeBool extends Subtype
                 ->where('attribute_id = :attributeId')
                 ->andWhere("bool_value is NULL")
                 ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('attributeId', $entity->get('supertypeId'))
+                ->setParameter('attributeId', $entity->get('id'))
                 ->executeStatement();
         }
     }

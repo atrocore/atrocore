@@ -47,6 +47,18 @@ class Entity extends ReferenceData
     }
 
     /**
+     * An entity of a type has the id of the entity and is deleted via the "Entity" service.
+     */
+    public function deleteEntity(string $id): bool
+    {
+        if ($this->entityType !== 'Entity') {
+            return $this->getServiceFactory()->create('Entity')->deleteEntity($id);
+        }
+
+        return parent::deleteEntity($id);
+    }
+
+    /**
      * The entities of the system and of the modules cannot be deleted, their configuration can be reset to default.
      */
     public function putAclMeta(OrmEntity $entity): void

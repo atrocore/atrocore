@@ -177,6 +177,17 @@ class Converter
                 }
             }
 
+            // a record that shares its id with the related record is removed together with it
+            foreach ($entityDefs['relations'] ?? [] as $relation) {
+                if (($relation['type'] ?? null) === 'belongsTo' && ($relation['key'] ?? null) === 'id' && !empty($relation['entity'])) {
+                    $this->foreignKeys[$entityName][] = [
+                        'entity'        => $relation['entity'],
+                        'fieldName'     => 'id',
+                        'cascadeDelete' => !empty($relation['cascadeDelete'])
+                    ];
+                }
+            }
+
             foreach ($uniqueFields as $columnNames) {
                 $table->addUniqueIndex($columnNames);
             }
@@ -231,7 +242,10 @@ class Converter
                 $fkName = self::generateForeignKeyName($entityName, $def['fieldName']);
                 if (!$fkTable->hasForeignKey($fkName)) {
                     $fkTable->addForeignKeyConstraint($table, [$column], ['id'], $options, $fkName);
-                    $fkTable->addIndex([$column], $fkName);
+                    // the primary key is the index of the shared id
+                    if ($column !== 'id') {
+                        $fkTable->addIndex([$column], $fkName);
+                    }
                 }
             }
         }

@@ -98,7 +98,7 @@ class FollowHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        $entityName = $this->resolveSubtypeForStream((string) $data->entityName, $data);
+        $entityName = $this->resolveSubtypeForStream((string) $data->entityName);
 
         if ($this->getMetadata()->get(['scopes', $entityName, 'streamDisabled'])) {
             throw new Forbidden();

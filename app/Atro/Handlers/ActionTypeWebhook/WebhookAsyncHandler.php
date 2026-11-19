@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeWebhook;
 
+use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/deleteAsync',
+    path: '/ActionTypeWebhook/{id}/webhookAsync',
     methods: [
         'POST',
     ],
-    summary: 'Execute Delete action asynchronously',
-    description: 'Schedules the specified Delete action as a background job and returns immediately with the job ID.',
-    tag: 'Action',
+    summary: 'Execute Webhook action asynchronously',
+    description: 'Schedules the specified Webhook action as a background job and returns immediately with the job ID.',
+    tag: 'ActionTypeWebhook',
     parameters: [
         [
             'name'        => 'id',
@@ -39,18 +40,8 @@ use Atro\Core\Routing\Route;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'entityId' => [
-                            'type'        => 'string',
-                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
-                        ],
-                        'where'    => [
-                            'type'        => 'array',
-                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
-                            'items'       => ['type' => 'object'],
-                        ],
-                    ],
+                    'type'        => 'object',
+                    'description' => 'No fields are consumed by this action type. The webhook handler calls the configured URL regardless of the request body.',
                 ],
             ],
         ],
@@ -74,6 +65,6 @@ use Atro\Core\Routing\Route;
         ],
     ],
 )]
-class DeleteAsyncHandler extends AbstractActionTypeAsyncHandler
+class WebhookAsyncHandler extends AbstractActionTypeAsyncHandler
 {
 }

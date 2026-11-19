@@ -69,15 +69,8 @@ class Service extends AbstractListener
             return;
         }
 
-        $subtypeRecord = $this->getEntityManager()->getRepository($subtype)
-            ->select(['id'])
-            ->where(['supertypeId' => $entity->get('id')])
-            ->findOne();
-        if (empty($subtypeRecord)) {
-            return;
-        }
-
-        $data = $this->getService($subtype)->getEntity($subtypeRecord->get('id'));
+        // a subtype record has the id of its supertype record
+        $data = $this->getService($subtype)->getEntity($entity->get('id'));
         if (empty($data)) {
             return;
         }

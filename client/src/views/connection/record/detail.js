@@ -28,7 +28,7 @@ Espo.define('views/connection/record/detail', 'views/subtype/record/detail', fun
 
         actionTestConnection() {
             this.notify('Loading...');
-            this.ajaxPostRequest(`Connection/${this.model.get('supertypeId')}/test`).then(() => {
+            this.ajaxPostRequest(`Connection/${this.model.id}/test`).then(() => {
                 this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
             });
         }

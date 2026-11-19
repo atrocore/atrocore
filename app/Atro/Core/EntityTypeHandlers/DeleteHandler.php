@@ -71,7 +71,7 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Store', 'ClassificationAttribute', 'SoftwarePackage'], requiresAbsent: ['supertypeId'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData', 'Subtype'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Store', 'ClassificationAttribute', 'SoftwarePackage'])]
 class DeleteHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
