@@ -1,44 +1,44 @@
 {
     "fields": {
-        "targetEntity": "",
-        "sourceEntity": "",
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "targetEntity": "Entidad de destino",
+        "sourceEntity": "Entidad de origen",
+        "transformationScript": "Script de transformación",
+        "executeTransformationAs": "Ejecutar la transformación como"
     },
     "tooltips": {
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "transformationScript": "Configure cómo se transforman los datos del registro de origen y se asignan al registro de destino.",
+        "executeTransformationAs": "La cuenta de usuario que se utilizará para ejecutar el script de transformación."
     },
     "exceptions": {
-        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "",
-        "sourceEntityTypeNotAllowed": "",
-        "targetEntityCannotBePrimaryOfContributorDerivative": "",
-        "sourceAndTargetEntityCannotBeSame": "",
-        "dataPipelineAlreadyExists": "",
-        "transformationScriptIsMissing": "",
-        "transformationScriptIsNotValid": "",
-        "noSourceRecordIsLinked": ""
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "La entidad '%s' es un contribuyente o un derivado de una solicitud de cambio y no se puede utilizar como entidad de origen.",
+        "sourceEntityTypeNotAllowed": "La entidad '%s' no se puede usar como entidad de origen: solo se permiten los tipos Base y Jerarquía.",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "La entidad '%s' es la entidad principal de un derivado de colaborador y no se puede usar como entidad de destino.",
+        "sourceAndTargetEntityCannotBeSame": "La entidad de origen y la entidad de destino no pueden ser la misma.",
+        "dataPipelineAlreadyExists": "Ya existe una canalización de datos para este par de entidades.",
+        "transformationScriptIsMissing": "Falta el script de transformación para la canalización de datos.",
+        "transformationScriptIsNotValid": "El script de transformación devuelve una carga útil no válida: %s",
+        "noSourceRecordIsLinked": "No hay ningún registro de origen vinculado al registro."
     },
     "labels": {
-        "targetRecordPreviewHint": "",
-        "noDataPipelineConfigured": "",
-        "noSourceRecords": "",
-        "discard": "",
-        "transformationPreview": "",
-        "targetRecordNotExists": "",
-        "applyToRecords": "",
-        "transformTo": ""
+        "targetRecordPreviewHint": "Muestra cómo quedaría el registro de destino después de la transformación. No se guarda nada.",
+        "noDataPipelineConfigured": "No hay ninguna canalización de datos configurada para este par de entidades",
+        "noSourceRecords": "Todavía no hay registros de la entidad de origen",
+        "discard": "Descartar",
+        "transformationPreview": "Vista previa de la transformación",
+        "targetRecordNotExists": "El registro de destino aún no existe. Aplique la vista previa para ver cómo quedaría después de la transformación.",
+        "applyToRecords": "Aplicar a registros",
+        "transformTo": "Transformar {entity}"
     },
     "messages": {
-        "transformConfirmation": "",
-        "updateFromSourceConfirmation": "",
-        "recordsTransformed": "",
-        "recordsNotTransformed": ""
+        "transformConfirmation": "El script de transformación se ejecutará para los registros seleccionados y se crearán o actualizarán los registros de destino. ¿Desea continuar?",
+        "updateFromSourceConfirmation": "El script de transformación se ejecutará para los registros de origen vinculados a los registros seleccionados, y estos se actualizarán. ¿Desea continuar?",
+        "recordsTransformed": "%s / %s registros transformados",
+        "recordsNotTransformed": "No se pudieron transformar %s registros. Consulte el registro para obtener más detalles."
     },
     "options": {
         "executeTransformationAs": {
-            "system": "",
-            "sameUser": ""
+            "system": "Sistema",
+            "sameUser": "Mismo usuario"
         }
     }
 }
