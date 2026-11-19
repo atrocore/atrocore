@@ -17,13 +17,4 @@ Espo.define('models/subtype', 'model', Dep => Dep.extend({
         return ((this.defs.links || {}).supertype || {}).entity || null;
     },
 
-    sync(method, model, options) {
-        if (method === 'delete') {
-            options = options || {};
-            options.url = `${this.getSupertype()}/${model.id}`;
-        }
-
-        return Dep.prototype.sync.call(this, method, model, options);
-    },
-
 }));

@@ -18,19 +18,26 @@ use Atro\Core\Services\AbstractRecordService;
 use Atro\Core\Services\Interfaces\DeletableInterface;
 use Atro\Core\Services\Interfaces\EditableInterface;
 use Atro\Core\Services\Interfaces\LinkableInterface;
+use Atro\Core\Services\Interfaces\MassActionsInterface;
+use Atro\Core\Services\Interfaces\SoftDeletableInterface;
 use Atro\Core\Services\Interfaces\SortableInterface;
 use Atro\Core\Services\Traits\EditableTrait;
 use Atro\Core\Services\Traits\LinkableTrait;
+use Atro\Core\Services\Traits\MassActionsTrait;
 use Atro\Core\Services\Traits\SortableTrait;
 
 /**
  * A subtype record is the supertype record extended with the subtype fields, the repository splits the data
- * between both tables. The relations of the supertype are served by the supertype record.
+ * between both tables. The relations of the supertype are served by the supertype record, which is also deleted
+ * and restored for the subtype record.
  */
 class Subtype extends AbstractRecordService implements
     EditableInterface,
     LinkableInterface,
-    SortableInterface
+    SortableInterface,
+    DeletableInterface,
+    SoftDeletableInterface,
+    MassActionsInterface
 {
     use EditableTrait {
         filterInput as protected doFilterInput;
@@ -46,6 +53,7 @@ class Subtype extends AbstractRecordService implements
     use SortableTrait {
         updateRelationSortOrder as protected doUpdateRelationSortOrder;
     }
+    use MassActionsTrait;
 
     public function loadAdditionalFields(Entity $entity, bool $skipLinkMultiple = false)
     {
@@ -150,6 +158,24 @@ class Subtype extends AbstractRecordService implements
 
         // the subtype is defined by the entity itself
         unset($data->type);
+    }
+
+    /**
+     * A subtype record has the id of its supertype record and is deleted together with it.
+     */
+    public function deleteEntity(string $id): bool
+    {
+        return $this->getSupertypeService()->deleteEntity($id);
+    }
+
+    public function deleteEntityPermanently(string $id): bool
+    {
+        return $this->getSupertypeService()->deleteEntityPermanently($id);
+    }
+
+    public function restoreEntity($id)
+    {
+        return $this->getSupertypeService()->restoreEntity($id);
     }
 
     public function putAclMeta(Entity $entity): void

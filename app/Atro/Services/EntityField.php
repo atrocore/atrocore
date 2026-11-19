@@ -36,6 +36,18 @@ class EntityField extends ReferenceData
     }
 
     /**
+     * A field of a type has the id of the field and is deleted via the "EntityField" service.
+     */
+    public function deleteEntity(string $id): bool
+    {
+        if ($this->entityType !== 'EntityField') {
+            return $this->getServiceFactory()->create('EntityField')->deleteEntity($id);
+        }
+
+        return parent::deleteEntity($id);
+    }
+
+    /**
      * Returns the `where` filter of a link field with Twig expressions resolved against the specified record. The
      * type of the field is the type of the subtype of the service, e.g. "link" for "EntityFieldTypeLink".
      *
