@@ -1,44 +1,44 @@
 {
     "fields": {
-        "targetEntity": "",
-        "sourceEntity": "",
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "targetEntity": "Entità di destinazione",
+        "sourceEntity": "Entità di origine",
+        "transformationScript": "Script di trasformazione",
+        "executeTransformationAs": "Esegui trasformazione come"
     },
     "tooltips": {
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "transformationScript": "Configura la trasformazione dei dati del record di origine e la relativa mappatura nel record di destinazione.",
+        "executeTransformationAs": "L'account utente che verrà utilizzato per eseguire lo script di trasformazione."
     },
     "exceptions": {
-        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "",
-        "sourceEntityTypeNotAllowed": "",
-        "targetEntityCannotBePrimaryOfContributorDerivative": "",
-        "sourceAndTargetEntityCannotBeSame": "",
-        "dataPipelineAlreadyExists": "",
-        "transformationScriptIsMissing": "",
-        "transformationScriptIsNotValid": "",
-        "noSourceRecordIsLinked": ""
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "L'entità '%s' è un contributore o un derivato di una richiesta di modifica e non può essere utilizzata come entità di origine.",
+        "sourceEntityTypeNotAllowed": "L'entità '%s' non può essere utilizzata come entità di origine: sono consentiti solo i tipi Base e Hierarchy.",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "L'entità '%s' è l'entità primaria di un derivato del collaboratore e non può essere utilizzata come entità di destinazione.",
+        "sourceAndTargetEntityCannotBeSame": "L'entità di origine e l'entità di destinazione non possono coincidere.",
+        "dataPipelineAlreadyExists": "Esiste già una pipeline di dati per questa coppia di entità.",
+        "transformationScriptIsMissing": "Lo script di trasformazione manca nella pipeline di dati.",
+        "transformationScriptIsNotValid": "Lo script di trasformazione restituisce un payload non valido: %s",
+        "noSourceRecordIsLinked": "Nessun record di origine è collegato al record."
     },
     "labels": {
-        "targetRecordPreviewHint": "",
-        "noDataPipelineConfigured": "",
-        "noSourceRecords": "",
-        "discard": "",
-        "transformationPreview": "",
-        "targetRecordNotExists": "",
-        "applyToRecords": "",
-        "transformTo": ""
+        "targetRecordPreviewHint": "Mostra l'aspetto del record di destinazione dopo la trasformazione. Non viene salvato nulla.",
+        "noDataPipelineConfigured": "Non è configurata alcuna pipeline di dati per questa coppia di entità",
+        "noSourceRecords": "Non sono ancora presenti record dell'entità di origine",
+        "discard": "Scarta",
+        "transformationPreview": "Anteprima della trasformazione",
+        "targetRecordNotExists": "Il record di destinazione non esiste ancora. Applica l'anteprima per vedere come apparirebbe dopo la trasformazione.",
+        "applyToRecords": "Applica ai record",
+        "transformTo": "Trasforma {entity}"
     },
     "messages": {
-        "transformConfirmation": "",
-        "updateFromSourceConfirmation": "",
-        "recordsTransformed": "",
-        "recordsNotTransformed": ""
+        "transformConfirmation": "Lo script di trasformazione verrà eseguito per i record selezionati e i record di destinazione verranno creati o aggiornati. Continuare?",
+        "updateFromSourceConfirmation": "Lo script di trasformazione verrà eseguito per i record di origine collegati ai record selezionati e questi ultimi verranno aggiornati. Continuare?",
+        "recordsTransformed": "%s / %s record trasformati",
+        "recordsNotTransformed": "Non è stato possibile trasformare %s record. Consultare il log per i dettagli."
     },
     "options": {
         "executeTransformationAs": {
-            "system": "",
-            "sameUser": ""
+            "system": "Sistema",
+            "sameUser": "Stesso utente"
         }
     }
 }
