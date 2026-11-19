@@ -1,0 +1,58 @@
+{
+    "fields": {
+        "name": "",
+        "description": "",
+        "isActive": "",
+        "isConfidential": "",
+        "clientCredentialsGrant": "",
+        "authorizationCodeGrant": "",
+        "refreshTokenGrant": "",
+        "user": "",
+        "secretHash": "",
+        "redirectUris": "",
+        "isConsentRequired": "",
+        "isUiClient": ""
+    },
+    "links": {
+        "user": ""
+    },
+    "labels": {
+        "Grant Types": "",
+        "authorizationRequest": "",
+        "Allow": "",
+        "signedInAs": "",
+        "Deny": ""
+    },
+    "tooltips": {
+        "isConfidential": "",
+        "clientCredentialsGrant": "",
+        "authorizationCodeGrant": "",
+        "refreshTokenGrant": "",
+        "user": "",
+        "redirectUris": "",
+        "isConsentRequired": "",
+        "isUiClient": ""
+    },
+    "exceptions": {
+        "userRequiredForClientCredentials": "",
+        "grantRequired": "",
+        "redirectUrisRequired": "",
+        "invalidRedirectUri": "",
+        "uiClientProtected": "",
+        "uiClientNotRemovable": ""
+    },
+    "actions": {
+        "generateSecret": ""
+    },
+    "actionConfirms": {
+        "generateSecret": ""
+    },
+    "actionResults": {
+        "generateSecret": ""
+    },
+    "messages": {
+        "uiClientDisabled": "",
+        "signInFailed": "",
+        "signInExpired": ""
+    }
+}
