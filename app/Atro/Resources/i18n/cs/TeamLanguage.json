@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "language": "",
+        "team": "",
+        "editAction": ""
+    },
+    "labels": {
+        "yes": "",
+        "no": ""
+    },
+    "exceptions": {
+        "cannotRemoveLanguageWhenRestricted": ""
+    }
+}
