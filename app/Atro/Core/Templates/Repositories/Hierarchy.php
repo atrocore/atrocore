@@ -71,19 +71,36 @@ class Hierarchy extends Base
         }
     }
 
+    protected function getSortColumn($sortBy): ?string
+    {
+        if (empty($sortBy) || !is_string($sortBy)) {
+            return null;
+        }
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $sortBy]);
+        if (empty($fieldDefs) || !empty($fieldDefs['notStorable'])) {
+            return null;
+        }
+        $column = Util::toUnderScore($sortBy);
+        if (!preg_match('/^[a-z_][a-z0-9_]*$/', $column)) {
+            return null;
+        }
+        return $column;
+    }
+
     public function getEntityPosition(Entity $entity, string $parentId, array $sortParams): ?int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
-        if (!empty($sortParams) && !empty($sortParams['sortBy'])) {
-            $primarySortBy = Util::toUnderScore($sortParams['sortBy']);
+        $requestedSortBy = (!empty($sortParams) && !empty($sortParams['sortBy'])) ? $this->getSortColumn($sortParams['sortBy']) : null;
+        if ($requestedSortBy !== null) {
+            $primarySortBy = $requestedSortBy;
             $sortOrder = !empty($sortParams['asc']) ? 'ASC' : 'DESC';
         } else {
             $primarySortBy = 'sort_order';
             $sortOrder = (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
         }
-        $secondarySortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $secondarySortBy = $this->getSortColumn($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name')) ?? 'name';
 
         if (Converter::isPgSQL($this->getConnection())) {
             if (empty($parentId)) {
@@ -694,9 +711,10 @@ class Hierarchy extends Base
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
-        $defaultSortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        if (!empty($selectParams['orderBy'])) {
-            $primarySortBy = Util::toUnderScore($selectParams['orderBy']);
+        $defaultSortBy = $this->getSortColumn($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name')) ?? 'name';
+        $requestedSortBy = !empty($selectParams['orderBy']) ? $this->getSortColumn($selectParams['orderBy']) : null;
+        if ($requestedSortBy !== null) {
+            $primarySortBy = $requestedSortBy;
             $secondarySortBy = 'sort_order';
         } else {
             $primarySortBy = 'sort_order';
