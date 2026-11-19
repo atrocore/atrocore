@@ -1,14 +1,14 @@
 {
     "fields": {
-        "language": "",
-        "team": "",
-        "editAction": ""
+        "language": "Idioma",
+        "team": "Equipo",
+        "editAction": "Editar"
     },
     "labels": {
-        "yes": "",
-        "no": ""
+        "yes": "Sí",
+        "no": "No"
     },
     "exceptions": {
-        "cannotRemoveLanguageWhenRestricted": ""
+        "cannotRemoveLanguageWhenRestricted": "No se puede eliminar el idioma principal cuando el equipo tiene activada la restricción de idioma."
     }
 }
