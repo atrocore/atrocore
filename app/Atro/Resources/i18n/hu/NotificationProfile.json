@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "isActive": "Aktív",
+        "description": "Leírás",
+        "notificationRules": "Értesítési szabályok"
+    }
+}

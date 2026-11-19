@@ -1,95 +1,106 @@
 {
-  "fields": {
-    "clusterItems": "Cluster-Artikel",
-    "number": "Retourenummer",
-    "masterEntity": "Stammdaten-Entität",
-    "rejectedClusterItems": "Abgelehnte Cluster Items",
-    "stagingItemCount": "Anzahl der Contributor-Datensätze",
-    "masterItemCount": "Master Item Count",
-    "status": "Status",
-    "consolidationMethod": "Konsolidierungsmethode",
-    "executionMode": "Ausführungsmodus"
-  },
-  "actions": {
-    "reject": "Ablehnen",
-    "consolidate": "Konsolidieren",
-    "unreject": "Ablehnen",
-    "purge": "Bereinigen",
-    "deconsolidate": "Entkonsolidieren",
-    "split": "Aufteilen"
-  },
-  "options": {
-    "status": {
-      "empty": "Leere Werte",
-      "review": "Review",
-      "invalid": "Ungültig",
-      "consolidated": "Konsolidiert"
+    "fields": {
+        "clusterItems": "Cluster-Artikel",
+        "number": "Retourenummer",
+        "masterEntity": "Stammdaten-Entität",
+        "rejectedClusterItems": "Abgelehnte Cluster Items",
+        "stagingItemCount": "Anzahl der Contributor-Datensätze",
+        "masterItemCount": "Master Item Count",
+        "status": "Status",
+        "consolidationMethod": "Konsolidierungsmethode",
+        "executionMode": "Ausführungsmodus"
     },
-    "consolidationMethod": {
-      "ruleBased": "Regelbasiert",
-      "hybrid": "Hybrid",
-      "manual": "Manuell"
+    "actions": {
+        "reject": "Ablehnen",
+        "consolidate": "Konsolidieren",
+        "unreject": "Ablehnen",
+        "purge": "Bereinigen",
+        "deconsolidate": "Entkonsolidieren",
+        "split": "Aufteilen",
+        "move": "Verschieben"
     },
-    "executionMode": {
-      "automatic": "Automatisch",
-      "manual": "Manuell"
+    "options": {
+        "status": {
+            "empty": "Leere Werte",
+            "review": "Review",
+            "invalid": "Ungültig",
+            "consolidated": "Konsolidiert"
+        },
+        "consolidationMethod": {
+            "ruleBased": "Regelbasiert",
+            "hybrid": "Hybrid",
+            "manual": "Manuell"
+        },
+        "executionMode": {
+            "automatic": "Automatisch",
+            "manual": "Manuell"
+        }
+    },
+    "actionConfirms": {
+        "purge": "Sind Sie sicher, dass Sie diesen Cluster bereinigen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "exceptions": {
+        "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich",
+        "noClusterItemsToPreview": "Es gibt nichts zur Vorschau: Der Cluster hat keine Contributor-Einträge",
+        "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden",
+        "clusterItemsNotInCluster": "Die Cluster-Elemente %s gehören nicht zu diesem Cluster",
+        "cannotDelete": "Nur leere Cluster können gelöscht werden"
+    },
+    "labels": {
+        "contributorRecord": "Contributor-Datensatz",
+        "contributorRecords": "Contributor-Datensätze",
+        "contributorRecordsPanel": "Contributor-Datensätze",
+        "masterRecord": "master-Datensatz",
+        "masterRecords": "master-Datensätze",
+        "consolidated": "Konsolidiert",
+        "unconsolidated": "Nicht konsolidiert",
+        "rejected": "Abgelehnt",
+        "consolidationPreview": "Konsolidierungsvorschau",
+        "standardView": "Standard",
+        "comparisonView": "Vergleich",
+        "manualConsolidationView": "Manuelle Konsolidierung",
+        "suggestedValues": "Vorgeschlagene Werte",
+        "selectAllSuggestedValues": "Alle vorgeschlagenen Werte auswählen",
+        "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
+        "noConsolidationConfigured": "Für diese Entität ist keine Konsolidierung konfiguriert",
+        "discard": "Verwerfen",
+        "masterRecordsPanel": "Master-Datensätze"
+    },
+    "streamMessages": {
+        "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
+        "clusterLinkedThis": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
+        "clusterUnlinked": "{user} hat {relatedEntity} von diesem Cluster getrennt",
+        "clusterUnlinkedThis": "{user} hat {relatedEntity} von diesem Cluster getrennt",
+        "clusterRejected": "{user} hat {relatedEntity} in diesem Cluster abgelehnt",
+        "clusterRejectedThis": "{user} hat {relatedEntity} in diesem Cluster abgelehnt",
+        "clusterReincluded": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
+        "clusterReincludedThis": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
+        "clusterMoved": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
+        "clusterMovedThis": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
+        "clusterConsolidated": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
+        "clusterConsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
+        "clusterDeconsolidated": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
+        "clusterDeconsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
+        "clusterGoldenRecord": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
+        "clusterGoldenRecordThis": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
+        "clusterDeleted": "{user} hat diesen Cluster gelöscht",
+        "clusterDeletedThis": "{user} hat diesen Cluster gelöscht",
+        "clusterRecordDeleted": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
+        "clusterRecordDeletedThis": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
+        "clusterMovedToCluster": "{user} hat {records} von Cluster {clusterLink} nach {entity} verschoben",
+        "clusterMovedToClusterThis": "{user} hat {records} von Cluster {clusterLink} in diesen Cluster verschoben",
+        "clusterMovedFromCluster": "{user} hat {records} von {entity} in Cluster {clusterLink} verschoben",
+        "clusterMovedFromClusterThis": "{user} hat {records} von diesem Cluster in Cluster {clusterLink} verschoben"
+    },
+    "messages": {
+        "consolidated": "Konsolidiert",
+        "noClusterFound": "Für diesen Datensatz wurde kein Cluster gefunden"
+    },
+    "massActions": {
+        "purge": "Endgültig löschen"
+    },
+    "massActionConfirmMessages": {
+        "purge": "Möchten Sie die ausgewählten Cluster wirklich endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "purgeAll": "Möchten Sie alle Cluster wirklich endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden."
     }
-  },
-  "actionConfirms": {
-    "purge": "Sind Sie sicher, dass Sie diesen Cluster bereinigen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
-  },
-  "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich",
-    "noClusterItemsToPreview": "Es gibt nichts zur Vorschau: Der Cluster hat keine Contributor-Einträge",
-    "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden",
-    "clusterItemsNotInCluster": "Die Cluster-Elemente %s gehören nicht zu diesem Cluster"
-  },
-  "labels": {
-    "contributorRecord": "Contributor-Datensatz",
-    "contributorRecords": "Contributor-Datensätze",
-    "contributorRecordsPanel": "Contributor-Datensätze",
-    "masterRecord": "master-Datensatz",
-    "masterRecords": "master-Datensätze",
-    "consolidated": "Konsolidiert",
-    "unconsolidated": "Nicht konsolidiert",
-    "rejected": "Abgelehnt",
-    "consolidationPreview": "Konsolidierungsvorschau",
-    "standardView": "Standard",
-    "comparisonView": "Vergleich",
-    "manualConsolidationView": "Manuelle Konsolidierung",
-    "suggestedValues": "Vorgeschlagene Werte",
-    "selectAllSuggestedValues": "Alle vorgeschlagenen Werte auswählen",
-    "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
-    "noConsolidationConfigured": "Für diese Entität ist keine Konsolidierung konfiguriert",
-    "discard": "Verwerfen"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
-    "clusterLinkedThis": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
-    "clusterUnlinked": "{user} hat {relatedEntity} von diesem Cluster getrennt",
-    "clusterUnlinkedThis": "{user} hat {relatedEntity} von diesem Cluster getrennt",
-    "clusterRejected": "{user} hat {relatedEntity} in diesem Cluster abgelehnt",
-    "clusterRejectedThis": "{user} hat {relatedEntity} in diesem Cluster abgelehnt",
-    "clusterReincluded": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
-    "clusterReincludedThis": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
-    "clusterMoved": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
-    "clusterMovedThis": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
-    "clusterConsolidated": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
-    "clusterConsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
-    "clusterDeconsolidated": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
-    "clusterDeconsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
-    "clusterGoldenRecord": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
-    "clusterGoldenRecordThis": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
-    "clusterDeleted": "{user} hat diesen Cluster gelöscht",
-    "clusterDeletedThis": "{user} hat diesen Cluster gelöscht",
-    "clusterRecordDeleted": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
-    "clusterRecordDeletedThis": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
-    "clusterMovedToCluster": "{user} hat {records} von Cluster {clusterLink} nach {entity} verschoben",
-    "clusterMovedToClusterThis": "{user} hat {records} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedFromCluster": "{user} hat {records} von {entity} in Cluster {clusterLink} verschoben",
-    "clusterMovedFromClusterThis": "{user} hat {records} von diesem Cluster in Cluster {clusterLink} verschoben"
-  },
-  "messages": {
-    "consolidated": "Konsolidiert"
-  }
 }

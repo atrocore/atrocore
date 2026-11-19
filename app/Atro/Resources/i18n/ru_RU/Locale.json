@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "timeZone": "Часовой пояс",
-    "dateFormat": "Формат даты",
-    "weekStart": "Первый день недели",
-    "timeFormat": "Формат времени",
-    "thousandSeparator": "Тысячный разделитель",
-    "decimalMark": "Десятичный разделитель",
-    "languageCode": "Код языка",
-    "fallbackLanguageCode": "Код запасного языка",
-    "displayLabelsInContentLanguage": "Отображение меток на языке контента"
-  },
-  "labels": {
-    "sunday": "Воскресенье",
-    "monday": "Понедельник"
-  },
-  "exceptions": {
-    "localeIsUsed": "Локаль используется и не может быть удалена."
-  }
+    "fields": {
+        "timeZone": "Часовой пояс",
+        "dateFormat": "Формат даты",
+        "weekStart": "Первый день недели",
+        "timeFormat": "Формат времени",
+        "thousandSeparator": "Тысячный разделитель",
+        "decimalMark": "Десятичный разделитель",
+        "languageCode": "Код языка",
+        "fallbackLanguageCode": "Код запасного языка",
+        "displayLabelsInContentLanguage": "Отображение меток на языке контента",
+        "disableForUi": "Отключить для интерфейса"
+    },
+    "labels": {
+        "sunday": "Воскресенье",
+        "monday": "Понедельник"
+    },
+    "exceptions": {
+        "localeIsUsed": "Локаль используется и не может быть удалена."
+    },
+    "tooltips": {
+        "disableForUi": "Если включено, эта локаль не будет отображаться в переключателе локалей на панели инструментов и в раскрывающемся списке профиля пользователя. Она останется доступной для настройки ленты экспорта, Канала и ленты импорта."
+    }
 }

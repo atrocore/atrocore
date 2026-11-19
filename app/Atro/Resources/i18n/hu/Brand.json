@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "products": "Termékek",
+        "description": "Leírás",
+        "isActive": "Aktív",
+        "code": "Kód"
+    },
+    "exceptions": {
+        "brandWithSuchCodeAlreadyExist": "Már létezik ilyen kódú márka."
+    }
+}

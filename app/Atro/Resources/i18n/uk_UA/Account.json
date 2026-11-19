@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "name": "Назва",
-    "emailAddress": "Адреса ел. пошти",
-    "phoneNumber": "Телефон",
-    "description": "Опис",
-    "type": "Тип",
-    "role": "Роль",
-    "number": "Номер",
-    "language": "Мова",
-    "addresses": "Адреси",
-    "contacts": "Контакти"
-  },
-  "options": {
-    "type": {
-      "individual": "Фізична особа",
-      "company": "Компанія"
+    "fields": {
+        "name": "Назва",
+        "emailAddress": "Адреса ел. пошти",
+        "phoneNumber": "Телефон",
+        "description": "Опис",
+        "type": "Тип",
+        "role": "Роль",
+        "number": "Номер",
+        "language": "Мова",
+        "addresses": "Адреси",
+        "contacts": "Контакти",
+        "vatId": "Ідентифікатор платника ПДВ",
+        "webUrl": "URL вебсайту"
     },
-    "role": {
-      "supplier": "Постачальник",
-      "customer": "Клієнт"
+    "options": {
+        "type": {
+            "individual": "Фізична особа",
+            "company": "Компанія"
+        },
+        "role": {
+            "supplier": "Постачальник",
+            "customer": "Клієнт"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "Адреса за замовчуванням для облікового запису вже існує."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "Адреса за замовчуванням для облікового запису вже існує."
-  }
 }

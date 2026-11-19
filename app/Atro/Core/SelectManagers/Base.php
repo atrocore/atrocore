@@ -774,6 +774,41 @@ class Base
         return $this->getMetadata()->getEventManager()->dispatch($scope, $action, $event);
     }
 
+    protected function prepareSortBy(array &$params, bool $withAcl = false): void
+    {
+        if (empty($params['sortBy']) || !$withAcl) {
+            return;
+        }
+
+        $sortBy = $params['sortBy'];
+        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType());
+
+        $isExists = false;
+        if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy])) {
+            $isExists = true;
+        } elseif (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute']))) {
+            if (!isset($this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy])) {
+                // attribute fields are sorted by "{name}", "{name}Unit", "{name}From" or "{name}To"
+                $ids = array_values(array_unique([$sortBy, preg_replace('/(Unit|From|To)$/', '', $sortBy)]));
+
+                $this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy] = $this
+                    ->getEntityManager()
+                    ->getRepository('Attribute')
+                    ->select(['id'])
+                    ->where(['OR' => ['systemName' => $ids, 'id' => $ids], 'entityId' => $this->getEntityType()])
+                    ->findOne() !== null;
+            }
+            $isExists = $this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy];
+        }
+
+        if ($isExists && !in_array($sortBy, $forbiddenAttributeList)) {
+            return;
+        }
+
+        $defaultSortBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy'], 'id');
+        $params['sortBy'] = !in_array($defaultSortBy, $forbiddenAttributeList) ? $defaultSortBy : 'id';
+    }
+
     public function getSelectParams(array $params, bool $withAcl = false, bool $checkWherePermission = false): array
     {
         $params = $this
@@ -781,6 +816,7 @@ class Base
             ->getArgument('params');
 
         $this->prepareActionExecutionFilter($params);
+        $this->prepareSortBy($params, $withAcl);
 
         $this->selectParameters = $params;
 
@@ -1829,6 +1865,12 @@ class Base
         $type      = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']);
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType(), 'read');
+        if (!empty($forbiddenFieldList)) {
+            $fieldList = array_values(array_filter($fieldList, function ($field) use ($forbiddenFieldList) {
+                return $field === 'id' || !in_array($field, $forbiddenFieldList);
+            }));
+        }
         $group     = [];
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);

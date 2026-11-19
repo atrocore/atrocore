@@ -1,43 +1,44 @@
 {
-  "fields": {
-    "width": "Ancho (%)",
-    "widthPx": "Ancho (px)",
-    "link": "Enlace",
-    "notSortable": "No ordenable",
-    "align": "Alinear",
-    "panelName": "Nombre del Panel",
-    "style": "Estilo",
-    "sticked": "Pegado",
-    "isLarge": "Large font size",
-    "cssStyle": "CSS Styles",
-    "hiddenPerDefault": "Oculto por defecto"
-  },
-  "options": {
-    "align": {
-      "left": "Izquierda",
-      "right": "Derecha",
-      "center": "Centro"
+    "fields": {
+        "width": "Ancho (%)",
+        "widthPx": "Ancho (px)",
+        "link": "Enlace",
+        "notSortable": "No ordenable",
+        "align": "Alinear",
+        "panelName": "Nombre del Panel",
+        "style": "Estilo",
+        "sticked": "Pegado",
+        "isLarge": "Large font size",
+        "cssStyle": "CSS Styles",
+        "hiddenPerDefault": "Oculto por defecto",
+        "label": "Etiqueta"
     },
-    "style": {
-      "default": "Borrador",
-      "success": "Exito",
-      "danger": "Peligro",
-      "info": "Información",
-      "warning": "Advertencia",
-      "primary": "Principal"
+    "options": {
+        "align": {
+            "left": "Izquierda",
+            "right": "Derecha",
+            "center": "Centro"
+        },
+        "style": {
+            "default": "Borrador",
+            "success": "Exito",
+            "danger": "Peligro",
+            "info": "Información",
+            "warning": "Advertencia",
+            "primary": "Principal"
+        }
+    },
+    "labels": {
+        "New panel": "Nuevo panel",
+        "Layout": "Diseño",
+        "layoutManagement": "Gestión de la disposición",
+        "reset": "Restablecer disposición",
+        "fullEdit": "Edición completa",
+        "resetToSystem": "Restablecer la disposición del sistema",
+        "layoutSelection": "Selección del diseño",
+        "layoutCustomization": "Personalización del diseño",
+        "configure": "Configure",
+        "Current Layout": "Disposición actual",
+        "Add Dynamic Fields": "Añadir campos dinámicos"
     }
-  },
-  "labels": {
-    "New panel": "Nuevo panel",
-    "Layout": "Diseño",
-    "layoutManagement": "Gestión de la disposición",
-    "reset": "Restablecer disposición",
-    "fullEdit": "Edición completa",
-    "resetToSystem": "Restablecer la disposición del sistema",
-    "layoutSelection": "Selección del diseño",
-    "layoutCustomization": "Personalización del diseño",
-    "configure": "Configure",
-    "Current Layout": "Disposición actual",
-    "Add Dynamic Fields": "Añadir campos dinámicos"
-  }
 }

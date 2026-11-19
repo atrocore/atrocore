@@ -1,26 +1,34 @@
 {
-  "fields": {
-    "minimumScore": "Minimální skóre, %",
-    "entity": "Entita",
-    "masterEntity": "Hlavní subjekt",
-    "matchingRules": "Pravidla porovnávání",
-    "matchedRecords": "Shodné záznamy",
-    "matchedRecordsMax": "Maximální počet odpovídajících záznamů"
-  },
-  "options": {
-    "type": {
-      "masterRecord": "Kontributor - Master",
-      "duplicate": "Duplikát - Duplikát"
+    "fields": {
+        "minimumScore": "Minimální skóre, %",
+        "entity": "Entita",
+        "masterEntity": "Hlavní subjekt",
+        "matchingRules": "Pravidla porovnávání",
+        "matchedRecords": "Shodné záznamy",
+        "matchedRecordsMax": "Maximální počet odpovídajících záznamů",
+        "blockingRules": "Blokovací pravidla",
+        "blockingOperator": "Blokovací operátor"
+    },
+    "options": {
+        "type": {
+            "masterRecord": "Kontributor - Master",
+            "duplicate": "Duplikát - Duplikát"
+        },
+        "blockingOperator": {
+            "or": "NEBO",
+            "and": "A"
+        }
+    },
+    "labels": {
+        "configureMatching": "Konfigurace přiřazování"
+    },
+    "tooltips": {
+        "matchedRecordsMax": "Pokud počet odpovídajících záznamů pro některý záznam překročí tuto hodnotu, bude přiřazování deaktivováno. Chcete-li povolit neomezený počet přiřazených záznamů, ponechte toto pole prázdné. ",
+        "blockingOperator": "Způsob, jakým se kombinují blokovací pravidla nejvyšší úrovně při výběru kandidátů. Při použití operátoru A pravidlo, jehož hodnota je v záznamu prázdná, nic nenajde, takže záznam nemá žádné kandidáty."
+    },
+    "exceptions": {
+        "noRules": "Aktivace je blokována. Pro toto přiřazení nebyla definována žádná pravidla.",
+        "masterRecordEntityInvalid": "Entitu %s nelze použít pro přiřazování typu Hlavní záznam. Povolena je pouze odvozená entita s rolí Staging.",
+        "noBlockingRules": "Aktivace je blokována. Pro toto přiřazování nebyla definována žádná blokovací pravidla."
     }
-  },
-  "labels": {
-    "configureMatching": "Konfigurace přiřazování"
-  },
-  "tooltips": {
-    "matchedRecordsMax": "Pokud počet odpovídajících záznamů pro některý záznam překročí tuto hodnotu, bude přiřazování deaktivováno. Chcete-li povolit neomezený počet přiřazených záznamů, ponechte toto pole prázdné. "
-  },
-  "exceptions": {
-    "noRules": "Aktivace je blokována. Pro toto přiřazení nebyla definována žádná pravidla.",
-    "masterRecordEntityInvalid": "Entitu %s nelze použít pro přiřazování typu Hlavní záznam. Povolena je pouze odvozená entita s rolí Staging."
-  }
 }

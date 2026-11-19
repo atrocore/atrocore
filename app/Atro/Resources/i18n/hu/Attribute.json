@@ -1,0 +1,122 @@
+{
+    "fields": {
+        "entity": "Entitás",
+        "compositeAttribute": "Összetett attribútum",
+        "nestedAttributes": "Beágyazott attribútumok",
+        "attributeGroup": "Attribútumcsoport",
+        "attributePanel": "Attribútumpanel",
+        "systemName": "Rendszernév",
+        "products": "Termékek",
+        "isMultilang": "Többnyelvű",
+        "fileType": "Fájltípus",
+        "pattern": "Regexminta",
+        "measure": "Mérték",
+        "defaultUnit": "Alapértelmezett mértékegység",
+        "prefixEnabled": "Előtag engedélyezése",
+        "defaultDate": "Alapértelmezett dátum",
+        "isRequired": "Kötelező",
+        "isReadOnly": "Csak olvasható",
+        "isProtected": "Védett",
+        "allowNullForBool": "Null érték engedélyezése",
+        "tooltip": "Eszköztipp",
+        "maxLength": "Maximális hossz",
+        "countBytesInsteadOfCharacters": "Bájtok számolása karakterek helyett",
+        "useDisabledTextareaInViewMode": "Letiltott szövegterület használata megtekintési módban",
+        "amountOfDigitsAfterComma": "Tizedesjegyek száma",
+        "description": "Leírás",
+        "classifications": "Osztályozások",
+        "min": "Minimum",
+        "max": "Maximum",
+        "notNull": "Null érték letiltása",
+        "trim": "Vezető és záró szóközök eltávolítása",
+        "classificationAttributes": "Osztályozási attribútumok",
+        "preparedName": "Név",
+        "htmlSanitizer": "HTML-tisztító",
+        "fullWidth": "Teljes szélesség",
+        "channel": "Csatorna",
+        "attributeGroupSortOrder": "Rendezési sorrend az attribútumcsoportban",
+        "conditionalRequired": "Kötelező",
+        "conditionalVisible": "Látható",
+        "conditionalReadOnly": "Csak olvasható",
+        "conditionalProtected": "Védett",
+        "conditionalDisableOptions": "Letiltott beállítások",
+        "modifiedExtendedDisabled": "Módosításként való rögzítés nélkül",
+        "duplicateIgnore": "Nem duplikálható",
+        "entityType": "Kapcsolt entitás",
+        "entityField": "Entitásmező",
+        "selectPageSize": "Rekordok oldalanként (kiválasztási párbeszédablak)",
+        "options": "Opciók"
+    },
+    "labels": {
+        "Classification": "Osztályozás",
+        "addNewValue": "Új érték hozzáadása",
+        "conditionalProperties": "Feltételes tulajdonságok",
+        "viewRecordsWithAttribute": "Az ezzel az attribútummal rendelkező rekordok"
+    },
+    "options": {
+        "type": {
+            "array": "Tömb",
+            "bool": "Logikai",
+            "composite": "Összetett",
+            "date": "Dátum",
+            "datetime": "Dátum-idő",
+            "float": "Lebegőpontos szám",
+            "int": "Egész szám",
+            "enum": "Lista",
+            "multiEnum": "Többértékű lista",
+            "text": "Szöveg",
+            "markdown": "Markdown",
+            "url": "URL",
+            "varchar": "Karakterlánc",
+            "wysiwyg": "HTML",
+            "rangeInt": "Egész szám tartomány",
+            "rangeFloat": "Lebegőpontos tartomány",
+            "file": "Fájl",
+            "link": "Hivatkozás",
+            "linkMultiple": "Többszörös hivatkozás"
+        }
+    },
+    "messages": {
+        "sameNumberOptions": "Ugyanannyi beállítást kell megadnia",
+        "productsCountWithAttribute": "Azon termékek száma, amelyeknél ez az attribútum be van állítva: <strong>{count}</strong>",
+        "removeAttribute(s)": "Az attribútum(ok) összes értéke is törlődik. Valóban törölni kívánja ezt/ezeket az attribútum(oka)t?"
+    },
+    "filterLabels": {
+        "All": "Összes"
+    },
+    "boolFilters": {
+        "notLinkedWithAnyRecord": "Nincs egyetlen rekordhoz sem kapcsolva"
+    },
+    "tooltips": {
+        "pattern": "Csak nagybetűk engedélyezéséhez, legfeljebb 10 karakteres hosszúsággal használja ezt: \"^[A-Z]{1,10}$\"",
+        "defaultDate": "Attribútumérték-módosító (pl. +5 nap, -3 hónap)",
+        "dropdown": "Ne használja a legördülő listát, ha a lista több mint 300 lehetőséget tartalmaz.",
+        "selectPageSize": "A kiválasztási párbeszédablakban oldalanként megjelenített rekordok száma. Ne állítson be túl magas értéket, mert az lelassíthatja vagy lefagyaszthatja a böngészőt."
+    },
+    "exceptions": {
+        "entityNotAllowToChoose": "Az Entitás nem választható ki.",
+        "wrongAttributeEntity": "A kiválasztott entitás nem engedélyezett. Az entitásnak meg kell egyeznie az Attribútumpanel és az Attribútumcsoport entitásával.",
+        "attributeEntityMustBeSameAsInCompositeAttribute": "Az Attribútum entitásának meg kell egyeznie az összetett attribútum entitásával.",
+        "attributeNotBelongToEntity": "Az attribútum nem tartozik ehhez az entitáshoz.",
+        "entityCannotBeChanged": "Az Entitás nem módosítható.",
+        "compositeAttributeNotFound": "Összetett attribútum nem található.",
+        "compositeAttributeCannotBeChild": "Az összetett attribútum nem lehet gyermek.",
+        "fileTypeCannotBeDeleted": "A rekord nem törölhető, mert használatban van a(z) „%s” attribútumban.",
+        "maxLessThanMin": "A minimumnak kisebbnek kell lennie a maximumnál.",
+        "noAttributeConverterFound": "Az attribútum átalakítása nem lehetséges: forrástípus: „%s”, céltípus: „%s”.",
+        "attributeValueIsInUse": "Az attribútumérték használatban van, ezért nem törölhető.",
+        "youCantChangeFieldOfTypeInAttribute": "Az Attribútum típusa nem módosítható.",
+        "attributeWithSuchCodeAlreadyExist": "Az ilyen kódú attribútum már létezik.",
+        "attributeIsUsedInProducts": "Az attribútum használatban van a termékekben. Először frissítse a termékeket.",
+        "attributeIsUsedInClassifications": "Az attribútum osztályozásokban használatos. Kérjük, először frissítse az osztályozásokat.",
+        "invalidType": "A(z) {type} attribútumtípus érvénytelen",
+        "attributeTypeCannotBeChanged": "Az attribútum típusa nem módosítható."
+    },
+    "subtypeGroups": {
+        "character": "Karakter",
+        "numeric": "Numerikus",
+        "date": "Dátum / idő",
+        "reference": "Hivatkozás",
+        "other": "Egyéb"
+    }
+}

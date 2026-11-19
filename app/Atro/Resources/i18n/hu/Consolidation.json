@@ -1,0 +1,35 @@
+{
+    "labels": {
+        "sourceEntities": "Forrásból előkészítési területre irányuló adatfolyamok"
+    },
+    "fields": {
+        "consolidationScript": "Konszolidációs szkript",
+        "updateMasterAutomatically": "Mesterrekord automatikus frissítése",
+        "minimumMatchingScore": "Minimális egyezési pontszám",
+        "consolidateAutomatically": "Automatikus konszolidáció",
+        "deleteInvalidMastersAutomatically": "Érvénytelen mesterrekordok automatikus törlése",
+        "executeConsolidationAs": "Konszolidáció végrehajtása ezzel a felhasználóval",
+        "skipCondition": "Kihagyási feltétel"
+    },
+    "tooltips": {
+        "name": "Csak azok a mesterentitások választhatók ki, amelyekhez már tartozik Közreműködő szerepkörű származtatott entitás.",
+        "consolidationScript": "Állítsa be, hogyan történjen a forrásadatok átalakítása, egyesítése és leképezése a mesterrekordra. A szkriptnek JSON-objektumot kell visszaadnia a mesterrekord mezőértékeivel.",
+        "executeConsolidationAs": "A konszolidációs szkript végrehajtásához használt felhasználói fiók.",
+        "skipCondition": "Minden jelölt esetén kiértékelt ExpressionLanguage-kifejezés, amely hozzáfér a `candidate` és a `masterRecord` értékéhez (utóbbi üres, amíg a mesterrekord még nem jött létre). Azok a jelöltek, amelyekre az eredmény true, kimaradnak a konszolidációs szkript `candidates` listájából. Ha nem marad jelölt, a mesterrekord nem jön létre és nem is frissül – például: candidate.get('name') == null."
+    },
+    "options": {
+        "executeConsolidationAs": {
+            "system": "Rendszer",
+            "sameUser": "Ugyanaz a felhasználó"
+        }
+    },
+    "exceptions": {
+        "consolidationScriptIsMissing": "Hiányzik a konszolidációs szkript a mesterentitáshoz",
+        "consolidationScriptIsNotValid": "A konszolidációs szkript érvénytelen adatcsomagot adott vissza: %s",
+        "consolidationScriptReturnedNoValues": "A konszolidációs szkript nem adott vissza értékeket",
+        "entityTypeInvalid": "A(z) „%s” entitástípus nem használható konszolidációra",
+        "consolidationAlreadyExists": "A(z) „%s” elemhez tartozó konszolidáció már létezik",
+        "skipConditionFailed": "A kihagyási feltétel nem teljesült: %s",
+        "allCandidatesSkipped": "A kihagyási feltétel miatt minden jelölt kimarad; nincs mit konszolidálni"
+    }
+}

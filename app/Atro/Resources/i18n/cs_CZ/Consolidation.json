@@ -1,29 +1,35 @@
 {
-  "labels": {
-    "sourceEntities": "Pipeline zdroj-staging"
-  },
-  "fields": {
-    "consolidationScript": "Konsolidační skript",
-    "updateMasterAutomatically": "Automatická aktualizace předlohy",
-    "minimumMatchingScore": "Minimální skóre shody",
-    "executeConsolidationAs": "Provést sloučení jako",
-    "deleteInvalidMastersAutomatically": "Automaticky mazat neplatné hlavní záznamy"
-  },
-  "tooltips": {
-    "name": "Lze vybrat pouze tu hlavní entitu, pro kterou již existuje odvozenina s rolí „Přispěvatel“.",
-    "consolidationScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu.",
-    "executeConsolidationAs": "Uživatelský účet, který bude použit ke spuštění konsolidačního skriptu."
-  },
-  "exceptions": {
-    "consolidationScriptIsMissing": "Chybí konsolidační skript pro hlavní entitu",
-    "consolidationScriptIsNotValid": "Konsolidační skript vrací neplatné užitečné zatížení: %s",
-    "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro konsolidaci",
-    "consolidationAlreadyExists": "Konsolidace pro \"%s\" již existuje"
-  },
-  "options": {
-    "executeConsolidationAs": {
-      "sameUser": "Stejný uživatel",
-      "system": "Systém"
+    "labels": {
+        "sourceEntities": "Pipeline zdroj-staging"
+    },
+    "fields": {
+        "consolidationScript": "Konsolidační skript",
+        "updateMasterAutomatically": "Automatická aktualizace předlohy",
+        "minimumMatchingScore": "Minimální skóre shody",
+        "executeConsolidationAs": "Provést sloučení jako",
+        "deleteInvalidMastersAutomatically": "Automaticky mazat neplatné hlavní záznamy",
+        "consolidateAutomatically": "Automatická konsolidace",
+        "skipCondition": "Podmínka přeskočení"
+    },
+    "tooltips": {
+        "name": "Lze vybrat pouze tu hlavní entitu, pro kterou již existuje odvozenina s rolí „Přispěvatel“.",
+        "consolidationScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu.",
+        "executeConsolidationAs": "Uživatelský účet, který bude použit ke spuštění konsolidačního skriptu.",
+        "skipCondition": "Výraz ExpressionLanguage vyhodnocovaný pro každého kandidáta s přístupem k `candidate` a `masterRecord` (prázdné, dokud není vytvořen hlavní záznam). Kandidáti, pro které vrátí hodnotu true, jsou vyloučeni z `candidates` konsolidačního skriptu. Pokud nezůstanou žádní kandidáti, hlavní záznam se nevytvoří ani neaktualizuje – např. candidate.get('name') == null."
+    },
+    "exceptions": {
+        "consolidationScriptIsMissing": "Chybí konsolidační skript pro hlavní entitu",
+        "consolidationScriptIsNotValid": "Konsolidační skript vrací neplatné užitečné zatížení: %s",
+        "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro konsolidaci",
+        "consolidationAlreadyExists": "Konsolidace pro \"%s\" již existuje",
+        "consolidationScriptReturnedNoValues": "Konsolidační skript nevrátil žádné hodnoty",
+        "skipConditionFailed": "Vyhodnocení podmínky přeskočení selhalo: %s",
+        "allCandidatesSkipped": "Všichni kandidáti byli přeskočeni na základě podmínky přeskočení, není co konsolidovat"
+    },
+    "options": {
+        "executeConsolidationAs": {
+            "sameUser": "Stejný uživatel",
+            "system": "Systém"
+        }
     }
-  }
 }

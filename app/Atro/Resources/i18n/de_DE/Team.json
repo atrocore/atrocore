@@ -1,11 +1,14 @@
 {
-  "fields": {
-    "roles": "Rollen",
-    "users": "Benutzer",
-    "notes": "Notizen",
-    "name": "Name"
-  },
-  "tooltips": {
-    "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen."
-  }
+    "fields": {
+        "roles": "Rollen",
+        "users": "Benutzer",
+        "notes": "Notizen",
+        "name": "Name",
+        "languageRestricted": "Sprachbeschränkung",
+        "languages": "Sprachen"
+    },
+    "tooltips": {
+        "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
+        "languageRestricted": "Wenn aktiviert, sind für Benutzer dieses Teams nur ausdrücklich aufgeführte Sprachen zugänglich. Wenn deaktiviert, wird keine Sprachfilterung angewendet."
+    }
 }

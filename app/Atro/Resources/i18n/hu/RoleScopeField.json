@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "name": "Mező",
+        "roleScope": "Hatókör",
+        "readAction": "Olvasás",
+        "editAction": "Szerkesztés"
+    }
+}

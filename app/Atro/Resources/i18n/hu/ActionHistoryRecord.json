@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "user": "Felhasználó",
+        "action": "Művelet",
+        "createdAt": "Dátum",
+        "controllerName": "Vezérlő neve",
+        "ipAddress": "IP-cím",
+        "target": "Cél",
+        "targetName": "Cél neve",
+        "targetId": "Cél ID",
+        "data": "Adat",
+        "oauthClient": "OAuth-kliens"
+    },
+    "links": {
+        "oauthClient": "OAuth-kliens"
+    }
+}

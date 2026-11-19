@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "timeZone": "Strefa czasowa",
-    "dateFormat": "Format daty",
-    "weekStart": "Pierwszy dzień tygodnia",
-    "timeFormat": "Format czasu",
-    "thousandSeparator": "Separator tysięcy",
-    "decimalMark": "Znak dziesiętny",
-    "languageCode": "Kod języka",
-    "fallbackLanguageCode": "Kod języka rezerwowego",
-    "displayLabelsInContentLanguage": "Wyświetlanie etykiet w języku treści"
-  },
-  "labels": {
-    "sunday": "Niedziela",
-    "monday": "Poniedziałek"
-  },
-  "exceptions": {
-    "localeIsUsed": "Lokalizacja w użyciu nie może zostać usunięta."
-  }
+    "fields": {
+        "timeZone": "Strefa czasowa",
+        "dateFormat": "Format daty",
+        "weekStart": "Pierwszy dzień tygodnia",
+        "timeFormat": "Format czasu",
+        "thousandSeparator": "Separator tysięcy",
+        "decimalMark": "Znak dziesiętny",
+        "languageCode": "Kod języka",
+        "fallbackLanguageCode": "Kod języka rezerwowego",
+        "displayLabelsInContentLanguage": "Wyświetlanie etykiet w języku treści",
+        "disableForUi": "Wyłącz w interfejsie"
+    },
+    "labels": {
+        "sunday": "Niedziela",
+        "monday": "Poniedziałek"
+    },
+    "exceptions": {
+        "localeIsUsed": "Lokalizacja w użyciu nie może zostać usunięta."
+    },
+    "tooltips": {
+        "disableForUi": "Po włączeniu ten język nie będzie wyświetlany w przełączniku języka na pasku narzędzi ani w menu rozwijanym profilu użytkownika. Nadal będzie dostępny w konfiguracji kanałów eksportu, kanału i kanału importu."
+    }
 }

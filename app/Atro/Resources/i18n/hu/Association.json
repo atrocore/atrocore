@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "description": "Leírás",
+        "isActive": "Aktív",
+        "reverseAssociation": "Fordított kapcsolat",
+        "code": "Kód",
+        "default": "Alapértelmezett érték"
+    },
+    "exceptions": {
+        "associationIsLinkedWithRecords": "A társítás rekordokhoz kapcsolódik. Kérjük, először válassza le a rekordokat",
+        "youCanNotDeactivateAssociationWithActiveRecords": "Aktív rekordok mellett nem deaktiválhatja a társítást"
+    }
+}

@@ -1,13 +1,17 @@
 {
-  "fields": {
-    "user": "Користувач",
-    "action": "Дія",
-    "createdAt": "Дата",
-    "target": "Ціль",
-    "ipAddress": "IP адреса",
-    "controllerName": "Ім'я контролера Ім'я контролера",
-    "targetName": "Назва цілі",
-    "targetId": "Ідентифікатор цілі",
-    "data": "Дані"
-  }
+    "fields": {
+        "user": "Користувач",
+        "action": "Дія",
+        "createdAt": "Дата",
+        "target": "Ціль",
+        "ipAddress": "IP адреса",
+        "controllerName": "Ім'я контролера Ім'я контролера",
+        "targetName": "Назва цілі",
+        "targetId": "Ідентифікатор цілі",
+        "data": "Дані",
+        "oauthClient": "OAuth-клієнт"
+    },
+    "links": {
+        "oauthClient": "Клієнт OAuth"
+    }
 }

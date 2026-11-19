@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "width": "Szélesség (%)",
+        "widthPx": "Szélesség (px)",
+        "link": "Hivatkozás",
+        "notSortable": "Nem rendezhető",
+        "align": "Igazítás",
+        "panelName": "Panel neve",
+        "style": "Stílus",
+        "sticked": "Rögzített",
+        "isLarge": "Nagy betűméret",
+        "cssStyle": "CSS-stílusok",
+        "hiddenPerDefault": "Alapértelmezés szerint rejtett",
+        "label": "Címke"
+    },
+    "options": {
+        "align": {
+            "left": "Balra",
+            "right": "Jobbra",
+            "center": "Középre"
+        },
+        "style": {
+            "default": "Alapértelmezett",
+            "success": "Siker",
+            "danger": "Veszély",
+            "info": "Információ",
+            "warning": "Figyelmeztetés",
+            "primary": "Elsődleges"
+        }
+    },
+    "labels": {
+        "New panel": "Új panel",
+        "Layout": "Elrendezés",
+        "Current Layout": "Jelenlegi elrendezés",
+        "Add Dynamic Fields": "Dinamikus mezők hozzáadása",
+        "reset": "Elrendezés visszaállítása",
+        "fullEdit": "Teljes szerkesztés",
+        "resetToSystem": "Rendszerelrendezés visszaállítása",
+        "layoutManagement": "Elrendezés kezelése",
+        "layoutSelection": "Elrendezés kiválasztása",
+        "layoutCustomization": "Elrendezés testreszabása",
+        "configure": "Konfigurálás"
+    }
+}

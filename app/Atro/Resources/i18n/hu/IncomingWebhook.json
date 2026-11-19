@@ -1,0 +1,6 @@
+{
+    "exceptions": {
+        "invalidIP": "Érvénytelen IP-cím: %s",
+        "invalidCode": "Az ellenőrzés nem sikerült: a kód csak betűket, számokat, aláhúzásjeleket vagy kötőjeleket tartalmazhat."
+    }
+}

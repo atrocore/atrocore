@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "name": "Nombre",
-    "emailAddress": "Correo electrónico",
-    "phoneNumber": "Teléfono",
-    "description": "Descripción",
-    "type": "Tipo",
-    "role": "papel",
-    "addresses": "Direcciones",
-    "contacts": "Contactos",
-    "number": "Número",
-    "language": "Languages"
-  },
-  "options": {
-    "type": {
-      "individual": "individual",
-      "company": "Compañía"
+    "fields": {
+        "name": "Nombre",
+        "emailAddress": "Correo electrónico",
+        "phoneNumber": "Teléfono",
+        "description": "Descripción",
+        "type": "Tipo",
+        "role": "papel",
+        "addresses": "Direcciones",
+        "contacts": "Contactos",
+        "number": "Número",
+        "language": "Languages",
+        "vatId": "ID de IVA",
+        "webUrl": "URL del sitio web"
     },
-    "role": {
-      "supplier": "Proveedor",
-      "customer": "Cliente"
+    "options": {
+        "type": {
+            "individual": "individual",
+            "company": "Compañía"
+        },
+        "role": {
+            "supplier": "Proveedor",
+            "customer": "Cliente"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "La dirección predeterminada para la Cuenta ya existe."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "La dirección predeterminada para la Cuenta ya existe."
-  }
 }

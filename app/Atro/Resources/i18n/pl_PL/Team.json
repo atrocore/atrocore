@@ -1,11 +1,14 @@
 {
-  "fields": {
-    "name": "Nazwa",
-    "roles": "Role",
-    "users": "Użytkownicy",
-    "notes": "Notatki"
-  },
-  "tooltips": {
-    "roles": "Role dostępu. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról."
-  }
+    "fields": {
+        "name": "Nazwa",
+        "roles": "Role",
+        "users": "Użytkownicy",
+        "notes": "Notatki",
+        "languageRestricted": "Ograniczenie języków",
+        "languages": "Języki"
+    },
+    "tooltips": {
+        "roles": "Role dostępu. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról.",
+        "languageRestricted": "Po włączeniu użytkownicy tego zespołu mają dostęp tylko do jawnie wymienionych języków. Po wyłączeniu filtrowanie języków nie jest stosowane."
+    }
 }

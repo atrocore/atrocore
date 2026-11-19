@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "matchSubject": "Egyezési alany",
+        "matchSubjectEntity": "Egyezési alany entitása",
+        "matchSubjectEntityId": "Egyezési alany entitásazonosítója",
+        "matchCandidate": "Egyezési jelölt",
+        "matchCandidateEntity": "Egyezési jelölt entitása",
+        "matchCandidateEntityId": "Egyezési jelölt entitásazonosítója",
+        "score": "Pontszám",
+        "hash": "Egyedi hash",
+        "hasCluster": "Van klasztere",
+        "clusterItems": "Klaszterelemek"
+    },
+    "options": {
+        "type": {
+            "duplicate": "Duplikátum",
+            "masterRecord": "Mesterrekord"
+        }
+    }
+}

@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "emailAddress": "E-Mail",
-    "phoneNumber": "Telefon",
-    "description": "Beschreibung",
-    "type": "Typ",
-    "role": "Rolle",
-    "number": "Nummer",
-    "language": "Sprache",
-    "addresses": "Adressen",
-    "contacts": "Kontakte",
-    "name": "Name"
-  },
-  "options": {
-    "type": {
-      "individual": "Person",
-      "company": "Unternehmen"
+    "fields": {
+        "emailAddress": "E-Mail",
+        "phoneNumber": "Telefon",
+        "description": "Beschreibung",
+        "type": "Typ",
+        "role": "Rolle",
+        "number": "Nummer",
+        "language": "Sprache",
+        "addresses": "Adressen",
+        "contacts": "Kontakte",
+        "name": "Name",
+        "vatId": "USt-IdNr.",
+        "webUrl": "Web-URL"
     },
-    "role": {
-      "supplier": "Lieferant",
-      "customer": "Kunde"
+    "options": {
+        "type": {
+            "individual": "Person",
+            "company": "Unternehmen"
+        },
+        "role": {
+            "supplier": "Lieferant",
+            "customer": "Kunde"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "Die Standardadresse für das Konto ist bereits vorhanden."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "Die Standardadresse für das Konto ist bereits vorhanden."
-  }
 }

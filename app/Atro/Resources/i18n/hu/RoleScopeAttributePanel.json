@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "attributePanel": "Attribútumpanel",
+        "roleScope": "Hatókör",
+        "readAction": "Olvasás",
+        "editAction": "Szerkesztés"
+    }
+}

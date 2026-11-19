@@ -1,28 +1,52 @@
 {
-  "fields": {
-    "entityName": "Nazwa podmiotu",
-    "entityId": "Identyfikator podmiotu",
-    "record": "Rekord",
-    "cluster": "Klaster",
-    "matchedRecord": "Dopasowany rekord",
-    "matchedScore": "Dopasowany wynik"
-  },
-  "exceptions": {
-    "notFound": "Nie znaleziono rekordu elementu klastra",
-    "cannotReject": "Ten element klastra nie może zostać odrzucony",
-    "cannotUnreject": "Ten element klastra nie może zostać odrzucony",
-    "idOrIdListOrWhereRequired": "Podaj co najmniej jedno z następujących: identyfikator, listę identyfikatorów lub filtr wyszukiwania."
-  },
-  "massActions": {
-    "reject": "Odrzuć"
-  },
-  "massActionSuccessMessages": {
-    "reject": "Wybrane elementy klastra są usuwane w tle"
-  },
-  "massActionConfirmMessages": {
-    "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
-  },
-  "actions": {
-    "reject": "Proszę odrzucić"
-  }
+    "fields": {
+        "entityName": "Nazwa podmiotu",
+        "entityId": "Identyfikator podmiotu",
+        "record": "Rekord",
+        "cluster": "Klaster",
+        "matchedRecord": "Dopasowany rekord",
+        "matchedScore": "Dopasowany wynik",
+        "confirmedAutomatically": "Potwierdzono automatycznie"
+    },
+    "exceptions": {
+        "notFound": "Nie znaleziono rekordu elementu klastra",
+        "cannotUnreject": "Ten element klastra nie może zostać odrzucony",
+        "idOrIdListOrWhereRequired": "Podaj co najmniej jedno z następujących: identyfikator, listę identyfikatorów lub filtr wyszukiwania.",
+        "itemsMustBelongToTheSameCluster": "Wszystkie wybrane elementy muszą należeć do tego samego klastra.",
+        "cannotDeconsolidateMasterEntityItem": "Nie można dekonsolidować elementu encji głównej.",
+        "cannotDeconsolidateAllItems": "Nie można dekonsolidować wszystkich skonsolidowanych elementów: co najmniej jeden element musi pozostać połączony ze złotym rekordem.",
+        "cannotSplitMasterEntityItem": "Nie można podzielić elementu encji głównej.",
+        "targetClusterIdRequired": "Klaster docelowy jest wymagany."
+    },
+    "massActions": {
+        "reject": "Odrzuć",
+        "deconsolidate": "Dekonsoliduj",
+        "split": "Podziel",
+        "move": "Przenieś",
+        "consolidate": "Konsoliduj"
+    },
+    "massActionSuccessMessages": {
+        "reject": "Wybrane elementy klastra są usuwane w tle",
+        "deconsolidate": "Wybrane elementy klastra zostały zdekonolidowane",
+        "split": "Wybrane elementy klastra zostały przeniesione do nowego klastra",
+        "move": "Wybrane elementy klastra zostały przeniesione",
+        "consolidate": "Wybrane elementy klastra zostały skonsolidowane"
+    },
+    "massActionConfirmMessages": {
+        "reject": "Czy na pewno chcesz odrzucić wybrane elementy?",
+        "deconsolidate": "Czy na pewno chcesz zdekonolidować wybrane elementy?",
+        "split": "Czy na pewno chcesz przenieść wybrane elementy do nowego klastra?"
+    },
+    "actions": {
+        "reject": "Proszę odrzucić",
+        "consolidate": "Konsoliduj",
+        "deconsolidate": "Dekonsoliduj",
+        "split": "Podziel",
+        "move": "Przenieś"
+    },
+    "labels": {
+        "moveToCluster": "Przenieś do klastra",
+        "confirmedAutomatically": "Potwierdzono automatycznie",
+        "selectTargetCluster": "Wybierz klaster docelowy"
+    }
 }

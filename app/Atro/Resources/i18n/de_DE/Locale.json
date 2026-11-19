@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "languageCode": "Sprachcode",
-    "fallbackLanguageCode": "Fallback-Sprachcode",
-    "timeZone": "Zeitzone",
-    "dateFormat": "Datumsformat",
-    "weekStart": "Erster Tag der Woche",
-    "timeFormat": "Zeitformat",
-    "thousandSeparator": "Tausendertrennzeichen",
-    "decimalMark": "Dezimaltrennzeichen",
-    "displayLabelsInContentLanguage": "Beschriftungen in Inhaltssprache anzeigen"
-  },
-  "labels": {
-    "sunday": "Sonntag",
-    "monday": "Montag"
-  },
-  "exceptions": {
-    "localeIsUsed": "Verwendetes Gebietsschema kann nicht entfernt werden."
-  }
+    "fields": {
+        "languageCode": "Sprachcode",
+        "fallbackLanguageCode": "Fallback-Sprachcode",
+        "timeZone": "Zeitzone",
+        "dateFormat": "Datumsformat",
+        "weekStart": "Erster Tag der Woche",
+        "timeFormat": "Zeitformat",
+        "thousandSeparator": "Tausendertrennzeichen",
+        "decimalMark": "Dezimaltrennzeichen",
+        "displayLabelsInContentLanguage": "Beschriftungen in Inhaltssprache anzeigen",
+        "disableForUi": "Für Benutzeroberfläche deaktivieren"
+    },
+    "labels": {
+        "sunday": "Sonntag",
+        "monday": "Montag"
+    },
+    "exceptions": {
+        "localeIsUsed": "Verwendetes Gebietsschema kann nicht entfernt werden."
+    },
+    "tooltips": {
+        "disableForUi": "Wenn diese Option aktiviert ist, wird dieses Gebietsschema weder in der Gebietsschemaauswahl der Symbolleiste noch im Dropdown-Menü des Benutzerprofils angezeigt. Es bleibt für die Konfiguration von Export-Feed, Kanal und Import-Feed verfügbar."
+    }
 }

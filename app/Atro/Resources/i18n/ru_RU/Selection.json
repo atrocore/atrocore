@@ -1,32 +1,33 @@
 {
-  "fields": {
-    "name": "Название",
-    "description": "Описание",
-    "selectionItems": "Записи о выборе"
-  },
-  "options": {
-    "type": {
-      "single": "Униформа",
-      "multiple": "Смешанные"
+    "fields": {
+        "name": "Название",
+        "description": "Описание",
+        "selectionItems": "Записи о выборе"
+    },
+    "options": {
+        "type": {
+            "single": "Униформа",
+            "multiple": "Смешанные"
+        }
+    },
+    "messages": {
+        "cannotSetToSingle": "Вы не можете установить 'Uniform'",
+        "youNeedAtLeastTwoItem": "Вам нужно как минимум два предмета для сравнения.",
+        "entityIsRequired": "Поле 'Entity' является обязательным.",
+        "entityTypeMismatch": "Эта выборка принимает только записи типа «%s»."
+    },
+    "labels": {
+        "createSelection": "Создать выбор"
+    },
+    "customActions": {
+        "replaceItem": "Заменить предмет"
+    },
+    "streamMessages": {
+        "selectionLinked": "{user} связал {relatedEntity} с этой выборкой",
+        "selectionLinkedThis": "{user} связал {relatedEntity} с этой выборкой",
+        "selectionUnlinked": "{user} отвязал {relatedEntity} от этой выборки",
+        "selectionUnlinkedThis": "{user} отвязал {relatedEntity} от этой выборки",
+        "selectionDeleted": "{user} удалил {relatedEntity} из этой выборки",
+        "selectionDeletedThis": "{user} удалил эту выборку"
     }
-  },
-  "messages": {
-    "cannotSetToSingle": "Вы не можете установить 'Uniform'",
-    "youNeedAtLeastTwoItem": "Вам нужно как минимум два предмета для сравнения.",
-    "entityIsRequired": "Поле 'Entity' является обязательным."
-  },
-  "labels": {
-    "createSelection": "Создать выбор"
-  },
-  "customActions": {
-    "replaceItem": "Заменить предмет"
-  },
-  "streamMessages": {
-    "selectionLinked": "{user} связал {relatedEntity} с этой выборкой",
-    "selectionLinkedThis": "{user} связал {relatedEntity} с этой выборкой",
-    "selectionUnlinked": "{user} отвязал {relatedEntity} от этой выборки",
-    "selectionUnlinkedThis": "{user} отвязал {relatedEntity} от этой выборки",
-    "selectionDeleted": "{user} удалил {relatedEntity} из этой выборки",
-    "selectionDeletedThis": "{user} удалил эту выборку"
-  }
 }

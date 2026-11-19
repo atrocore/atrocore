@@ -1,26 +1,34 @@
 {
-  "fields": {
-    "entity": "Entità",
-    "minimumScore": "Punteggio minimo, in %.",
-    "masterEntity": "Entità master",
-    "matchingRules": "Regole di abbinamento",
-    "matchedRecords": "Record abbinati",
-    "matchedRecordsMax": "Numero massimo di record abbinati"
-  },
-  "options": {
-    "type": {
-      "duplicate": "Duplicato - Duplicato",
-      "masterRecord": "Contributore - Master"
+    "fields": {
+        "entity": "Entità",
+        "minimumScore": "Punteggio minimo, in %.",
+        "masterEntity": "Entità master",
+        "matchingRules": "Regole di abbinamento",
+        "matchedRecords": "Record abbinati",
+        "matchedRecordsMax": "Numero massimo di record abbinati",
+        "blockingRules": "Regole di blocco",
+        "blockingOperator": "Operatore di blocco"
+    },
+    "options": {
+        "type": {
+            "duplicate": "Duplicato - Duplicato",
+            "masterRecord": "Contributore - Master"
+        },
+        "blockingOperator": {
+            "or": "OR",
+            "and": "AND"
+        }
+    },
+    "labels": {
+        "configureMatching": "Configurare la corrispondenza"
+    },
+    "tooltips": {
+        "matchedRecordsMax": "Se il numero di record abbinati per qualsiasi record supera questo valore, l'abbinamento sarà disattivato. Lasci questo campo vuoto per consentire un numero illimitato di record abbinati. ",
+        "blockingOperator": "Modalità di combinazione delle regole di blocco di primo livello per selezionare i candidati. Con AND, una regola il cui valore è vuoto nel record non trova corrispondenze, quindi il record non ottiene candidati."
+    },
+    "exceptions": {
+        "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento.",
+        "masterRecordEntityInvalid": "L'entità %s non può essere utilizzata per un abbinamento di tipo Record principale. È consentita solo un'entità derivata con il ruolo Staging.",
+        "noBlockingRules": "L'attivazione è bloccata. Non sono state definite regole di blocco per questo abbinamento."
     }
-  },
-  "labels": {
-    "configureMatching": "Configurare la corrispondenza"
-  },
-  "tooltips": {
-    "matchedRecordsMax": "Se il numero di record abbinati per qualsiasi record supera questo valore, l'abbinamento sarà disattivato. Lasci questo campo vuoto per consentire un numero illimitato di record abbinati. "
-  },
-  "exceptions": {
-    "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento.",
-    "masterRecordEntityInvalid": "L'entità %s non può essere utilizzata per un abbinamento di tipo Record principale. È consentita solo un'entità derivata con il ruolo Staging."
-  }
 }

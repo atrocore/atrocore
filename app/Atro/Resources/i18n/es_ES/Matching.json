@@ -1,26 +1,34 @@
 {
-  "fields": {
-    "minimumScore": "Puntuación mínima, %",
-    "entity": "Entidad",
-    "masterEntity": "Entidad principal",
-    "matchingRules": "Reglas de concordancia",
-    "matchedRecords": "Registros coincidentes",
-    "matchedRecordsMax": "Número máximo de registros coincidentes"
-  },
-  "options": {
-    "type": {
-      "masterRecord": "Contribuidor - Maestro",
-      "duplicate": "Duplicado - Duplicado"
+    "fields": {
+        "minimumScore": "Puntuación mínima, %",
+        "entity": "Entidad",
+        "masterEntity": "Entidad principal",
+        "matchingRules": "Reglas de concordancia",
+        "matchedRecords": "Registros coincidentes",
+        "matchedRecordsMax": "Número máximo de registros coincidentes",
+        "blockingRules": "Reglas de bloqueo",
+        "blockingOperator": "Operador de bloqueo"
+    },
+    "options": {
+        "type": {
+            "masterRecord": "Contribuidor - Maestro",
+            "duplicate": "Duplicado - Duplicado"
+        },
+        "blockingOperator": {
+            "or": "O",
+            "and": "Y"
+        }
+    },
+    "labels": {
+        "configureMatching": "Configurar el emparejamiento"
+    },
+    "tooltips": {
+        "matchedRecordsMax": "Si el número de registros coincidentes para cualquier registro supera este valor, se desactivará la coincidencia. Deje este campo vacío para permitir un número ilimitado de registros coincidentes. ",
+        "blockingOperator": "Cómo se combinan las reglas de bloqueo de nivel superior para seleccionar candidatos. Con Y, una regla cuyo valor está vacío en el registro no coincide con nada, por lo que el registro no obtiene candidatos."
+    },
+    "exceptions": {
+        "noRules": "La activación está bloqueada. No se han definido reglas de concordancia para esta concordancia.",
+        "masterRecordEntityInvalid": "La entidad %s no se puede utilizar para una concordancia de tipo Registro maestro. Solo se permite una entidad derivada con el rol Staging.",
+        "noBlockingRules": "La activación está bloqueada. No se han definido reglas de bloqueo para esta concordancia."
     }
-  },
-  "labels": {
-    "configureMatching": "Configurar el emparejamiento"
-  },
-  "tooltips": {
-    "matchedRecordsMax": "Si el número de registros coincidentes para cualquier registro supera este valor, se desactivará la coincidencia. Deje este campo vacío para permitir un número ilimitado de registros coincidentes. "
-  },
-  "exceptions": {
-    "noRules": "La activación está bloqueada. No se han definido reglas de concordancia para esta concordancia.",
-    "masterRecordEntityInvalid": "La entidad %s no se puede utilizar para una concordancia de tipo Registro maestro. Solo se permite una entidad derivada con el rol Staging."
-  }
 }

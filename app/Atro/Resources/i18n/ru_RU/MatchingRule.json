@@ -1,42 +1,47 @@
 {
-  "fields": {
-    "matching": "Соответствие",
-    "weight": "Вес",
-    "matchingRuleSet": "Набор",
-    "matchingRules": "Правила подбора",
-    "operator": "Оператор",
-    "attribute": "Атрибут",
-    "matchScoreExpression": "Выражение оценки"
-  },
-  "groupOptions": {
-    "field": {
-      "fields": "Поля",
-      "attributes": "Атрибуты"
-    }
-  },
-  "options": {
-    "type": {
-      "fieldEqual": "Поле равно",
-      "fieldSimilar": "Поле похоже",
-      "fieldContains": "Поле содержит",
-      "set": "Набор",
-      "expression": "Выражение"
+    "fields": {
+        "matching": "Соответствие",
+        "weight": "Вес",
+        "matchingRuleSet": "Набор",
+        "matchingRules": "Правила подбора",
+        "operator": "Оператор",
+        "attribute": "Атрибут",
+        "matchScoreExpression": "Выражение оценки",
+        "ignoreUnavailableAttributes": "Игнорировать недоступные атрибуты"
     },
-    "operator": {
-      "and": "AND",
-      "or": "OR"
+    "groupOptions": {
+        "field": {
+            "fields": "Поля",
+            "attributes": "Атрибуты"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "Поле равно",
+            "fieldSimilar": "Поле похоже",
+            "fieldContains": "Поле содержит",
+            "set": "Набор",
+            "expression": "Выражение",
+            "fieldsSimilar": "Поля похожи",
+            "attributesSimilar": "Атрибуты похожи"
+        },
+        "operator": {
+            "and": "AND",
+            "or": "OR"
+        }
+    },
+    "exceptions": {
+        "notValidCode": "Код должен содержать только буквы, цифры, символы подчеркивания и тире.",
+        "notValidMatchingActivation": "Правило подбора можно изменить только для неактивного подбора.",
+        "notValidMatching": "Сопоставление недействительно",
+        "notValidMatchingRuleSet": "Набор правил соответствия недействителен",
+        "notValidFieldType": "Тип поля не поддерживается выбранным типом правила.",
+        "notValidAttributeType": "Тип атрибута не поддерживается выбранным типом правила.",
+        "expressionCannotBeEmpty": "Выражение не может быть пустым.",
+        "notValidAttributesSimilar": "У сущностей сопоставления нет атрибутов."
+    },
+    "tooltips": {
+        "matchScoreExpression": "Выражение ExpressionLanguage с доступом к `stageEntity` (полной записи) и `masterEntity` (необработанным значениям полей кандидата в виде массива - напр. masterEntity['name']). Должно возвращать число от 0 до 1, которое умножается на вес правила для получения оценки совпадения - напр. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 оценивает точное совпадение как 1, а всё остальное как 0.",
+        "ignoreUnavailableAttributes": "Если параметр включён, атрибут, связанный только с одной из сравниваемых записей, не сравнивается. В противном случае его сходство равно 0."
     }
-  },
-  "exceptions": {
-    "notValidCode": "Код должен содержать только буквы, цифры, символы подчеркивания и тире.",
-    "notValidMatchingActivation": "Правило подбора можно изменить только для неактивного подбора.",
-    "notValidMatching": "Сопоставление недействительно",
-    "notValidMatchingRuleSet": "Набор правил соответствия недействителен",
-    "notValidFieldType": "Тип поля не поддерживается выбранным типом правила.",
-    "notValidAttributeType": "Тип атрибута не поддерживается выбранным типом правила.",
-    "expressionCannotBeEmpty": "Выражение не может быть пустым."
-  },
-  "tooltips": {
-    "matchScoreExpression": "Выражение ExpressionLanguage с доступом к `stageEntity` (полной записи) и `masterEntity` (необработанным значениям полей кандидата в виде массива - напр. masterEntity['name']). Должно возвращать число от 0 до 1, которое умножается на вес правила для получения оценки совпадения - напр. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 оценивает точное совпадение как 1, а всё остальное как 0."
-  }
 }

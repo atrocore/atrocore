@@ -1,43 +1,44 @@
 {
-  "fields": {
-    "width": "Ширина (%)",
-    "widthPx": "Ширина (px)",
-    "link": "Ссылка",
-    "notSortable": "Не сортируемый",
-    "align": "Выровнять",
-    "panelName": "Название панели",
-    "style": "Стиль",
-    "isLarge": "Большой размер шрифта",
-    "sticked": "Прилеплен",
-    "cssStyle": "CSS Styles",
-    "hiddenPerDefault": "Скрыт по умолчанию"
-  },
-  "options": {
-    "align": {
-      "left": "по левому краю",
-      "right": "по правому краю",
-      "center": "Центр"
+    "fields": {
+        "width": "Ширина (%)",
+        "widthPx": "Ширина (px)",
+        "link": "Ссылка",
+        "notSortable": "Не сортируемый",
+        "align": "Выровнять",
+        "panelName": "Название панели",
+        "style": "Стиль",
+        "isLarge": "Большой размер шрифта",
+        "sticked": "Прилеплен",
+        "cssStyle": "CSS Styles",
+        "hiddenPerDefault": "Скрыт по умолчанию",
+        "label": "Метка"
     },
-    "style": {
-      "default": "По умолчанию",
-      "success": "Успех",
-      "danger": "Опасность",
-      "info": "Информация",
-      "warning": "Предупреждение",
-      "primary": "Основной"
+    "options": {
+        "align": {
+            "left": "по левому краю",
+            "right": "по правому краю",
+            "center": "Центр"
+        },
+        "style": {
+            "default": "По умолчанию",
+            "success": "Успех",
+            "danger": "Опасность",
+            "info": "Информация",
+            "warning": "Предупреждение",
+            "primary": "Основной"
+        }
+    },
+    "labels": {
+        "New panel": "Новая панель",
+        "Layout": "Макет",
+        "configure": "Настройте",
+        "reset": "Сброс макета",
+        "fullEdit": "Полное редактирование",
+        "resetToSystem": "Сброс к системной раскладке",
+        "layoutManagement": "Управление макетом",
+        "layoutSelection": "Выбор раскладки",
+        "layoutCustomization": "Настройка макета",
+        "Current Layout": "Текущий макет",
+        "Add Dynamic Fields": "Добавить динамические поля"
     }
-  },
-  "labels": {
-    "New panel": "Новая панель",
-    "Layout": "Макет",
-    "configure": "Настройте",
-    "reset": "Сброс макета",
-    "fullEdit": "Полное редактирование",
-    "resetToSystem": "Сброс к системной раскладке",
-    "layoutManagement": "Управление макетом",
-    "layoutSelection": "Выбор раскладки",
-    "layoutCustomization": "Настройка макета",
-    "Current Layout": "Текущий макет",
-    "Add Dynamic Fields": "Добавить динамические поля"
-  }
 }

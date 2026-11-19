@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "name": "Имя",
-    "emailAddress": "Адрес эл. почты",
-    "phoneNumber": "Телефон",
-    "description": "Описание",
-    "addresses": "Адреса",
-    "contacts": "Контакты",
-    "type": "Тип",
-    "role": "Роль",
-    "number": "Номер",
-    "language": "Язык"
-  },
-  "options": {
-    "type": {
-      "individual": "Индивидуально",
-      "company": "Компания"
+    "fields": {
+        "name": "Имя",
+        "emailAddress": "Адрес эл. почты",
+        "phoneNumber": "Телефон",
+        "description": "Описание",
+        "addresses": "Адреса",
+        "contacts": "Контакты",
+        "type": "Тип",
+        "role": "Роль",
+        "number": "Номер",
+        "language": "Язык",
+        "vatId": "ИНН плательщика НДС",
+        "webUrl": "URL веб-сайта"
     },
-    "role": {
-      "supplier": "Поставщик",
-      "customer": "Клиент"
+    "options": {
+        "type": {
+            "individual": "Индивидуально",
+            "company": "Компания"
+        },
+        "role": {
+            "supplier": "Поставщик",
+            "customer": "Клиент"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "Адрес по умолчанию для этой учетной записи уже существует."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "Адрес по умолчанию для этой учетной записи уже существует."
-  }
 }

@@ -1,91 +1,96 @@
 {
-  "fields": {
-    "isActive": "Actif",
-    "type": "Type",
-    "sourceEntity": "Entité source",
-    "inBackground": "Exécuter en arrière-plan",
-    "usage": "Utilisation",
-    "massAction": "Action de masse",
-    "display": "Affichage",
-    "actionsSet": "Ensemble d'actions",
-    "actions": "Actions",
-    "webhookUrl": "URL",
-    "showEmailPreview": "Prévisualisation avant envoi",
-    "emailTo": "E-mail du destinataire",
-    "focusField": "Champ",
-    "changeFields": "Champs",
-    "emailCc": "E-mail CC",
-    "emailBcc": "E-mail BCC",
-    "executeAs": "Exécuter en tant que",
-    "displayField": "Champ",
-    "mode": "Mode",
-    "emailScript": "Script",
-    "emailTemplate": "Modèle d'e-mail",
-    "targetEntity": "Entité cible",
-    "hideTextLabel": "Masquer le libellé de texte sur le bouton",
-    "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
-    "updateType": "Type de mise à jour",
-    "updateScript": "Script",
-    "updateFields": "Mise à jour des champs",
-    "searchEntity": "Entité de recherche",
-    "executions": "Exécutions",
-    "deletePermanently": "Supprimer définitivement"
-  },
-  "labels": {
-    "execute": "Exécuter",
-    "Parameters": "Paramètres",
-    "fieldsPanel": "Mise à jour"
-  },
-  "actions": {
-    "allLogs": "Tous les journaux"
-  },
-  "massActions": {
-    "execute": "Exécuter"
-  },
-  "messages": {
-    "executeNow": "Êtes-vous sûr de vouloir exécuter l'action sélectionnée ?"
-  },
-  "options": {
-    "display": {
-      "dropdown": "Liste déroulante",
-      "single": "Seul"
+    "fields": {
+        "isActive": "Actif",
+        "type": "Type",
+        "sourceEntity": "Entité source",
+        "inBackground": "Exécuter en arrière-plan",
+        "usage": "Utilisation",
+        "massAction": "Action de masse",
+        "display": "Affichage",
+        "actionsSet": "Ensemble d'actions",
+        "actions": "Actions",
+        "webhookUrl": "URL",
+        "showEmailPreview": "Prévisualisation avant envoi",
+        "emailTo": "E-mail du destinataire",
+        "focusField": "Champ",
+        "changeFields": "Champs",
+        "emailCc": "E-mail CC",
+        "emailBcc": "E-mail BCC",
+        "executeAs": "Exécuter en tant que",
+        "displayField": "Champ",
+        "mode": "Mode",
+        "emailScript": "Script",
+        "emailTemplate": "Modèle d'e-mail",
+        "targetEntity": "Entité cible",
+        "hideTextLabel": "Masquer le libellé de texte sur le bouton",
+        "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
+        "updateType": "Type de mise à jour",
+        "updateScript": "Script",
+        "updateFields": "Mise à jour des champs",
+        "searchEntity": "Entité de recherche",
+        "executions": "Exécutions",
+        "deletePermanently": "Supprimer définitivement",
+        "handler": "Gestionnaire"
     },
-    "type": {
-      "create": "Création",
-      "update": "Mise à jour",
-      "delete": "Suppression",
-      "set": "Ensemble d'actions",
-      "webhook": "Webhook",
-      "email": "Envoyer un e-mail",
-      "customCode": "Code personnalisé",
-      "createOrUpdate": "Création ou mise à jour",
-      "custom": "Code personnalisé"
+    "labels": {
+        "execute": "Exécuter",
+        "Parameters": "Paramètres",
+        "fieldsPanel": "Mise à jour"
     },
-    "usage": {
-      "entity": "Bouton d'action d'entité",
-      "record": "Bouton d'action d'enregistrement",
-      "field": "Bouton d'action de champ",
-      "onFieldFocus": "Au focus du champ",
-      "onFieldChange": "Au changement du champ",
-      "onRecordLoad": "À la création/mise à jour d’un enregistrement"
+    "actions": {
+        "allLogs": "Tous les journaux"
     },
-    "executeAs": {
-      "sameUser": "Même utilisateur",
-      "system": "Système"
+    "massActions": {
+        "execute": "Exécuter"
     },
-    "mode": {
-      "basic": "Basique",
-      "script": "Script"
+    "messages": {
+        "executeNow": "Êtes-vous sûr de vouloir exécuter l'action sélectionnée ?"
+    },
+    "options": {
+        "display": {
+            "dropdown": "Liste déroulante",
+            "single": "Seul"
+        },
+        "type": {
+            "create": "Création",
+            "update": "Mise à jour",
+            "delete": "Suppression",
+            "set": "Ensemble d'actions",
+            "webhook": "Webhook",
+            "email": "Envoyer un e-mail",
+            "customCode": "Code personnalisé",
+            "createOrUpdate": "Création ou mise à jour",
+            "custom": "Code personnalisé"
+        },
+        "usage": {
+            "entity": "Bouton d'action d'entité",
+            "record": "Bouton d'action d'enregistrement",
+            "field": "Bouton d'action de champ",
+            "onFieldFocus": "Au focus du champ",
+            "onFieldChange": "Au changement du champ",
+            "onRecordLoad": "À la création/mise à jour d’un enregistrement"
+        },
+        "executeAs": {
+            "sameUser": "Même utilisateur",
+            "system": "Système"
+        },
+        "mode": {
+            "basic": "Basique",
+            "script": "Script"
+        },
+        "updateType": {
+            "basic": "De base",
+            "script": "Script"
+        }
+    },
+    "tooltips": {
+        "inBackground": "L'action sera exécutée en arrière-plan sans message direct de succès ou d'erreur. Utilisez-le si l'exécution de l'action peut prendre plus de 30 secondes.",
+        "usage": "L'utilisation prescrit l'emplacement de l'action. Une action sur les enregistrements exige que les enregistrements concernés soient présélectionnés.",
+        "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'action."
+    },
+    "exceptions": {
+        "expressionCannotBeEmpty": "L'expression ne peut pas être vide.",
+        "forEditModeOnly": "L'action \"%s\" n'est disponible qu'en mode modification et ne peut pas être utilisée ici.",
+        "actionTypeDisabledForTargetEntity": "Le type d'action \"%1$s\" ne peut pas être utilisé, car cette action est désactivée pour l'entité \"%2$s\"."
     }
-  },
-  "tooltips": {
-    "inBackground": "L'action sera exécutée en arrière-plan sans message direct de succès ou d'erreur. Utilisez-le si l'exécution de l'action peut prendre plus de 30 secondes.",
-    "usage": "L'utilisation prescrit l'emplacement de l'action. Une action sur les enregistrements exige que les enregistrements concernés soient présélectionnés.",
-    "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'action."
-  },
-  "exceptions": {
-    "expressionCannotBeEmpty": "L'expression ne peut pas être vide.",
-    "forEditModeOnly": "L'action \"%s\" n'est disponible qu'en mode modification et ne peut pas être utilisée ici.",
-    "actionTypeDisabledForTargetEntity": "Le type d'action \"%1$s\" ne peut pas être utilisé, car cette action est désactivée pour l'entité \"%2$s\"."
-  }
 }

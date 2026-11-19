@@ -1,33 +1,47 @@
 {
-  "fields": {
-    "matching": "A juego",
-    "weight": "Peso",
-    "matchingRuleSet": "Fije",
-    "matchingRules": "Reglas de concordancia",
-    "operator": "Operador",
-    "matchScoreExpression": "Expresión de puntuación"
-  },
-  "options": {
-    "type": {
-      "fieldEqual": "El campo es igual",
-      "fieldSimilar": "El campo es similar",
-      "fieldContains": "El campo contiene",
-      "set": "Fije",
-      "expression": "Expresión"
+    "fields": {
+        "matching": "A juego",
+        "weight": "Peso",
+        "matchingRuleSet": "Fije",
+        "matchingRules": "Reglas de concordancia",
+        "operator": "Operador",
+        "matchScoreExpression": "Expresión de puntuación",
+        "attribute": "Atributo",
+        "ignoreUnavailableAttributes": "Ignorar atributos no disponibles"
     },
-    "operator": {
-      "and": "Y",
-      "or": "O"
+    "options": {
+        "type": {
+            "fieldEqual": "El campo es igual",
+            "fieldSimilar": "El campo es similar",
+            "fieldContains": "El campo contiene",
+            "set": "Fije",
+            "expression": "Expresión",
+            "fieldsSimilar": "Los campos son similares",
+            "attributesSimilar": "Los atributos son similares"
+        },
+        "operator": {
+            "and": "Y",
+            "or": "O"
+        }
+    },
+    "exceptions": {
+        "notValidCode": "El código debe contener sólo letras, números, guiones bajos y guiones.",
+        "notValidMatchingActivation": "La regla de coincidencia sólo puede modificarse para una coincidencia inactiva.",
+        "notValidMatching": "La coincidencia no es válida",
+        "notValidMatchingRuleSet": "El conjunto de reglas de concordancia no es válido",
+        "expressionCannotBeEmpty": "La expresión no puede estar vacía.",
+        "notValidFieldType": "El tipo de campo no es compatible con el tipo de regla seleccionado.",
+        "notValidAttributeType": "El tipo de atributo no es compatible con el tipo de regla seleccionado.",
+        "notValidAttributesSimilar": "Las entidades de la coincidencia no tienen atributos."
+    },
+    "tooltips": {
+        "matchScoreExpression": "Una expresión de ExpressionLanguage con acceso a `stageEntity` (un registro completo) y `masterEntity` (los valores de campo sin procesar del candidato, como un array - p. ej. masterEntity['name']). Debe devolver un número entre 0 y 1, que se multiplica por el peso de la regla para producir la puntuación de coincidencia - p. ej. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 puntúa una coincidencia exacta como 1 y todo lo demás como 0.",
+        "ignoreUnavailableAttributes": "Si está habilitado, no se compara un atributo vinculado a solo uno de los registros comparados. De lo contrario, la similitud de dicho atributo es 0."
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Campos",
+            "attributes": "Atributos"
+        }
     }
-  },
-  "exceptions": {
-    "notValidCode": "El código debe contener sólo letras, números, guiones bajos y guiones.",
-    "notValidMatchingActivation": "La regla de coincidencia sólo puede modificarse para una coincidencia inactiva.",
-    "notValidMatching": "La coincidencia no es válida",
-    "notValidMatchingRuleSet": "El conjunto de reglas de concordancia no es válido",
-    "expressionCannotBeEmpty": "La expresión no puede estar vacía."
-  },
-  "tooltips": {
-    "matchScoreExpression": "Una expresión de ExpressionLanguage con acceso a `stageEntity` (un registro completo) y `masterEntity` (los valores de campo sin procesar del candidato, como un array - p. ej. masterEntity['name']). Debe devolver un número entre 0 y 1, que se multiplica por el peso de la regla para producir la puntuación de coincidencia - p. ej. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 puntúa una coincidencia exacta como 1 y todo lo demás como 0."
-  }
 }

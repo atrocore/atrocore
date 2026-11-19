@@ -1,29 +1,35 @@
 {
-  "labels": {
-    "sourceEntities": "Pipeline'y źródło-staging"
-  },
-  "fields": {
-    "consolidationScript": "Skrypt konsolidacji",
-    "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
-    "minimumMatchingScore": "Minimalny wynik dopasowania",
-    "deleteInvalidMastersAutomatically": "Automatycznie usuwaj nieprawidłowe rekordy główne",
-    "executeConsolidationAs": "Wykonać scalanie jako"
-  },
-  "tooltips": {
-    "name": "Można wybrać tylko taką encję główną, dla której już istnieje pochodna z rolą „Współtwórca”.",
-    "consolidationScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
-    "executeConsolidationAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu konsolidacji."
-  },
-  "exceptions": {
-    "consolidationScriptIsMissing": "Brakuje skryptu konsolidacji dla jednostki master",
-    "consolidationScriptIsNotValid": "Skrypt konsolidacji zwraca nieprawidłowy ładunek: %s",
-    "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do konsolidacji",
-    "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje"
-  },
-  "options": {
-    "executeConsolidationAs": {
-      "sameUser": "Ten sam użytkownik",
-      "system": "System"
+    "labels": {
+        "sourceEntities": "Pipeline'y źródło-staging"
+    },
+    "fields": {
+        "consolidationScript": "Skrypt konsolidacji",
+        "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
+        "minimumMatchingScore": "Minimalny wynik dopasowania",
+        "deleteInvalidMastersAutomatically": "Automatycznie usuwaj nieprawidłowe rekordy główne",
+        "executeConsolidationAs": "Wykonać scalanie jako",
+        "consolidateAutomatically": "Konsoliduj automatycznie",
+        "skipCondition": "Warunek pominięcia"
+    },
+    "tooltips": {
+        "name": "Można wybrać tylko taką encję główną, dla której już istnieje pochodna z rolą „Współtwórca”.",
+        "consolidationScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
+        "executeConsolidationAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu konsolidacji.",
+        "skipCondition": "Wyrażenie ExpressionLanguage oceniane dla każdego kandydata z dostępem do `candidate` i `masterRecord` (puste, dopóki rekord główny nie zostanie utworzony). Kandydaci, dla których zwraca wartość true, są wykluczani z `candidates` skryptu konsolidacji. Jeśli nie pozostaną kandydaci, rekord główny nie zostanie utworzony ani zaktualizowany — np. candidate.get('name') == null."
+    },
+    "exceptions": {
+        "consolidationScriptIsMissing": "Brakuje skryptu konsolidacji dla jednostki master",
+        "consolidationScriptIsNotValid": "Skrypt konsolidacji zwraca nieprawidłowy ładunek: %s",
+        "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do konsolidacji",
+        "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje",
+        "consolidationScriptReturnedNoValues": "Skrypt konsolidacji nie zwrócił żadnych wartości",
+        "skipConditionFailed": "Wykonanie warunku pominięcia nie powiodło się: %s",
+        "allCandidatesSkipped": "Wszyscy kandydaci zostali pominięci przez warunek pominięcia, nie ma nic do skonsolidowania"
+    },
+    "options": {
+        "executeConsolidationAs": {
+            "sameUser": "Ten sam użytkownik",
+            "system": "System"
+        }
     }
-  }
 }

@@ -1,0 +1,33 @@
+{
+    "fields": {
+        "name": "Név",
+        "description": "Leírás",
+        "selectionItems": "Kijelölés elemei"
+    },
+    "options": {
+        "type": {
+            "single": "Egységes",
+            "multiple": "Vegyes"
+        }
+    },
+    "labels": {
+        "createSelection": "Kijelölés létrehozása"
+    },
+    "messages": {
+        "cannotSetToSingle": "Nem állíthatja be az „Egységes” értéket",
+        "youNeedAtLeastTwoItem": "Az összehasonlításhoz legalább két elem szükséges.",
+        "entityIsRequired": "Az „Entitás” mező megadása kötelező.",
+        "entityTypeMismatch": "Ez a kijelölés csak a(z) %s típusú rekordokat fogadja el."
+    },
+    "customActions": {
+        "replaceItem": "Elem cseréje"
+    },
+    "streamMessages": {
+        "selectionLinked": "{user} ehhez a kijelöléshez kapcsolta a(z) {relatedEntity} rekordot",
+        "selectionLinkedThis": "A(z) {user} összekapcsolta a(z) {relatedEntity} entitást ezzel a kijelöléssel",
+        "selectionUnlinked": "{user} leválasztotta a(z) {relatedEntity} rekordot erről a kijelölésről",
+        "selectionUnlinkedThis": "A(z) {user} leválasztotta a(z) {relatedEntity} entitást erről a kijelölésről",
+        "selectionDeleted": "{user} törölte a(z) {relatedEntity} rekordot a kijelölésből",
+        "selectionDeletedThis": "Ezt a kijelölést a(z) {user} törölte"
+    }
+}

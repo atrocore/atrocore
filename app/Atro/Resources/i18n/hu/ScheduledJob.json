@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "name": "Név",
+        "scheduling": "Ütemezés",
+        "jobs": "Feladatok",
+        "action": "Művelet"
+    },
+    "links": {
+        "action": "Művelet"
+    },
+    "labels": {
+        "executeNow": "Végrehajtás most"
+    },
+    "exceptions": {
+        "wrongCrontabConfiguration": "Hibás crontab-konfiguráció",
+        "onlyOneJobTypeAllowed": "Csak egy „%s” feladat engedélyezett"
+    },
+    "messages": {
+        "jobLaunched": "A feladat létrejött",
+        "jobAlreadyExist": "Kevesebb mint egy perce hoztak létre egy feladatot"
+    },
+    "options": {
+        "type": {
+            "ClearEntities": "Törölt adatok törlése",
+            "ComposerAutoUpdate": "Rendszer automatikus frissítése",
+            "UpdateCurrencyExchangeViaECB": "Árfolyamok frissítése az ECB-n keresztül",
+            "CheckUpdates": "Rendszerfrissítések keresése",
+            "ScanStorage": "Tárhely vizsgálata",
+            "FindMatches": "Egyezések keresése",
+            "CalculateScriptFieldsForEntities": "Szkriptmezők kiszámítása",
+            "SendReports": "Anonim hibajelentések küldése",
+            "CreateClusters": "Klaszterek létrehozása",
+            "Action": "Művelet"
+        }
+    },
+    "tooltips": {
+        "scheduling": "Crontab-jelölés. Meghatározza a feladatfuttatások gyakoriságát.\n\n*/5 * * * * - 5 percenként\n\n0 */2 * * * - 2 óránként\n\n30 1 * * * - naponta egyszer, 01:30-kor\n\n0 0 1 * * - a hónap első napján"
+    }
+}

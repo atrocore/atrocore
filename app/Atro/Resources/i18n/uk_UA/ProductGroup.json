@@ -1,7 +1,15 @@
 {
-  "fields": {
-    "code": "Код",
-    "itemType": "Тип елемента",
-    "products": "Продукти"
-  }
+    "fields": {
+        "code": "Код",
+        "itemType": "Тип елемента",
+        "products": "Продукти"
+    },
+    "options": {
+        "itemType": {
+            "physical_goods": "Фізичні товари",
+            "services": "Послуги",
+            "digital_products": "Цифрові продукти",
+            "legal_rights": "Юридичні права"
+        }
+    }
 }

@@ -1,27 +1,29 @@
 {
-  "fields": {
-    "name": "Imię",
-    "emailAddress": "Email",
-    "phoneNumber": "Numer telefonu",
-    "description": "Opis",
-    "type": "Typ",
-    "role": "Rola",
-    "addresses": "Adresy",
-    "contacts": "Kontakty",
-    "number": "Numer",
-    "language": "Język"
-  },
-  "options": {
-    "type": {
-      "individual": "Osoba prywatna",
-      "company": "Firma"
+    "fields": {
+        "name": "Imię",
+        "emailAddress": "Email",
+        "phoneNumber": "Numer telefonu",
+        "description": "Opis",
+        "type": "Typ",
+        "role": "Rola",
+        "addresses": "Adresy",
+        "contacts": "Kontakty",
+        "number": "Numer",
+        "language": "Język",
+        "vatId": "NIP",
+        "webUrl": "Adres URL"
     },
-    "role": {
-      "supplier": "Dostawca",
-      "customer": "Klient"
+    "options": {
+        "type": {
+            "individual": "Osoba prywatna",
+            "company": "Firma"
+        },
+        "role": {
+            "supplier": "Dostawca",
+            "customer": "Klient"
+        }
+    },
+    "exceptions": {
+        "defaultAddressAlreadyExist": "Domyślny adres dla konta już istnieje."
     }
-  },
-  "exceptions": {
-    "defaultAddressAlreadyExist": "Domyślny adres dla konta już istnieje."
-  }
 }

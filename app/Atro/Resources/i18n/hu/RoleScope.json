@@ -1,0 +1,28 @@
+{
+    "fields": {
+        "name": "Hatókör",
+        "role": "Szerep",
+        "hasAccess": "Hozzáférés",
+        "createAction": "Létrehozás",
+        "readAction": "Olvasás",
+        "editAction": "Szerkesztés",
+        "deleteAction": "Törlés",
+        "streamAction": "Tevékenységek",
+        "fields": "Mezők",
+        "accessData": "Adatokhoz való hozzáférés",
+        "createAttributeValueAction": "Attribútumérték létrehozása",
+        "deleteAttributeValueAction": "Attribútumérték törlése",
+        "attributes": "Attribútumok",
+        "attributePanels": "Attribútumpanelek"
+    },
+    "labels": {
+        "all": "Összes",
+        "team": "Csapat",
+        "own": "Saját",
+        "no": "Nem",
+        "yes": "Igen"
+    },
+    "exceptions": {
+        "roleScopeActionDisabled": "A(z) „%1$s” művelet nem engedélyezhető, mert a(z) „%2$s” entitás esetében le van tiltva."
+    }
+}

@@ -1,20 +1,24 @@
 {
-  "fields": {
-    "timeZone": "Часовий пояс",
-    "dateFormat": "Формат дати",
-    "weekStart": "Перший день тижня",
-    "timeFormat": "Формат часу",
-    "thousandSeparator": "Тисячний роздільник",
-    "decimalMark": "Десятковий роздільник",
-    "languageCode": "Код мови",
-    "fallbackLanguageCode": "Код резервної мови",
-    "displayLabelsInContentLanguage": "Відображати етикетки мовою вмісту"
-  },
-  "labels": {
-    "sunday": "Неділя",
-    "monday": "Понеділок"
-  },
-  "exceptions": {
-    "localeIsUsed": "Локаль використовується і не може бути видалена."
-  }
+    "fields": {
+        "timeZone": "Часовий пояс",
+        "dateFormat": "Формат дати",
+        "weekStart": "Перший день тижня",
+        "timeFormat": "Формат часу",
+        "thousandSeparator": "Тисячний роздільник",
+        "decimalMark": "Десятковий роздільник",
+        "languageCode": "Код мови",
+        "fallbackLanguageCode": "Код резервної мови",
+        "displayLabelsInContentLanguage": "Відображати етикетки мовою вмісту",
+        "disableForUi": "Вимкнути для інтерфейсу"
+    },
+    "labels": {
+        "sunday": "Неділя",
+        "monday": "Понеділок"
+    },
+    "exceptions": {
+        "localeIsUsed": "Локаль використовується і не може бути видалена."
+    },
+    "tooltips": {
+        "disableForUi": "Якщо ввімкнено, ця локаль не відображатиметься у перемикачі локалей на панелі інструментів або у списку профілю користувача. Вона залишатиметься доступною для налаштування потоку експорту, Каналу та потоку імпорту."
+    }
 }
