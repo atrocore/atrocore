@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeSet;
 
+use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/webhookAsync',
+    path: '/ActionTypeSet/{id}/setAsync',
     methods: [
         'POST',
     ],
-    summary: 'Execute Webhook action asynchronously',
-    description: 'Schedules the specified Webhook action as a background job and returns immediately with the job ID.',
-    tag: 'Action',
+    summary: 'Execute Set action asynchronously',
+    description: 'Schedules the specified Set action as a background job and returns immediately with the job ID. The ordered sequence of sub-actions runs in the background.',
+    tag: 'ActionTypeSet',
     parameters: [
         [
             'name'        => 'id',
@@ -39,8 +40,18 @@ use Atro\Core\Routing\Route;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'        => 'object',
-                    'description' => 'No fields are consumed by this action type. The webhook handler calls the configured URL regardless of the request body.',
+                    'type'       => 'object',
+                    'properties' => [
+                        'entityId' => [
+                            'type'        => 'string',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
+                        ],
+                        'where'    => [
+                            'type'        => 'array',
+                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
+                            'items'       => ['type' => 'object'],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -64,6 +75,6 @@ use Atro\Core\Routing\Route;
         ],
     ],
 )]
-class WebhookAsyncHandler extends AbstractActionTypeAsyncHandler
+class SetAsyncHandler extends AbstractActionTypeAsyncHandler
 {
 }

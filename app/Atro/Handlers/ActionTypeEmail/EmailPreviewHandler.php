@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeEmail;
 
 use Atro\ActionTypes\SendEmail;
 use Atro\Core\Exceptions\NotFound;
@@ -23,13 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Action/{id}/emailPreview',
+    path: '/ActionTypeEmail/{id}/emailPreview',
     methods: [
         'POST',
     ],
     summary: 'Preview email action output',
     description: 'Renders the email template configured in the Email action for the given entity record and returns the rendered subject, body, and recipients without sending.',
-    tag: 'Action',
+    tag: 'ActionTypeEmail',
     parameters: [
         [
             'name'        => 'id',

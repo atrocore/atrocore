@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeCreateOrUpdate;
 
+use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/setAsync',
+    path: '/ActionTypeCreateOrUpdate/{id}/createOrUpdate',
     methods: [
         'POST',
     ],
-    summary: 'Execute Set action asynchronously',
-    description: 'Schedules the specified Set action as a background job and returns immediately with the job ID. The ordered sequence of sub-actions runs in the background.',
-    tag: 'Action',
+    summary: 'Execute CreateOrUpdate action',
+    description: 'Executes the specified CreateOrUpdate action synchronously. Updates the record if it already exists; otherwise creates it.',
+    tag: 'ActionTypeCreateOrUpdate',
     parameters: [
         [
             'name'        => 'id',
@@ -57,23 +58,29 @@ use Atro\Core\Routing\Route;
     ],
     responses: [
         200 => [
-            'description' => 'The action has been scheduled as a background job.',
+            'description' => 'Execution result.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'jobId' => [
-                                'type'        => 'string',
-                                'description' => 'ID of the created background job.',
+                            'success' => [
+                                'type' => 'boolean',
+                            ],
+                            'message' => [
+                                'type'     => 'string',
+                                'nullable' => true,
                             ],
                         ],
                     ],
                 ],
             ],
         ],
+        404 => [
+            'description' => 'Action record not found.',
+        ],
     ],
 )]
-class SetAsyncHandler extends AbstractActionTypeAsyncHandler
+class CreateOrUpdateHandler extends AbstractActionTypeSyncHandler
 {
 }

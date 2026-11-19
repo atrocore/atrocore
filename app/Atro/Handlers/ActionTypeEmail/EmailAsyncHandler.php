@@ -11,19 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeEmail;
 
+use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/email',
+    path: '/ActionTypeEmail/{id}/emailAsync',
     methods: [
         'POST',
     ],
-    summary: 'Execute Email action',
-    description: 'Executes the specified Email action synchronously. Sends an email according to the action configuration. '
-        . 'Optional body fields can override template values such as subject, body, and recipient lists.',
-    tag: 'Action',
+    summary: 'Execute Email action asynchronously',
+    description: 'Schedules the specified Email action as a background job and returns immediately with the job ID.',
+    tag: 'ActionTypeEmail',
     parameters: [
         [
             'name'        => 'id',
@@ -43,32 +43,32 @@ use Atro\Core\Routing\Route;
                     'type'        => 'object',
                     'description' => 'Optional overrides for the email action. All fields are optional and supplement the action configuration.',
                     'properties'  => [
-                        'subject'   => [
+                        'entityId' => [
+                            'type'        => 'string',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
+                        ],
+                        'subject'  => [
                             'type'        => 'string',
                             'description' => 'Override the email subject.',
                         ],
-                        'body'      => [
+                        'body'     => [
                             'type'        => 'string',
                             'description' => 'Override the email body.',
                         ],
-                        'emailTo'   => [
+                        'emailTo'  => [
                             'type'        => 'array',
                             'description' => 'Override the TO recipient list.',
                             'items'       => ['type' => 'string'],
                         ],
-                        'emailCc'   => [
+                        'emailCc'  => [
                             'type'        => 'array',
                             'description' => 'Override the CC recipient list.',
                             'items'       => ['type' => 'string'],
                         ],
-                        'emailBcc'  => [
+                        'emailBcc' => [
                             'type'        => 'array',
                             'description' => 'Override the BCC recipient list.',
                             'items'       => ['type' => 'string'],
-                        ],
-                        'entityId'  => [
-                            'type'        => 'string',
-                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
                         ],
                     ],
                 ],
@@ -77,29 +77,23 @@ use Atro\Core\Routing\Route;
     ],
     responses: [
         200 => [
-            'description' => 'Execution result.',
+            'description' => 'The action has been scheduled as a background job.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'success' => [
-                                'type' => 'boolean',
-                            ],
-                            'message' => [
-                                'type'     => 'string',
-                                'nullable' => true,
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job.',
                             ],
                         ],
                     ],
                 ],
             ],
         ],
-        404 => [
-            'description' => 'Action record not found.',
-        ],
     ],
 )]
-class EmailHandler extends AbstractActionTypeSyncHandler
+class EmailAsyncHandler extends AbstractActionTypeAsyncHandler
 {
 }

@@ -549,13 +549,14 @@ class Metadata extends AbstractMetadataListener
             try {
                 // the settings of the action types are stored in the tables of the subtypes
                 $actions = $connection->createQueryBuilder()
-                    ->select('a.*, COALESCE(tc.target_entity, tu.target_entity, tcu.target_entity, td.target_entity) AS target_entity, te.show_email_preview, te.email_template_id')
+                    ->select('a.*, COALESCE(tc.target_entity, tu.target_entity, tcu.target_entity, td.target_entity) AS target_entity, te.show_email_preview, te.email_template_id, tcs.handler')
                     ->from($connection->quoteIdentifier('action'), 'a')
                     ->leftJoin('a', 'action_type_create', 'tc', 'tc.id = a.id')
                     ->leftJoin('a', 'action_type_update', 'tu', 'tu.id = a.id')
                     ->leftJoin('a', 'action_type_create_or_update', 'tcu', 'tcu.id = a.id')
                     ->leftJoin('a', 'action_type_delete', 'td', 'td.id = a.id')
                     ->leftJoin('a', 'action_type_email', 'te', 'te.id = a.id')
+                    ->leftJoin('a', 'action_type_custom', 'tcs', 'tcs.id = a.id')
                     ->where('a.deleted = :false')
                     ->andWhere('a.is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -634,6 +635,11 @@ class Metadata extends AbstractMetadataListener
                     $params['tooltip'] = $action['name'];
                 }
                 $params['html'] = $html;
+            }
+
+            // a custom action is executed by the route of its handler
+            if ($action['type'] === 'custom') {
+                $params['handler'] = $action['handler'] ?? null;
             }
 
             if ($action['type'] === 'email') {

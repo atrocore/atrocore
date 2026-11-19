@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeUpdate;
 
+use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/createAsync',
+    path: '/ActionTypeUpdate/{id}/update',
     methods: [
         'POST',
     ],
-    summary: 'Execute Create action asynchronously',
-    description: 'Schedules the specified Create action as a background job and returns immediately with the job ID.',
-    tag: 'Action',
+    summary: 'Execute Update action',
+    description: 'Executes the specified Update action synchronously. Updates one or more entity records according to the action configuration.',
+    tag: 'ActionTypeUpdate',
     parameters: [
         [
             'name'        => 'id',
@@ -57,23 +58,29 @@ use Atro\Core\Routing\Route;
     ],
     responses: [
         200 => [
-            'description' => 'The action has been scheduled as a background job.',
+            'description' => 'Execution result.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'jobId' => [
-                                'type'        => 'string',
-                                'description' => 'ID of the created background job.',
+                            'success' => [
+                                'type' => 'boolean',
+                            ],
+                            'message' => [
+                                'type'     => 'string',
+                                'nullable' => true,
                             ],
                         ],
                     ],
                 ],
             ],
         ],
+        404 => [
+            'description' => 'Action record not found.',
+        ],
     ],
 )]
-class CreateAsyncHandler extends AbstractActionTypeAsyncHandler
+class UpdateHandler extends AbstractActionTypeSyncHandler
 {
 }

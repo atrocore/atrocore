@@ -51,7 +51,7 @@ Espo.define('views/connection/record/detail-smtp', 'views/connection/record/deta
                     view.close();
 
                     $.ajax({
-                        url: `Connection/${this.model.id}/sendTestEmail`,
+                        url: `ConnectionTypeSmtp/${this.model.id}/sendTestEmail`,
                         type: 'POST',
                         data: JSON.stringify({
                             email: emailAddress

@@ -851,7 +851,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             const defs = this.getDynamicActionDefs(data.id)
             const type = defs?.type
-            return this.ajaxPostRequest(`Action/${data.id}/${type}Async`, requestData).success(response => {
+            return this.ajaxPostRequest(`${this.getActionSubtype(type)}/${data.id}/${this.getActionRouteName(data.id, type)}Async`, requestData).success(response => {
                 if (response.jobId) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
@@ -3779,11 +3779,40 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             })
         },
 
+        /**
+         * The execution routes of an action belong to the subtype of its type.
+         */
+        getActionSubtype: function (type) {
+            const scopes = this.getMetadata().get('scopes') || {};
+
+            return Object.keys(scopes).find(scope => scopes[scope].supertypeId === 'Action'
+                && this.getMetadata().get(['entityDefs', scope, 'fields', 'type', 'default']) === type);
+        },
+
+        /**
+         * The name of the execution route of an action: a custom action is executed by the route of its handler.
+         */
+        getActionRouteName: function (actionId, type) {
+            if (type !== 'custom') {
+                return type;
+            }
+
+            for (const key of ['dynamicRecordActions', 'dynamicEntityActions', 'dynamicFieldActions', 'dynamicOnRecordLoadActions']) {
+                const defs = (this.getMetadata().get(['clientDefs', this.entityType, key]) || []).find(defs => defs.id === actionId);
+                if (defs) {
+                    return `custom${defs.handler || ''}`;
+                }
+            }
+
+            return type;
+        },
+
         executeActionRequest: function (payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
             const { actionId, actionType, inBackground, ...body } = payload;
-            const urlSuffix = inBackground ? `${actionType}Async` : actionType;
-            return this.ajaxPostRequest(`Action/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
+            const routeName = this.getActionRouteName(actionId, actionType);
+            const urlSuffix = inBackground ? `${routeName}Async` : routeName;
+            return this.ajaxPostRequest(`${this.getActionSubtype(actionType)}/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
                 if (response.link) {
                     window.open(response.link, '_blank');
                     this.collection.fetch();

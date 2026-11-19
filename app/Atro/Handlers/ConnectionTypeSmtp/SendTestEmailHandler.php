@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Connection;
+namespace Atro\Handlers\ConnectionTypeSmtp;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
@@ -22,13 +22,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Connection/{id}/sendTestEmail',
+    path: '/ConnectionTypeSmtp/{id}/sendTestEmail',
     methods: [
         'POST',
     ],
     summary: 'Send a test email via a connection',
     description: 'Sends a test email to the specified address using the SMTP settings of the given connection record. Returns true on success, or throws an error with details on failure.',
-    tag: 'Connection',
+    tag: 'ConnectionTypeSmtp',
     parameters: [
         [
             'name'        => 'id',

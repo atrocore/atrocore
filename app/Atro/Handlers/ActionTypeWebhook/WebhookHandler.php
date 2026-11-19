@@ -11,18 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Action;
+namespace Atro\Handlers\ActionTypeWebhook;
 
+use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
 use Atro\Core\Routing\Route;
 
 #[Route(
-    path: '/Action/{id}/set',
+    path: '/ActionTypeWebhook/{id}/webhook',
     methods: [
         'POST',
     ],
-    summary: 'Execute Set action',
-    description: 'Executes the specified Set action synchronously. Runs the ordered sequence of sub-actions configured in the set, one after another.',
-    tag: 'Action',
+    summary: 'Execute Webhook action',
+    description: 'Executes the specified Webhook action synchronously. Makes an HTTP request to the configured webhook URL. The request body is not forwarded to the webhook URL.',
+    tag: 'ActionTypeWebhook',
     parameters: [
         [
             'name'        => 'id',
@@ -39,18 +40,8 @@ use Atro\Core\Routing\Route;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'entityId' => [
-                            'type'        => 'string',
-                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
-                        ],
-                        'where'    => [
-                            'type'        => 'array',
-                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
-                            'items'       => ['type' => 'object'],
-                        ],
-                    ],
+                    'type'        => 'object',
+                    'description' => 'No fields are consumed by this action type. The webhook handler calls the configured URL regardless of the request body.',
                 ],
             ],
         ],
@@ -66,10 +57,6 @@ use Atro\Core\Routing\Route;
                             'success' => [
                                 'type' => 'boolean',
                             ],
-                            'executed' => [
-                                'type'        => 'boolean',
-                                'description' => 'False when the action did not run (conditions not met, nothing to do).',
-                            ],
                             'message' => [
                                 'type'     => 'string',
                                 'nullable' => true,
@@ -84,6 +71,6 @@ use Atro\Core\Routing\Route;
         ],
     ],
 )]
-class SetHandler extends AbstractActionTypeSyncHandler
+class WebhookHandler extends AbstractActionTypeSyncHandler
 {
 }
