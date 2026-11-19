@@ -2,32 +2,32 @@
     "fields": {
         "name": "",
         "description": "",
-        "isActive": "",
-        "isConfidential": "",
+        "isActive": "Activo",
+        "isConfidential": "Confidencial",
         "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
+        "authorizationCodeGrant": "Código de autorización",
+        "refreshTokenGrant": "Token de actualización",
+        "user": "Usuario",
         "secretHash": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
+        "redirectUris": "URI de redirección",
+        "isConsentRequired": "Consentimiento obligatorio",
         "isUiClient": ""
     },
     "links": {
-        "user": ""
+        "user": "Usuario"
     },
     "labels": {
-        "Grant Types": "",
-        "authorizationRequest": "",
+        "Grant Types": "Tipos de concesión",
+        "authorizationRequest": "{clientName} solicita acceso a su cuenta. Inicie sesión para permitirlo.",
         "Allow": "",
-        "signedInAs": "",
-        "Deny": ""
+        "signedInAs": "Ha iniciado sesión como {userName}.",
+        "Deny": "Denegar"
     },
     "tooltips": {
-        "isConfidential": "",
+        "isConfidential": "Un cliente confidencial se autentica con su secreto de cliente. Un cliente público, como una aplicación de navegador o móvil, no puede mantener un secreto.",
         "clientCredentialsGrant": "",
         "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
+        "refreshTokenGrant": "Junto con el token de acceso, el cliente recibe un token de actualización, que canjea por un nuevo token de acceso sin que el usuario tenga que volver a iniciar sesión.",
         "user": "",
         "redirectUris": "",
         "isConsentRequired": "",
@@ -36,16 +36,16 @@
     "exceptions": {
         "userRequiredForClientCredentials": "",
         "grantRequired": "",
-        "redirectUrisRequired": "",
-        "invalidRedirectUri": "",
-        "uiClientProtected": "",
-        "uiClientNotRemovable": ""
+        "redirectUrisRequired": "Un cliente que utiliza la concesión de código de autorización necesita al menos un URI de redirección.",
+        "invalidRedirectUri": "\"%s\" no es un URI de redirección válido: se espera un URI http o https, o un esquema personalizado de una aplicación nativa en notación de dominio inverso (p. ej., com.example.app:/callback), sin fragmento.",
+        "uiClientProtected": "La interfaz de usuario de AtroCore inicia sesión con este cliente: solo se pueden cambiar su nombre, descripción y estado.",
+        "uiClientNotRemovable": "La interfaz de usuario de AtroCore inicia sesión con este cliente, por lo que no se puede eliminar. Desactívelo para impedir el inicio de sesión en la interfaz de usuario."
     },
     "actions": {
-        "generateSecret": ""
+        "generateSecret": "Generar secreto"
     },
     "actionConfirms": {
-        "generateSecret": ""
+        "generateSecret": "Se generará un nuevo secreto de cliente. El secreto actual dejará de funcionar y se revocarán los tokens emitidos al cliente. ¿Desea continuar?"
     },
     "actionResults": {
         "generateSecret": ""
