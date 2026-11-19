@@ -1,58 +1,58 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "isActive": "",
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "secretHash": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "name": "Název",
+        "description": "Popis",
+        "isActive": "Aktivní",
+        "isConfidential": "Důvěrný",
+        "clientCredentialsGrant": "Přihlašovací údaje klienta",
+        "authorizationCodeGrant": "Autorizační kód",
+        "refreshTokenGrant": "Obnovovací token",
+        "user": "Uživatel",
+        "secretHash": "Hash tajného klíče",
+        "redirectUris": "URI pro přesměrování",
+        "isConsentRequired": "Vyžaduje souhlas",
+        "isUiClient": "Klient uživatelského rozhraní"
     },
     "links": {
-        "user": ""
+        "user": "Uživatel"
     },
     "labels": {
-        "Grant Types": "",
-        "authorizationRequest": "",
-        "Allow": "",
-        "signedInAs": "",
-        "Deny": ""
+        "Grant Types": "Typy grantů",
+        "authorizationRequest": "{clientName} žádá o přístup k vašemu účtu. Přihlaste se a povolte mu přístup.",
+        "Allow": "Povolit",
+        "signedInAs": "Jste přihlášeni jako {userName}.",
+        "Deny": "Zamítnout"
     },
     "tooltips": {
-        "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "isConfidential": "Důvěrný klient se ověřuje pomocí svého tajného klíče. Veřejný klient, například prohlížeč nebo mobilní aplikace, nemůže tajný klíč bezpečně uchovávat.",
+        "clientCredentialsGrant": "Klient získá přístupový token vlastním jménem pomocí svého ID klienta a tajného klíče, bez uživatele. Jedná za vybraného uživatele.",
+        "authorizationCodeGrant": "Klient získá přístupový token jménem uživatele, který se přihlásí prostřednictvím přihlašovacího formuláře AtroCore (s PKCE).",
+        "refreshTokenGrant": "Klient získá spolu s přístupovým tokenem také obnovovací token, který použije k získání nového přístupového tokenu, aniž by se uživatel musel znovu přihlašovat.",
+        "user": "Uživatel, za kterého klient jedná při získávání přístupového tokenu pomocí vlastních přihlašovacích údajů (grant přihlašovacích údajů klienta).",
+        "redirectUris": "Adresy, na které je uživatel po přihlášení přesměrován. redirect_uri autorizačního požadavku se musí přesně shodovat s jednou z nich.",
+        "isConsentRequired": "Uživatel na přihlašovacím formuláři AtroCore potvrzuje, že aplikace získá přístup k účtu. Tuto možnost vypněte pouze u aplikací vlastní organizace, například u uživatelského rozhraní AtroCore.",
+        "isUiClient": "Uživatelské rozhraní AtroCore se přihlašuje pomocí tohoto klienta. Nastavuje se při instalaci; obnoví ho konzolový příkaz „restore ui client“."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "",
-        "grantRequired": "",
-        "redirectUrisRequired": "",
-        "invalidRedirectUri": "",
-        "uiClientProtected": "",
-        "uiClientNotRemovable": ""
+        "userRequiredForClientCredentials": "Klient používající grant přihlašovacích údajů klienta potřebuje uživatele, za kterého bude jednat.",
+        "grantRequired": "Vyberte alespoň jeden způsob získání přístupového tokenu: přihlašovací údaje klienta nebo autorizační kód.",
+        "redirectUrisRequired": "Klient s grantem autorizačního kódu potřebuje alespoň jednu URI pro přesměrování.",
+        "invalidRedirectUri": "„%s“ není platná URI pro přesměrování: očekává se URI s protokolem http nebo https, případně vlastní schéma nativní aplikace v obráceném zápisu domény (např. com.example.app:/callback), bez fragmentu.",
+        "uiClientProtected": "Uživatelské rozhraní AtroCore se přihlašuje prostřednictvím tohoto klienta: lze změnit pouze jeho název, popis a stav.",
+        "uiClientNotRemovable": "Uživatelské rozhraní AtroCore se přihlašuje prostřednictvím tohoto klienta, proto jej nelze odstranit. Chcete-li přihlašování do uživatelského rozhraní vypnout, deaktivujte jej."
     },
     "actions": {
-        "generateSecret": ""
+        "generateSecret": "Vygenerovat tajný klíč"
     },
     "actionConfirms": {
-        "generateSecret": ""
+        "generateSecret": "Bude vygenerován nový tajný klíč klienta. Stávající klíč přestane fungovat a tokeny vydané klientovi budou odvolány. Chcete pokračovat?"
     },
     "actionResults": {
-        "generateSecret": ""
+        "generateSecret": "Tajný klíč klienta se zobrazí pouze jednou, zkopírujte si ho nyní:"
     },
     "messages": {
-        "uiClientDisabled": "",
-        "signInFailed": "",
-        "signInExpired": ""
+        "uiClientDisabled": "Přihlášení do uživatelského rozhraní je vypnuté správcem.",
+        "signInFailed": "Přihlášení se nezdařilo. Přihlaste se znovu.",
+        "signInExpired": "Přihlášení vypršelo. Spusťte ho znovu v aplikaci."
     }
 }
