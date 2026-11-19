@@ -1,14 +1,14 @@
 {
     "fields": {
-        "language": "",
-        "team": "",
-        "editAction": ""
+        "language": "Sprache",
+        "team": "Team",
+        "editAction": "Bearbeiten"
     },
     "labels": {
-        "yes": "",
-        "no": ""
+        "yes": "Ja",
+        "no": "Nein"
     },
     "exceptions": {
-        "cannotRemoveLanguageWhenRestricted": ""
+        "cannotRemoveLanguageWhenRestricted": "Die Hauptsprache kann nicht entfernt werden, wenn die Spracheinschränkung für das Team aktiviert ist."
     }
 }
