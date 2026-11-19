@@ -2,32 +2,16 @@
     "fields": {
         "name": "Nom",
         "description": "Description",
-        "isActive": "",
-        "isConfidential": "",
         "clientCredentialsGrant": "Identifiants du client",
-        "authorizationCodeGrant": "",
-        "refreshTokenGrant": "",
-        "user": "",
         "secretHash": "Hachage du secret",
-        "redirectUris": "",
-        "isConsentRequired": "",
         "isUiClient": "Client d’interface utilisateur"
     },
-    "links": {
-        "user": ""
-    },
     "labels": {
-        "Grant Types": "",
-        "authorizationRequest": "",
-        "Allow": "Autoriser",
-        "signedInAs": "",
-        "Deny": ""
+        "Allow": "Autoriser"
     },
     "tooltips": {
-        "isConfidential": "",
         "clientCredentialsGrant": "Le client obtient un jeton d’accès en son propre nom à l’aide de son ID client et de son secret, sans utilisateur. Il agit au nom de l’utilisateur sélectionné.",
         "authorizationCodeGrant": "Le client obtient un jeton d’accès au nom d’un utilisateur qui se connecte via le formulaire de connexion AtroCore (avec PKCE).",
-        "refreshTokenGrant": "",
         "user": "L’utilisateur au nom duquel le client agit lorsqu’il obtient un jeton d’accès avec ses propres identifiants (flux des identifiants du client).",
         "redirectUris": "Les adresses auxquelles l’utilisateur est redirigé après sa connexion. Le redirect_uri d’une requête d’autorisation doit correspondre exactement à l’une d’elles.",
         "isConsentRequired": "L’utilisateur confirme sur le formulaire de connexion AtroCore que l’application peut accéder à son compte. Désactivez cette option uniquement pour les applications de votre propre organisation, comme l’interface utilisateur AtroCore.",
@@ -35,17 +19,7 @@
     },
     "exceptions": {
         "userRequiredForClientCredentials": "Un client utilisant le flux des identifiants du client doit agir au nom d’un utilisateur.",
-        "grantRequired": "Sélectionnez au moins une méthode pour obtenir un jeton d’accès : identifiants du client ou code d’autorisation.",
-        "redirectUrisRequired": "",
-        "invalidRedirectUri": "",
-        "uiClientProtected": "",
-        "uiClientNotRemovable": ""
-    },
-    "actions": {
-        "generateSecret": ""
-    },
-    "actionConfirms": {
-        "generateSecret": ""
+        "grantRequired": "Sélectionnez au moins une méthode pour obtenir un jeton d’accès : identifiants du client ou code d’autorisation."
     },
     "actionResults": {
         "generateSecret": "Le secret du client ne s’affiche qu’une seule fois. Copiez-le maintenant :"
