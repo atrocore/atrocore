@@ -1781,5 +1781,15 @@
         "ConnectionTypeCookie": "Loguje się za pomocą żądania logowania i wysyła otrzymane pliki cookie z każdym żądaniem.",
         "ConnectionTypeTokenAuthApi": "Loguje się za pomocą żądania logowania i tworzy nagłówki żądania na podstawie odpowiedzi, np. tokenu.",
         "ConnectionTypeOtto": "Łączy się z API OTTO Market za pomocą OAuth."
+    },
+    "scopeDescriptions": {
+        "Action": "Wykonuje operację na rekordach, np. tworzy je, aktualizuje lub usuwa, wysyła wiadomość e-mail albo wywołuje webhook. Można ją uruchomić ręcznie, za pomocą przepływu pracy lub zgodnie z harmonogramem.",
+        "Attribute": "Właściwość rekordu dodawana do rekordów indywidualnie lub za pośrednictwem klasyfikacji, zamiast pola dostępnego w każdym rekordzie encji.",
+        "BlockingRule": "Wybiera rekordy kandydujące, które są następnie porównywane z regułami dopasowywania. Nie ocenia kandydatów.",
+        "Connection": "Przechowuje dane dostępowe do systemu zewnętrznego, np. bazy danych, serwera plików, serwera pocztowego lub API.",
+        "Entity": "Type rekordów danych, np. produktów lub marek, z własnymi polami, relacjami i układami.",
+        "EntityField": "Właściwość, którą ma każdy rekord encji. Type określa, jakie dane przechowuje pole i jak są wyświetlane.",
+        "MatchingRule": "Porównuje rekord z rekordem kandydującym i przyznaje kandydatowi punkty, jeśli pasują do siebie. Suma punktów określa, czy rekordy są duplikatami.",
+        "Storage": "Miejsce przechowywania plików, np. folder na serwerze AtroCore lub zewnętrzny magazyn plików."
     }
 }
