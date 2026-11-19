@@ -1,44 +1,44 @@
 {
     "fields": {
-        "targetEntity": "",
-        "sourceEntity": "",
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "targetEntity": "Целевая сущность",
+        "sourceEntity": "Исходная сущность",
+        "transformationScript": "Скрипт трансформации",
+        "executeTransformationAs": "Выполнять трансформацию от имени"
     },
     "tooltips": {
-        "transformationScript": "",
-        "executeTransformationAs": ""
+        "transformationScript": "Настройте преобразование данных исходной записи и их сопоставление с целевой записью.",
+        "executeTransformationAs": "Учетная запись пользователя, от имени которой будет выполняться скрипт трансформации."
     },
     "exceptions": {
-        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "",
-        "sourceEntityTypeNotAllowed": "",
-        "targetEntityCannotBePrimaryOfContributorDerivative": "",
-        "sourceAndTargetEntityCannotBeSame": "",
-        "dataPipelineAlreadyExists": "",
-        "transformationScriptIsMissing": "",
-        "transformationScriptIsNotValid": "",
-        "noSourceRecordIsLinked": ""
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Сущность «%s» является участником или производной от запроса на изменение и не может использоваться в качестве исходной сущности.",
+        "sourceEntityTypeNotAllowed": "Сущность «%s» не может использоваться как исходная сущность: допускаются только типы «Базовая» и «Иерархия».",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "Сущность «%s» является основной сущностью производной сущности участника и не может использоваться как целевая сущность.",
+        "sourceAndTargetEntityCannotBeSame": "Исходная и целевая сущности не могут совпадать.",
+        "dataPipelineAlreadyExists": "Для этой пары сущностей уже существует конвейер данных.",
+        "transformationScriptIsMissing": "Отсутствует сценарий преобразования для конвейера данных.",
+        "transformationScriptIsNotValid": "Скрипт трансформации возвращает недопустимые данные: %s",
+        "noSourceRecordIsLinked": "С исходной записью не связана ни одна запись."
     },
     "labels": {
-        "targetRecordPreviewHint": "",
-        "noDataPipelineConfigured": "",
-        "noSourceRecords": "",
-        "discard": "",
-        "transformationPreview": "",
-        "targetRecordNotExists": "",
-        "applyToRecords": "",
-        "transformTo": ""
+        "targetRecordPreviewHint": "Предварительный просмотр целевой записи после трансформации. Данные не сохраняются.",
+        "noDataPipelineConfigured": "Для этой пары сущностей не настроен конвейер данных",
+        "noSourceRecords": "Записи исходной сущности пока отсутствуют",
+        "discard": "Отменить",
+        "transformationPreview": "Предварительный просмотр трансформации",
+        "targetRecordNotExists": "Целевая запись ещё не существует. Примените предварительный просмотр, чтобы увидеть, как она будет выглядеть после преобразования.",
+        "applyToRecords": "Применить к записям",
+        "transformTo": "Преобразовать {entity}"
     },
     "messages": {
-        "transformConfirmation": "",
-        "updateFromSourceConfirmation": "",
-        "recordsTransformed": "",
-        "recordsNotTransformed": ""
+        "transformConfirmation": "Скрипт трансформации будет выполнен для выбранных записей, а целевые записи будут созданы или обновлены. Продолжить?",
+        "updateFromSourceConfirmation": "Скрипт трансформации будет выполнен для исходных записей, связанных с выбранными записями, а выбранные записи будут обновлены. Продолжить?",
+        "recordsTransformed": "Преобразовано записей: %s / %s",
+        "recordsNotTransformed": "Не удалось преобразовать %s записей. Подробности см. в журнале."
     },
     "options": {
         "executeTransformationAs": {
-            "system": "",
-            "sameUser": ""
+            "system": "Система",
+            "sameUser": "Тот же пользователь"
         }
     }
 }
