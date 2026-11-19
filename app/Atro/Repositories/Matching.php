@@ -87,19 +87,11 @@ class Matching extends Base
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isActive') && !empty($entity->get('isActive'))) {
-            $rule = $this->getEntityManager()->getRepository('MatchingRule')
-                ->where(['matchingId' => $entity->id])
-                ->findOne();
-
-            if (empty($rule)) {
+            if (!$this->getEntityManager()->getRepository('MatchingRule')->hasNotEmptyRules($entity->id)) {
                 throw new BadRequest($this->getLanguage()->translate('noRules', 'exceptions', 'Matching'));
             }
 
-            $blockingRule = $this->getEntityManager()->getRepository('BlockingRule')
-                ->where(['matchingId' => $entity->id])
-                ->findOne();
-
-            if (empty($blockingRule)) {
+            if (!$this->getEntityManager()->getRepository('BlockingRule')->hasNotEmptyRules($entity->id)) {
                 throw new BadRequest($this->getLanguage()->translate('noBlockingRules', 'exceptions', 'Matching'));
             }
         }
@@ -154,11 +146,11 @@ class Matching extends Base
         $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
 
         foreach ($entity->get('blockingRules') ?? [] as $rule) {
-            $this->getEntityManager()->removeEntity($rule);
+            $this->getEntityManager()->removeEntity($rule, ['removeWithMatching' => true]);
         }
 
         foreach ($entity->get('matchingRules') ?? [] as $rule) {
-            $this->getEntityManager()->removeEntity($rule);
+            $this->getEntityManager()->removeEntity($rule, ['removeWithMatching' => true]);
         }
 
         $this->rebuild();

@@ -50,9 +50,11 @@ class Set extends AbstractBlockingRule
             }
         }
 
-        if (!empty($rulesParts)) {
-            $subQb->andWhere(implode($operator, $rulesParts));
+        if (empty($rulesParts)) {
+            return '1=0';
         }
+
+        $subQb->andWhere(implode($operator, $rulesParts));
 
         foreach ($subQb->getParameters() as $name => $value) {
             $qb->setParameter($name, $value, Mapper::getParameterType($value));

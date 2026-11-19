@@ -18,7 +18,6 @@ use Atro\Core\BlockingRuleType\AbstractBlockingRule;
 use Atro\Core\ExpressionLanguage\Compiled\CompiledMatchingRuleWhereExpression;
 use Atro\Core\ExpressionLanguage\Compiled\MatchingRuleWhereContext;
 use Atro\Entities\BlockingRule as BlockingRuleEntity;
-use Espo\ORM\Entity as OrmEntity;
 
 class BlockingRule extends AbstractRule
 {
@@ -42,15 +41,5 @@ class BlockingRule extends AbstractRule
     public function createBlockingType(BlockingRuleEntity $rule): AbstractBlockingRule
     {
         return $this->container->get('matchingManager')->createBlockingType($rule);
-    }
-
-    protected function afterRemove(OrmEntity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        $matching = $this->getMatching($entity);
-        if (!empty($matching) && !empty($matching->get('isActive'))) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
-        }
     }
 }

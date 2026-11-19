@@ -311,6 +311,22 @@ abstract class AbstractRule extends Base
         $this->saveExpressions($entity);
     }
 
+    public function hasNotEmptyRules(string $matchingId): bool
+    {
+        return $this->containsNotEmptyRule($this->where(['matchingId' => $matchingId, static::RULE_SET_FIELD => null])->find());
+    }
+
+    protected function containsNotEmptyRule(iterable $rules): bool
+    {
+        foreach ($rules as $rule) {
+            if ($rule->get('type') !== 'set' || $this->containsNotEmptyRule($rule->getNestedRules())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param OrmEntity          $entity
      * @param array              $options
@@ -319,11 +335,15 @@ abstract class AbstractRule extends Base
      */
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
+        if (empty($options['removeWithMatching'])) {
+            $this->validateIsMatchingActive($entity);
+        }
+
         parent::beforeRemove($entity, $options);
 
         if ($entity->get('type') === 'set') {
             foreach ($entity->getNestedRules() as $rule) {
-                $this->getEntityManager()->removeEntity($rule);
+                $this->getEntityManager()->removeEntity($rule, ['removeWithMatching' => !empty($options['removeWithMatching'])]);
             }
         }
     }
