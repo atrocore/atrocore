@@ -1,17 +1,17 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
+        "name": "Nom",
+        "description": "Description",
         "isActive": "",
         "isConfidential": "",
-        "clientCredentialsGrant": "",
+        "clientCredentialsGrant": "Identifiants du client",
         "authorizationCodeGrant": "",
         "refreshTokenGrant": "",
         "user": "",
-        "secretHash": "",
+        "secretHash": "Hachage du secret",
         "redirectUris": "",
         "isConsentRequired": "",
-        "isUiClient": ""
+        "isUiClient": "Client d’interface utilisateur"
     },
     "links": {
         "user": ""
@@ -19,23 +19,23 @@
     "labels": {
         "Grant Types": "",
         "authorizationRequest": "",
-        "Allow": "",
+        "Allow": "Autoriser",
         "signedInAs": "",
         "Deny": ""
     },
     "tooltips": {
         "isConfidential": "",
-        "clientCredentialsGrant": "",
-        "authorizationCodeGrant": "",
+        "clientCredentialsGrant": "Le client obtient un jeton d’accès en son propre nom à l’aide de son ID client et de son secret, sans utilisateur. Il agit au nom de l’utilisateur sélectionné.",
+        "authorizationCodeGrant": "Le client obtient un jeton d’accès au nom d’un utilisateur qui se connecte via le formulaire de connexion AtroCore (avec PKCE).",
         "refreshTokenGrant": "",
-        "user": "",
-        "redirectUris": "",
-        "isConsentRequired": "",
-        "isUiClient": ""
+        "user": "L’utilisateur au nom duquel le client agit lorsqu’il obtient un jeton d’accès avec ses propres identifiants (flux des identifiants du client).",
+        "redirectUris": "Les adresses auxquelles l’utilisateur est redirigé après sa connexion. Le redirect_uri d’une requête d’autorisation doit correspondre exactement à l’une d’elles.",
+        "isConsentRequired": "L’utilisateur confirme sur le formulaire de connexion AtroCore que l’application peut accéder à son compte. Désactivez cette option uniquement pour les applications de votre propre organisation, comme l’interface utilisateur AtroCore.",
+        "isUiClient": "L’interface utilisateur AtroCore se connecte via ce client. Celui-ci est défini lors de l’installation. La commande console « restore ui client » le restaure."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "",
-        "grantRequired": "",
+        "userRequiredForClientCredentials": "Un client utilisant le flux des identifiants du client doit agir au nom d’un utilisateur.",
+        "grantRequired": "Sélectionnez au moins une méthode pour obtenir un jeton d’accès : identifiants du client ou code d’autorisation.",
         "redirectUrisRequired": "",
         "invalidRedirectUri": "",
         "uiClientProtected": "",
@@ -48,11 +48,11 @@
         "generateSecret": ""
     },
     "actionResults": {
-        "generateSecret": ""
+        "generateSecret": "Le secret du client ne s’affiche qu’une seule fois. Copiez-le maintenant :"
     },
     "messages": {
-        "uiClientDisabled": "",
-        "signInFailed": "",
-        "signInExpired": ""
+        "uiClientDisabled": "La connexion à l’interface utilisateur a été désactivée par l’administrateur.",
+        "signInFailed": "La connexion a échoué. Veuillez vous reconnecter.",
+        "signInExpired": "La connexion a expiré. Relancez-la dans l’application."
     }
 }
