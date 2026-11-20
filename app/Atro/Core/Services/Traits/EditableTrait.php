@@ -1229,7 +1229,7 @@ trait EditableTrait
                 foreach ($value as $id) {
                     $foreignEntity = $this->getEntityManager()->getRepository($entityName)->get($id);
                     if (empty($foreignEntity)) {
-                        throw new BadRequest("'$value' is not valid for the field '$field'");
+                        throw new BadRequest("'$id' is not valid for the field '$field'");
                     }
                 }
                 continue;

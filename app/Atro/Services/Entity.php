@@ -91,6 +91,26 @@ class Entity extends ReferenceData
     }
 
     /**
+     * The supertype is validated before the general validation of the link values, it explains the reason of the error.
+     */
+    protected function beforeCreateEntity(OrmEntity $entity, $data)
+    {
+        $supertype = $data->supertypeEntityId ?? null;
+        if (!empty($supertype) && is_string($supertype)) {
+            $supertypeDefs = $this->getMetadata()->get(['scopes', $supertype]);
+            if (empty($supertypeDefs) || !empty($supertypeDefs['emHidden'])) {
+                throw new BadRequest(sprintf($this->container->get('language')->translate('supertypeIsNotFound', 'exceptions', 'Entity'), $supertype));
+            }
+
+            if (($supertypeDefs['type'] ?? null) !== 'Base' || !empty($supertypeDefs['primaryEntityId'])) {
+                throw new BadRequest($this->container->get('language')->translate('supertypeMustBeBase', 'exceptions', 'Entity'));
+            }
+        }
+
+        parent::beforeCreateEntity($entity, $data);
+    }
+
+    /**
      * Some entities allow to change only some of their parameters.
      */
     protected function getReadOnlyFields(OrmEntity $entity): array
