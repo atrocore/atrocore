@@ -9,12 +9,6 @@
         {
           "name": "sessionLifetime"
         }
-      ],
-      [
-        false,
-        {
-          "name": "sessionMaxIdleTime"
-        }
       ]
     ]
   },

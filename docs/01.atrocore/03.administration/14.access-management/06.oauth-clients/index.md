@@ -46,7 +46,7 @@ Deleting a client revokes all tokens issued to it: the application loses access 
 
 The AtroCore user interface logs in by the OAuth client **AtroCore UI**, marked with **UI Client**. It is created on the installation. The server acts as this client: it requests and keeps the tokens, the browser has only a session cookie (see [Session Cookie](../../../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie)).
 
-Only the name, the description, **Active** and the token lifetimes of this client can be changed, and it cannot be deleted. Deactivating it turns off the login to the user interface for all users. To turn it on again, run:
+Only the name, the description, **Active** and the token lifetimes of this client can be changed, and it cannot be deleted. Deactivating it turns off the login to the user interface for all users. To turn it on again, run: It has no **Claims** panel: its tokens never leave the server.
 
 ```
 php console.php restore ui client

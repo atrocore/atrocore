@@ -27,7 +27,8 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 /**
  * The sessions of the user interface (backend for frontend): the server is the OAuth client of the user interface,
  * keeps its tokens encrypted and gives the browser only the session cookie. The access token is refreshed when it
- * expires, the session ends with the lifetime and the idle time from the settings.
+ * expires. The session ends with the lifetime from the settings and when it stays unused longer than the refresh token
+ * lifetime of the client of the user interface: then its tokens cannot be refreshed anymore.
  */
 class BrowserSession
 {
@@ -202,9 +203,9 @@ class BrowserSession
     public function deleteExpired(): void
     {
         $lifetime = (float)$this->config->get('sessionLifetime', 0);
-        $idleTime = (float)$this->config->get('sessionMaxIdleTime', 0);
+        $idleSeconds = $this->getMaxIdleSeconds();
 
-        if ($lifetime <= 0 && $idleTime <= 0) {
+        if ($lifetime <= 0 && $idleSeconds <= 0) {
             return;
         }
 
@@ -217,9 +218,9 @@ class BrowserSession
             $conditions[] = 'created_at < :createdBefore';
             $queryBuilder->setParameter('createdBefore', date('Y-m-d H:i:s', time() - (int)round($lifetime * 3600)));
         }
-        if ($idleTime > 0) {
+        if ($idleSeconds > 0) {
             $conditions[] = 'last_access_at < :accessedBefore';
-            $queryBuilder->setParameter('accessedBefore', date('Y-m-d H:i:s', time() - (int)round($idleTime * 3600)));
+            $queryBuilder->setParameter('accessedBefore', date('Y-m-d H:i:s', time() - $idleSeconds));
         }
 
         $queryBuilder->where($queryBuilder->expr()->or(...$conditions));
@@ -328,9 +329,25 @@ class BrowserSession
             return true;
         }
 
-        $idleTime = (float)$this->config->get('sessionMaxIdleTime', 0);
+        $idleSeconds = $this->getMaxIdleSeconds();
 
-        return $idleTime > 0 && strtotime((string)$session['last_access_at']) + (int)round($idleTime * 3600) < time();
+        return $idleSeconds > 0 && strtotime((string)$session['last_access_at']) + $idleSeconds < time();
+    }
+
+    /**
+     * How long a session may stay unused: the refresh token lifetime of the client of the user interface, after which
+     * the tokens of the session cannot be refreshed. 0 when the client is missing.
+     */
+    private function getMaxIdleSeconds(): int
+    {
+        $minutes = $this->connection->createQueryBuilder()
+            ->select('refresh_token_lifetime')
+            ->from('oauth_client')
+            ->where('id = :id')
+            ->setParameter('id', (string)$this->uiClient->getId())
+            ->fetchOne();
+
+        return max(0, (int)$minutes) * 60;
     }
 
     /**

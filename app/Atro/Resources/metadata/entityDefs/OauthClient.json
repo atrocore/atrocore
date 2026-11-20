@@ -214,7 +214,17 @@
       "layoutListDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
     },
     "secretHash": {
       "type": "varchar",

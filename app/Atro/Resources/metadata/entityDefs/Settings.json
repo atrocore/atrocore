@@ -123,12 +123,6 @@
       "required": true,
       "tooltip": true
     },
-    "sessionMaxIdleTime": {
-      "type": "float",
-      "min": 0,
-      "default": 0,
-      "tooltip": true
-    },
     "sessionPreventConcurrent": {
       "type": "bool",
       "tooltip": true
@@ -161,7 +155,6 @@
       "default": 20,
       "required": true
     },
-
     "adminNotificationsNewVersion": {
       "type": "bool"
     },

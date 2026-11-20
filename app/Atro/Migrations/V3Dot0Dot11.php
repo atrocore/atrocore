@@ -36,7 +36,8 @@ class V3Dot0Dot11 extends Base
 
     /**
      * The custom claims of the OAuth clients: a claim name is unique per client. The token lifetimes are settings of
-     * each client instead of options in data/config.php: the existing clients get the lifetimes the options set.
+     * each client instead of options in data/config.php: the existing clients get the lifetimes the options set. The
+     * idle time of the sessions of the user interface is the refresh token lifetime of its client.
      */
     public function up(): void
     {
@@ -51,6 +52,7 @@ class V3Dot0Dot11 extends Base
         }
 
         $this->moveLifetimeOptions();
+        $this->moveSessionIdleTime();
     }
 
     protected function addLifetimeColumns(Schema $schema): void
@@ -94,6 +96,33 @@ class V3Dot0Dot11 extends Base
         }
 
         $config->remove('oauthAuthCodeTtl');
+        $config->save();
+    }
+
+    /**
+     * The idle time of the sessions of the user interface is the refresh token lifetime of its client: the setting
+     * "sessionMaxIdleTime" (hours, 0 for no limit) goes to that client and is removed.
+     */
+    protected function moveSessionIdleTime(): void
+    {
+        $config = $this->getConfig();
+        $uiClientId = (string)$config->get('oauthUiClientId', '');
+
+        if ($uiClientId !== '' && $config->has('sessionMaxIdleTime')) {
+            [, , $min, $max] = self::LIFETIME_OPTIONS['oauthRefreshTokenTtl'];
+            $hours = (float)$config->get('sessionMaxIdleTime');
+            $minutes = $hours > 0 ? max($min, min($max, (int)round($hours * 60))) : $max;
+
+            $this->getDbal()->createQueryBuilder()
+                ->update('oauth_client')
+                ->set('refresh_token_lifetime', ':minutes')
+                ->where('id = :id')
+                ->setParameter('minutes', $minutes, ParameterType::INTEGER)
+                ->setParameter('id', $uiClientId)
+                ->executeStatement();
+        }
+
+        $config->remove('sessionMaxIdleTime');
         $config->save();
     }
 

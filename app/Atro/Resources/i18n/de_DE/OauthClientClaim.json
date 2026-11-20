@@ -12,6 +12,7 @@
     "value": "Der Wert des Claims. Jedes Zugriffstoken des Clients enthält ihn als Zeichenkette."
   },
   "exceptions": {
-    "reservedName": "\"%s\" wird vom Autorisierungsserver gesetzt und kann nicht als eigener Claim verwendet werden."
+    "reservedName": "\"%s\" wird vom Autorisierungsserver gesetzt und kann nicht als eigener Claim verwendet werden.",
+    "uiClientNoClaims": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an: Seine Tokens verlassen den Server nie, daher hat er keine eigenen Claims."
   }
 }

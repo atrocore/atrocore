@@ -37,7 +37,7 @@
     "isConsentRequired": "The user confirms on the AtroCore login form that the application gets access to the account. Turn it off only for the applications of your own organization, such as the AtroCore user interface.",
     "isUiClient": "The AtroCore user interface signs in by this client. It is set on the installation; the console command \"restore ui client\" restores it.",
     "accessTokenLifetime": "How long an access token of the client is valid, in minutes (1 to 1440). An application that checks the tokens itself, without asking AtroCore, notices a revocation only when the token expires, so keep it short for such clients.",
-    "refreshTokenLifetime": "How long a refresh token of the client is valid, in minutes (1 to 525600)."
+    "refreshTokenLifetime": "How long a refresh token of the client is valid, in minutes (1 to 525600). Every refresh issues a new refresh token, so the lifetime counts from the last refresh. For the AtroCore UI client it is how long a session of the user interface can stay unused."
   },
   "exceptions": {
     "grantRequired": "Select at least one way to obtain an access token: client credentials or authorization code.",
