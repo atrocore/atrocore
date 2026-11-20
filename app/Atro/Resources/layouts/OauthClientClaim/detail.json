@@ -1,0 +1,22 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      [
+        {
+          "name": "oauthClient"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": "Details"
+  }
+]

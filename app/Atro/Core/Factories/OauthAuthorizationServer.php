@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Atro\Core\Factories;
 
 use Atro\Core\Container;
+use Atro\Core\OAuth\Grants\AuthCodeGrant;
+use Atro\Core\OAuth\Grants\ClientCredentialsGrant;
+use Atro\Core\OAuth\Grants\RefreshTokenGrant;
 use Atro\Core\OAuth\Keys;
 use Atro\Core\OAuth\Repositories\AccessTokenRepository;
 use Atro\Core\OAuth\Repositories\AuthCodeRepository;
@@ -21,23 +24,17 @@ use Atro\Core\OAuth\Repositories\ClientRepository;
 use Atro\Core\OAuth\Repositories\RefreshTokenRepository;
 use Atro\Core\OAuth\Repositories\ScopeRepository;
 use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\Grant\AuthCodeGrant;
-use League\OAuth2\Server\Grant\ClientCredentialsGrant;
-use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
+/**
+ * The OAuth authorization server. The access and refresh tokens get the lifetimes of their client (OauthClient);
+ * an authorization code is valid for a fixed time.
+ */
 class OauthAuthorizationServer implements FactoryInterface
 {
-    public const ACCESS_TOKEN_TTL_CONFIG_KEY = 'oauthAccessTokenTtl';
-    public const REFRESH_TOKEN_TTL_CONFIG_KEY = 'oauthRefreshTokenTtl';
-    public const AUTH_CODE_TTL_CONFIG_KEY = 'oauthAuthCodeTtl';
-
-    public const DEFAULT_ACCESS_TOKEN_TTL = 'PT1H';
-    public const DEFAULT_REFRESH_TOKEN_TTL = 'P1M';
-    public const DEFAULT_AUTH_CODE_TTL = 'PT10M';
+    public const AUTH_CODE_TTL = 'PT10M';
 
     public function create(Container $container)
     {
-        $config = $container->get('config');
         $keys = $container->get(Keys::class);
 
         $server = new AuthorizationServer(
@@ -48,25 +45,18 @@ class OauthAuthorizationServer implements FactoryInterface
             $keys->getEncryptionKey()
         );
 
-        $accessTokenTtl = new \DateInterval($config->get(self::ACCESS_TOKEN_TTL_CONFIG_KEY, self::DEFAULT_ACCESS_TOKEN_TTL));
-
-        $refreshTokenTtl = new \DateInterval($config->get(self::REFRESH_TOKEN_TTL_CONFIG_KEY, self::DEFAULT_REFRESH_TOKEN_TTL));
-
-        $server->enableGrantType(new ClientCredentialsGrant(), $accessTokenTtl);
+        $server->enableGrantType(new ClientCredentialsGrant());
 
         $authCodeGrant = new AuthCodeGrant(
             $container->get(AuthCodeRepository::class),
             $container->get(RefreshTokenRepository::class),
-            new \DateInterval($config->get(self::AUTH_CODE_TTL_CONFIG_KEY, self::DEFAULT_AUTH_CODE_TTL))
+            new \DateInterval(self::AUTH_CODE_TTL)
         );
-        $authCodeGrant->setRefreshTokenTTL($refreshTokenTtl);
         // PKCE is required from every client and validated by Atro\Core\OAuth\Authorization
         $authCodeGrant->disableRequireCodeChallengeForPublicClients();
-        $server->enableGrantType($authCodeGrant, $accessTokenTtl);
+        $server->enableGrantType($authCodeGrant);
 
-        $refreshTokenGrant = new RefreshTokenGrant($container->get(RefreshTokenRepository::class));
-        $refreshTokenGrant->setRefreshTokenTTL($refreshTokenTtl);
-        $server->enableGrantType($refreshTokenGrant, $accessTokenTtl);
+        $server->enableGrantType(new RefreshTokenGrant($container->get(RefreshTokenRepository::class)));
 
         return $server;
     }

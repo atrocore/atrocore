@@ -68,7 +68,7 @@ To ensure the security of your accounts and sensitive data, follow these best pr
 By following these guidelines, you can significantly improve the security of your online accounts and protect your personal information.
 
 ## Session expiration ##
-Consider decreasing [Session Max Idle Time](../../01.atrocore/03.administration/14.access-management/05.authentication/index.md#sessions). Additionally, you can also specify Session Lifetime.
+Consider decreasing the **Refresh Token Lifetime** of the OAuth client [AtroCore UI](../../01.atrocore/03.administration/14.access-management/06.oauth-clients/index.md#atrocore-ui-client): it is how long a session of the user interface can stay unused. Additionally, you can also specify [Session Lifetime](../../01.atrocore/03.administration/14.access-management/05.authentication/index.md#sessions).
 
 ## OAuth clients ##
 Register every integration as a separate [OAuth client](../../01.atrocore/03.administration/14.access-management/06.oauth-clients/index.md) with its own user and role, so that its access can be limited, audited in the Action History and revoked without affecting other integrations. Deactivate or delete the clients that are no longer used.

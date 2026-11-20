@@ -51,6 +51,14 @@
       ],
       [
         {
+          "name": "accessTokenLifetime"
+        },
+        {
+          "name": "refreshTokenLifetime"
+        }
+      ],
+      [
+        {
           "name": "isConsentRequired"
         },
         false

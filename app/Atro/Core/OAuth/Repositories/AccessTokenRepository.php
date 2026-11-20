@@ -44,7 +44,24 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
             $accessToken->setUserIdentifier($userIdentifier);
         }
 
+        $accessToken->setCustomClaims($this->getCustomClaims($clientEntity->getIdentifier()));
+
         return $accessToken;
+    }
+
+    /**
+     * @return array<string, string> claim name => value, as configured for the client (OauthClientClaim)
+     */
+    protected function getCustomClaims(string $clientId): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('name', 'value')
+            ->from('oauth_client_claim')
+            ->where('oauth_client_id = :clientId')
+            ->andWhere('deleted = :false')
+            ->setParameter('clientId', $clientId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllKeyValue();
     }
 
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity): void

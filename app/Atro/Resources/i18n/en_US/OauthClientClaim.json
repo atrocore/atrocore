@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Name",
+    "value": "Value",
+    "oauthClient": "OAuth Client"
+  },
+  "links": {
+    "oauthClient": "OAuth Client"
+  },
+  "tooltips": {
+    "name": "The name of the claim in the access token, e.g. \"role\". The registered JWT claims and the claims set by the server (aud, sub, exp, iat, nbf, jti, iss, scopes) cannot be used.",
+    "value": "The value of the claim. Every access token issued to the client carries it as a string."
+  },
+  "exceptions": {
+    "reservedName": "\"%s\" is set by the authorization server and cannot be used as a custom claim.",
+    "uiClientNoClaims": "The AtroCore user interface signs in by this client: its tokens never leave the server, so it has no custom claims."
+  }
+}

@@ -22,5 +22,15 @@
       "acl": "edit",
       "sortOrder": 300
     }
+  },
+  "relationshipPanels": {
+    "claims": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    }
   }
 }

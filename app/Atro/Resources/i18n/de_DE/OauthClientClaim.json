@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Name",
+    "value": "Wert",
+    "oauthClient": "OAuth-Client"
+  },
+  "links": {
+    "oauthClient": "OAuth-Client"
+  },
+  "tooltips": {
+    "name": "Der Name des Claims im Zugriffstoken, z. B. \"role\". Die registrierten JWT-Claims und die vom Server gesetzten Claims (aud, sub, exp, iat, nbf, jti, iss, scopes) können nicht verwendet werden.",
+    "value": "Der Wert des Claims. Jedes Zugriffstoken des Clients enthält ihn als Zeichenkette."
+  },
+  "exceptions": {
+    "reservedName": "\"%s\" wird vom Autorisierungsserver gesetzt und kann nicht als eigener Claim verwendet werden.",
+    "uiClientNoClaims": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an: Seine Tokens verlassen den Server nie, daher hat er keine eigenen Claims."
+  }
+}

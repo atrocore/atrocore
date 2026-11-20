@@ -525,7 +525,6 @@ final class Config
             'assignmentEmailNotifications'    => false,
             'disabledCountQueryEntityList'    => [],
             'sessionLifetime'               => 0,
-            'sessionMaxIdleTime'            => 120,
             'passwordChangeRequestResendInterval' => 1,
             'passwordChangeRequestLifetime'   => 15,
             'userNameRegularExpression'       => '[^a-z0-9\-@_\.\s]',

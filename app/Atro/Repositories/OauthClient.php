@@ -48,10 +48,6 @@ class OauthClient extends Base
             throw new BadRequest($this->container->get('language')->translate('grantRequired', 'exceptions', 'OauthClient'));
         }
 
-        if ($hasClientCredentials && empty($entity->get('userId'))) {
-            throw new BadRequest($this->container->get('language')->translate('userRequiredForClientCredentials', 'exceptions', 'OauthClient'));
-        }
-
         // the redirect URI of the client of the user interface is the site URL
         if (!empty($entity->get('authorizationCodeGrant')) && !$this->isUiClient($entity)) {
             $this->validateRedirectUris((array)$entity->get('redirectUris'));

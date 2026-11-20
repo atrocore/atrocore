@@ -11,10 +11,14 @@
     "secretHash": "Secret Hash",
     "redirectUris": "Redirect URIs",
     "isConsentRequired": "Consent Required",
-    "isUiClient": "UI Client"
+    "isUiClient": "UI Client",
+    "claims": "Claims",
+    "accessTokenLifetime": "Access Token Lifetime, min",
+    "refreshTokenLifetime": "Refresh Token Lifetime, min"
   },
   "links": {
-    "user": "User"
+    "user": "User",
+    "claims": "Claims"
   },
   "labels": {
     "Grant Types": "Grant Types",
@@ -25,20 +29,21 @@
   },
   "tooltips": {
     "isConfidential": "A confidential client authenticates with its client secret. A public client, such as a browser or mobile application, cannot keep a secret.",
-    "clientCredentialsGrant": "The client obtains an access token on its own behalf with its client ID and secret, without a user. It acts as the selected user.",
+    "clientCredentialsGrant": "The client obtains an access token on its own behalf with its client ID and secret, without a user. With a user selected, the token has the permissions of that user in the AtroCore API.",
     "authorizationCodeGrant": "The client obtains an access token on behalf of a user who logs in on the AtroCore login form (with PKCE).",
     "refreshTokenGrant": "Together with the access token the client gets a refresh token, which it exchanges for a new access token without signing the user in again.",
-    "user": "The user the client acts as when it obtains an access token with its own credentials (client credentials grant).",
+    "user": "Optional. With a user, the access tokens of the client (client credentials grant) have the permissions of this user in the AtroCore API. Without a user, the tokens have no access to the AtroCore API: they only authenticate the client to other applications, e.g. with its custom claims.",
     "redirectUris": "The addresses the user is returned to after signing in. The redirect_uri of an authorization request must match one of them exactly.",
     "isConsentRequired": "The user confirms on the AtroCore login form that the application gets access to the account. Turn it off only for the applications of your own organization, such as the AtroCore user interface.",
-    "isUiClient": "The AtroCore user interface signs in by this client. It is set on the installation; the console command \"restore ui client\" restores it."
+    "isUiClient": "The AtroCore user interface signs in by this client. It is set on the installation; the console command \"restore ui client\" restores it.",
+    "accessTokenLifetime": "How long an access token of the client is valid, in minutes (1 to 1440). An application that checks the tokens itself, without asking AtroCore, notices a revocation only when the token expires, so keep it short for such clients.",
+    "refreshTokenLifetime": "How long a refresh token of the client is valid, in minutes (1 to 525600). Every refresh issues a new refresh token, so the lifetime counts from the last refresh. For the AtroCore UI client it is how long a session of the user interface can stay unused."
   },
   "exceptions": {
-    "userRequiredForClientCredentials": "A client with the client credentials grant needs a user to act as.",
     "grantRequired": "Select at least one way to obtain an access token: client credentials or authorization code.",
     "redirectUrisRequired": "A client with the authorization code grant needs at least one redirect URI.",
     "invalidRedirectUri": "\"%s\" is not a valid redirect URI: an http or https URI, or a custom scheme of a native application in reverse domain notation (e.g. com.example.app:/callback), without a fragment is expected.",
-    "uiClientProtected": "The AtroCore user interface signs in by this client: only its name, description and activity can be changed.",
+    "uiClientProtected": "The AtroCore user interface signs in by this client: only its name, description, activity and token lifetimes can be changed.",
     "uiClientNotRemovable": "The AtroCore user interface signs in by this client, it cannot be deleted. Deactivate it to turn off signing in to the user interface."
   },
   "actions": {

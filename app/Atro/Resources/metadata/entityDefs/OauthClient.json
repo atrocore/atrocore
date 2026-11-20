@@ -96,6 +96,39 @@
         }
       }
     },
+    "accessTokenLifetime": {
+      "type": "int",
+      "required": true,
+      "default": 60,
+      "min": 1,
+      "max": 1440,
+      "tooltip": true
+    },
+    "refreshTokenLifetime": {
+      "type": "int",
+      "default": 4320,
+      "min": 1,
+      "max": 525600,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "refreshTokenGrant"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "refreshTokenGrant"
+            }
+          ]
+        }
+      }
+    },
     "redirectUris": {
       "type": "array",
       "tooltip": true,
@@ -165,22 +198,28 @@
             }
           ]
         },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isConfidential"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "clientCredentialsGrant"
-            }
-          ]
-        },
         "protected": {
           "conditionGroup": [
             {
               "type": "isTrue",
+              "attribute": "isUiClient"
+            }
+          ]
+        }
+      }
+    },
+    "claims": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
               "attribute": "isUiClient"
             }
           ]
@@ -218,6 +257,11 @@
     "user": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "claims": {
+      "type": "hasMany",
+      "foreign": "oauthClient",
+      "entity": "OauthClientClaim"
     },
     "createdBy": {
       "type": "belongsTo",

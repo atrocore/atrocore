@@ -34,7 +34,6 @@
         "isUiClient": "Az AtroCore felhasználói felület ezzel a klienssel jelentkezik be. A telepítés során van beállítva; a „restore ui client” konzolparancs állítja vissza."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "A kliens-hitelesítő adatokat használó kliensnek szüksége van egy felhasználóra, akinek a nevében eljárhat.",
         "grantRequired": "Válasszon legalább egy módot a hozzáférési token beszerzéséhez: kliens-hitelesítő adatok vagy engedélyezési kód.",
         "redirectUrisRequired": "Az engedélyezési kód folyamatot használó klienshez legalább egy átirányítási URI szükséges.",
         "invalidRedirectUri": "A(z) „%s” nem érvényes átirányítási URI: HTTP- vagy HTTPS-URI, illetve egy natív alkalmazás egyedi sémájú, fordított tartományneves formátumú URI-ja (pl. com.example.app:/callback) várható, töredék nélkül.",
