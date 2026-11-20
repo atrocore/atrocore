@@ -287,19 +287,32 @@ class Translation extends Base
         $conn->executeStatement($sql, $params, $types);
     }
 
+    /**
+     * Updates the given columns of the rows; a column a row does not carry keeps its value. One statement updates the
+     * same columns of all its rows, so the rows are grouped by their columns: in a statement over the union of the
+     * columns a row would set the columns it does not carry to NULL.
+     */
     public function bulkUpdate(array $rows): void
+    {
+        $groups = [];
+        foreach ($rows as $row) {
+            $keys = array_keys($row);
+            sort($keys);
+            $groups[implode(',', $keys)][] = $row;
+        }
+
+        foreach ($groups as $groupRows) {
+            $this->updateRowsWithSameColumns($groupRows);
+        }
+    }
+
+    private function updateRowsWithSameColumns(array $rows): void
     {
         if (empty($rows)) {
             return;
         }
 
-        $allKeys = [];
-        foreach ($rows as $row) {
-            foreach (array_keys($row) as $key) {
-                $allKeys[$key] = true;
-            }
-        }
-        $allKeys = array_keys($allKeys);
+        $allKeys = array_keys($rows[0]);
 
         $conn = $this->getDbal();
         $columns = array_map(fn(string $k) => Util::toUnderScore($k), $allKeys);
