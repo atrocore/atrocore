@@ -27,6 +27,26 @@
     "description": {
       "type": "text"
     },
+    "isActive": {
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
     "minimumScore": {
       "type": "int",
       "required": true,
