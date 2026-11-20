@@ -17,6 +17,7 @@
         "cookie",
         "smtp",
         "vertica",
+        "oracle",
         "tokenAuthApi",
         "apiKey"
       ],
@@ -152,7 +153,8 @@
                 "msql",
                 "ftp",
                 "sftp",
-                "vertica"
+                "vertica",
+                "oracle"
               ]
             }
           ]
@@ -175,7 +177,8 @@
                 "mysql",
                 "psql",
                 "msql",
-                "vertica"
+                "vertica",
+                "oracle"
               ]
             }
           ]
@@ -189,7 +192,8 @@
                 "mysql",
                 "psql",
                 "msql",
-                "vertica"
+                "vertica",
+                "oracle"
               ]
             }
           ]
@@ -214,7 +218,8 @@
                 "msql",
                 "ftp",
                 "sftp",
-                "vertica"
+                "vertica",
+                "oracle"
               ]
             }
           ]
@@ -242,6 +247,7 @@
                 "cookie",
                 "pdoSql",
                 "vertica",
+                "oracle",
                 "tokenAuthApi",
                 "oauth2"
               ]
@@ -286,6 +292,7 @@
                 "cookie",
                 "pdoSql",
                 "vertica",
+                "oracle",
                 "tokenAuthApi",
                 "oauth2"
               ]
