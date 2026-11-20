@@ -187,6 +187,14 @@
         }
       }
     },
+    "claims": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "noLoad": true
+    },
     "secretHash": {
       "type": "varchar",
       "len": 255,
@@ -218,6 +226,11 @@
     "user": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "claims": {
+      "type": "hasMany",
+      "foreign": "oauthClient",
+      "entity": "OauthClientClaim"
     },
     "createdBy": {
       "type": "belongsTo",

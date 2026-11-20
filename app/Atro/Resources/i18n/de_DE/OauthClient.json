@@ -11,10 +11,12 @@
     "secretHash": "Secret-Hash",
     "redirectUris": "Redirect-URIs",
     "isConsentRequired": "Zustimmung erforderlich",
-    "isUiClient": "UI-Client"
+    "isUiClient": "UI-Client",
+    "claims": "Claims"
   },
   "links": {
-    "user": "Benutzer"
+    "user": "Benutzer",
+    "claims": "Claims"
   },
   "labels": {
     "Grant Types": "Grant-Typen",

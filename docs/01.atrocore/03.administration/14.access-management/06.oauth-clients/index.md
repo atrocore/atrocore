@@ -28,6 +28,14 @@ The **ID** of the client is its client ID.
 
 A confidential client needs a secret. Use the action **Generate Secret** in the list or on the detail view of the client and copy the secret: AtroCore stores only its hash and shows the secret only once. Generating a new secret makes the previous one invalid and revokes all tokens issued to the client.
 
+## Custom Claims
+
+The access tokens of AtroCore are JSON Web Tokens. The panel **Claims** of a client adds claims of your own to them: every access token issued to the client carries exactly the claims configured there. An application that receives the token reads them without asking AtroCore, for example the role a partner application grants to the client.
+
+A claim has a **Name** and a **Value**, both text. A name is unique per client. The claims that AtroCore sets itself – `iss`, `sub`, `aud`, `exp`, `nbf`, `iat`, `jti` and `scopes` – cannot be used.
+
+A change of the claims applies to the tokens issued after it; the tokens already issued keep their claims until they expire. To apply a change at once, generate a new secret: it revokes the issued tokens.
+
 ## Deleting a Client
 
 Deleting a client revokes all tokens issued to it: the application loses access immediately.

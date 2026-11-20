@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "tooltip": true
+    },
+    "value": {
+      "type": "varchar",
+      "required": true,
+      "tooltip": true
+    },
+    "oauthClient": {
+      "type": "link",
+      "required": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "oauthClient": {
+      "type": "belongsTo",
+      "foreign": "claims",
+      "entity": "OauthClient"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "name",
+      "oauth_client_id"
+    ]
+  }
+}
