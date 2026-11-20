@@ -96,6 +96,39 @@
         }
       }
     },
+    "accessTokenLifetime": {
+      "type": "int",
+      "required": true,
+      "default": 60,
+      "min": 1,
+      "max": 1440,
+      "tooltip": true
+    },
+    "refreshTokenLifetime": {
+      "type": "int",
+      "default": 4320,
+      "min": 1,
+      "max": 525600,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "refreshTokenGrant"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "refreshTokenGrant"
+            }
+          ]
+        }
+      }
+    },
     "redirectUris": {
       "type": "array",
       "tooltip": true,

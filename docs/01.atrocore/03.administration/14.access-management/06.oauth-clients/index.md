@@ -19,6 +19,8 @@ To manage the clients go to `Administration / Authentication / OAuth Clients`. O
 - **Refresh Token**: together with the access token the client gets a refresh token and renews the access token without a new login. Available with **Authorization Code**.
 - **Redirect URIs**: the addresses AtroCore returns the user to after the login, required for **Authorization Code**. Each one is an `https` or `http` URI, or a custom scheme of a native application in reverse domain notation (e.g. `com.example.app:/callback`), without a fragment. Other schemes, such as `javascript:` or `data:`, are rejected. The `redirect_uri` of an authorization request has to match one of them exactly.
 - **Consent Required**: the user confirms that the application gets access to the account. Disable it only for the applications of your own organization.
+- **Access Token Lifetime, min**: how long an access token of the client is valid, from 1 to 1440 minutes (60 by default). An application that checks the tokens itself, without asking AtroCore, notices a revocation or a changed claim only when the token expires: keep the lifetime short for such clients.
+- **Refresh Token Lifetime, min**: how long a refresh token of the client is valid, from 1 to 525600 minutes (4320, i.e. 3 days, by default). Available with **Refresh Token**. Every refresh issues a new refresh token, so the lifetime counts from the last refresh: for the AtroCore UI client it is how long a session can stay unused and still be continued.
 
 A client needs at least one grant: **Client Credentials** or **Authorization Code**.
 
@@ -44,7 +46,7 @@ Deleting a client revokes all tokens issued to it: the application loses access 
 
 The AtroCore user interface logs in by the OAuth client **AtroCore UI**, marked with **UI Client**. It is created on the installation. The server acts as this client: it requests and keeps the tokens, the browser has only a session cookie (see [Session Cookie](../../../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie)).
 
-Only the name, the description and **Active** of this client can be changed, and it cannot be deleted. Deactivating it turns off the login to the user interface for all users. To turn it on again, run:
+Only the name, the description, **Active** and the token lifetimes of this client can be changed, and it cannot be deleted. Deactivating it turns off the login to the user interface for all users. To turn it on again, run:
 
 ```
 php console.php restore ui client

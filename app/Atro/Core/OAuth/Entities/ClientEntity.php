@@ -31,6 +31,10 @@ class ClientEntity implements ClientEntityInterface
 
     private bool $isConsentRequired;
 
+    private int $accessTokenLifetime;
+
+    private int $refreshTokenLifetime;
+
     public function __construct(
         string $identifier,
         string $name,
@@ -38,7 +42,9 @@ class ClientEntity implements ClientEntityInterface
         bool $isConfidential,
         array $grantTypes,
         ?string $userId,
-        bool $isConsentRequired
+        bool $isConsentRequired,
+        int $accessTokenLifetime,
+        int $refreshTokenLifetime
     ) {
         $this->identifier = $identifier;
         $this->name = $name;
@@ -47,6 +53,8 @@ class ClientEntity implements ClientEntityInterface
         $this->grantTypes = $grantTypes;
         $this->userId = $userId;
         $this->isConsentRequired = $isConsentRequired;
+        $this->accessTokenLifetime = $accessTokenLifetime;
+        $this->refreshTokenLifetime = $refreshTokenLifetime;
     }
 
     public function supportsGrantType(string $grantType): bool
@@ -68,5 +76,21 @@ class ClientEntity implements ClientEntityInterface
     public function isConsentRequired(): bool
     {
         return $this->isConsentRequired;
+    }
+
+    /**
+     * How long an access token of the client is valid, in minutes.
+     */
+    public function getAccessTokenLifetime(): int
+    {
+        return $this->accessTokenLifetime;
+    }
+
+    /**
+     * How long a refresh token of the client is valid, in minutes.
+     */
+    public function getRefreshTokenLifetime(): int
+    {
+        return $this->refreshTokenLifetime;
     }
 }

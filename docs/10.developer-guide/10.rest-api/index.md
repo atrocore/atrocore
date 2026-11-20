@@ -39,13 +39,13 @@ Every application that calls the API is registered as an [OAuth client](../../01
 
 The token and revocation endpoints take the parameters form-encoded (`Content-Type: application/x-www-form-urlencoded`). A confidential client authenticates with its client ID and secret, either in the request body (`client_id`, `client_secret`) or by HTTP Basic authentication.
 
-| Token | Lifetime | Option in `data/config.php` |
-| --- | --- | --- |
-| Access token | 1 hour | `oauthAccessTokenTtl` |
-| Refresh token | 1 month | `oauthRefreshTokenTtl` |
-| Authorization code | 10 minutes | `oauthAuthCodeTtl` |
+| Token | Lifetime |
+| --- | --- |
+| Access token | **Access Token Lifetime** of the OAuth client, 60 minutes by default |
+| Refresh token | **Refresh Token Lifetime** of the OAuth client, 3 days by default |
+| Authorization code | 10 minutes |
 
-The lifetimes are ISO 8601 durations, e.g. `'oauthAccessTokenTtl' => 'PT30M'`.
+The lifetimes of the tokens are settings of each OAuth client (see [OAuth Clients](../../01.atrocore/03.administration/14.access-management/06.oauth-clients/index.md)).
 
 > The AtroCore UI does not keep tokens in the browser: the server holds them and the browser has only an `HttpOnly` session cookie. See [Session Cookie](../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie).
 

@@ -68,7 +68,9 @@ class ClientRepository implements ClientRepositoryInterface
             !empty($row['is_confidential']),
             $this->getGrantTypes($row),
             $row['user_id'] ?: null,
-            !empty($row['is_consent_required'])
+            !empty($row['is_consent_required']),
+            (int)$row['access_token_lifetime'],
+            (int)$row['refresh_token_lifetime']
         );
     }
 
@@ -123,7 +125,7 @@ class ClientRepository implements ClientRepositoryInterface
     private function fetchActiveClient(string $clientIdentifier): ?array
     {
         $row = $this->connection->createQueryBuilder()
-            ->select('id', 'name', 'is_confidential', 'client_credentials_grant', 'authorization_code_grant', 'refresh_token_grant', 'redirect_uris', 'is_consent_required', 'user_id', 'secret_hash')
+            ->select('id', 'name', 'is_confidential', 'client_credentials_grant', 'authorization_code_grant', 'refresh_token_grant', 'redirect_uris', 'is_consent_required', 'user_id', 'secret_hash', 'access_token_lifetime', 'refresh_token_lifetime')
             ->from('oauth_client')
             ->where('id = :id')
             ->andWhere('deleted = :false')

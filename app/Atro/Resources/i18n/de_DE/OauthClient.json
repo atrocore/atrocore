@@ -12,7 +12,9 @@
     "redirectUris": "Redirect-URIs",
     "isConsentRequired": "Zustimmung erforderlich",
     "isUiClient": "UI-Client",
-    "claims": "Claims"
+    "claims": "Claims",
+    "accessTokenLifetime": "Gültigkeit des Zugriffstokens, Min.",
+    "refreshTokenLifetime": "Gültigkeit des Refresh-Tokens, Min."
   },
   "links": {
     "user": "Benutzer",
@@ -33,13 +35,15 @@
     "user": "Optional. Mit einem Benutzer haben die Zugriffstokens des Clients (Client Credentials) die Berechtigungen dieses Benutzers in der AtroCore-API. Ohne Benutzer haben die Tokens keinen Zugriff auf die AtroCore-API: Sie authentifizieren den Client nur gegenüber anderen Anwendungen, z. B. mit seinen eigenen Claims.",
     "redirectUris": "Die Adressen, zu denen der Benutzer nach der Anmeldung zurückgeleitet wird. Die redirect_uri einer Autorisierungsanfrage muss genau mit einer davon übereinstimmen.",
     "isConsentRequired": "Der Benutzer bestätigt im AtroCore-Anmeldeformular, dass die Anwendung Zugriff auf das Konto erhält. Deaktivieren Sie dies nur für Anwendungen Ihrer eigenen Organisation, z. B. die AtroCore-Benutzeroberfläche.",
-    "isUiClient": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an. Er wird bei der Installation festgelegt; der Konsolenbefehl „restore ui client\" stellt ihn wieder her."
+    "isUiClient": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an. Er wird bei der Installation festgelegt; der Konsolenbefehl „restore ui client\" stellt ihn wieder her.",
+    "accessTokenLifetime": "Wie lange ein Zugriffstoken des Clients gültig ist, in Minuten (1 bis 1440). Eine Anwendung, die die Tokens selbst prüft, ohne AtroCore zu fragen, bemerkt einen Widerruf erst, wenn das Token abläuft; halten Sie den Wert für solche Clients kurz.",
+    "refreshTokenLifetime": "Wie lange ein Refresh-Token des Clients gültig ist, in Minuten (1 bis 525600)."
   },
   "exceptions": {
     "grantRequired": "Wählen Sie mindestens einen Weg, ein Access Token zu erhalten: Client Credentials oder Authorization Code.",
     "redirectUrisRequired": "Ein Client mit dem Authorization Code Grant benötigt mindestens eine Redirect-URI.",
     "invalidRedirectUri": "\"%s\" ist keine gültige Redirect-URI: erwartet wird eine http- oder https-URI oder ein eigenes Schema einer nativen Anwendung in umgekehrter Domain-Notation (z. B. com.example.app:/callback), ohne Fragment.",
-    "uiClientProtected": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an: nur Name, Beschreibung und Aktivität können geändert werden.",
+    "uiClientProtected": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an: nur Name, Beschreibung, Aktivität und die Gültigkeit der Tokens können geändert werden.",
     "uiClientNotRemovable": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an, er kann nicht gelöscht werden. Deaktivieren Sie ihn, um die Anmeldung an der Benutzeroberfläche abzuschalten."
   },
   "actions": {
