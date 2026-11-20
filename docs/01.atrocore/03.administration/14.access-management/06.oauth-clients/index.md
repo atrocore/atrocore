@@ -4,7 +4,7 @@ title: OAuth Clients
 
 AtroCore is an OAuth 2.0 authorization server. Every application that calls the REST API – an integration, a web or mobile application, a tool like Postman – is registered as an OAuth client and receives access tokens for it. How applications request and use the tokens is described in [REST API Authentication](../../../../10.developer-guide/10.rest-api/index.md#authentication).
 
-To manage the clients go to `Administration / Authentication / OAuth Clients`. Only administrators manage the clients: a client acts with the permissions of its user, so its secret gives the access of that user.
+To manage the clients go to `Administration / Authentication / OAuth Clients`. Only administrators manage the clients: a client with a user acts with the permissions of that user, so its secret gives the access of that user.
 
 <!-- To Do: add screenshot of the OAuth Client detail view -->
 
@@ -13,8 +13,8 @@ To manage the clients go to `Administration / Authentication / OAuth Clients`. O
 - **Name**, **Description**: shown in the list of clients and, for **Consent Required**, to the user who allows the access.
 - **Active**: an inactive client gets no tokens. Deactivating a client revokes all tokens issued to it.
 - **Confidential**: the client authenticates with its client secret. Enable it for an integration or an application with a server; disable it for a browser or mobile application, which cannot keep a secret.
-- **Client Credentials**: the client obtains access tokens on its own behalf, without a user signing in. Requires **Confidential** and a **User**.
-- **User**: the user a client with **Client Credentials** acts as. Its tokens have the permissions of this user, so give the user a role with only the permissions the integration needs.
+- **Client Credentials**: the client obtains access tokens on its own behalf, without a user signing in. Requires **Confidential**.
+- **User**: the user a client with **Client Credentials** acts as. Its tokens have the permissions of this user in the AtroCore REST API, so give the user a role with only the permissions the integration needs. Leave it empty for a client that uses AtroCore only to authenticate to another application: its tokens are issued, but the AtroCore REST API rejects them.
 - **Authorization Code**: the client obtains access tokens on behalf of a user who logs in on the AtroCore login form. PKCE with the `S256` method is required.
 - **Refresh Token**: together with the access token the client gets a refresh token and renews the access token without a new login. Available with **Authorization Code**.
 - **Redirect URIs**: the addresses AtroCore returns the user to after the login, required for **Authorization Code**. Each one is an `https` or `http` URI, or a custom scheme of a native application in reverse domain notation (e.g. `com.example.app:/callback`), without a fragment. Other schemes, such as `javascript:` or `data:`, are rejected. The `redirect_uri` of an authorization request has to match one of them exactly.

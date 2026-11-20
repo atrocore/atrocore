@@ -165,18 +165,6 @@
             }
           ]
         },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isConfidential"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "clientCredentialsGrant"
-            }
-          ]
-        },
         "protected": {
           "conditionGroup": [
             {

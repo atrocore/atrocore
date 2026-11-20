@@ -27,16 +27,15 @@
   },
   "tooltips": {
     "isConfidential": "Ein vertraulicher Client authentifiziert sich mit seinem Client-Secret. Ein öffentlicher Client, z. B. eine Browser- oder mobile Anwendung, kann kein Secret geheim halten.",
-    "clientCredentialsGrant": "Der Client erhält ein Access Token in eigenem Namen mit seiner Client-ID und seinem Secret, ohne Benutzer. Er handelt als der ausgewählte Benutzer.",
+    "clientCredentialsGrant": "Der Client erhält mit seiner Client-ID und seinem Secret selbst ein Zugriffstoken, ohne Benutzer. Ist ein Benutzer ausgewählt, hat das Token die Berechtigungen dieses Benutzers in der AtroCore-API.",
     "authorizationCodeGrant": "Der Client erhält ein Access Token im Namen eines Benutzers, der sich im AtroCore-Anmeldeformular anmeldet (mit PKCE).",
     "refreshTokenGrant": "Zusammen mit dem Access Token erhält der Client ein Refresh Token, das er gegen ein neues Access Token tauscht, ohne dass sich der Benutzer erneut anmelden muss.",
-    "user": "Der Benutzer, in dessen Namen der Client handelt, wenn er ein Access Token mit seinen eigenen Zugangsdaten erhält (Client Credentials Grant).",
+    "user": "Optional. Mit einem Benutzer haben die Zugriffstokens des Clients (Client Credentials) die Berechtigungen dieses Benutzers in der AtroCore-API. Ohne Benutzer haben die Tokens keinen Zugriff auf die AtroCore-API: Sie authentifizieren den Client nur gegenüber anderen Anwendungen, z. B. mit seinen eigenen Claims.",
     "redirectUris": "Die Adressen, zu denen der Benutzer nach der Anmeldung zurückgeleitet wird. Die redirect_uri einer Autorisierungsanfrage muss genau mit einer davon übereinstimmen.",
     "isConsentRequired": "Der Benutzer bestätigt im AtroCore-Anmeldeformular, dass die Anwendung Zugriff auf das Konto erhält. Deaktivieren Sie dies nur für Anwendungen Ihrer eigenen Organisation, z. B. die AtroCore-Benutzeroberfläche.",
     "isUiClient": "Die AtroCore-Benutzeroberfläche meldet sich über diesen Client an. Er wird bei der Installation festgelegt; der Konsolenbefehl „restore ui client\" stellt ihn wieder her."
   },
   "exceptions": {
-    "userRequiredForClientCredentials": "Ein Client mit dem Client Credentials Grant benötigt einen Benutzer, in dessen Namen er handelt.",
     "grantRequired": "Wählen Sie mindestens einen Weg, ein Access Token zu erhalten: Client Credentials oder Authorization Code.",
     "redirectUrisRequired": "Ein Client mit dem Authorization Code Grant benötigt mindestens eine Redirect-URI.",
     "invalidRedirectUri": "\"%s\" ist keine gültige Redirect-URI: erwartet wird eine http- oder https-URI oder ein eigenes Schema einer nativen Anwendung in umgekehrter Domain-Notation (z. B. com.example.app:/callback), ohne Fragment.",
