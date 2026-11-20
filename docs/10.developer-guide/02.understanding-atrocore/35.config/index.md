@@ -6,6 +6,56 @@ AtroCore configuration parameters are located in the `data/config.php` file. You
 code by retrieving the `config` utility from the service container.
 
 
+## Environment-managed configuration
+
+Declare required environment values directly in `data/config.php` using `Config::env()`:
+
+```php
+<?php
+return [
+    'siteUrl' => \Atro\Core\Utils\Config::env('ATROPIM_SITE_URL'),
+    'database' => [
+        'driver' => 'pdo_mysql',
+        'host' => \Atro\Core\Utils\Config::env('DB_HOST'),
+        'port' => '',
+        'charset' => 'utf8mb4',
+        'dbname' => \Atro\Core\Utils\Config::env('DB_DATABASE'),
+        'user' => \Atro\Core\Utils\Config::env('DB_USERNAME'),
+        'password' => \Atro\Core\Utils\Config::env('DB_PASSWORD'),
+    ],
+];
+```
+
+Merge these entries into the existing file, retaining other settings. For a fresh deployment,
+let configuration creation generate the initial file, then declare environment bindings before
+running installation. Identity keys such as `encryptionKey`, `passwordPepper` and
+`oauthEncryptionKey` may also use bindings; preserve their existing values when moving an installed
+system to environment management.
+
+Both `Config::load()` and the container config utility resolve bindings at runtime. Saves preserve
+`Config::env()` calls instead of writing resolved values. Nested arrays and objects are supported.
+For typed values, use `Config::env('WORKER_COUNT', 'json')`: JSON numbers, booleans and arrays retain
+their types. Missing or empty variables and invalid JSON fail immediately without exposing values.
+There are no default values. Supply variables to web, CLI and worker processes.
+
+Environment-managed values cannot be changed through `set()` or removed through `remove()`.
+When replacing a section, include its managed fields with their current runtime values: saves
+retain the original bindings for those fields while applying changes to ordinary fields. For example,
+you can change `database.port` by submitting an updated `database` array with its existing password.
+Changing or omitting a managed password, or removing the entire section, throws an exception naming
+the affected path. The same rules apply to Admin UI and installer updates. Array and object values
+are compared recursively, with strict scalar types.
+
+Writes accept top-level keys; dot notation is for reads. Declare bindings directly in `config.php`,
+not through `set()`. The config utility keeps separate stored and resolved snapshots in memory.
+Each save reads the latest stored configuration once and revalidates pending changes against it,
+so changes to bindings made externally are also respected.
+
+Replace existing `getenv()` calls with `Config::env()` to retain their environment binding across
+saves. Arbitrary PHP expressions are still evaluated normally and are not preserved. Restart PHP
+workers after changing their environment. Public configuration fields remain public; environment
+bindings control resolution and persistence, not access to configuration values.
+
 ## Accessing a Value
 
 To retrieve a configuration value, use the `get()` method with the parameter's key. You can access nested values using dot notation (e.g., `'database.host'`).

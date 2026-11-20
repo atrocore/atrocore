@@ -57,15 +57,108 @@ final class Config
     private ?array $additionalConfigCache = null;
 
     private array $data = [];
+    private ?array $storedData = null;
+    private array $resolvedStoredData = [];
     private array $changedData = [];
     private array $removeData = [];
 
     /**
-     * Config data as stored on disk. Falls back to the defaults before the
+     * Runtime config with environment references resolved. Uses defaults before the
      * installation has created the file - that is a normal state, unlike a
      * file that exists but does not hold an array.
      */
     public static function load(): array
+    {
+        return self::resolveEnvironment(self::loadStored());
+    }
+
+    public static function env(string $variable, string $type = 'string'): EnvironmentVariable
+    {
+        return new EnvironmentVariable($variable, $type);
+    }
+
+    private static function resolveEnvironment(mixed $value): mixed
+    {
+        if ($value instanceof EnvironmentVariable) {
+            return $value->resolve();
+        }
+        if (is_array($value)) {
+            return array_map(self::resolveEnvironment(...), $value);
+        }
+        if ($value instanceof \stdClass) {
+            return (object) self::resolveEnvironment(get_object_vars($value));
+        }
+        return $value;
+    }
+
+    private static function containsEnvironment(mixed $value): bool
+    {
+        if ($value instanceof EnvironmentVariable) {
+            return true;
+        }
+        if (is_array($value) || $value instanceof \stdClass) {
+            foreach ($value as $item) {
+                if (self::containsEnvironment($item)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Keep bindings while validating a replacement against the same runtime snapshot. */
+    private static function preserveEnvironment(mixed $stored, mixed $resolved, mixed $replacement, string $path): mixed
+    {
+        if ($stored instanceof EnvironmentVariable) {
+            if (!self::sameValue($resolved, $replacement)) {
+                throw new \LogicException(sprintf("Environment-managed config key '%s' cannot be changed.", $path));
+            }
+            return $stored;
+        }
+        if (!self::containsEnvironment($stored)) {
+            return $replacement;
+        }
+        if (!is_array($replacement) && !$replacement instanceof \stdClass) {
+            throw new \LogicException(sprintf("Config key '%s' contains environment bindings and cannot be replaced.", $path));
+        }
+
+        $result = (array) $replacement;
+        $resolved = (array) $resolved;
+        foreach ($stored as $key => $value) {
+            if (!self::containsEnvironment($value)) {
+                continue;
+            }
+            $childPath = $path . '.' . $key;
+            if (!array_key_exists($key, $result)) {
+                throw new \LogicException(sprintf("Environment-managed config key '%s' cannot be removed.", $childPath));
+            }
+            $result[$key] = self::preserveEnvironment($value, $resolved[$key], $result[$key], $childPath);
+        }
+        return $replacement instanceof \stdClass ? (object) $result : $result;
+    }
+
+    private static function sameValue(mixed $left, mixed $right): bool
+    {
+        if (is_array($left) || $left instanceof \stdClass) {
+            if (!is_array($right) && !$right instanceof \stdClass) {
+                return false;
+            }
+            $left = (array) $left;
+            $right = (array) $right;
+            if (count($left) !== count($right)) {
+                return false;
+            }
+            foreach ($left as $key => $value) {
+                if (!array_key_exists($key, $right) || !self::sameValue($value, $right[$key])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return $left === $right;
+    }
+
+    private static function loadStored(): array
     {
         if (!file_exists(self::CONFIG_PATH)) {
             return self::getDefaults();
@@ -177,8 +270,16 @@ final class Config
 
         $this->assertWritable($name);
 
-        $this->data[$name] = $value;
-        $this->changedData[$name] = $value;
+        if (self::containsEnvironment($value)) {
+            throw new \InvalidArgumentException('Declare environment bindings directly in config.php.');
+        }
+        self::preserveEnvironment(
+            $this->storedData[$name] ?? null, $this->resolvedStoredData[$name] ?? null, $value, $name
+        );
+        $resolved = self::resolveEnvironment($value);
+        $this->data[$name] = $resolved;
+        $this->changedData[$name] = self::resolveEnvironment($resolved);
+        $this->removeData = array_values(array_diff($this->removeData, [$name]));
     }
 
     public function remove(string $name): bool
@@ -186,9 +287,11 @@ final class Config
         $this->loadConfig();
 
         $this->assertWritable($name);
+        self::assertRemovable($this->storedData, $name);
 
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
+            unset($this->changedData[$name]);
             $this->removeData[] = $name;
             return true;
         }
@@ -202,21 +305,24 @@ final class Config
             return false;
         }
 
-        $data = self::load();
-
-        if (empty($data) || !is_array($data)) {
-            return false;
-        }
+        $data = self::loadStored();
+        $resolved = self::resolveEnvironment($data);
+        $this->assertNoConflictsWithStoredConfig($resolved);
 
         // change config data
         foreach ($this->changedData as $key => $value) {
-            $data[$key] = $value;
+            $this->assertWritable($key);
+            $data[$key] = self::preserveEnvironment($data[$key] ?? null, $resolved[$key] ?? null, $value, $key);
+            $resolved[$key] = $value;
         }
 
         // remove config data
         foreach ($this->removeData as $key) {
+            $this->assertWritable($key);
+            self::assertRemovable($data, $key);
             if (array_key_exists($key, $data)) {
                 unset($data[$key]);
+                unset($resolved[$key]);
             }
         }
 
@@ -226,21 +332,28 @@ final class Config
 
         $this->changedData = [];
         $this->removeData = [];
-        $this->loadConfig(true);
+        $this->storedData = $data;
+        $this->resolvedStoredData = $resolved;
+        $this->data = self::resolveEnvironment($resolved);
+        $this->applyAdditionalConfigData();
+        $this->applyComputedKeys();
 
         return true;
     }
 
     protected function loadConfig(bool $reload = false): array
     {
-        if ($reload || empty($this->data)) {
+        if ($reload || $this->storedData === null) {
             // checked before it lands in $data: leaving a broken config in place
             // would silence the check on every later call
-            $data = self::load();
+            $stored = self::loadStored();
+            $data = self::resolveEnvironment($stored);
 
             $this->assertNoConflictsWithStoredConfig($data);
 
-            $this->data = $data;
+            $this->storedData = $stored;
+            $this->resolvedStoredData = $data;
+            $this->data = self::resolveEnvironment($data);
         }
 
         $this->applyAdditionalConfigData();
@@ -413,10 +526,21 @@ final class Config
 
     private function assertWritable(string $name): void
     {
-        if (in_array($name, $this->getReadOnlyKeys(), true)) {
+        if (str_contains($name, '.')) {
+            throw new \InvalidArgumentException('Config writes require a top-level key.');
+        }
+        $root = explode('.', $name, 2)[0];
+        if (in_array($root, $this->getReadOnlyKeys(), true)) {
             throw new \LogicException(
-                sprintf("Config key '%s' is computed on load and cannot be written.", $name)
+                sprintf("Config key '%s' is managed at runtime and cannot be written.", $name)
             );
+        }
+    }
+
+    private static function assertRemovable(array $stored, string $name): void
+    {
+        if (self::containsEnvironment($stored[$name] ?? null)) {
+            throw new \LogicException(sprintf("Config key '%s' contains environment bindings and cannot be removed.", $name));
         }
     }
 
@@ -447,6 +571,11 @@ final class Config
 
     private static function exportValue(mixed $value, int $level = 0): string
     {
+        if ($value instanceof EnvironmentVariable) {
+            return '\\Atro\\Core\\Utils\\Config::env(' . var_export($value->variable, true)
+                . ', ' . var_export($value->type, true) . ')';
+        }
+
         if ($value instanceof \stdClass) {
             return '(object) ' . self::exportValue(get_object_vars($value), $level);
         }
