@@ -6,31 +6,58 @@
         "refreshTokenGrant": "Token de actualización",
         "user": "Usuario",
         "redirectUris": "URI de redirección",
-        "isConsentRequired": "Consentimiento obligatorio"
+        "isConsentRequired": "Consentimiento obligatorio",
+        "claims": "Reclamaciones",
+        "isUiClient": "Cliente de interfaz de usuario",
+        "description": "Descripción",
+        "refreshTokenLifetime": "Tiempo de validez del token de actualización, min",
+        "clientCredentialsGrant": "Credenciales del cliente",
+        "accessTokenLifetime": "Tiempo de validez del token de acceso, min",
+        "name": "Nombre",
+        "secretHash": "Hash secreto"
     },
     "links": {
-        "user": "Usuario"
+        "user": "Usuario",
+        "claims": "Atributos"
     },
     "labels": {
         "Grant Types": "Tipos de concesión",
         "authorizationRequest": "{clientName} solicita acceso a su cuenta. Inicie sesión para permitirlo.",
         "signedInAs": "Ha iniciado sesión como {userName}.",
-        "Deny": "Denegar"
+        "Deny": "Denegar",
+        "Allow": "Permitir"
     },
     "tooltips": {
         "isConfidential": "Un cliente confidencial se autentica con su secreto de cliente. Un cliente público, como una aplicación de navegador o móvil, no puede mantener un secreto.",
-        "refreshTokenGrant": "Junto con el token de acceso, el cliente recibe un token de actualización, que canjea por un nuevo token de acceso sin que el usuario tenga que volver a iniciar sesión."
+        "refreshTokenGrant": "Junto con el token de acceso, el cliente recibe un token de actualización, que canjea por un nuevo token de acceso sin que el usuario tenga que volver a iniciar sesión.",
+        "refreshTokenLifetime": "Tiempo de validez del token de actualización del cliente, en minutos (de 1 a 525600). Cada actualización emite un nuevo token de actualización, por lo que el tiempo de validez se cuenta desde la última actualización. Para el cliente de interfaz de usuario de AtroCore, indica cuánto tiempo puede permanecer inactiva una sesión de la interfaz de usuario.",
+        "clientCredentialsGrant": "El cliente obtiene un token de acceso en su propio nombre con su ID de cliente y su secreto, sin un usuario. Si se selecciona un usuario, el token tendrá los permisos de ese usuario en la API de AtroCore.",
+        "redirectUris": "Las direcciones a las que se redirige al usuario después de iniciar sesión. El redirect_uri de una solicitud de autorización debe coincidir exactamente con una de ellas.",
+        "authorizationCodeGrant": "El cliente obtiene un token de acceso en nombre de un usuario que inicia sesión en el formulario de inicio de sesión de AtroCore (con PKCE).",
+        "accessTokenLifetime": "Tiempo de validez del token de acceso del cliente, en minutos (de 1 a 1440). Si una aplicación comprueba los tokens por su cuenta, sin consultar a AtroCore, solo detecta la revocación cuando caduca el token. Por eso, mantenga este tiempo corto para esos clientes.",
+        "isConsentRequired": "El usuario confirma en el formulario de inicio de sesión de AtroCore que la aplicación puede acceder a la cuenta. Desactive esta opción solo para las aplicaciones de su propia organización, como la interfaz de usuario de AtroCore.",
+        "user": "Opcional. Si se especifica un usuario, los tokens de acceso del cliente (concesión de credenciales del cliente) tendrán los permisos de ese usuario en la API de AtroCore. Si no se especifica un usuario, los tokens no tendrán acceso a la API de AtroCore: solo autenticarán al cliente ante otras aplicaciones, por ejemplo, mediante sus claims personalizados.",
+        "isUiClient": "La interfaz de usuario de AtroCore inicia sesión mediante este cliente. Se configura durante la instalación; el comando de consola \"restore ui client\" lo restaura."
     },
     "exceptions": {
         "redirectUrisRequired": "Un cliente que utiliza la concesión de código de autorización necesita al menos un URI de redirección.",
         "invalidRedirectUri": "\"%s\" no es un URI de redirección válido: se espera un URI http o https, o un esquema personalizado de una aplicación nativa en notación de dominio inverso (p. ej., com.example.app:/callback), sin fragmento.",
         "uiClientProtected": "La interfaz de usuario de AtroCore inicia sesión con este cliente: solo se pueden cambiar su nombre, descripción y estado.",
-        "uiClientNotRemovable": "La interfaz de usuario de AtroCore inicia sesión con este cliente, por lo que no se puede eliminar. Desactívelo para impedir el inicio de sesión en la interfaz de usuario."
+        "uiClientNotRemovable": "La interfaz de usuario de AtroCore inicia sesión con este cliente, por lo que no se puede eliminar. Desactívelo para impedir el inicio de sesión en la interfaz de usuario.",
+        "grantRequired": "Seleccione al menos una forma de obtener un token de acceso: credenciales del cliente o código de autorización."
     },
     "actions": {
         "generateSecret": "Generar secreto"
     },
     "actionConfirms": {
         "generateSecret": "Se generará un nuevo secreto de cliente. El secreto actual dejará de funcionar y se revocarán los tokens emitidos al cliente. ¿Desea continuar?"
+    },
+    "messages": {
+        "signInFailed": "No se pudo iniciar sesión. Vuelva a iniciar sesión.",
+        "signInExpired": "La sesión ha caducado. Iníciela de nuevo en la aplicación.",
+        "uiClientDisabled": "El administrador ha desactivado el inicio de sesión en la interfaz de usuario."
+    },
+    "actionResults": {
+        "generateSecret": "El secreto del cliente se muestra una sola vez. Cópielo ahora:"
     }
 }
