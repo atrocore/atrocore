@@ -177,7 +177,8 @@
         "BlockingRuleTypeFieldSimilar": "Regola di blocco: il campo è simile",
         "BlockingRuleTypeFieldContains": "Regola di blocco: il campo contiene",
         "BlockingRuleTypeSet": "Regola di blocco: insieme",
-        "BlockingRuleTypeExpression": "Regola di blocco: espressione"
+        "BlockingRuleTypeExpression": "Regola di blocco: espressione",
+        "OauthClientClaim": "Dichiarazione del client OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
@@ -1173,7 +1174,8 @@
         "BlockingRuleTypeFieldSimilar": "Regola di blocco: campo simile",
         "BlockingRuleTypeFieldContains": "Regola di blocco: il campo contiene",
         "BlockingRuleTypeSet": "Regola di blocco: insieme",
-        "BlockingRuleTypeExpression": "Regola di blocco: espressione"
+        "BlockingRuleTypeExpression": "Regola di blocco: espressione",
+        "OauthClientClaim": "Dichiarazioni del client OAuth"
     },
     "descriptions": {
         "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."
