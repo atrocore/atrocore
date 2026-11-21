@@ -294,7 +294,8 @@
         "BlockingRuleTypeExpression": "Règle de blocage: Expression",
         "OauthClient": "Client OAuth",
         "AttributeTypeEnum": "Attribut : Liste",
-        "AttributeTypeMultiEnum": "Attribut : Liste à valeurs multiples"
+        "AttributeTypeMultiEnum": "Attribut : Liste à valeurs multiples",
+        "OauthClientClaim": "Revendication du client OAuth"
     },
     "labels": {
         "dataLineage": "Traçabilité des données",
@@ -988,7 +989,8 @@
         "BlockingRuleTypeExpression": "Règle de blocage: Expression",
         "OauthClient": "Clients OAuth",
         "AttributeTypeEnum": "Attribut : Liste",
-        "AttributeTypeMultiEnum": "Attribut : Liste à valeurs multiples"
+        "AttributeTypeMultiEnum": "Attribut : Liste à valeurs multiples",
+        "OauthClientClaim": "Revendications du client OAuth"
     },
     "descriptions": {
         "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

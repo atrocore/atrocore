@@ -11,10 +11,14 @@
         "secretHash": "Titok hash",
         "redirectUris": "Átirányítási URI-k",
         "isConsentRequired": "Hozzájárulás szükséges",
-        "isUiClient": "UI-kliens"
+        "isUiClient": "UI-kliens",
+        "claims": "Állítások",
+        "accessTokenLifetime": "Hozzáférési token érvényességi ideje, perc",
+        "refreshTokenLifetime": "Frissítési token érvényességi ideje, perc"
     },
     "links": {
-        "user": "Felhasználó"
+        "user": "Felhasználó",
+        "claims": "Állítások"
     },
     "labels": {
         "Grant Types": "Engedélyezési módok",
@@ -31,7 +35,9 @@
         "user": "Az a felhasználó, akinek a nevében a kliens eljár, amikor saját hitelesítő adataival szerez hozzáférési tokent (kliens-hitelesítő adatok használata).",
         "redirectUris": "Azok a címek, amelyekre a felhasználó a bejelentkezés után visszakerül. Az engedélyezési kérelem redirect_uri értékének pontosan meg kell egyeznie az egyik címmel.",
         "isConsentRequired": "A felhasználó az AtroCore bejelentkezési űrlapján megerősíti, hogy az alkalmazás hozzáférhet a fiókhoz. Csak a saját szervezete alkalmazásainál kapcsolja ki, például az AtroCore felhasználói felületénél.",
-        "isUiClient": "Az AtroCore felhasználói felület ezzel a klienssel jelentkezik be. A telepítés során van beállítva; a „restore ui client” konzolparancs állítja vissza."
+        "isUiClient": "Az AtroCore felhasználói felület ezzel a klienssel jelentkezik be. A telepítés során van beállítva; a „restore ui client” konzolparancs állítja vissza.",
+        "accessTokenLifetime": "Az ügyfél hozzáférési tokenjének érvényességi ideje percben (1–1440). Ha egy alkalmazás önállóan, az AtroCore megkeresése nélkül ellenőrzi a tokeneket, a visszavonást csak a token lejártakor észleli. Ezért az ilyen ügyfelek esetén állítsa rövidre az érvényességi időt.",
+        "refreshTokenLifetime": "Az ügyfél frissítési tokenjének érvényességi ideje percben (1–525600). Minden frissítés új frissítési tokent ad ki, ezért az érvényességi idő az utolsó frissítéstől számít. Az AtroCore felhasználói felület ügyfele esetén ez azt határozza meg, hogy mennyi ideig maradhat tétlen a felhasználói felület munkamenete."
     },
     "exceptions": {
         "grantRequired": "Válasszon legalább egy módot a hozzáférési token beszerzéséhez: kliens-hitelesítő adatok vagy engedélyezési kód.",

@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "language": "Lingua",
+        "team": "Team",
+        "editAction": "Modifica"
+    },
+    "labels": {
+        "yes": "Sì",
+        "no": "No"
+    },
+    "exceptions": {
+        "cannotRemoveLanguageWhenRestricted": "Impossibile rimuovere la lingua principale quando è attiva la restrizione linguistica per il team."
+    }
+}

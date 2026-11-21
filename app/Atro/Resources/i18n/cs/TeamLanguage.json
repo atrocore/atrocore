@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "language": "Jazyk",
+        "team": "Tým",
+        "editAction": "Upravit"
+    },
+    "labels": {
+        "yes": "Ano",
+        "no": "Ne"
+    },
+    "exceptions": {
+        "cannotRemoveLanguageWhenRestricted": "Hlavní jazyk nelze odebrat, pokud má tým zapnuté omezení jazyků."
+    }
+}

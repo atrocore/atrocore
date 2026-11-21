@@ -176,7 +176,8 @@
         "BlockingRuleTypeFieldSimilar": "Regola di blocco: il campo è simile",
         "BlockingRuleTypeFieldContains": "Regola di blocco: il campo contiene",
         "BlockingRuleTypeSet": "Regola di blocco: insieme",
-        "BlockingRuleTypeExpression": "Regola di blocco: espressione"
+        "BlockingRuleTypeExpression": "Regola di blocco: espressione",
+        "OauthClientClaim": "Dichiarazione del client OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
@@ -1173,7 +1174,8 @@
         "BlockingRuleTypeFieldSimilar": "Regola di blocco: campo simile",
         "BlockingRuleTypeFieldContains": "Regola di blocco: il campo contiene",
         "BlockingRuleTypeSet": "Regola di blocco: insieme",
-        "BlockingRuleTypeExpression": "Regola di blocco: espressione"
+        "BlockingRuleTypeExpression": "Regola di blocco: espressione",
+        "OauthClientClaim": "Dichiarazioni del client OAuth"
     },
     "descriptions": {
         "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."
@@ -1778,5 +1780,15 @@
         "BlockingRuleTypeFieldContains": "Seleziona i candidati in cui il valore del campo contiene il valore del record.",
         "BlockingRuleTypeSet": "Combina più regole con AND o OR.",
         "BlockingRuleTypeExpression": "Seleziona i candidati tramite un'espressione ExpressionLanguage."
+    },
+    "scopeDescriptions": {
+        "Action": "Esegue un’operazione sui record, ad esempio li crea, aggiorna o elimina, invia un’email o chiama un webhook. Può essere eseguita manualmente, tramite un flusso di lavoro o in base a una pianificazione.",
+        "Attribute": "Proprietà di un record aggiunta ai record singolarmente o tramite una Classificazione, anziché essere un campo presente in ogni record dell’Entità.",
+        "BlockingRule": "Seleziona i record candidati da confrontare con le regole di matching. Non assegna un punteggio ai candidati.",
+        "Connection": "Memorizza i dati di accesso a un sistema esterno, ad esempio un database, un server di file, un server di posta o un’API.",
+        "Entity": "Tipo di record di dati, ad esempio prodotti o marchi, con campi, relazioni e layout propri.",
+        "EntityField": "Proprietà presente in ogni record dell’Entità. Il tipo definisce quali dati contiene il campo e come vengono visualizzati.",
+        "MatchingRule": "Confronta un record con un record candidato e assegna un punteggio al candidato se corrispondono. La somma dei punteggi determina se i record sono duplicati.",
+        "Storage": "Posizione in cui vengono conservati i file, ad esempio una cartella sul server AtroCore o un archivio file esterno."
     }
 }

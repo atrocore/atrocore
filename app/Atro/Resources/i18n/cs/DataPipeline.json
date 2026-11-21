@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "targetEntity": "Cílová entita",
+        "sourceEntity": "Zdrojová entita",
+        "transformationScript": "Transformační skript",
+        "executeTransformationAs": "Spustit transformaci jako"
+    },
+    "tooltips": {
+        "transformationScript": "Nakonfigurujte, jak se data ze zdrojového záznamu transformují a mapují do cílového záznamu.",
+        "executeTransformationAs": "Uživatelský účet, který bude použit ke spuštění transformačního skriptu."
+    },
+    "exceptions": {
+        "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Entita '%s' je přispěvatelem nebo derivátem požadavku na změnu a nelze ji použít jako zdrojovou entitu.",
+        "sourceEntityTypeNotAllowed": "Entitu '%s' nelze použít jako zdrojovou entitu: povoleny jsou pouze typy Base a Hierarchy.",
+        "targetEntityCannotBePrimaryOfContributorDerivative": "Entita '%s' je primární entitou odvozené entity typu přispěvatel a nelze ji použít jako cílovou entitu.",
+        "sourceAndTargetEntityCannotBeSame": "Zdrojová a cílová entita nemohou být stejné.",
+        "dataPipelineAlreadyExists": "Datový kanál pro tuto dvojici entit již existuje.",
+        "transformationScriptIsMissing": "Transformační skript pro datový tok chybí.",
+        "transformationScriptIsNotValid": "Transformační skript vrací neplatná data: %s",
+        "noSourceRecordIsLinked": "K záznamu není propojen žádný zdrojový záznam."
+    },
+    "labels": {
+        "targetRecordPreviewHint": "Zobrazuje, jak bude cílový záznam vypadat po transformaci. Nic se neukládá.",
+        "noDataPipelineConfigured": "Pro tuto dvojici entit není nakonfigurován žádný datový kanál",
+        "noSourceRecords": "Zdrojová entita zatím nemá žádné záznamy",
+        "discard": "Zahodit",
+        "transformationPreview": "Náhled transformace",
+        "targetRecordNotExists": "Cílový záznam zatím neexistuje. Použijte náhled, abyste viděli, jak bude vypadat po transformaci.",
+        "applyToRecords": "Použít na záznamy",
+        "transformTo": "Transformovat {entity}"
+    },
+    "messages": {
+        "transformConfirmation": "Transformační skript se spustí pro vybrané záznamy a cílové záznamy se vytvoří nebo aktualizují. Pokračovat?",
+        "updateFromSourceConfirmation": "Transformační skript se spustí pro zdrojové záznamy propojené s vybranými záznamy a vybrané záznamy se aktualizují. Pokračovat?",
+        "recordsTransformed": "Transformováno záznamů: %s / %s",
+        "recordsNotTransformed": "Záznamy (%s) se nepodařilo transformovat. Podrobnosti najdete v protokolu."
+    },
+    "options": {
+        "executeTransformationAs": {
+            "system": "Systém",
+            "sameUser": "Stejný uživatel"
+        }
+    }
+}

@@ -163,7 +163,8 @@
         "EntityFieldTypeDate": "Entitásmező: dátum",
         "EntityFieldTypeJsonObject": "Entitásmező: JSON-objektum",
         "EntityUniqueIndex": "Egyedi indexek",
-        "ConnectionTypeCookie": "Kapcsolat: süti-munkamenet"
+        "ConnectionTypeCookie": "Kapcsolat: süti-munkamenet",
+        "OauthClientClaim": "OAuth-kliens-állítások"
     },
     "labels": {
         "Yesterday": "Tegnap",
@@ -751,7 +752,8 @@
         "DocumentFolder": "Dokumentummappa",
         "AccountGroup": "Fiókcsoport",
         "MatchingRuleTypeFieldEqual": "Egyeztetési szabály: a mező egyenlő",
-        "MatchingRuleTypeFieldsSimilar": "Egyeztetési szabály: a mezők hasonlóak"
+        "MatchingRuleTypeFieldsSimilar": "Egyeztetési szabály: a mezők hasonlóak",
+        "OauthClientClaim": "OAuth-kliens-állítás"
     },
     "insightsPanels": {
         "summary": "Összegzés",
@@ -1778,5 +1780,15 @@
         "EntityTypeSubtype": "Az alapentitást saját mezőkkel bővíti, a közös adatok pedig a szuperentitásban vannak tárolva.",
         "AttributeTypeBool": "Olyan igaz vagy hamis érték, amely üresen is hagyható.",
         "EntityFieldTypeRangeInt": "Egész számokból álló, opcionálisan mértékegységgel megadható tól–ig pár, például 10–20 mm."
+    },
+    "scopeDescriptions": {
+        "Action": "Rekordokon végez műveleteket, például létrehozza, frissíti vagy törli őket, e-mailt küld vagy webhookot hív meg. Manuálisan, munkafolyamat részeként vagy ütemezetten futtatható.",
+        "Attribute": "A rekord olyan tulajdonsága, amelyet egyedileg vagy osztályozáson keresztül adnak hozzá a rekordokhoz, nem pedig olyan mező, amellyel az entitás minden rekordja rendelkezik.",
+        "BlockingRule": "Kiválasztja azokat a jelölt rekordokat, amelyeket ezután az egyezési szabályok alapján hasonlítanak össze. Nem pontozza a jelölteket.",
+        "Connection": "Külső rendszerhez, például adatbázishoz, fájlszerverhez, levelezőszerverhez vagy API-hoz tartozó hozzáférési adatokat tárol.",
+        "Entity": "Adatrekordok egy típusa, például termékek vagy márkák, saját mezőkkel, kapcsolatokkal és elrendezésekkel.",
+        "EntityField": "Olyan tulajdonság, amellyel az entitás minden rekordja rendelkezik. A típus határozza meg, hogy a mező milyen adatokat tárol, és hogyan jeleníti meg azokat.",
+        "MatchingRule": "Összehasonlít egy rekordot egy jelölt rekorddal, és egyezés esetén pontozza a jelöltet. A pontszámok összege határozza meg, hogy a rekordok duplikátumok-e.",
+        "Storage": "A fájlok tárolási helye, például egy mappa az AtroCore-kiszolgálón vagy egy külső fájltároló."
     }
 }

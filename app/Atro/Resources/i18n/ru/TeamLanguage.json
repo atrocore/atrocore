@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "language": "Язык",
+        "team": "Команда",
+        "editAction": "Редактировать"
+    },
+    "labels": {
+        "yes": "Да",
+        "no": "Нет"
+    },
+    "exceptions": {
+        "cannotRemoveLanguageWhenRestricted": "Невозможно удалить основной язык, если для команды включено ограничение по языкам."
+    }
+}

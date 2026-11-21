@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "Сопоставление",
+        "blockingRuleSet": "Набор",
+        "blockingRules": "Правила блокировки",
+        "operator": "Оператор",
+        "attribute": "Атрибут",
+        "matchedWhereExpression": "Выражение WHERE для сопоставления"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Поля",
+            "attributes": "Атрибуты"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "Поле равно",
+            "fieldSimilar": "Поле похоже",
+            "fieldContains": "Поле содержит",
+            "set": "Набор",
+            "expression": "Выражение"
+        },
+        "operator": {
+            "and": "И",
+            "or": "ИЛИ"
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "Правило блокировки можно изменить только для неактивного сопоставления.",
+        "notValidMatching": "Сопоставление недопустимо",
+        "notValidMatchingRuleSet": "Набор правил блокировки недопустим",
+        "notValidFieldType": "Тип поля не поддерживается выбранным типом правила.",
+        "notValidAttributeType": "Тип атрибута не поддерживается выбранным типом правила.",
+        "expressionCannotBeEmpty": "Выражение не может быть пустым."
+    },
+    "tooltips": {
+        "matchedWhereExpression": "Выражение ExpressionLanguage с доступом к `stageEntity` (гидратированная запись). Должно возвращать массив условий WHERE, описывающий, какие мастер-записи следует рассматривать в качестве кандидатов: ключи — имена полей, значения — то, с чем их нужно сопоставить (операторы можно указывать в ключе, например `field>`, `field*`, а группы `OR`/`AND` можно вкладывать для описания более сложных условий), например, {nameFrFr: stageEntity.get('name')} находит мастер-записи, в которых nameFrFr совпадает со значением name записи этапа."
+    }
+}

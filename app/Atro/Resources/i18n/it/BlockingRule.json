@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "Corrispondenza",
+        "blockingRuleSet": "Insieme",
+        "blockingRules": "Regole di blocco",
+        "operator": "Operatore",
+        "attribute": "Attributo",
+        "matchedWhereExpression": "Espressione Where corrispondente"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Campi",
+            "attributes": "Attributi"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "Il campo è uguale",
+            "fieldSimilar": "Il campo è simile",
+            "fieldContains": "Il campo contiene",
+            "set": "Insieme",
+            "expression": "Espressione"
+        },
+        "operator": {
+            "and": "E",
+            "or": "O"
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "La regola di blocco può essere modificata solo per una corrispondenza inattiva.",
+        "notValidMatching": "Corrispondenza non valida",
+        "notValidMatchingRuleSet": "Insieme di regole di blocco non valido",
+        "notValidFieldType": "Il tipo di campo non è supportato dal tipo di regola selezionato.",
+        "notValidAttributeType": "Il tipo di attributo non è supportato dal tipo di regola selezionato.",
+        "expressionCannotBeEmpty": "L'espressione non può essere vuota."
+    },
+    "tooltips": {
+        "matchedWhereExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record idratato). Deve restituire un array di clausole where che descriva quali record master considerare come candidati: le chiavi sono nomi di campi, i valori sono i criteri di confronto (gli operatori possono essere incorporati nella chiave, ad esempio `field>`, `field*`, e i gruppi `OR`/`AND` possono essere annidati per condizioni più complesse), ad esempio {nameFrFr: stageEntity.get('name')} trova i record master il cui campo nameFrFr è uguale al nome del record stage."
+    }
+}
