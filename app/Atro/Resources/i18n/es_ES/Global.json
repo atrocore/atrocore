@@ -177,7 +177,8 @@
         "BlockingRuleTypeFieldSimilar": "Regla de bloqueo: el campo es similar",
         "BlockingRuleTypeFieldContains": "Regla de bloqueo: el campo contiene",
         "BlockingRuleTypeSet": "Regla de bloqueo: conjunto",
-        "BlockingRuleTypeExpression": "Regla de bloqueo: expresión"
+        "BlockingRuleTypeExpression": "Regla de bloqueo: expresión",
+        "OauthClientClaim": "Atributo de cliente OAuth"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Paquetes de software",
@@ -344,7 +345,8 @@
         "BlockingRuleTypeFieldSimilar": "Regla de bloqueo: el campo es similar",
         "BlockingRuleTypeFieldContains": "Regla de bloqueo: el campo contiene",
         "BlockingRuleTypeSet": "Regla de bloqueo: conjunto",
-        "BlockingRuleTypeExpression": "Regla de bloqueo: expresión"
+        "BlockingRuleTypeExpression": "Regla de bloqueo: expresión",
+        "OauthClientClaim": "Atributos de cliente OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "El procesamiento en segundo plano no funciona. Lo más probable es que crontab no esté configurado correctamente o que haya un problema en el servidor. Consulte la guía de instalación.",
