@@ -43,9 +43,19 @@
       ],
       [
         {
-          "name": "country"
+          "name": "state"
         },
-        false
+        {
+          "name": "region"
+        }
+      ],
+      [
+        {
+          "name": "province"
+        },
+        {
+          "name": "country"
+        }
       ],
       [
         {

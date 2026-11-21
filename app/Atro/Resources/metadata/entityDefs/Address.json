@@ -35,6 +35,15 @@
     "city": {
       "type": "varchar"
     },
+    "state": {
+      "type": "varchar"
+    },
+    "region": {
+      "type": "varchar"
+    },
+    "province": {
+      "type": "varchar"
+    },
     "country": {
       "type": "link"
     },
