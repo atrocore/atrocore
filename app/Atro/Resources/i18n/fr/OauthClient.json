@@ -18,7 +18,6 @@
         "isUiClient": "L’interface utilisateur AtroCore se connecte via ce client. Celui-ci est défini lors de l’installation. La commande console « restore ui client » le restaure."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "Un client utilisant le flux des identifiants du client doit agir au nom d’un utilisateur.",
         "grantRequired": "Sélectionnez au moins une méthode pour obtenir un jeton d’accès : identifiants du client ou code d’autorisation."
     },
     "actionResults": {
