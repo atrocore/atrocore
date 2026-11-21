@@ -176,7 +176,8 @@
         "BlockingRuleTypeFieldSimilar": "Reguła blokująca: pole jest podobne",
         "BlockingRuleTypeFieldContains": "Reguła blokująca: pole zawiera",
         "BlockingRuleTypeSet": "Reguła blokująca: zestaw",
-        "BlockingRuleTypeExpression": "Reguła blokująca: wyrażenie"
+        "BlockingRuleTypeExpression": "Reguła blokująca: wyrażenie",
+        "OauthClientClaim": "Atrybut klienta OAuth"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Pakiety oprogramowania",
@@ -342,7 +343,8 @@
         "BlockingRuleTypeFieldSimilar": "Reguła blokująca: pole jest podobne",
         "BlockingRuleTypeFieldContains": "Reguła blokująca: pole zawiera",
         "BlockingRuleTypeSet": "Reguła blokująca: zestaw",
-        "BlockingRuleTypeExpression": "Reguła blokująca: wyrażenie"
+        "BlockingRuleTypeExpression": "Reguła blokująca: wyrażenie",
+        "OauthClientClaim": "Atrybuty klienta OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "Przetwarzanie w tle nie działa. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji.",
