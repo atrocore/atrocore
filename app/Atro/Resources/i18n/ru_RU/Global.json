@@ -176,7 +176,8 @@
         "BlockingRuleTypeFieldSimilar": "Правило блокировки: поле похоже",
         "BlockingRuleTypeFieldContains": "Правило блокировки: поле содержит",
         "BlockingRuleTypeSet": "Правило блокировки: набор",
-        "BlockingRuleTypeExpression": "Правило блокировки: выражение"
+        "BlockingRuleTypeExpression": "Правило блокировки: выражение",
+        "OauthClientClaim": "Утверждение клиента OAuth"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Программные пакеты",
@@ -342,7 +343,8 @@
         "BlockingRuleTypeFieldSimilar": "Правило блокировки: поле похоже",
         "BlockingRuleTypeFieldContains": "Правило блокировки: поле содержит",
         "BlockingRuleTypeSet": "Правило блокировки: набор",
-        "BlockingRuleTypeExpression": "Правило блокировки: выражение"
+        "BlockingRuleTypeExpression": "Правило блокировки: выражение",
+        "OauthClientClaim": "Утверждения клиента OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "Фоновая обработка не работает. Скорее всего, crontab настроен неправильно или есть проблема на сервере. Пожалуйста, обратитесь к инструкции по установке.",
