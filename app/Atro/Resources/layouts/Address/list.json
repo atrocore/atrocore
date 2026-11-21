@@ -22,6 +22,15 @@
     "name": "city"
   },
   {
+    "name": "state"
+  },
+  {
+    "name": "region"
+  },
+  {
+    "name": "province"
+  },
+  {
     "name": "country"
   }
 ]
