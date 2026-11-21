@@ -1,18 +1,18 @@
 {
     "fields": {
-        "name": "",
-        "value": "",
-        "oauthClient": ""
+        "name": "Nombre",
+        "value": "Valor",
+        "oauthClient": "Cliente de OAuth"
     },
     "links": {
-        "oauthClient": ""
+        "oauthClient": "Cliente de OAuth"
     },
     "tooltips": {
-        "name": "",
-        "value": ""
+        "name": "El nombre del atributo en el token de acceso, p. ej., \"role\". No se pueden usar los atributos JWT registrados ni los atributos establecidos por el servidor (aud, sub, exp, iat, nbf, jti, iss, scopes).",
+        "value": "El valor del atributo. Todos los tokens de acceso emitidos para el cliente lo incluyen como una cadena."
     },
     "exceptions": {
-        "reservedName": "",
-        "uiClientNoClaims": ""
+        "reservedName": "\"%s\" lo establece el servidor de autorización y no se puede usar como atributo personalizado.",
+        "uiClientNoClaims": "La interfaz de usuario de AtroCore inicia sesión mediante este cliente: sus tokens nunca salen del servidor, por lo que no tiene atributos personalizados."
     }
 }
