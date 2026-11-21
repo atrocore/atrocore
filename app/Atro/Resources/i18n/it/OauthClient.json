@@ -34,7 +34,6 @@
         "isUiClient": "L'interfaccia utente di AtroCore effettua l'accesso tramite questo client. Viene configurato durante l'installazione; il comando della console \"restore ui client\" lo ripristina."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "Un client che usa il flusso delle credenziali client deve agire come un utente.",
         "grantRequired": "Selezionare almeno un metodo per ottenere un token di accesso: credenziali client o codice di autorizzazione.",
         "redirectUrisRequired": "Un client che utilizza il flusso del codice di autorizzazione deve avere almeno un URI di reindirizzamento.",
         "invalidRedirectUri": "\"%s\" non è un URI di reindirizzamento valido: è richiesto un URI http o https oppure uno schema personalizzato di un'applicazione nativa in notazione a dominio inverso (ad es. com.example.app:/callback), senza frammento.",

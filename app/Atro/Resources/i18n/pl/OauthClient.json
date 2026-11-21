@@ -34,7 +34,6 @@
         "isUiClient": "Interfejs użytkownika AtroCore loguje się za pomocą tego klienta. Jest on ustawiany podczas instalacji; przywraca go polecenie konsoli „restore ui client”."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "Klient korzystający z trybu danych uwierzytelniających klienta musi mieć przypisanego użytkownika, w którego imieniu działa.",
         "grantRequired": "Wybierz co najmniej jeden sposób uzyskania tokenu dostępu: dane uwierzytelniające klienta lub kod autoryzacyjny.",
         "redirectUrisRequired": "Klient korzystający z grant typu kod autoryzacyjny musi mieć co najmniej jeden URI przekierowania.",
         "invalidRedirectUri": "„%s” nie jest prawidłowym URI przekierowania. Oczekiwany jest URI HTTP lub HTTPS albo niestandardowy schemat aplikacji natywnej zapisany w odwrotnej notacji domenowej (np. com.example.app:/callback), bez fragmentu.",
