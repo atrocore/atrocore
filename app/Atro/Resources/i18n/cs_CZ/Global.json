@@ -176,7 +176,8 @@
         "BlockingRuleTypeFieldSimilar": "Blokovací pravidlo: pole je podobné",
         "BlockingRuleTypeFieldContains": "Blokovací pravidlo: pole obsahuje",
         "BlockingRuleTypeSet": "Blokovací pravidlo: množina",
-        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz"
+        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz",
+        "OauthClientClaim": "Claim klienta OAuth"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Softwarové balíčky",
@@ -342,7 +343,8 @@
         "BlockingRuleTypeFieldSimilar": "Blokovací pravidlo: pole je podobné",
         "BlockingRuleTypeFieldContains": "Blokovací pravidlo: pole obsahuje",
         "BlockingRuleTypeSet": "Blokovací pravidlo: sada",
-        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz"
+        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz",
+        "OauthClientClaim": "Claimy klienta OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",
