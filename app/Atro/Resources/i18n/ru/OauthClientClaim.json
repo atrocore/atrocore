@@ -1,18 +1,1 @@
-{
-    "fields": {
-        "name": "",
-        "value": "",
-        "oauthClient": ""
-    },
-    "links": {
-        "oauthClient": ""
-    },
-    "tooltips": {
-        "name": "",
-        "value": ""
-    },
-    "exceptions": {
-        "reservedName": "",
-        "uiClientNoClaims": ""
-    }
-}
+{}
