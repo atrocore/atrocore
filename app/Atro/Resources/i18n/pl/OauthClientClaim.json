@@ -1,18 +1,18 @@
 {
     "fields": {
-        "name": "",
-        "value": "",
-        "oauthClient": ""
+        "name": "Nazwa",
+        "value": "Wartość",
+        "oauthClient": "Klient OAuth"
     },
     "links": {
-        "oauthClient": ""
+        "oauthClient": "Klient OAuth"
     },
     "tooltips": {
-        "name": "",
-        "value": ""
+        "name": "Nazwa atrybutu w tokenie dostępu, np. \"role\". Nie można używać zarejestrowanych atrybutów JWT ani atrybutów ustawianych przez serwer (aud, sub, exp, iat, nbf, jti, iss, scopes).",
+        "value": "Wartość atrybutu. Każdy token dostępu wydany klientowi zawiera ją jako ciąg znaków."
     },
     "exceptions": {
-        "reservedName": "",
-        "uiClientNoClaims": ""
+        "reservedName": "\"%s\" jest ustawiane przez serwer autoryzacji i nie może być używane jako niestandardowy atrybut.",
+        "uiClientNoClaims": "Interfejs użytkownika AtroCore uwierzytelnia się za pomocą tego klienta: jego tokeny nigdy nie opuszczają serwera, więc nie ma on niestandardowych atrybutów."
     }
 }
