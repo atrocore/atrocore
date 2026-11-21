@@ -11,10 +11,14 @@
         "secretHash": "Skrót sekretu",
         "redirectUris": "URI przekierowania",
         "isConsentRequired": "Wymagana zgoda",
-        "isUiClient": "Klient interfejsu użytkownika"
+        "isUiClient": "Klient interfejsu użytkownika",
+        "claims": "Roszczenia",
+        "accessTokenLifetime": "Okres ważności tokenu dostępu, min",
+        "refreshTokenLifetime": "Okres ważności tokenu odświeżania, min"
     },
     "links": {
-        "user": "Użytkownik"
+        "user": "Użytkownik",
+        "claims": "Deklaracje"
     },
     "labels": {
         "Grant Types": "Typy przyznawania uprawnień",
@@ -31,7 +35,9 @@
         "user": "Użytkownik, w którego imieniu działa klient, gdy uzyskuje token dostępu przy użyciu własnych danych uwierzytelniających (tryb danych uwierzytelniających klienta).",
         "redirectUris": "Adresy, na które użytkownik jest przekierowywany po zalogowaniu. Wartość redirect_uri w żądaniu autoryzacji musi dokładnie odpowiadać jednemu z tych adresów.",
         "isConsentRequired": "Użytkownik potwierdza na formularzu logowania AtroCore, że aplikacja może uzyskać dostęp do jego konta. Wyłącz tę opcję tylko dla aplikacji własnej organizacji, takich jak interfejs użytkownika AtroCore.",
-        "isUiClient": "Interfejs użytkownika AtroCore loguje się za pomocą tego klienta. Jest on ustawiany podczas instalacji; przywraca go polecenie konsoli „restore ui client”."
+        "isUiClient": "Interfejs użytkownika AtroCore loguje się za pomocą tego klienta. Jest on ustawiany podczas instalacji; przywraca go polecenie konsoli „restore ui client”.",
+        "accessTokenLifetime": "Czas ważności tokenu dostępu klienta w minutach (od 1 do 1440). Aplikacja, która samodzielnie weryfikuje tokeny bez kontaktowania się z AtroCore, wykryje unieważnienie dopiero po wygaśnięciu tokenu, dlatego w przypadku takich klientów należy ustawić krótki okres ważności.",
+        "refreshTokenLifetime": "Czas ważności tokenu odświeżania klienta w minutach (od 1 do 525600). Każde odświeżenie wystawia nowy token odświeżania, dlatego okres ważności jest liczony od ostatniego odświeżenia. W przypadku klienta interfejsu użytkownika AtroCore określa, jak długo sesja interfejsu może pozostawać nieaktywna."
     },
     "exceptions": {
         "grantRequired": "Wybierz co najmniej jeden sposób uzyskania tokenu dostępu: dane uwierzytelniające klienta lub kod autoryzacyjny.",
