@@ -34,7 +34,6 @@
         "isUiClient": "Uživatelské rozhraní AtroCore se přihlašuje pomocí tohoto klienta. Nastavuje se při instalaci; obnoví ho konzolový příkaz „restore ui client“."
     },
     "exceptions": {
-        "userRequiredForClientCredentials": "Klient používající grant přihlašovacích údajů klienta potřebuje uživatele, za kterého bude jednat.",
         "grantRequired": "Vyberte alespoň jeden způsob získání přístupového tokenu: přihlašovací údaje klienta nebo autorizační kód.",
         "redirectUrisRequired": "Klient s grantem autorizačního kódu potřebuje alespoň jednu URI pro přesměrování.",
         "invalidRedirectUri": "„%s“ není platná URI pro přesměrování: očekává se URI s protokolem http nebo https, případně vlastní schéma nativní aplikace v obráceném zápisu domény (např. com.example.app:/callback), bez fragmentu.",
