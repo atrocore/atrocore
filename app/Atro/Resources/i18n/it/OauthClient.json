@@ -11,10 +11,14 @@
         "secretHash": "Hash del segreto",
         "redirectUris": "URI di reindirizzamento",
         "isConsentRequired": "Consenso richiesto",
-        "isUiClient": "Client dell'interfaccia utente"
+        "isUiClient": "Client dell'interfaccia utente",
+        "claims": "Dichiarazioni",
+        "accessTokenLifetime": "Durata del token di accesso, min",
+        "refreshTokenLifetime": "Durata del token di aggiornamento, min"
     },
     "links": {
-        "user": "Utente"
+        "user": "Utente",
+        "claims": "Dichiarazioni"
     },
     "labels": {
         "Grant Types": "Tipi di concessione",
@@ -31,7 +35,9 @@
         "user": "L'utente come cui agisce il client quando ottiene un token di accesso con le proprie credenziali (flusso delle credenziali client).",
         "redirectUris": "Gli indirizzi a cui viene reindirizzato l'utente dopo l'accesso. Il redirect_uri di una richiesta di autorizzazione deve corrispondere esattamente a uno di questi indirizzi.",
         "isConsentRequired": "L'utente conferma nel modulo di accesso di AtroCore che l'applicazione può accedere all'account. Disattivare questa opzione solo per le applicazioni della propria organizzazione, come l'interfaccia utente di AtroCore.",
-        "isUiClient": "L'interfaccia utente di AtroCore effettua l'accesso tramite questo client. Viene configurato durante l'installazione; il comando della console \"restore ui client\" lo ripristina."
+        "isUiClient": "L'interfaccia utente di AtroCore effettua l'accesso tramite questo client. Viene configurato durante l'installazione; il comando della console \"restore ui client\" lo ripristina.",
+        "accessTokenLifetime": "Durata di validità del token di accesso del client, in minuti (da 1 a 1440). Un’applicazione che verifica autonomamente i token, senza rivolgersi ad AtroCore, rileva la revoca solo alla scadenza del token. Per questi client, impostare una durata breve.",
+        "refreshTokenLifetime": "Durata di validità del token di aggiornamento del client, in minuti (da 1 a 525600). A ogni aggiornamento viene emesso un nuovo token di aggiornamento, quindi la durata decorre dall’ultimo aggiornamento. Per il client dell’interfaccia utente di AtroCore, indica per quanto tempo una sessione dell’interfaccia può rimanere inattiva."
     },
     "exceptions": {
         "grantRequired": "Selezionare almeno un metodo per ottenere un token di accesso: credenziali client o codice di autorizzazione.",
