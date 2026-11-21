@@ -11,10 +11,14 @@
         "secretHash": "Hash tajného klíče",
         "redirectUris": "URI pro přesměrování",
         "isConsentRequired": "Vyžaduje souhlas",
-        "isUiClient": "Klient uživatelského rozhraní"
+        "isUiClient": "Klient uživatelského rozhraní",
+        "claims": "Nároky",
+        "accessTokenLifetime": "Doba platnosti přístupového tokenu, min",
+        "refreshTokenLifetime": "Doba platnosti obnovovacího tokenu, min"
     },
     "links": {
-        "user": "Uživatel"
+        "user": "Uživatel",
+        "claims": "Nároky"
     },
     "labels": {
         "Grant Types": "Typy grantů",
@@ -31,7 +35,9 @@
         "user": "Uživatel, za kterého klient jedná při získávání přístupového tokenu pomocí vlastních přihlašovacích údajů (grant přihlašovacích údajů klienta).",
         "redirectUris": "Adresy, na které je uživatel po přihlášení přesměrován. redirect_uri autorizačního požadavku se musí přesně shodovat s jednou z nich.",
         "isConsentRequired": "Uživatel na přihlašovacím formuláři AtroCore potvrzuje, že aplikace získá přístup k účtu. Tuto možnost vypněte pouze u aplikací vlastní organizace, například u uživatelského rozhraní AtroCore.",
-        "isUiClient": "Uživatelské rozhraní AtroCore se přihlašuje pomocí tohoto klienta. Nastavuje se při instalaci; obnoví ho konzolový příkaz „restore ui client“."
+        "isUiClient": "Uživatelské rozhraní AtroCore se přihlašuje pomocí tohoto klienta. Nastavuje se při instalaci; obnoví ho konzolový příkaz „restore ui client“.",
+        "refreshTokenLifetime": "Doba platnosti obnovovacího tokenu klienta v minutách (1 až 525600). Při každém obnovení se vydá nový obnovovací token, takže se doba platnosti počítá od posledního obnovení. U klienta uživatelského rozhraní AtroCore určuje, jak dlouho může relace uživatelského rozhraní zůstat neaktivní.",
+        "accessTokenLifetime": "Doba platnosti přístupového tokenu klienta v minutách (1 až 1440). Aplikace, která ověřuje tokeny sama, bez dotazování AtroCore, zaznamená odvolání až po vypršení platnosti tokenu. U takových klientů proto nastavte krátkou dobu platnosti."
     },
     "exceptions": {
         "grantRequired": "Vyberte alespoň jeden způsob získání přístupového tokenu: přihlašovací údaje klienta nebo autorizační kód.",
