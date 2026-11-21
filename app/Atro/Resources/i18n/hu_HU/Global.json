@@ -163,7 +163,8 @@
         "EntityFieldTypeDate": "Entitásmező: dátum",
         "EntityFieldTypeJsonObject": "Entitásmező: JSON-objektum",
         "EntityUniqueIndex": "Egyedi indexek",
-        "ConnectionTypeCookie": "Kapcsolat: süti-munkamenet"
+        "ConnectionTypeCookie": "Kapcsolat: süti-munkamenet",
+        "OauthClientClaim": "OAuth-kliens-állítások"
     },
     "labels": {
         "Yesterday": "Tegnap",
@@ -751,7 +752,8 @@
         "DocumentFolder": "Dokumentummappa",
         "AccountGroup": "Fiókcsoport",
         "MatchingRuleTypeFieldEqual": "Egyeztetési szabály: a mező egyenlő",
-        "MatchingRuleTypeFieldsSimilar": "Egyeztetési szabály: a mezők hasonlóak"
+        "MatchingRuleTypeFieldsSimilar": "Egyeztetési szabály: a mezők hasonlóak",
+        "OauthClientClaim": "OAuth-kliens-állítás"
     },
     "insightsPanels": {
         "summary": "Összegzés",
