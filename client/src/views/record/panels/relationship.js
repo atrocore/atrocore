@@ -667,7 +667,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (!this.readinessMarkerListened) {
                 this.readinessMarkerListened = true;
-                this.listenTo(this.model, 'change', () => this.toggleReadinessMarker());
+                this.listenTo(this.model, 'change', () => {
+                    this.toggleReadinessMarker();
+                    this.toggleVisibilityViaConditions();
+                });
                 this.listenTo(this.model, 'change:_meta', () => this.markNotReadyRows());
             }
         },
