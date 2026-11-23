@@ -23,6 +23,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Language;
+use Atro\Core\Utils\LinkWhereRenderer;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\UniqueIndexDescriber;
 use Atro\Core\Utils\Util;
@@ -1201,13 +1202,8 @@ trait EditableTrait
             $where        = $entity->entityDefs['fields'][$originalName]['where'] ?? [];
 
             if (!empty($where)) {
-                $renderedWhere = @json_decode(
-                    $this->container->get('twig')->renderTemplate(json_encode($where), ['entity' => $entity]),
-                    true
-                );
-                if (is_array($renderedWhere)) {
-                    $where = $renderedWhere;
-                }
+                // there is no form when a record is saved: uiRecord is null, the record that is saved is entity
+                $where = (new LinkWhereRenderer($this->container->get('twig')))->render($where, $entity);
             }
 
             $entityName = $entity->entityDefs['fields'][$originalName]['entity'] ?? $entity->entityDefs['links'][$originalName]['entity'] ?? null;
