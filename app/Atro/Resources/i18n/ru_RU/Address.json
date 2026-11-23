@@ -14,7 +14,10 @@
         "prospect": "Перспективы",
         "accounts": "Контрагенты",
         "contacts": "Контакты",
-        "postalCode": "Почтовый индекс"
+        "postalCode": "Почтовый индекс",
+        "state": "Штат",
+        "region": "Регион",
+        "province": "Провинция"
     },
     "options": {
         "type": {
