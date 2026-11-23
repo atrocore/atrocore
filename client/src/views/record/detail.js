@@ -209,6 +209,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                     middle._loadNestedViews(() => {
                         if (middleOnly) {
+                            this.listenToOnce(middle, 'after:render', () => {
+                                this.initListenToInlineMode();
+                            });
                             middle.reRender()
                         } else {
                             this.reRender();
