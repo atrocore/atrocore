@@ -112,33 +112,7 @@ class EntityField extends ReferenceData
             $record = $repository->get();
         }
 
-        return (new LinkWhereRenderer($this->twig()))->render($where, $record, $uiRecord === null ? null : $this->prepareUiRecord($uiRecord, $forbiddenFields));
-    }
-
-    /**
-     * The values of a form that the expressions of a filter can use: the fields that the user may read.
-     */
-    protected function prepareUiRecord(array $uiRecord, array $forbiddenFields): array
-    {
-        $result = [];
-
-        foreach ($uiRecord as $name => $value) {
-            if (!is_string($name) || preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $name) !== 1) {
-                continue;
-            }
-
-            // the parts of a link: the field of measureId and of measureName is measure
-            $field = preg_replace('/(Ids|Id|Names|Name)$/', '', $name);
-            if (in_array($name, $forbiddenFields, true) || in_array($field, $forbiddenFields, true)) {
-                continue;
-            }
-
-            if ($value === null || is_scalar($value) || is_array($value)) {
-                $result[$name] = $value;
-            }
-        }
-
-        return $result;
+        return (new LinkWhereRenderer($this->twig()))->render($where, $record, $uiRecord);
     }
 
     public function updateOptionCode(string $id, string $oldValue, string $newValue): bool
