@@ -22,7 +22,7 @@ class Cascade extends AbstractErasureResolver
         return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::LINK_TYPES);
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
     {
         $foreignEntityType = $this->getForeignEntityType($entity, $field);
         if (empty($foreignEntityType) || empty($this->getMetadata()->get(['scopes', $foreignEntityType, 'containsPersonalData']))) {
@@ -36,7 +36,7 @@ class Cascade extends AbstractErasureResolver
         $repository = $this->getEntityManager()->getRepository($foreignEntityType);
 
         foreach ($this->getLinkedEntities($entity, $field) as $foreign) {
-            $repository->erasePersonalData($foreign, $processed);
+            $repository->erasePersonalData($foreign, $processed, $automatically);
         }
 
         return true;

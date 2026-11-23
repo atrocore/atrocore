@@ -22,7 +22,7 @@ class Unlink extends AbstractErasureResolver
         return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::LINK_TYPES);
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
     {
         $this->unlink($entity, $field, $this->getLinkedEntities($entity, $field));
 

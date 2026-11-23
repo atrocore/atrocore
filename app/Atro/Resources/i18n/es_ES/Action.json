@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Ejecute",
         "Parameters": "Parámetros",
-        "fieldsPanel": "Guardar"
+        "fieldsPanel": "Guardar",
+        "erasureActionName": "Borrar datos personales: %s"
     },
     "actions": {
         "allLogs": "Todos los registros"
@@ -67,6 +68,7 @@
             "update": "Guardar",
             "create": "Crear",
             "delete": "Borrar",
+            "erasure": "Borrar datos personales",
             "createOrUpdate": "Crear o actualizar",
             "custom": "Código personalizado"
         },
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "La expresión no puede estar vacía.",
         "forEditModeOnly": "La acción '%s' sólo está disponible en el modo de edición y no puede utilizarse aquí.",
-        "actionTypeDisabledForTargetEntity": "El tipo de acción \"%1$s\" no se puede utilizar porque esta acción está deshabilitada para la entidad \"%2$s\"."
+        "actionTypeDisabledForTargetEntity": "El tipo de acción \"%1$s\" no se puede utilizar porque esta acción está deshabilitada para la entidad \"%2$s\".",
+        "entityDoesNotContainPersonalData": "La entidad '%s' no contiene datos personales"
     }
 }

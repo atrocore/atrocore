@@ -74,12 +74,12 @@ class Note
     /**
      * Removes all notes related to the erased fields of the record and creates the "Erase" note
      */
-    public function afterPersonalDataErased(OrmEntity $entity, array $fields): void
+    public function afterPersonalDataErased(OrmEntity $entity, array $fields, bool $automatically = false): void
     {
         $this->deleteFieldNotes($entity, $fields);
 
         if ($this->streamEnabled($entity->getEntityName())) {
-            $this->createNote('Erase', $entity->getEntityName(), $entity->id, []);
+            $this->createNote('Erase', $entity->getEntityName(), $entity->id, $automatically ? ['automatically' => true] : []);
         }
     }
 

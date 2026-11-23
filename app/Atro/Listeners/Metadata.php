@@ -440,10 +440,6 @@ class Metadata extends AbstractMetadataListener
                 'readOnly' => true,
             ];
 
-            if (!in_array('erasePersonalData', $data['clientDefs'][$scope]['massActionList'] ?? [])) {
-                $data['clientDefs'][$scope]['massActionList'][] = 'erasePersonalData';
-            }
-
             $data['entityDefs'][$scope . 'PersonalData'] = [
                 'fields'        => [
                     'field'  => [

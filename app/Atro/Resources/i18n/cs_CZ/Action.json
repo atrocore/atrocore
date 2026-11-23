@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Provést",
         "Parameters": "Parametry",
-        "fieldsPanel": "Aktualizovat"
+        "fieldsPanel": "Aktualizovat",
+        "erasureActionName": "Vymazat osobní údaje: %s"
     },
     "actions": {
         "allLogs": "Všechny protokoly"
@@ -67,6 +68,7 @@
             "update": "Aktualizovat",
             "create": "Vytvořit",
             "delete": "Odstranit",
+            "erasure": "Vymazat osobní údaje",
             "createOrUpdate": "Vytvořit nebo aktualizovat",
             "custom": "Vlastní kód"
         },
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "Výraz nemůže být prázdný.",
         "forEditModeOnly": "Akce \"%s\" je k dispozici pouze v režimu úprav a nelze ji zde použít.",
-        "actionTypeDisabledForTargetEntity": "Typ akce \"%1$s\" nelze použít, protože tato akce je pro entitu \"%2$s\" zakázána."
+        "actionTypeDisabledForTargetEntity": "Typ akce \"%1$s\" nelze použít, protože tato akce je pro entitu \"%2$s\" zakázána.",
+        "entityDoesNotContainPersonalData": "Entita '%s' neobsahuje osobní údaje"
     }
 }

@@ -878,7 +878,42 @@ class Entity extends ReferenceData
             }
         }
 
+        if ($entity->isAttributeChanged('containsPersonalData') && !empty($entity->get('containsPersonalData'))) {
+            $this->createErasureAction($entity);
+        }
+
         parent::afterSave($entity, $options);
+    }
+
+    /**
+     * The personal data of the records of the entity are erased by the action "Erasure": it is created when the entity
+     * starts to contain personal data, unless the entity already has one.
+     */
+    protected function createErasureAction(OrmEntity $entity): void
+    {
+        $scope = $entity->get('code');
+
+        $repository = $this->getEntityManager()->getRepository('ActionTypeErasure');
+        if (!empty($repository->where(['targetEntity' => $scope])->findOne())) {
+            return;
+        }
+
+        $action = $repository->get();
+        $action->set([
+            'name'                      => sprintf($this->getLanguage()->translate('erasureActionName', 'labels', 'Action'), $entity->get('name') ?? $scope),
+            'isActive'                  => true,
+            'targetEntity'              => $scope,
+            'searchEntity'              => $scope,
+            'sourceEntity'              => $scope,
+            'usage'                     => 'record',
+            'display'                   => 'dropdown',
+            'massAction'                => true,
+            'applyToPreselectedRecords' => true,
+            'executeAs'                 => 'sameUser',
+            'iconClass'                 => 'eraser',
+        ]);
+
+        $this->getEntityManager()->saveEntity($action);
     }
 
     protected function prepareVirtualFields(OrmEntity $entity): void

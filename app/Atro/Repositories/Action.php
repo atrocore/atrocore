@@ -44,7 +44,7 @@ class Action extends Base
 
         if (
             $entity->isAttributeChanged('targetEntity')
-            && in_array($entity->get('type'), ['update', 'email', 'delete'])
+            && in_array($entity->get('type'), ['update', 'email', 'delete', 'erasure'])
         ) {
             $entity->set('searchEntity', $entity->get('targetEntity'));
         }

@@ -20,6 +20,10 @@ Espo.define('views/stream/notes/erase', 'views/stream/note',
         isRemovable: false,
 
         setup() {
+            if ((this.model.get('data') || {}).automatically) {
+                this.messageName = 'eraseAutomaticallyThis';
+            }
+
             this.messageData['datetime'] = this.getDateTime().toDisplay(this.model.get('createdAt'));
 
             const auditMeta = this.model.getMeta('audit', 'createdBy');

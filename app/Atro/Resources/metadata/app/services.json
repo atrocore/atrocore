@@ -27,6 +27,7 @@
   "ActionTypeUpdate": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeCreateOrUpdate": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeDelete": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeErasure": "\\Atro\\Services\\ActionSubtype",
   "ActionTypeCustom": "\\Atro\\Services\\ActionSubtype",
   "AttributeTypeVarchar": "\\Atro\\Services\\AttributeSubtype",
   "AttributeTypeText": "\\Atro\\Services\\AttributeSubtype",

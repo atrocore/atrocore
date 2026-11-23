@@ -49,7 +49,7 @@ class Anonymize extends AbstractErasureResolver
         return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::SUPPORTED_TYPES);
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
     {
         $this->anonymizeField($entity, $field);
 

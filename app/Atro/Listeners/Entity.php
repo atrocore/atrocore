@@ -43,7 +43,7 @@ class Entity extends AbstractListener
         $options = $event->getArgument('options') ?? [];
         if (!empty($options['erasePersonalData'])) {
             // erased values must not get into the stream, the "Erase" note is created instead
-            $this->getNoteUtil()->afterPersonalDataErased($entity, $options['erasedFields'] ?? []);
+            $this->getNoteUtil()->afterPersonalDataErased($entity, $options['erasedFields'] ?? [], !empty($options['erasedAutomatically']));
         } else {
             $this->getNoteUtil()->afterEntitySaved($entity);
         }

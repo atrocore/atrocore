@@ -260,6 +260,7 @@
         "ActionTypeUpdate": "Action: Mise à jour",
         "ActionTypeCreateOrUpdate": "Action: Création ou mise à jour",
         "ActionTypeDelete": "Action: Suppression",
+        "ActionTypeErasure": "Action: Effacer les données personnelles",
         "ActionTypeSet": "Action: Ensemble d'actions",
         "ActionTypeCustom": "Action: Code personnalisé",
         "AttributeTypeVarchar": "Attribut: Chaîne",
@@ -794,8 +795,6 @@
         "massUnfollowZeroResult": "Rien n'a été désabandonné",
         "massRestoreResult": "{count} enregistrements sont maintenant restaurés",
         "erasePersonalDataConfirmation": "Les champs sélectionnés seront effacés définitivement. Êtes-vous sûr de vous ?",
-        "erasePersonalDataRecordConfirmation": "Les données personnelles de cet enregistrement seront effacées définitivement selon le mode d'effacement de chaque champ. Êtes-vous sûr ?",
-        "erasePersonalDataRecordsConfirmation": "Les données personnelles des enregistrements sélectionnés seront effacées définitivement selon le mode d'effacement de chaque champ. Êtes-vous sûr ?",
         "duplicatedAndLinked": "Les enregistrements ont été dupliqués et reliés avec succès.",
         "deletePermanentlyRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement les enregistrements sélectionnés ?",
         "deletePermanentlyRecordConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement l'enregistrement ?",
@@ -954,6 +953,7 @@
         "ActionTypeUpdate": "Action: Mise à jour",
         "ActionTypeCreateOrUpdate": "Action: Création ou mise à jour",
         "ActionTypeDelete": "Action: Suppression",
+        "ActionTypeErasure": "Action: Effacer les données personnelles",
         "ActionTypeSet": "Action: Ensemble d'actions",
         "ActionTypeCustom": "Action: Code personnalisé",
         "AttributeTypeVarchar": "Attribut: Chaîne",
@@ -1010,7 +1010,6 @@
         "multipleClassifications": "Classifications multiples"
     },
     "massActions": {
-        "erasePersonalData": "Effacer",
         "dataPipelineTransformSource": "Transformation des enregistrements source",
         "dataPipelineUpdateFromSource": "Mise à jour depuis la source",
         "updateFromSource": "Transformer",
@@ -1050,6 +1049,7 @@
         "assign": "{entityType} {entity} vous a été attribué."
     },
     "streamMessages": {
+        "eraseAutomaticallyThis": "Les données personnelles de cet enregistrement ont été effacées automatiquement le {datetime}.",
         "eraseThis": "{user} a effacé les données personnelles de cet enregistrement le {datetime}.",
         "erase": "{user} a effacé les données personnelles de {entityType} {entity} le {datetime}.",
         "composerUpdate": "{user} a modifié les paquets logiciels installés",
@@ -1710,6 +1710,7 @@
         "ActionTypeUpdate": "Met à jour les enregistrements sélectionnés ou trouvés de l'entité cible.",
         "ActionTypeCreateOrUpdate": "Met à jour les enregistrements trouvés de l'entité cible ou en crée un nouveau si rien n'est trouvé.",
         "ActionTypeDelete": "Supprime les enregistrements sélectionnés ou trouvés de l'entité cible, éventuellement de façon définitive.",
+        "ActionTypeErasure": "Efface les données personnelles des enregistrements sélectionnés ou trouvés de l'entité cible selon le mode d'effacement de chaque champ.",
         "ActionTypeEmail": "Envoie un e-mail à partir d'un modèle d'e-mail ou d'un script.",
         "ActionTypeSet": "Exécute plusieurs actions l'une après l'autre comme une seule action.",
         "ActionTypeWebhook": "Appelle une URL externe pour notifier un autre système.",
