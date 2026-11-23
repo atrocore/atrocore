@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\ReferenceData;
 use Atro\Core\Twig\Twig;
+use Atro\Core\Utils\LinkWhereRenderer;
 use Espo\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
@@ -48,17 +49,20 @@ class EntityField extends ReferenceData
     }
 
     /**
-     * Returns the `where` filter of a link field with Twig expressions resolved against the specified record. The
-     * type of the field is the type of the subtype of the service, e.g. "link" for "EntityFieldTypeLink".
+     * Returns the `where` filter of a link field with Twig expressions resolved: the specified record is `entity`, and
+     * the current values of the form, which are not saved, are `uiRecord`. The type of the field is the type of the
+     * subtype of the service, e.g. "link" for "EntityFieldTypeLink".
+     *
+     * @param array|null $uiRecord The current values of the form by field; the expressions are resolved for a new record when it is given
      *
      * @throws NotFound   When the field of this type or the record does not exist.
      * @throws Forbidden  When the caller lacks read access to the entity scope, the field, or the record.
      */
-    public function prepareFieldWhere(string $id, string $recordId): array
+    public function prepareFieldWhere(string $id, string $recordId, ?array $uiRecord = null): array
     {
         $field = $this->getRepository()->get($id);
         if (!empty($field)) {
-            return $this->prepareFieldWhereByEntityAndField((string)$field->get('entityId'), (string)$field->get('code'), $recordId);
+            return $this->prepareFieldWhereByEntityAndField((string)$field->get('entityId'), (string)$field->get('code'), $recordId, $uiRecord);
         }
 
         // the fields hidden from the Entity Manager have no record, the entity and the field are taken from the ID
@@ -72,10 +76,10 @@ class EntityField extends ReferenceData
             throw new NotFound();
         }
 
-        return $this->prepareFieldWhereByEntityAndField($parts[0], $parts[1], $recordId);
+        return $this->prepareFieldWhereByEntityAndField($parts[0], $parts[1], $recordId, $uiRecord);
     }
 
-    public function prepareFieldWhereByEntityAndField(string $entityName, string $fieldCode, string $recordId): array
+    public function prepareFieldWhereByEntityAndField(string $entityName, string $fieldCode, string $recordId, ?array $uiRecord = null): array
     {
         if (!$this->getAcl()->check($entityName, 'read')) {
             throw new Forbidden();
@@ -88,25 +92,53 @@ class EntityField extends ReferenceData
 
         $where = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldCode, 'where']) ?? [];
 
-        if (empty($where) || $recordId === '') {
+        // without a record and without the values of a form there is nothing to render the expressions for
+        if (empty($where) || ($recordId === '' && $uiRecord === null)) {
             return $where;
         }
 
-        $record = $this->getEntityManager()->getRepository($entityName)->get($recordId);
-        if (empty($record)) {
-            throw new NotFound();
+        $repository = $this->getEntityManager()->getRepository($entityName);
+
+        if ($recordId !== '') {
+            $record = $repository->get($recordId);
+            if (empty($record)) {
+                throw new NotFound();
+            }
+
+            if (!$this->getAcl()->checkEntity($record, 'read')) {
+                throw new Forbidden();
+            }
+        } else {
+            $record = $repository->get();
         }
 
-        if (!$this->getAcl()->checkEntity($record, 'read')) {
-            throw new Forbidden();
+        return (new LinkWhereRenderer($this->twig()))->render($where, $record, $uiRecord === null ? null : $this->prepareUiRecord($uiRecord, $forbiddenFields));
+    }
+
+    /**
+     * The values of a form that the expressions of a filter can use: the fields that the user may read.
+     */
+    protected function prepareUiRecord(array $uiRecord, array $forbiddenFields): array
+    {
+        $result = [];
+
+        foreach ($uiRecord as $name => $value) {
+            if (!is_string($name) || preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $name) !== 1) {
+                continue;
+            }
+
+            // the parts of a link: the field of measureId and of measureName is measure
+            $field = preg_replace('/(Ids|Id|Names|Name)$/', '', $name);
+            if (in_array($name, $forbiddenFields, true) || in_array($field, $forbiddenFields, true)) {
+                continue;
+            }
+
+            if ($value === null || is_scalar($value) || is_array($value)) {
+                $result[$name] = $value;
+            }
         }
 
-        $renderedWhere = @json_decode(
-            $this->twig()->renderTemplate(json_encode($where), ['entity' => $record]),
-            true
-        );
-
-        return is_array($renderedWhere) ? $renderedWhere : $where;
+        return $result;
     }
 
     public function updateOptionCode(string $id, string $oldValue, string $newValue): bool

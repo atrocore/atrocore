@@ -244,17 +244,20 @@ Espo.define('model', [], function () {
         /**
          * Returns the filter of the records of a link or a multiple link: the "where" param of the field, the
          * placeholders of which are resolved for the record, and the rules of the "foreignFilterFields" of the field.
-         * The type of the relation ("link" or "linkMultiple") is the type of the field when it is not given.
+         * The placeholders can use the current values of the form as uiRecord, also for a record that is not saved yet;
+         * the saved record is entity. The type of the relation ("link" or "linkMultiple") is the type of the field when it is
+         * not given.
          */
         getLinkWhere: function (field, linkType) {
             let where = this.getFieldParam(field, 'where');
 
             if (where && JSON.stringify(where).includes('{{')) {
                 const type = (linkType || this.getFieldParam(field, 'type')) === 'link' ? 'EntityFieldTypeLink' : 'EntityFieldTypeLinkMultiple';
-                const recordId = this.id || '';
                 $.ajax({
-                    url: type + '/' + this.name + '_' + field + '/where' + (recordId ? '?recordId=' + recordId : ''),
-                    type: 'GET',
+                    url: type + '/' + this.name + '_' + field + '/where',
+                    type: 'POST',
+                    data: JSON.stringify({entityId: this.id || undefined, uiRecord: this.attributes}),
+                    contentType: 'application/json',
                     async: false,
                     success: response => {
                         where = response?.where || where;
