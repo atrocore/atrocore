@@ -369,6 +369,36 @@ For example, the payload filters all attributes by their ids and transfers to th
 
 ![Export Feed](./_assets/export-feed.png){.large}
 
+The following variables are available in the payload:
+
+| Variable | Type | Description |
+|---|---|---|
+| `entity` | `Entity` | The first record to export |
+| `sourceEntities` | `EntityCollection` | The records to export |
+| `sourceEntitiesIds` | `array` | The IDs of the records to export |
+| `triggeredEntity` | `Entity` | The record that triggered the action |
+| `triggeredEntityType` | `string` | The entity type of the triggered record |
+| `triggeredEntityId` | `string` | The ID of the triggered record |
+| `changedFieldsData` | `array` | The changed fields of the triggered record: `fields` contains the names of the changed fields, `attributes.was` and `attributes.became` contain the values before and after the change. Available only when fields of an existing record are changed |
+| `workflowData` | `array` | The data of the workflow that triggered the action, e.g. `workflow_id` and `workflow_name` |
+| `executedViaWorkflow` | `bool` | `true` when the action is executed by a workflow |
+| `actionUser` | `Entity` | The user who triggered the action |
+| `importJobId` | `string` | The ID of the import job, when the change comes from an import |
+
+Every key of the payload is passed to the export feed and is available in all templates of the feed (the feed template, the URL of an HTTP request, the response validator and the response formatter) as `feedData.data.<key>`. Keys with the names of the export feed settings (e.g. `where`) override these settings for this execution, so put your own values under a separate key, for example `vars`:
+
+    {
+      "where": [{"type": "in", "attribute": "id", "value": ["{{ entity.id }}"]}],
+      "vars": {
+        "changedFields": {{ (changedFieldsData.fields ?? [])|json_encode|raw }},
+        "workflow": "{{ workflowData.workflow_name ?? '' }}"
+      }
+    }
+
+In the export feed these values are available as `{{ feedData.data.vars.changedFields|join(',') }}` and `{{ feedData.data.vars.workflow }}`.
+
+Together with an [HTTP request export feed](../../../02.data-exchange/09.export-feeds-http-request/) that processes the response with an import feed, this lets a workflow send the changed record to an external service and write the result back, e.g. to determine the geolocation when the address of a record is changed.
+
 ### Communication
 
 #### **Send E-mail**
