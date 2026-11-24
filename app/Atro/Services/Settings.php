@@ -96,6 +96,7 @@ class Settings extends AbstractService
         $data = $this->getConfigData();
         $data = $this->prepareAdminOnlyForOutput($data);
         $data = $this->prepareCustomHeadCodeForOutput($data);
+        $data = $this->prepareSystemFieldsForOutput($data);
 
         return $this->prepareStylesheetConfigForOutput($data);
     }
@@ -212,6 +213,7 @@ class Settings extends AbstractService
             }
         }
 
+        $values = $this->prepareSystemKeysForSave($values);
         $values = $this->prepareCustomHeadCodeForSave($values);
         $values = $this->prepareStylesheetConfigForSave($values);
 
@@ -250,6 +252,53 @@ class Settings extends AbstractService
             if ($this->getConfig()->has($key)) {
                 $data[$key] = $this->getConfig()->get($key);
             }
+        }
+
+        return $data;
+    }
+
+    /**
+     * The fields kept in data/config.system.php are shown read-only in the Settings form
+     */
+    private function prepareSystemFieldsForOutput(array $data): array
+    {
+        $fields = [];
+        foreach (array_keys($this->getSettingsFieldDefs()) as $field) {
+            foreach ($this->getFieldAttributes($field) as $attribute) {
+                if ($this->getConfig()->isSystemKey($attribute)) {
+                    $fields[] = $field;
+                    break;
+                }
+            }
+        }
+
+        if (!empty($fields)) {
+            $data['_meta']['readOnlyFields'] = $fields;
+        }
+
+        return $data;
+    }
+
+    /**
+     * A form submits a system parameter with its current value as well - only a change is refused
+     */
+    private function prepareSystemKeysForSave(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (!$this->getConfig()->isSystemKey($key)) {
+                continue;
+            }
+
+            // compared as plain data: the request holds objects where the config holds arrays
+            $current = json_decode(json_encode($this->getConfig()->get($key)), true);
+            if (json_decode(json_encode($value), true) != $current) {
+                throw new BadRequest(sprintf(
+                    $this->getLanguage()->translate('systemConfigKey', 'exceptions', 'Settings'),
+                    $this->getLanguage()->translate($key, 'fields', 'Settings')
+                ));
+            }
+
+            unset($data[$key]);
         }
 
         return $data;

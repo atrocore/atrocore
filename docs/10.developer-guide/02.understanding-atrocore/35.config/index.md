@@ -2,8 +2,124 @@
 title: Config Parameters
 ---
 
-AtroCore configuration parameters are located in the `data/config.php` file. You can access and modify these values in the
-code by retrieving the `config` utility from the service container.
+AtroCore configuration parameters are located in two files:
+
+- `data/config.php` - the parameters the system manages itself. The administration panel and the `config` utility write them.
+- `data/config.system.php` - the system parameters, maintained by hand. Neither the administration panel nor the `config` utility writes this file.
+
+You can access the values of both files in the code by retrieving the `config` utility from the service container.
+
+## System Parameters
+
+`data/config.system.php` holds the parameters that neither the administration panel nor the code may change: the
+database connection, the secret keys and everything the administrator decides to fix. The file is a plain PHP array,
+just like `data/config.php`:
+
+```php
+<?php
+return [
+    'database'           => [
+        'driver'   => 'pdo_pgsql',
+        'host'     => 'localhost',
+        'port'     => '',
+        'charset'  => 'utf8',
+        'dbname'   => 'atrocore',
+        'user'     => 'atrocore',
+        'password' => 'secret',
+    ],
+    'logger'             => [
+        'path'          => 'data/logs/atro.log',
+        'level'         => 'WARNING',
+        'rotation'      => true,
+        'maxFileNumber' => 7,
+    ],
+    'amountOfDbDumps'    => 14,
+    'filesPath'          => 'upload/files/',
+    'thumbnailsPath'     => 'upload/thumbnails/',
+    'encryptionKey'      => '...',
+    'passwordPepper'     => '...',
+    'oauthEncryptionKey' => '...',
+];
+```
+
+The rules are simple:
+
+- **A parameter of `data/config.system.php` overrides the same parameter of `data/config.php`.** Associative arrays
+  are merged key by key, so `data/config.system.php` may define only `database.password` and leave the rest of the
+  connection in `data/config.php`. Lists and scalar values are replaced as a whole.
+- **Every top-level key of `data/config.system.php` is a system parameter.** `set()` and `remove()` throw a
+  `LogicException` for it, the Settings form shows its fields read-only, and `PATCH /api/settings` rejects a change of
+  it. If the file defines `database.password`, the whole `database` key is a system parameter.
+- **Any parameter becomes a system one the moment you move it to `data/config.system.php`** - `siteUrl`,
+  `recordsPerPage`, anything. Move it back to `data/config.php` to make it editable again.
+- **The file is optional.** A missing file defines no system parameters.
+
+The installation moves `database`, `logger`, `amountOfDbDumps`, `filesPath`, `thumbnailsPath`, `encryptionKey`,
+`passwordPepper` and `oauthEncryptionKey` from `data/config.php` to `data/config.system.php` as one of its last steps.
+The upgrade to AtroCore 3.0 moves the same parameters. If `data/config.system.php` already exists and is maintained by
+hand, it is left as it is: the parameters it defines are only removed from `data/config.php`.
+
+When you move a parameter by hand, remove it from `data/config.php`, otherwise its stale value stays on the disk. Keep
+`encryptionKey`, `passwordPepper` and `oauthEncryptionKey` unchanged when moving them: the stored credentials, the
+passwords of the users and the issued tokens depend on them.
+
+`Config::isSystemKey()` tells whether a parameter is defined in `data/config.system.php`:
+
+```php
+if ($config->isSystemKey('siteUrl')) {
+    // the value cannot be changed by the system
+}
+```
+
+### Environment Variables
+
+Neither the administration panel nor the `config` utility rewrites `data/config.system.php`, so any PHP expression
+there stays as it is. Any system parameter can therefore come from the environment, with a default value for the case
+the variable is not set:
+
+```php
+<?php
+return [
+    'database'           => [
+        'driver'   => getenv('ATRO_DB_DRIVER') ?: 'pdo_pgsql',
+        'host'     => getenv('ATRO_DB_HOST') ?: 'localhost',
+        'port'     => getenv('ATRO_DB_PORT') ?: '',
+        'charset'  => 'utf8',
+        'dbname'   => getenv('ATRO_DB_NAME') ?: 'atrocore',
+        'user'     => getenv('ATRO_DB_USER') ?: 'atrocore',
+        'password' => getenv('ATRO_DB_PASSWORD'),
+    ],
+    'logger'             => [
+        'path'          => getenv('ATRO_LOGGER_PATH') ?: 'data/logs/atro.log',
+        'level'         => getenv('ATRO_LOGGER_LEVEL') ?: 'WARNING',
+        'rotation'      => true,
+        'maxFileNumber' => getenv('ATRO_LOGGER_MAX_FILE_NUMBER') ?: 7,
+    ],
+    'amountOfDbDumps'    => getenv('ATRO_AMOUNT_OF_DB_DUMPS') ?: 14,
+    'filesPath'          => getenv('ATRO_FILES_PATH') ?: 'upload/files/',
+    'thumbnailsPath'     => getenv('ATRO_THUMBNAILS_PATH') ?: 'upload/thumbnails/',
+    'encryptionKey'      => getenv('ATRO_ENCRYPTION_KEY'),
+    'passwordPepper'     => getenv('ATRO_PASSWORD_PEPPER'),
+    'oauthEncryptionKey' => getenv('ATRO_OAUTH_ENCRYPTION_KEY'),
+    'siteUrl'            => getenv('ATRO_SITE_URL') ?: 'https://pim.example.com',
+];
+```
+
+- Give the secrets no default value: a missing variable then leaves the parameter empty instead of a known secret.
+- Supply the variables to every process: the web server, the console commands and the workers. Restart the workers
+  after changing the variables or the file.
+
+To install the system with such a file, create `data/config.system.php` before running the installer and give the
+installer the same database connection. The installation never writes a file that holds anything but plain values:
+the parameters the file defines are only removed from `data/config.php`, the others stay there.
+
+Never use `getenv()` in `data/config.php`: the system rewrites that file on every save and replaces the expression with
+its current value.
+
+### Backups
+
+Include `data/config.system.php` in every backup together with `data/config.php`: without its secret keys no user can
+log in.
 
 
 ## Accessing a Value
@@ -25,7 +141,7 @@ $dbHost = $config->get('database.host');
 
 ## Store or modify a value
 
-To change a configuration value, use the `set()` method. **Changes are not applied until you call `save()`**. This method persists the changes to the configuration file.
+To change a configuration value, use the `set()` method. **Changes are not applied until you call `save()`**. This method persists the changes to `data/config.php`.
 
 **Example:**
 
@@ -40,7 +156,7 @@ $config->set('applicationName', 'My Custom App');
 $config->save();
 ```
 
-Computed and contributed parameters cannot be written this way - see [Read-Only Parameters](#read-only-parameters).
+System, computed and contributed parameters cannot be written this way - see [System Parameters](#system-parameters) and [Read-Only Parameters](#read-only-parameters).
 
 ## Read-Only Parameters
 

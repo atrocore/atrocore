@@ -29,7 +29,7 @@ The user interface keeps no tokens in the browser: the server is the OAuth clien
 Requests that change data and are authenticated by the session cookie are accepted only if their `Origin` (or `Referer`) header matches the instance host or **Site URL**.
 
 ## OAuth Keys ##
-The access tokens are signed with the RSA key pair in `data/keys`; the refresh tokens, the authorization codes and the tokens kept for the sessions are encrypted with the key `oauthEncryptionKey` in `data/config.php`. Both are created on the installation. Keep them readable only by the web server user and include them in the [backups](../03.backups/index.md): without them all issued tokens and sessions become invalid, and the users and integrations have to log in again.
+The access tokens are signed with the RSA key pair in `data/keys`; the refresh tokens, the authorization codes and the tokens kept for the sessions are encrypted with the key `oauthEncryptionKey` in `data/config.system.php`. Both are created on the installation. Keep them readable only by the web server user and include them in the [backups](../03.backups/index.md): without them all issued tokens and sessions become invalid, and the users and integrations have to log in again.
 
 ## Redirect all unencrypted traffic to HTTPS ##
 To redirect all HTTP traffic to HTTPS administrators are encouraged to issue a permanent redirect using the 301 status code. When using Apache this can be achieved by a setting such as the following in the Apache VirtualHosts configuration:
