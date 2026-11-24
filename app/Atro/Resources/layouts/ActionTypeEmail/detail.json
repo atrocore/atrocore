@@ -159,12 +159,6 @@
         {
           "name": "emailScript"
         }
-      ],
-      [
-        {
-          "name": "searchEntity"
-        },
-        false
       ]
     ]
   }

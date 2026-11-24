@@ -32,33 +32,7 @@
     "searchEntity": {
       "type": "varchar",
       "view": "views/action/fields/search-entity",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "create",
-                "createOrUpdate",
-                "update"
-              ]
-            }
-          ]
-        },
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "create",
-                "createOrUpdate"
-              ]
-            }
-          ]
-        }
-      }
+      "readOnly": true
     }
   }
 }
