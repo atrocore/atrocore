@@ -73,28 +73,39 @@ if ($config->isSystemKey('siteUrl')) {
 
 ### Environment Variables
 
-Neither the administration panel nor the `config` utility rewrites `data/config.system.php`, so any PHP expression there stays as it is. Supply a value from
-the environment with `getenv()`:
+Neither the administration panel nor the `config` utility rewrites `data/config.system.php`, so any PHP expression
+there stays as it is. Any system parameter can therefore come from the environment, with a default value for the case
+the variable is not set:
 
 ```php
 <?php
 return [
-    'database'        => [
-        'driver'   => 'pdo_pgsql',
-        'host'     => getenv('ATRO_DB_HOST'),
-        'port'     => '',
+    'database'           => [
+        'driver'   => getenv('ATRO_DB_DRIVER') ?: 'pdo_pgsql',
+        'host'     => getenv('ATRO_DB_HOST') ?: 'localhost',
+        'port'     => getenv('ATRO_DB_PORT') ?: '',
         'charset'  => 'utf8',
-        'dbname'   => getenv('ATRO_DB_NAME'),
-        'user'     => getenv('ATRO_DB_USER'),
+        'dbname'   => getenv('ATRO_DB_NAME') ?: 'atrocore',
+        'user'     => getenv('ATRO_DB_USER') ?: 'atrocore',
         'password' => getenv('ATRO_DB_PASSWORD'),
     ],
-    'amountOfDbDumps' => (int)(getenv('ATRO_AMOUNT_OF_DB_DUMPS') ?: 14),
+    'logger'             => [
+        'path'          => getenv('ATRO_LOGGER_PATH') ?: 'data/logs/atro.log',
+        'level'         => getenv('ATRO_LOGGER_LEVEL') ?: 'WARNING',
+        'rotation'      => true,
+        'maxFileNumber' => getenv('ATRO_LOGGER_MAX_FILE_NUMBER') ?: 7,
+    ],
+    'amountOfDbDumps'    => getenv('ATRO_AMOUNT_OF_DB_DUMPS') ?: 14,
+    'filesPath'          => getenv('ATRO_FILES_PATH') ?: 'upload/files/',
+    'thumbnailsPath'     => getenv('ATRO_THUMBNAILS_PATH') ?: 'upload/thumbnails/',
+    'encryptionKey'      => getenv('ATRO_ENCRYPTION_KEY'),
+    'passwordPepper'     => getenv('ATRO_PASSWORD_PEPPER'),
+    'oauthEncryptionKey' => getenv('ATRO_OAUTH_ENCRYPTION_KEY'),
+    'siteUrl'            => getenv('ATRO_SITE_URL') ?: 'https://pim.example.com',
 ];
 ```
 
-- `getenv()` returns `false` for a missing variable, so use `?:` for a default value, not `??`.
-- `getenv()` always returns a string: cast numbers with `(int)` and booleans with
-  `filter_var(..., FILTER_VALIDATE_BOOL)`.
+- Give the secrets no default value: a missing variable then leaves the parameter empty instead of a known secret.
 - Supply the variables to every process: the web server, the console commands and the workers. Restart the workers
   after changing the variables or the file.
 
