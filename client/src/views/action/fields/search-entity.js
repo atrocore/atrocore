@@ -16,14 +16,9 @@ Espo.define('views/action/fields/search-entity', 'views/fields/entity-type',
             setup() {
                 Dep.prototype.setup.call(this);
 
-                this.listenTo(this.model, 'change:targetEntity', () => {
-                    if (['update', 'email', 'delete'].includes(this.model.get('type'))) {
-                        this.model.set(this.name, this.model.get('targetEntity'));
-                    }
-                });
-
+                // the records created for the found records are configured via script only
                 this.listenTo(this.model, 'change:searchEntity', () => {
-                    if (['create', 'createOrUpdate'].includes(this.model.get('type'))) {
+                    if (this.model.get('searchEntity')) {
                         this.model.set('updateType', 'script');
                     }
                 });

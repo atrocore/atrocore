@@ -18,7 +18,7 @@
     },
     "searchEntity": {
       "type": "varchar",
-      "view": "views/action/fields/search-entity"
+      "view": "views/fields/entity-type"
     },
     "applyToPreselectedRecords": {
       "type": "bool",
