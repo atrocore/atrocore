@@ -120,7 +120,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         // same File entity, and its real on-disk location needs to stay stable across reuploads
         if (!$file->getStorage()->getSubtype()->get('syncFolders') && empty($file->get('path'))) {
             $file->set('path', FolderPathGenerator::generate($this->getConfig()->get('uploadRootPath') ?? '', true));
-            $file->set('thumbnailsPath', $file->get('path'));
         }
 
         $fileName = $this->getLocalPath($file);
@@ -450,18 +449,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         }
 
         return $url;
-    }
-
-    public function getThumbnail(File $file, string $size): ?string
-    {
-        /** @var Thumbnail $thumbnailCreator */
-        $thumbnailCreator = $this->container->get(Thumbnail::class);
-
-        if ($thumbnailCreator->hasThumbnail($file, $size)) {
-            return $thumbnailCreator->preparePath($file, $size);
-        }
-
-        return $thumbnailCreator->getPath($file, $size);
     }
 
     public function getThumbnailPdfImageCachePath(File $file): string

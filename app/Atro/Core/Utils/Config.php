@@ -610,7 +610,6 @@ final class Config
             'useCache'                        => true,
             'applicationName'                 => 'AtroPIM',
             'filesPath'                       => 'upload/files/',
-            'thumbnailsPath'                  => 'upload/thumbnails/',
             'chunkFileSize'                   => 2,
             'fileUploadStreamCount'           => 3,
             'globalSearchEntityList'          => ['File', 'Folder', 'Attribute', 'AttributeGroup', 'Classification'],

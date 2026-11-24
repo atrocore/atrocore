@@ -57,9 +57,6 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
             }
 
             let src = this.getImageUrl(id, this.previewSize);
-            if (src) {
-                src = src + (src.includes('?') ? '&' : '?') + 'time=' + (new Date(this.model.get('fileMtime'))).getTime();
-            }
 
             if (this.mode === 'list') {
 

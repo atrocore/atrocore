@@ -25,6 +25,8 @@ use Atro\Services\SoftwarePackage;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use GuzzleHttp\Psr7\ServerRequest;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\ResourceServer;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Http\Message\ResponseInterface;
 use Atro\Core\Factories\HttpPipeline;
@@ -318,7 +320,7 @@ final class Application
         $entryPointManager = new EntryPointManager($container);
 
         try {
-            if ($this->authenticateBySession()) {
+            if ($this->authenticate()) {
                 $entryPointManager->run($entryPoint, $data);
                 return;
             }
@@ -428,23 +430,38 @@ final class Application
     }
 
     /**
-     * The session of the user interface authenticates the entry points too, e.g. the images and the downloads.
+     * The entry points, e.g. the images and the downloads, are authenticated the same way as the API:
+     * by an access token or by the session of the user interface.
      */
-    protected function authenticateBySession(): bool
+    protected function authenticate(): bool
     {
-        $sessionId = SessionCookie::getSessionId(ServerRequest::fromGlobals());
-        if ($sessionId === null) {
-            return false;
+        $request = ServerRequest::fromGlobals();
+
+        if (preg_match('/^\s*Bearer\s/i', $request->getHeaderLine('Authorization'))) {
+            try {
+                $request = $this->getContainer()->get(ResourceServer::class)->validateAuthenticatedRequest($request);
+            } catch (OAuthServerException $e) {
+                return false;
+            }
+
+            $userId = (string)$request->getAttribute('oauth_user_id');
+            $clientId = (string)$request->getAttribute('oauth_client_id');
+        } else {
+            $sessionId = SessionCookie::getSessionId($request);
+            if ($sessionId === null) {
+                return false;
+            }
+
+            $accessToken = $this->getContainer()->get(BrowserSession::class)->authenticate($sessionId);
+            if ($accessToken === null) {
+                return false;
+            }
+
+            $userId = (string)$accessToken['userId'];
+            $clientId = (string)$accessToken['clientId'];
         }
 
-        $accessToken = $this->getContainer()->get(BrowserSession::class)->authenticate($sessionId);
-        if ($accessToken === null) {
-            return false;
-        }
-
-        $tokenUser = $this->getContainer()->get(TokenUser::class);
-
-        $user = $tokenUser->resolve($accessToken['userId'], $accessToken['clientId']);
+        $user = $this->getContainer()->get(TokenUser::class)->resolve($userId, $clientId);
         if ($user === null) {
             return false;
         }

@@ -23,7 +23,9 @@ class LogoImage extends Image
     public function run()
     {
         $id = !empty($_GET['id']) ? $_GET['id'] : $this->getConfig()->get('companyLogoId');
-        if (empty($id)) {
+
+        // only the logo and the favicon are shown without authorization
+        if (empty($id) || !in_array($id, [$this->getConfig()->get('companyLogoId'), $this->getConfig()->get('faviconId')], true)) {
             throw new NotFound();
         }
 
@@ -33,7 +35,7 @@ class LogoImage extends Image
             throw new NotFound();
         }
 
-        $this->show($file, $_GET['size'] ?? null);
+        $this->show($file);
     }
 
     protected function checkFile(File $file): bool

@@ -131,14 +131,6 @@
       "layoutMassUpdateDisabled": true,
       "importDisabled": true
     },
-    "thumbnailsPath": {
-      "type": "text",
-      "view": "views/fields/varchar",
-      "readOnly": true,
-      "default": null,
-      "layoutMassUpdateDisabled": true,
-      "importDisabled": true
-    },
     "type": {
       "type": "link",
       "view": "views/file/fields/type",

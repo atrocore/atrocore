@@ -5,7 +5,6 @@
         "storage": "Tárhely",
         "mimeType": "MIME-típus",
         "path": "Útvonal",
-        "thumbnailsPath": "Bélyegképek elérési útja",
         "preview": "Előnézet",
         "hash": "Hash",
         "generated": "Generált",

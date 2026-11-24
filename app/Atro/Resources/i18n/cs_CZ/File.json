@@ -5,7 +5,6 @@
         "storage": "Úložiště",
         "mimeType": "Typ MIME",
         "path": "Cesta",
-        "thumbnailsPath": "Cesta k miniaturám",
         "preview": "Náhled",
         "hash": "Hash",
         "generated": "Vygenerováno",

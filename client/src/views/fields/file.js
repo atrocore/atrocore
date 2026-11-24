@@ -380,14 +380,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         prepareMediaFromModel: function (model) {
-            let cachePart = model.get('fileMtime') ? '?time=' + (new Date(model.get('fileMtime'))).getTime() : '';
-
             return {
                 id: model.get(this.idName),
                 name: model.get(this.nameName),
                 url: this.getFilePathsData(model).download,
-                smallThumbnail: this.getFilePathsData(model).thumbnails.small + cachePart,
-                largeThumbnail: this.getFilePathsData(model).thumbnails.large + cachePart,
+                smallThumbnail: this.getFilePathsData(model).thumbnails.small,
+                largeThumbnail: this.getFilePathsData(model).thumbnails.large,
                 isImage: (this.getMetadata().get(['app', 'file', 'image', 'extensions']) || []).includes(model.get('extension'))
             };
         }

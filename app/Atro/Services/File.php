@@ -21,6 +21,7 @@ use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\UrlGuard;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -34,7 +35,7 @@ class File extends Base
      */
     public const INTERNAL_INPUT_KEYS = ['localFileName', 'allChunks', '_generated'];
 
-    protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
+    protected $mandatorySelectAttributeList = ['storageId', 'path', 'hash', 'fileMtime', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
 
     public static function stripInternalInput(\stdClass $data): \stdClass
     {
@@ -86,19 +87,11 @@ class File extends Base
             if (in_array($entity->get('extension'), $this->getMetadata()->get(['app', 'extensionsWithThumbnail'], []))) {
                 $entity->set('hasOpen', true);
 
-                foreach ($this->getMetadata()->get(['app', 'thumbnailTypes'], []) as $size => $typeData) {
-                    $field = \Atro\Entities\File::prepareThumbnailUrlFieldName($size);
-
+                foreach (array_keys($this->getMetadata()->get(['app', 'thumbnailTypes'], [])) as $size) {
+                    $field = \Atro\Entities\File::prepareThumbnailUrlFieldName((string)$size);
                     if ($entity->hasField($field)) {
-                        try {
-                            if (!empty($url = $this->getRepository()->getStorage($entity)->getThumbnail($entity, $size))) {
-                                $url = $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $this->prepareThumbnailPath($url);
-                            }
-                        } catch (BadRequest|NotFound $e) {
-                            $url = null;
-                        }
-
-                        $entity->set($field, $url);
+                        $url = $this->getThumbnailCreator()->getUrl($entity, (string)$size);
+                        $entity->set($field, $url === null ? null : $this->getConfig()->getSiteUrl() . '/' . $url);
                     }
                 }
             }
@@ -125,16 +118,6 @@ class File extends Base
             $entity->set('sizeUnitId', $entity->get('widthUnitId'));
             $entity->set('sizeUnitData', $entity->get('widthUnitData'));
         }
-    }
-
-    public static function prepareThumbnailPath(string $path): string
-    {
-        if (urldecode($path) !== $path) {
-            // Filename contains literal percent-encoded characters; double-encode "%" so Apache's single URL-decode pass yields the correct filesystem path.
-            $path = str_replace('%', '%25', $path);
-        }
-
-        return $path;
     }
 
     public function createEntityAndBuildResponse(\stdClass $attachment): array
@@ -358,5 +341,10 @@ class File extends Base
         $this->executeMassAction($params);
 
         return true;
+    }
+
+    protected function getThumbnailCreator(): Thumbnail
+    {
+        return $this->container->get(Thumbnail::class);
     }
 }

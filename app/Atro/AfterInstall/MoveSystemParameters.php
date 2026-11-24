@@ -35,7 +35,6 @@ class MoveSystemParameters implements AfterInstallInterface
             'logger',
             'amountOfDbDumps',
             'filesPath',
-            'thumbnailsPath',
             'encryptionKey',
             PasswordHash::PEPPER_CONFIG_KEY,
             Keys::ENCRYPTION_KEY_CONFIG_KEY,

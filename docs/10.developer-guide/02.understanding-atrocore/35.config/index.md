@@ -35,7 +35,6 @@ return [
     ],
     'amountOfDbDumps'    => 14,
     'filesPath'          => 'upload/files/',
-    'thumbnailsPath'     => 'upload/thumbnails/',
     'encryptionKey'      => '...',
     'passwordPepper'     => '...',
     'oauthEncryptionKey' => '...',
@@ -54,7 +53,7 @@ The rules are simple:
   `recordsPerPage`, anything. Move it back to `data/config.php` to make it editable again.
 - **The file is optional.** A missing file defines no system parameters.
 
-The installation moves `database`, `logger`, `amountOfDbDumps`, `filesPath`, `thumbnailsPath`, `encryptionKey`,
+The installation moves `database`, `logger`, `amountOfDbDumps`, `filesPath`, `encryptionKey`,
 `passwordPepper` and `oauthEncryptionKey` from `data/config.php` to `data/config.system.php` as one of its last steps.
 The upgrade to AtroCore 3.0 moves the same parameters. If `data/config.system.php` already exists and is maintained by
 hand, it is left as it is: the parameters it defines are only removed from `data/config.php`.
@@ -97,7 +96,6 @@ return [
     ],
     'amountOfDbDumps'    => getenv('ATRO_AMOUNT_OF_DB_DUMPS') ?: 14,
     'filesPath'          => getenv('ATRO_FILES_PATH') ?: 'upload/files/',
-    'thumbnailsPath'     => getenv('ATRO_THUMBNAILS_PATH') ?: 'upload/thumbnails/',
     'encryptionKey'      => getenv('ATRO_ENCRYPTION_KEY'),
     'passwordPepper'     => getenv('ATRO_PASSWORD_PEPPER'),
     'oauthEncryptionKey' => getenv('ATRO_OAUTH_ENCRYPTION_KEY'),
@@ -334,7 +332,6 @@ Every key a module contributes automatically becomes read-only.
 | Parameter               | Type      | Description                                                                                                       |
 |:------------------------|:----------|:------------------------------------------------------------------------------------------------------------------|
 | `filesPath`             | `string`  | The base file path where all user-uploaded files are stored.                                                      |
-| `thumbnailsPath`        | `string`  | The base file path where generated image thumbnails are stored.                                                   |
 | `chunkFileSize`         | `integer` | The maximum size of each data chunk in bytes that is uploaded to the server during a file upload.                 |
 | `fileUploadStreamCount` | `integer` | The maximum number of concurrent streams (or chunks) that can be uploaded simultaneously, improving upload speed. |
 | `fetchAllowedHosts`     | `array`   | Hosts the server may fetch from even when they resolve to a private address. Empty by default - see below.        |

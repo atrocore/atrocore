@@ -22,6 +22,11 @@ class V2Dot4Dot6 extends Base
 
     public function up(): void
     {
+        // public/upload is not used since 3.0.14, its .htaccess is not shipped anymore
+        if (!file_exists('vendor/atrocore/core/copy/public/upload/.htaccess')) {
+            return;
+        }
+
         if (!is_dir('public/upload')) {
             mkdir('public/upload', 0755, true);
         }

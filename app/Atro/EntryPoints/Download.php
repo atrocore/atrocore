@@ -42,12 +42,41 @@ class Download extends AbstractEntryPoint
         $type = $_GET['type'] ?? null;
 
         if ($type === 'custom') {
-            $path = $this->container->get(Custom::class)->convert($file, $_GET);
-            header("Location: $path", true, 302);
-            exit;
+            $this->sendConvertedImage($file, $_GET);
         }
 
         $this->downloadByFileStream($file);
+    }
+
+    /**
+     * Converts the image on every request; the browser keeps it and asks the server again, the server answers
+     * "not modified" without converting while the file and the parameters are the same.
+     */
+    protected function sendConvertedImage(File $file, array $params): never
+    {
+        $key = [(string)$file->get('hash'), (string)$file->get('fileMtime')];
+        foreach (['width', 'height', 'quality', 'scale', 'format'] as $name) {
+            $key[] = is_scalar($params[$name] ?? null) ? (string)$params[$name] : '';
+        }
+        $etag = '"' . substr(md5(implode('|', $key)), 0, 12) . '"';
+
+        header('Cache-Control: private, no-cache');
+        header('ETag: ' . $etag);
+        header('X-Content-Type-Options: nosniff');
+
+        if ($this->isNotModified($etag)) {
+            http_response_code(304);
+            exit;
+        }
+
+        $result = $this->container->get(Custom::class)->convertToBlob($file, $params);
+
+        header('Content-Type: ' . $result['mimeType']);
+        header('Content-Length: ' . strlen($result['content']));
+        header("Content-Disposition: inline; filename*=UTF-8''" . rawurlencode($result['name']));
+
+        echo $result['content'];
+        exit;
     }
 
     protected function downloadByFileStream(File $file): void
@@ -65,7 +94,7 @@ class Download extends AbstractEntryPoint
         }
 
         header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-        header("Cache-Control: public");
+        header("Cache-Control: private");
         header('Content-Type: application/octet-stream');
         header("Content-Length: {$fileSize}");
         header("Content-Disposition: attachment; filename=\"{$file->get('name')}\"");
