@@ -110,6 +110,7 @@
   },
   "exceptions": {
     "variableKeyInvalid": "Key should start with a small letter and can consist only of letters and numbers.",
-    "variableKeyIsExist": "Key '%s' already exists."
+    "variableKeyIsExist": "Key '%s' already exists.",
+    "systemConfigKey": "The setting '%s' is a system setting and cannot be changed."
   }
 }

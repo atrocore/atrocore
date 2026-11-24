@@ -110,6 +110,7 @@
     },
     "exceptions": {
         "variableKeyInvalid": "Der Schlüssel sollte mit einem Kleinbuchstaben beginnen und darf nur aus Buchstaben und Zahlen bestehen.",
-        "variableKeyIsExist": "Schlüssel '%s' existiert bereits."
+        "variableKeyIsExist": "Schlüssel '%s' existiert bereits.",
+        "systemConfigKey": "Die Einstellung '%s' ist eine Systemeinstellung und kann nicht geändert werden."
     }
 }

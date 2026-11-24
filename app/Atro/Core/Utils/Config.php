@@ -21,6 +21,28 @@ final class Config
     private const string CONFIG_PATH = 'data/config.php';
 
     /**
+     * Parameters maintained by hand only: they override data/config.php and
+     * can never be written by the system.
+     */
+    private const string SYSTEM_CONFIG_PATH = 'data/config.system.php';
+
+    /**
+     * Parameters a fresh installation keeps in data/config.system.php.
+     */
+    private const SYSTEM_KEYS_ON_CREATE
+        = [
+            'isInstalled',
+            'database',
+            'logger',
+            'amountOfDbDumps',
+            'filesPath',
+            'thumbnailsPath',
+            'encryptionKey',
+            PasswordHash::PEPPER_CONFIG_KEY,
+            Keys::ENCRYPTION_KEY_CONFIG_KEY,
+        ];
+
+    /**
      * Keys the core derives on every load - see applyComputedKeys(). They are
      * never stored in data/config.php and never writable.
      */
@@ -57,32 +79,23 @@ final class Config
     private ?array $additionalConfigCache = null;
 
     private array $data = [];
+    private array $systemKeys = [];
     private array $changedData = [];
     private array $removeData = [];
 
     /**
-     * Config data as stored on disk. Falls back to the defaults before the
-     * installation has created the file - that is a normal state, unlike a
-     * file that exists but does not hold an array.
+     * Config data as stored on disk, with data/config.system.php laid over data/config.php.
      */
     public static function load(): array
     {
-        if (!file_exists(self::CONFIG_PATH)) {
-            return self::getDefaults();
-        }
-
-        $data = include self::CONFIG_PATH;
-
-        if (!is_array($data)) {
-            throw new \RuntimeException(sprintf('Config file %s is corrupted.', self::CONFIG_PATH));
-        }
-
-        return $data;
+        return self::applySystemConfig(self::loadStored(), self::loadSystem());
     }
 
     /**
-     * Creates the config file from the defaults on a fresh installation.
-     * Returns false when the file is already there, or could not be written.
+     * Creates the config files from the defaults on a fresh installation. The system
+     * parameters go to data/config.system.php, unless the file is already provided:
+     * then it is kept as is, and data/config.php gets only what it does not define.
+     * Returns false when data/config.php is already there, or could not be written.
      */
     public static function createIfMissing(): bool
     {
@@ -95,7 +108,31 @@ final class Config
         $data[PasswordHash::PEPPER_CONFIG_KEY] = PasswordHash::generatePepper();
         $data[Keys::ENCRYPTION_KEY_CONFIG_KEY] = Keys::generateEncryptionKey();
 
-        return self::writeAtomically(self::exportPhp($data));
+        if (file_exists(self::SYSTEM_CONFIG_PATH)) {
+            $systemKeys = array_keys(self::loadSystem());
+        } else {
+            $systemKeys = self::SYSTEM_KEYS_ON_CREATE;
+            $system = array_intersect_key($data, array_flip($systemKeys));
+
+            if (!self::writeAtomically(self::SYSTEM_CONFIG_PATH, self::exportPhp($system))) {
+                return false;
+            }
+        }
+
+        $data = array_diff_key($data, array_flip($systemKeys));
+
+        return self::writeAtomically(self::CONFIG_PATH, self::exportPhp($data));
+    }
+
+    /**
+     * Whether the parameter is defined in data/config.system.php. A segmented name
+     * is checked by its top-level key, as the whole top-level key is protected.
+     */
+    public function isSystemKey(string $name): bool
+    {
+        $this->loadConfig();
+
+        return in_array(explode('.', $name)[0], $this->systemKeys, true);
     }
 
     /**
@@ -202,9 +239,10 @@ final class Config
             return false;
         }
 
-        $data = self::load();
+        // only data/config.php is written, data/config.system.php stays untouched
+        $data = self::loadStored();
 
-        if (empty($data) || !is_array($data)) {
+        if (empty($data)) {
             return false;
         }
 
@@ -220,7 +258,7 @@ final class Config
             }
         }
 
-        if (!self::writeAtomically(self::exportPhp($data))) {
+        if (!self::writeAtomically(self::CONFIG_PATH, self::exportPhp($data))) {
             return false;
         }
 
@@ -236,11 +274,13 @@ final class Config
         if ($reload || empty($this->data)) {
             // checked before it lands in $data: leaving a broken config in place
             // would silence the check on every later call
-            $data = self::load();
+            $system = self::loadSystem();
+            $data = self::applySystemConfig(self::loadStored(), $system);
 
             $this->assertNoConflictsWithStoredConfig($data);
 
             $this->data = $data;
+            $this->systemKeys = array_keys($system);
         }
 
         $this->applyAdditionalConfigData();
@@ -411,8 +451,72 @@ final class Config
         $branch[$last] = $value;
     }
 
+    /**
+     * The defaults stand in for data/config.php before the installation has created
+     * the file - that is a normal state, unlike a file that exists but does not hold an array.
+     */
+    private static function loadStored(): array
+    {
+        if (!file_exists(self::CONFIG_PATH)) {
+            return self::getDefaults();
+        }
+
+        return self::includeFile(self::CONFIG_PATH);
+    }
+
+    /**
+     * data/config.system.php is optional: a missing file defines no system parameters.
+     */
+    private static function loadSystem(): array
+    {
+        if (!file_exists(self::SYSTEM_CONFIG_PATH)) {
+            return [];
+        }
+
+        return self::includeFile(self::SYSTEM_CONFIG_PATH);
+    }
+
+    private static function includeFile(string $path): array
+    {
+        $data = include $path;
+
+        if (!is_array($data)) {
+            throw new \RuntimeException(sprintf('Config file %s is corrupted.', $path));
+        }
+
+        return $data;
+    }
+
+    /**
+     * Lays the system parameters over the stored ones. Associative arrays are merged
+     * key by key, anything else - lists included - is replaced as a whole.
+     */
+    private static function applySystemConfig(array $data, array $system): array
+    {
+        foreach ($system as $key => $value) {
+            if (self::isMap($value) && self::isMap($data[$key] ?? null)) {
+                $data[$key] = self::applySystemConfig($data[$key], $value);
+            } else {
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
+    }
+
+    private static function isMap(mixed $value): bool
+    {
+        return is_array($value) && $value !== [] && !array_is_list($value);
+    }
+
     private function assertWritable(string $name): void
     {
+        if (in_array($name, $this->systemKeys, true)) {
+            throw new \LogicException(
+                sprintf("Config key '%s' is defined in %s and cannot be written.", $name, self::SYSTEM_CONFIG_PATH)
+            );
+        }
+
         if (in_array($name, $this->getReadOnlyKeys(), true)) {
             throw new \LogicException(
                 sprintf("Config key '%s' is computed on load and cannot be written.", $name)
@@ -473,10 +577,8 @@ final class Config
      * Writes through a temporary file and renames it into place, so a concurrent
      * reader never includes a half-written config.
      */
-    private static function writeAtomically(string $content): bool
+    private static function writeAtomically(string $path, string $content): bool
     {
-        $path = self::CONFIG_PATH;
-
         $tmp = $path . '.' . uniqid('', true) . '.tmp';
 
         if (file_put_contents($tmp, $content) === false) {
