@@ -28,7 +28,7 @@
     },
     "searchEntity": {
       "type": "varchar",
-      "view": "views/action/fields/search-entity",
+      "view": "views/action/fields/target-search-entity",
       "readOnly": true
     },
     "updateType": {

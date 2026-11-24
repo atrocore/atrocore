@@ -124,17 +124,5 @@
         }
       ]
     ]
-  },
-  {
-    "label": "Parameters",
-    "style": "default",
-    "rows": [
-      [
-        {
-          "name": "searchEntity"
-        },
-        false
-      ]
-    ]
   }
 ]
