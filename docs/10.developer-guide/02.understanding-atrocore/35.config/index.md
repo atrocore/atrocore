@@ -18,7 +18,6 @@ just like `data/config.php`:
 ```php
 <?php
 return [
-    'isInstalled'        => true,
     'database'           => [
         'driver'   => 'pdo_pgsql',
         'host'     => 'localhost',
@@ -55,9 +54,10 @@ The rules are simple:
   `recordsPerPage`, anything. Move it back to `data/config.php` to make it editable again.
 - **The file is optional.** A missing file defines no system parameters.
 
-A fresh installation puts `isInstalled`, `database`, `logger`, `amountOfDbDumps`, `filesPath`, `thumbnailsPath`,
-`encryptionKey`, `passwordPepper` and `oauthEncryptionKey` into `data/config.system.php`. The upgrade to AtroCore 3.0
-moves the same parameters there from `data/config.php`, unless `data/config.system.php` already exists.
+The installation moves `database`, `logger`, `amountOfDbDumps`, `filesPath`, `thumbnailsPath`, `encryptionKey`,
+`passwordPepper` and `oauthEncryptionKey` from `data/config.php` to `data/config.system.php` as one of its last steps.
+The upgrade to AtroCore 3.0 moves the same parameters. If `data/config.system.php` already exists and is maintained by
+hand, it is left as it is: the parameters it defines are only removed from `data/config.php`.
 
 When you move a parameter by hand, remove it from `data/config.php`, otherwise its stale value stays on the disk. Keep
 `encryptionKey`, `passwordPepper` and `oauthEncryptionKey` unchanged when moving them: the stored credentials, the
@@ -98,10 +98,9 @@ return [
 - Supply the variables to every process: the web server, the console commands and the workers. Restart the workers
   after changing the variables or the file.
 
-To install the system with such a file, create `data/config.system.php` before running the installer. The installer
-then takes the database connection from the file instead of asking for it and never writes the file. The parameters
-the file does not define - the secret keys, `isInstalled` and the others - go to `data/config.php`. A parameter that the
-installer has to set but the file defines, e.g. `isInstalled`, is reported as a warning: set it in the file yourself.
+To install the system with such a file, create `data/config.system.php` before running the installer and give the
+installer the same database connection. The installation never writes a file that holds anything but plain values:
+the parameters the file defines are only removed from `data/config.php`, the others stay there.
 
 Never use `getenv()` in `data/config.php`: the system rewrites that file on every save and replaces the expression with
 its current value.

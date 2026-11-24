@@ -147,7 +147,7 @@ sudo php atrocore-installer.phar install-atrocore --no-interaction \
 
 Pass the passwords as environment variables rather than as options: an option is visible in the list of processes and in the shell history.
 
-The installer writes the database connection, the secret keys and the other system parameters to `data/config.system.php`, which the administration panel cannot change, see [Config Parameters](../../10.developer-guide/02.understanding-atrocore/35.config/index.md#system-parameters). To keep them out of the files, e.g. in a container, create `data/config.system.php` with `getenv()` before running the installer: the installer then takes the database connection from it, does not ask for the `--db-*` parameters and never writes the file.
+At the end of the installation the database connection, the secret keys and the other system parameters are moved to `data/config.system.php`, which the administration panel cannot change, see [Config Parameters](../../10.developer-guide/02.understanding-atrocore/35.config/index.md#system-parameters). To keep them out of the files, e.g. in a container, create `data/config.system.php` with `getenv()` before running the installer and give the installer the same database connection: the file is then left as it is, and the parameters it defines are removed from `data/config.php`.
 
 With `--json` the result is printed to the standard output as JSON (`status`, `siteUrl`, `admin.username`, `admin.password`, `webUser`, `warnings`), everything else goes to the standard error output.
 

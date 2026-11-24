@@ -21,17 +21,16 @@ final class Config
     private const string CONFIG_PATH = 'data/config.php';
 
     /**
-     * Parameters maintained by hand only: they override data/config.php and
-     * can never be written by the system.
+     * The system parameters: they override data/config.php and cannot be changed by
+     * set(), remove() or the Settings form.
      */
     private const string SYSTEM_CONFIG_PATH = 'data/config.system.php';
 
     /**
-     * Parameters a fresh installation keeps in data/config.system.php.
+     * Parameters the installation moves to data/config.system.php, see moveSystemParameters().
      */
-    private const SYSTEM_KEYS_ON_CREATE
+    private const SYSTEM_KEYS
         = [
-            'isInstalled',
             'database',
             'logger',
             'amountOfDbDumps',
@@ -92,10 +91,8 @@ final class Config
     }
 
     /**
-     * Creates the config files from the defaults on a fresh installation. The system
-     * parameters go to data/config.system.php, unless the file is already provided:
-     * then it is kept as is, and data/config.php gets only what it does not define.
-     * Returns false when data/config.php is already there, or could not be written.
+     * Creates the config file from the defaults on a fresh installation.
+     * Returns false when the file is already there, or could not be written.
      */
     public static function createIfMissing(): bool
     {
@@ -108,20 +105,50 @@ final class Config
         $data[PasswordHash::PEPPER_CONFIG_KEY] = PasswordHash::generatePepper();
         $data[Keys::ENCRYPTION_KEY_CONFIG_KEY] = Keys::generateEncryptionKey();
 
-        if (file_exists(self::SYSTEM_CONFIG_PATH)) {
-            $systemKeys = array_keys(self::loadSystem());
-        } else {
-            $systemKeys = self::SYSTEM_KEYS_ON_CREATE;
-            $system = array_intersect_key($data, array_flip($systemKeys));
+        return self::writeAtomically(self::CONFIG_PATH, self::exportPhp($data));
+    }
 
-            if (!self::writeAtomically(self::SYSTEM_CONFIG_PATH, self::exportPhp($system))) {
-                return false;
+    /**
+     * Moves the system parameters from data/config.php to data/config.system.php when the
+     * system is installed: the installer writes them to data/config.php, so their values
+     * there are the latest ones. A data/config.system.php maintained by hand is never written,
+     * as writing it would replace its expressions, e.g. getenv(), with their values: what it
+     * defines is only removed from data/config.php, where it is overridden anyway.
+     */
+    public function moveSystemParameters(): void
+    {
+        if (!file_exists(self::CONFIG_PATH)) {
+            return;
+        }
+
+        $stored = self::loadStored();
+        $system = self::loadSystem();
+        $keys = array_flip(self::SYSTEM_KEYS);
+
+        if (self::isSystemConfigGenerated($system)) {
+            $moved = array_intersect_key($stored, $keys);
+            if (empty($moved)) {
+                return;
+            }
+
+            // the system file first: an interruption leaves the parameters in both files, with the same values
+            if (!self::writeAtomically(self::SYSTEM_CONFIG_PATH, self::exportPhp(array_merge($system, $moved)))) {
+                throw new \RuntimeException(sprintf('Cannot write %s.', self::SYSTEM_CONFIG_PATH));
+            }
+
+            $data = array_diff_key($stored, $moved);
+        } else {
+            $data = self::removeOverridden($stored, array_intersect_key($system, $keys));
+            if ($data === $stored) {
+                return;
             }
         }
 
-        $data = array_diff_key($data, array_flip($systemKeys));
+        if (!self::writeAtomically(self::CONFIG_PATH, self::exportPhp($data))) {
+            throw new \RuntimeException(sprintf('Cannot write %s.', self::CONFIG_PATH));
+        }
 
-        return self::writeAtomically(self::CONFIG_PATH, self::exportPhp($data));
+        $this->loadConfig(true);
     }
 
     /**
@@ -504,6 +531,44 @@ final class Config
         return $data;
     }
 
+    /**
+     * Whether data/config.system.php is missing or exactly what writing its values gives, i.e.
+     * holds plain values only. Anything else - an expression, a comment, another formatting -
+     * means the file is maintained by hand.
+     */
+    private static function isSystemConfigGenerated(array $system): bool
+    {
+        if (!file_exists(self::SYSTEM_CONFIG_PATH)) {
+            return true;
+        }
+
+        return file_get_contents(self::SYSTEM_CONFIG_PATH) === self::exportPhp($system);
+    }
+
+    /**
+     * Removes from the stored parameters what the system ones override - the counterpart of
+     * applySystemConfig(): associative arrays key by key, anything else as a whole.
+     */
+    private static function removeOverridden(array $data, array $system): array
+    {
+        foreach ($system as $key => $value) {
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+
+            if (self::isMap($value) && self::isMap($data[$key])) {
+                $data[$key] = self::removeOverridden($data[$key], $value);
+                if ($data[$key] === []) {
+                    unset($data[$key]);
+                }
+            } else {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+    }
+
     private static function isMap(mixed $value): bool
     {
         return is_array($value) && $value !== [] && !array_is_list($value);
@@ -585,8 +650,9 @@ final class Config
             return false;
         }
 
-        // a fresh file gets umask permissions - keep whatever the config had
-        if (file_exists($path) && ($perms = fileperms($path)) !== false) {
+        // a fresh file gets umask permissions - keep whatever the file had, a new one gets the ones of data/config.php
+        $source = file_exists($path) ? $path : self::CONFIG_PATH;
+        if (file_exists($source) && ($perms = fileperms($source)) !== false) {
             chmod($tmp, $perms & 0777);
         }
 

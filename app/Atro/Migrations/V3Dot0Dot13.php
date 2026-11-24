@@ -17,7 +17,7 @@ use Atro\Core\Migration\Base;
 
 /**
  * Moves the system parameters from data/config.php to data/config.system.php. A data/config.system.php that
- * already exists is left as it is: only the parameters it holds with the same values are removed from data/config.php.
+ * already exists is left as it is: what it defines is only removed from data/config.php, where it is overridden anyway.
  */
 class V3Dot0Dot13 extends Base
 {
@@ -26,7 +26,6 @@ class V3Dot0Dot13 extends Base
 
     private const SYSTEM_KEYS
         = [
-            'isInstalled',
             'database',
             'logger',
             'amountOfDbDumps',
@@ -53,17 +52,9 @@ class V3Dot0Dot13 extends Base
 
         // prepared by the administrator or left by an interrupted migration
         if (file_exists(self::SYSTEM_CONFIG_PATH)) {
-            $system = self::read(self::SYSTEM_CONFIG_PATH);
-
-            $duplicates = [];
-            foreach (array_intersect_key($config, $system, $keys) as $key => $value) {
-                if ($value === $system[$key]) {
-                    $duplicates[$key] = true;
-                }
-            }
-
-            if (!empty($duplicates)) {
-                self::write(self::CONFIG_PATH, array_diff_key($config, $duplicates));
+            $data = self::removeOverridden($config, array_intersect_key(self::read(self::SYSTEM_CONFIG_PATH), $keys));
+            if ($data !== $config) {
+                self::write(self::CONFIG_PATH, $data);
             }
 
             return;
@@ -72,6 +63,34 @@ class V3Dot0Dot13 extends Base
         // the system file first: an interrupted migration leaves the keys in both files, with the same values
         self::write(self::SYSTEM_CONFIG_PATH, array_intersect_key($config, $keys));
         self::write(self::CONFIG_PATH, array_diff_key($config, $keys));
+    }
+
+    /**
+     * Associative arrays of data/config.system.php override data/config.php key by key, anything else as a whole
+     */
+    private static function removeOverridden(array $data, array $system): array
+    {
+        foreach ($system as $key => $value) {
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+
+            if (self::isMap($value) && self::isMap($data[$key])) {
+                $data[$key] = self::removeOverridden($data[$key], $value);
+                if ($data[$key] === []) {
+                    unset($data[$key]);
+                }
+            } else {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+    }
+
+    private static function isMap(mixed $value): bool
+    {
+        return is_array($value) && $value !== [] && !array_is_list($value);
     }
 
     private static function read(string $path): array
