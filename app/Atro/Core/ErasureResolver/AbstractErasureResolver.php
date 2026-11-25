@@ -15,6 +15,7 @@ namespace Atro\Core\ErasureResolver;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Metadata;
+use Atro\DTOs\ErasureDataDTO;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -29,17 +30,14 @@ abstract class AbstractErasureResolver
     /**
      * Checks whether the field can be erased by this resolver
      */
-    abstract public function supports(Entity $entity, string $field): bool;
+    abstract public function supports(ErasureDataDTO $data): bool;
 
     /**
      * Anonymize the value of the field in the record.
      *
-     * @param array $processed     records that are already erased, prevents endless loops for cascade erasure
-     * @param bool  $automatically whether the data are erased without a user action, e.g. by an "Erasure" action executed by a workflow or a scheduled job
-     *
      * @return bool whether the value of the field is erased
      */
-    abstract public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool;
+    abstract public function resolve(ErasureDataDTO $data): bool;
 
     protected function getFieldDefs(Entity $entity, string $field): array
     {

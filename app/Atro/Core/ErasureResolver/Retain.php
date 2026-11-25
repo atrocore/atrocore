@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Espo\ORM\Entity;
+use Atro\DTOs\ErasureDataDTO;
 
 class Retain extends AbstractErasureResolver
 {
-    public function supports(Entity $entity, string $field): bool
+    public function supports(ErasureDataDTO $data): bool
     {
         return true;
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
+    public function resolve(ErasureDataDTO $data): bool
     {
         return false;
     }

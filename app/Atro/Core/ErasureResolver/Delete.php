@@ -13,29 +13,29 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Espo\ORM\Entity;
+use Atro\DTOs\ErasureDataDTO;
 
 class Delete extends AbstractErasureResolver
 {
-    public function supports(Entity $entity, string $field): bool
+    public function supports(ErasureDataDTO $data): bool
     {
-        $fieldDefs = $this->getFieldDefs($entity, $field);
+        $fieldDefs = $this->getFieldDefs($data->entity, $data->field);
         if (!in_array($fieldDefs['type'] ?? null, self::LINK_TYPES)) {
             return false;
         }
 
-        $foreignEntityType = $this->getForeignEntityType($entity, $field);
+        $foreignEntityType = $this->getForeignEntityType($data->entity, $data->field);
 
         return empty($foreignEntityType) || $this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) !== 'Subtype';
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = [], bool $automatically = false): bool
+    public function resolve(ErasureDataDTO $data): bool
     {
-        $linkedEntities = $this->getLinkedEntities($entity, $field);
+        $linkedEntities = $this->getLinkedEntities($data->entity, $data->field);
 
-        $this->unlink($entity, $field, $linkedEntities);
+        $this->unlink($data->entity, $data->field, $linkedEntities);
 
-        $foreignType = $this->getMetadata()->get(['scopes', $this->getForeignEntityType($entity, $field), 'type'], 'Base');
+        $foreignType = $this->getMetadata()->get(['scopes', $this->getForeignEntityType($data->entity, $data->field), 'type'], 'Base');
 
         foreach ($linkedEntities as $foreign) {
             $this->getEntityManager()->removeEntity($foreign);

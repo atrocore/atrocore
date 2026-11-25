@@ -93,7 +93,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation'], requires: ['containsPersonalData'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requires: ['containsPersonalData'])]
 class MassErasePersonalDataHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

@@ -12,6 +12,7 @@
 namespace Atro\Core\ORM\Repositories;
 
 use Atro\Core\ErasureResolver\AbstractErasureResolver;
+use Atro\DTOs\ErasureDataDTO;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
@@ -1373,12 +1374,14 @@ class RDB extends \Espo\ORM\Repositories\RDB
                 continue;
             }
 
+            $data = new ErasureDataDTO($entity, $field, $processed, $automatically);
+
             $resolver = $this->getErasureResolver($fieldDefs['erasureMode']);
-            if (!$resolver->supports($entity, $field)) {
+            if (!$resolver->supports($data)) {
                 throw new Error("No erasure resolver supports field '$field' of entity '$this->entityType' for record '$entity->id'.");
             }
 
-            if ($resolver->resolve($entity, $field, $processed, $automatically)) {
+            if ($resolver->resolve($data)) {
                 $erasedFields[] = $field;
             }
         }
