@@ -9,80 +9,105 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+declare(strict_types=1);
+
 namespace Atro\EntryPoints;
 
-use Atro\Entities\File;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Thumbnail as ThumbnailCreator;
-use Atro\Core\Utils\Util;
+use Atro\Entities\File;
 
+/**
+ * Serves the thumbnail of a file to a user who has access to the file. The thumbnail is created on the first request.
+ */
 class Thumbnail extends AbstractEntryPoint
 {
+    private const int MAX_AGE = 31536000;
+
+    private const string PLACEHOLDER
+        = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#f0f0f0"/>'
+        . '<path d="M22 14h14l10 10v26H22z" fill="none" stroke="#b0b0b0" stroke-width="2"/></svg>';
+
     public function run()
     {
-        if (empty($_GET['id']) || empty($_GET['size'])) {
-            throw new BadRequest();
-        }
+        $id = (string)($_GET['id'] ?? '');
+        $size = (string)($_GET['size'] ?? '');
 
-        $id   = $_GET['id'];
-        $size = $_GET['size'];
+        // errors are never cached, the headers of a successful response replace it
+        header('Cache-Control: no-store');
 
-        /** @var File $file */
-        $file = $this->getEntityManager()->getEntity("File", $id);
-        if (empty($file)) {
+        if (preg_match('/^[a-zA-Z0-9_-]+$/', $id) !== 1) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($file)) {
-            throw new Forbidden();
+        /** @var File $file */
+        $file = $this->getEntityManager()->getEntity('File', $id);
+
+        // a file the user has no access to is reported the same way as a missing one
+        if (empty($file) || !$this->getAcl()->checkEntity($file)) {
+            throw new NotFound();
         }
 
         $tc = $this->getThumbnailCreator();
-
-        if (!$tc->hasThumbnail($file, $size)) {
-            if (!$tc->isResizeSupported($file)) {
-                // SVG: copy original to thumbnail path using storage abstraction
-                $tmpDir = 'data/.thumbnail-tmp' . DIRECTORY_SEPARATOR . $id;
-                Util::createDir($tmpDir);
-                try {
-                    $localPath = $file->findOrCreateLocalFilePath($tmpDir);
-                    $target    = 'public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $size);
-                    if (!is_dir(dirname($target))) {
-                        mkdir(dirname($target), 0777, true);
-                    }
-                    copy($localPath, $target);
-                } finally {
-                    Util::removeDir($tmpDir);
-                }
-            } else {
-                $largestSize = $tc->getLargestSizeKey();
-                if ($size !== $largestSize && $tc->hasThumbnail($file, $largestSize)) {
-                    // Derive smaller size from the already-created large thumbnail
-                    if (!$tc->create('public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $largestSize), $size, $tc->preparePath($file, $size))) {
-                        throw new NotFound();
-                    }
-                } else {
-                    // Get original from storage (downloads only for remote storages)
-                    $tmpDir = 'data/.thumbnail-tmp' . DIRECTORY_SEPARATOR . $id;
-                    Util::createDir($tmpDir);
-                    try {
-                        $localPath = $file->findOrCreateLocalFilePath($tmpDir);
-                        $tc->createLargestThumbnail($file, $localPath, true);
-                        if ($size !== $largestSize) {
-                            $tc->create('public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $largestSize), $size, $tc->preparePath($file, $size));
-                        }
-                    } finally {
-                        Util::removeDir($tmpDir);
-                    }
-                }
-            }
+        if (!$tc->isSupported($file) || !$tc->isSizeValid($size)) {
+            throw new NotFound();
         }
 
-        $thumbnailPath = \Atro\Services\File::prepareThumbnailPath($tc->preparePath($file, $size));
+        $version = $tc->getVersion($file, $size);
+        $etag = '"' . $version . '"';
 
-        header("Location: /$thumbnailPath");
+        header('X-Content-Type-Options: nosniff');
+        header('ETag: ' . $etag);
+        if (($_GET['cache'] ?? null) === $version) {
+            header('Cache-Control: private, max-age=' . self::MAX_AGE . ', immutable');
+        } else {
+            header('Cache-Control: private, no-cache');
+        }
+
+        if ($this->isNotModified($etag)) {
+            http_response_code(304);
+            exit;
+        }
+
+        $path = $tc->generate($file, $size);
+        if ($path === null) {
+            header('Cache-Control: no-store');
+            header_remove('ETag');
+            if (!$tc->isPending($file, $size)) {
+                throw new NotFound();
+            }
+            $this->output('image/svg+xml', self::PLACEHOLDER);
+        }
+
+        $this->sendFile($path);
+    }
+
+    protected function sendFile(string $path): never
+    {
+        $mimeType = $this->getThumbnailCreator()->getMimeType($path);
+
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . filesize($path));
+        header('Content-Disposition: inline');
+        if ($mimeType === 'image/svg+xml') {
+            header('Content-Security-Policy: sandbox');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'HEAD') {
+            readfile($path);
+        }
+        exit;
+    }
+
+    private function output(string $mimeType, string $contents): never
+    {
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . strlen($contents));
+        header('Content-Security-Policy: sandbox');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'HEAD') {
+            echo $contents;
+        }
         exit;
     }
 

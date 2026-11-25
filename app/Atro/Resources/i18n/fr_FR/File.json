@@ -5,7 +5,6 @@
     "storage": "Stockage",
     "mimeType": "Type MIME",
     "path": "Chemin d'accès",
-    "thumbnailsPath": "Chemin d'accès aux vignettes",
     "preview": "Aperçu",
     "hash": "Hash",
     "generated": "Généré",

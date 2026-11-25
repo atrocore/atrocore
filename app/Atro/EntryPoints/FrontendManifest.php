@@ -32,8 +32,9 @@ class FrontendManifest extends AbstractEntryPoint
         if ($faviconId = $this->getConfig()->get('faviconId')) {
             $file = $this->getEntityManager()->getEntity('File', $faviconId);
 
+            // the icons of a manifest are loaded without authorization
             if ($file) {
-                $icon['src'] = $file->getLargeThumbnailUrl();
+                $icon['src'] = '/?entryPoint=LogoImage&id=' . $faviconId;
                 $icon['type'] = $file->get('mimeType');
             }
         }

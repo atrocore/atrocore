@@ -196,16 +196,6 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
         return \GuzzleHttp\Psr7\Utils::streamFor($this->getContents($file));
     }
 
-    public function getThumbnail(File $file, string $size): ?string
-    {
-        $tc = $this->getThumbnailCreator();
-        if ($tc->hasThumbnail($file, $size)) {
-            return $tc->preparePath($file, $size);
-        }
-
-        return $tc->getPath($file, $size);
-    }
-
     protected function getThumbnailCreator(): Thumbnail
     {
         return $this->container->get(Thumbnail::class);

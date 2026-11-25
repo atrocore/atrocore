@@ -11,6 +11,7 @@
 
 namespace Atro\EntryPoints;
 
+use Atro\Core\Utils\Thumbnail;
 use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
@@ -52,11 +53,11 @@ class Image extends AbstractEntryPoint
                 throw new NotFound();
             }
 
-            $method = "get" . ucfirst($size) . "ThumbnailUrl";
-            if (!method_exists($file, $method)) {
+            $url = $this->container->get(Thumbnail::class)->getUrl($file, $size);
+            if ($url === null) {
                 throw new NotFound();
             }
-            header("Location: /{$file->$method()}");
+            header("Location: /$url");
             exit;
         } else {
             $contents = $file->getContents();
@@ -66,8 +67,7 @@ class Image extends AbstractEntryPoint
         if (!empty($fileType)) {
             header('Content-Type: ' . $fileType);
         }
-        header('Pragma: public');
-        header('Cache-Control: max-age=360000, must-revalidate');
+        header('Cache-Control: private, max-age=360000, must-revalidate');
         $fileSize = mb_strlen($contents, "8bit");
         if ($fileSize) {
             header('Content-Length: ' . $fileSize);

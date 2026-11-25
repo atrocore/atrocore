@@ -5,7 +5,6 @@
     "storage": "Dateiablage",
     "mimeType": "MIME-Typ",
     "path": "Pfad",
-    "thumbnailsPath": "Thumbnails Pfad",
     "preview": "Vorschau",
     "hash": "Hash",
     "generated": "Generiert",

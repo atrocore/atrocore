@@ -23,7 +23,6 @@ use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
-use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\PDFLib;
 use Atro\Core\Utils\RegexUtil;
@@ -46,8 +45,6 @@ class File extends Base
         if ($entity->isNew() && !empty($entity->_input->_generated)) {
             $entity->set('generated', true);
         }
-
-        $this->prepareThumbnailsPath($entity);
 
         try {
             // validate via type
@@ -113,7 +110,6 @@ class File extends Base
                     // old thumbnails must be removed
                     $this->getThumbnailCreator()->deleteAllThumbnails($entity->_fetchedEntity ?? $entity);
 
-                    $this->createThumbnailIfNeeded($entity, $localPath);
                     $this->addDimensions($entity, $localPath);
                 } finally {
                     $this->cleanupLocalTmpFile($localPath);
@@ -142,7 +138,6 @@ class File extends Base
                         $this->automaticallyCorrectExtension($entity, $localPath);
                     }
 
-                    $this->createThumbnailIfNeeded($entity, $localPath);
                     $this->addDimensions($entity, $localPath);
                 } finally {
                     $this->cleanupLocalTmpFile($localPath);
@@ -272,33 +267,6 @@ class File extends Base
     {
         if (str_starts_with($localPath, LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR) && file_exists($localPath)) {
             Util::removeDir(dirname($localPath));
-        }
-    }
-
-    /**
-     * Pre-generates the largest thumbnail while the just-uploaded file is still local.
-     * Skipped for local storage - its thumbnails can be generated lazily on request instead.
-     */
-    protected function createThumbnailIfNeeded(FileEntity $file, string $localPath): void
-    {
-        if ($this->getStorage($file) instanceof LocalFileStorageInterface) {
-            return;
-        }
-
-        $ext = strtolower(pathinfo($file->get('name'), PATHINFO_EXTENSION));
-        if (in_array($ext, $this->getMetadata()->get(['app', 'extensionsWithThumbnail'], []))) {
-            $this->getThumbnailCreator()->createLargestThumbnail($file, $localPath);
-        }
-    }
-
-    public function prepareThumbnailsPath(FileEntity $file): void
-    {
-        if (empty($file->get('thumbnailsPath'))) {
-            if (!empty($file->get('path'))) {
-                $file->set('thumbnailsPath', $file->get('path'));
-            } else {
-                $file->set('thumbnailsPath', FolderPathGenerator::generate(trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/'), true));
-            }
         }
     }
 
@@ -522,8 +490,8 @@ class File extends Base
         ];
         try {
             if ($res['download'] !== null) {
-                foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
-                    $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
+                foreach (array_keys($this->getMetadata()->get('app.thumbnailTypes') ?? []) as $type) {
+                    $res['thumbnails'][$type] = $this->getThumbnailCreator()->getUrl($file, (string)$type);
                 }
             }
         } catch (\Throwable $e) {
@@ -673,32 +641,12 @@ class File extends Base
 
     public function getSmallThumbnailUrl(FileEntity $file): ?string
     {
-        if (empty($file->get('storageId'))) {
-            return null;
-        }
-
-        try {
-            $url = $this->getStorage($file)->getThumbnail($file, 'small');
-        } catch (BadRequest|NotFound $e) {
-            $url = null;
-        }
-
-        return $url;
+        return $this->getThumbnailCreator()->getUrl($file, 'small');
     }
 
     public function getMediumThumbnailUrl(FileEntity $file): ?string
     {
-        if (empty($file->get('storageId'))) {
-            return null;
-        }
-
-        try {
-            $url = $this->getStorage($file)->getThumbnail($file, 'medium');
-        } catch (BadRequest|NotFound $e) {
-            $url = null;
-        }
-
-        return $url;
+        return $this->getThumbnailCreator()->getUrl($file, 'medium');
     }
 
     /**
@@ -752,17 +700,7 @@ class File extends Base
 
     public function getLargeThumbnailUrl(FileEntity $file): ?string
     {
-        if (empty($file->get('storageId'))) {
-            return null;
-        }
-
-        try {
-            $url = $this->getStorage($file)->getThumbnail($file, 'large');
-        } catch (BadRequest|NotFound $e) {
-            $url = null;
-        }
-
-        return $url;
+        return $this->getThumbnailCreator()->getUrl($file, 'large');
     }
 
     protected function addDimensionFromImage(FileEntity $file, string $imagePath): void

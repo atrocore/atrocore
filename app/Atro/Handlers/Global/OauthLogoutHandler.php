@@ -57,6 +57,9 @@ class OauthLogoutHandler extends AbstractHandler
             $this->container->get(BrowserSession::class)->logout($sessionId);
         }
 
-        return (new BoolResponse(true))->withHeader('Set-Cookie', SessionCookie::buildClearHeaders($request, $siteUrl));
+        // the files of the user, e.g. the thumbnails, must not stay in the cache of the browser after the logout
+        return (new BoolResponse(true))
+            ->withHeader('Set-Cookie', SessionCookie::buildClearHeaders($request, $siteUrl))
+            ->withHeader('Clear-Site-Data', '"cache"');
     }
 }

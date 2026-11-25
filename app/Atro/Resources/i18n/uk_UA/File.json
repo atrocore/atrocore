@@ -5,7 +5,6 @@
     "storage": "Сховище",
     "mimeType": "MIME тип",
     "path": "Шлях",
-    "thumbnailsPath": "Шлях до ескізів",
     "preview": "Попередній перегляд",
     "hash": "Хеш",
     "generated": "Згенеровано",

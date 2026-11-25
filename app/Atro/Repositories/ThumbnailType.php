@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Thumbnail;
 use Espo\ORM\Entity;
 
 class ThumbnailType extends ReferenceData
@@ -92,7 +93,7 @@ class ThumbnailType extends ReferenceData
             ]);
             $this->getMetadata()->save();
 
-            $this->deleteAllThumbnails();
+            $this->getThumbnailCreator()->deleteThumbnailsOfSize((string)$entity->get('code'));
         }
 
         if ($entity->isAttributeChanged('name')) {
@@ -107,21 +108,18 @@ class ThumbnailType extends ReferenceData
         $this->getMetadata()->delete('app', 'thumbnailTypes', [$entity->get('code')]);
         $this->getMetadata()->save();
 
-        $this->deleteAllThumbnails();
+        $this->getThumbnailCreator()->deleteThumbnailsOfSize((string)$entity->get('code'));
 
         return true;
-    }
-
-    public function deleteAllThumbnails(): void
-    {
-        $path = 'public/'.trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
-        if (is_dir($path)) {
-            exec('rm -rf '.escapeshellarg($path));
-        }
     }
 
     protected function getTranslationRepository(): Translation
     {
         return $this->getEntityManager()->getRepository('Translation');
+    }
+
+    protected function getThumbnailCreator(): Thumbnail
+    {
+        return $this->container->get(Thumbnail::class);
     }
 }

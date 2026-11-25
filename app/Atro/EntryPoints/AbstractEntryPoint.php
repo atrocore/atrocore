@@ -32,6 +32,26 @@ abstract class AbstractEntryPoint
         $this->container = $container;
     }
 
+    /**
+     * Whether the browser already has the content with the given ETag
+     */
+    protected function isNotModified(string $etag): bool
+    {
+        $header = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
+        if ($header === '') {
+            return false;
+        }
+
+        foreach (explode(',', $header) as $value) {
+            $value = trim($value);
+            if ($value === '*' || $value === $etag || $value === 'W/' . $etag) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected function getUser(): User
     {
         return $this->container->get('user');

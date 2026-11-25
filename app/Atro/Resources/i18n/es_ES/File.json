@@ -5,7 +5,6 @@
         "storage": "Almacenamiento",
         "mimeType": "Tipo MIME",
         "path": "Ruta",
-        "thumbnailsPath": "Ruta de las miniaturas",
         "preview": "Vista previa",
         "hash": "Hash",
         "generated": "Generado",

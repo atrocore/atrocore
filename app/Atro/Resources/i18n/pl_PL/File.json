@@ -5,7 +5,6 @@
         "storage": "Przechowywanie plików",
         "mimeType": "Typ MIME",
         "path": "Ścieżka",
-        "thumbnailsPath": "Ścieżka miniatur",
         "preview": "Podgląd",
         "hash": "Hash",
         "generated": "Wygenerowany",

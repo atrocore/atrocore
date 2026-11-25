@@ -15,11 +15,9 @@ namespace Atro\Core\Download;
 
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
 use Atro\Core\Utils\Config;
-use Atro\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Imagick;
 
@@ -48,27 +46,34 @@ class Custom
         $this->entityManager = $container->get('entityManager');
     }
 
-    public function convert(File $file, array $params): string
+    /**
+     * The URL of the converted image relative to the site URL. It is served by the Download entry point,
+     * which requires authentication and access to the file.
+     */
+    public function getUrl(File $file, array $params): string
     {
-        $this->prepare($file, $params);
+        $query = ['type' => 'custom'];
+        foreach (['width', 'height', 'quality', 'scale', 'format'] as $key) {
+            if (isset($params[$key]) && is_scalar($params[$key]) && (string)$params[$key] !== '') {
+                $query[$key] = (string)$params[$key];
+            }
+        }
 
-        Util::createDir('public' . DIRECTORY_SEPARATOR .  $this->getDirPath());
+        $format = strtolower((string)($query['format'] ?? '')) ?: 'jpeg';
 
-        $this->imagick->writeImage($this->getFilePath());
-
-        return $this->getDirPath() . DIRECTORY_SEPARATOR . $this->getName();
+        return 'downloads/' . $file->get('id') . '.' . rawurlencode($format) . '?' . http_build_query($query);
     }
 
     /**
-     * Applies the same conversion as convert() but returns the image bytes instead of writing a file.
+     * Converts the image in memory.
      *
-     * @return array{content: string, mimeType: string}
+     * @return array{content: string, mimeType: string, name: string}
      */
     public function convertToBlob(File $file, array $params): array
     {
         $this->prepare($file, $params);
 
-        $result = ['content' => $this->imagick->getImageBlob(), 'mimeType' => $this->getType()];
+        $result = ['content' => $this->imagick->getImageBlob(), 'mimeType' => $this->getType(), 'name' => $this->getName()];
 
         $this->imagick->clear();
 
@@ -152,27 +157,6 @@ class Custom
         return $this->format === 'jpg' ? 'jpeg' : $this->format;
     }
 
-    protected function getDirPath(): string
-    {
-        if (empty($this->file)) {
-            throw new Error('Attachment is required for converter.');
-        }
-
-        return $this->config->get('renditionPath', 'upload/rendition/') . $this->file->get('id') . DIRECTORY_SEPARATOR . $this->createSubDir();
-    }
-
-    protected function getFilePath(): string
-    {
-        return 'public' . DIRECTORY_SEPARATOR . $this->getDirPath() . DIRECTORY_SEPARATOR . $this->getName();
-    }
-
-    protected function createSubDir(): string
-    {
-        $key = $this->config->get('encryptionKey', '') . '_' . $this->width . '_' . $this->height . '_' . $this->quality . '_' . $this->scale . '_' . $this->format;
-
-        return md5($key);
-    }
-
     protected function getImageWidth(): int
     {
         return $this->imagick->getImageWidth();
@@ -189,7 +173,7 @@ class Custom
         array_pop($name);
         $name[] = $this->format;
 
-        return str_replace("\"", "\\\"", implode(".", $name));
+        return implode(".", $name);
     }
 
     protected function getType(): string
