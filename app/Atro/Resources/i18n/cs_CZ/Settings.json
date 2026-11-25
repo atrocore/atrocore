@@ -110,6 +110,7 @@
     },
     "exceptions": {
         "variableKeyInvalid": "Klíč by měl začínat malým písmenem a může se skládat pouze z písmen a číslic.",
-        "variableKeyIsExist": "Klíč '%s' již existuje."
+        "variableKeyIsExist": "Klíč '%s' již existuje.",
+        "systemConfigKey": "Nastavení '%s' je systémové nastavení a nelze jej změnit."
     }
 }
