@@ -6,6 +6,21 @@
     "allowedUsage": "Allowed Usage",
     "used": "Used",
     "link": "Link",
-    "viewLink": "Link for viewing"
+    "viewLink": "Link for viewing",
+    "limitUsage": "Limit Usage",
+    "expires": "Expires"
+  },
+  "labels": {
+    "Access Restrictions": "Access Restrictions"
+  },
+  "tooltips": {
+    "active": "An inactive link returns \"Not Found\".",
+    "available": "Whether the link opens the file right now: it is active, not expired and its usage limit is not reached.",
+    "link": "Public link to the file. Anyone who has the link opens the file without signing in.",
+    "used": "How many times the link was opened. Every request counts, also viewing the file in a browser.",
+    "limitUsage": "Limit how many times the link can be opened.",
+    "allowedUsage": "How many times the link can be opened. When \"Used\" reaches this number, the link returns \"Forbidden\".",
+    "expires": "Make the link work only till a specified date and time.",
+    "validTill": "After this date and time the link returns \"Forbidden\"."
   }
 }

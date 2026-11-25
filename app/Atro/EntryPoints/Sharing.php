@@ -44,14 +44,11 @@ class Sharing extends Download
             throw new Forbidden();
         }
 
-        if (!empty($sharing->get('allowedUsage'))) {
-            $used = (int)$sharing->get('used');
-            if ($used >= $sharing->get('allowedUsage')) {
-                throw new Forbidden();
-            }
-            $sharing->set('used', $used + 1);
-            $this->getEntityManager()->saveEntity($sharing);
+        if (!empty($sharing->get('allowedUsage')) && (int)$sharing->get('used') >= $sharing->get('allowedUsage')) {
+            throw new Forbidden();
         }
+
+        $this->getEntityManager()->getRepository('Sharing')->incrementUsed($sharing->get('id'));
 
         $type = $_GET['type'] ?? null;
         if ($type === 'custom') {

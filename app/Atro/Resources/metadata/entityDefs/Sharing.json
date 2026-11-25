@@ -8,7 +8,8 @@
     },
     "active": {
       "type": "bool",
-      "default": true
+      "default": true,
+      "tooltip": true
     },
     "available": {
       "type": "bool",
@@ -16,21 +17,73 @@
       "readOnly": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "tooltip": true
     },
     "file": {
       "type": "file",
       "required": true
     },
+    "expires": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true
+    },
     "validTill": {
-      "type": "datetime"
+      "type": "datetime",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "expires"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "expires"
+            }
+          ]
+        }
+      }
+    },
+    "limitUsage": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true
     },
     "allowedUsage": {
-      "type": "int"
+      "type": "int",
+      "min": 1,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "limitUsage"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "limitUsage"
+            }
+          ]
+        }
+      }
     },
     "used": {
       "type": "int",
-      "readOnly": true
+      "readOnly": true,
+      "default": 0,
+      "tooltip": true
     },
     "link": {
       "type": "url",
@@ -38,7 +91,8 @@
       "readOnly": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "tooltip": true
     },
     "viewLink": {
       "type": "url",

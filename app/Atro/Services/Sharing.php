@@ -20,6 +20,19 @@ class Sharing extends Base
 {
     protected $mandatorySelectAttributeList = ['active', 'validTill', 'allowedUsage', 'used', 'fileId'];
 
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        parent::handleInput($data, $id);
+
+        // a restriction value sent without its flag switches the flag on
+        $restrictions = ['limitUsage' => 'allowedUsage', 'expires' => 'validTill'];
+        foreach ($restrictions as $flagField => $valueField) {
+            if (!property_exists($data, $flagField) && !empty($data->$valueField)) {
+                $data->$flagField = true;
+            }
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
