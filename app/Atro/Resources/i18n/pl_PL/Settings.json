@@ -110,6 +110,7 @@
     },
     "exceptions": {
         "variableKeyInvalid": "Klucz powinien zaczynać się od małej litery i może składać się tylko z liter i cyfr.",
-        "variableKeyIsExist": "Klucz '%s' już istnieje."
+        "variableKeyIsExist": "Klucz '%s' już istnieje.",
+        "systemConfigKey": "Ustawienie '%s' jest ustawieniem systemowym i nie można go zmienić."
     }
 }
