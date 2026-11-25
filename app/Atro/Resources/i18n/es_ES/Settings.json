@@ -110,6 +110,7 @@
     },
     "exceptions": {
         "variableKeyIsExist": "La clave '%s' ya existe.",
-        "variableKeyInvalid": "La clave debe empezar por una letra minúscula y puede constar sólo de letras y números."
+        "variableKeyInvalid": "La clave debe empezar por una letra minúscula y puede constar sólo de letras y números.",
+        "systemConfigKey": "La configuración '%s' es una configuración del sistema y no se puede cambiar."
     }
 }
