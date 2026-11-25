@@ -5,7 +5,9 @@
         {
           "name": "active"
         },
-        false
+        {
+          "name": "available"
+        }
       ],
       [
         {
@@ -17,23 +19,11 @@
       ],
       [
         {
-          "name": "allowedUsage"
+          "name": "name"
         },
         {
           "name": "used"
         }
-      ],
-      [
-        {
-          "name": "validTill"
-        },
-        false
-      ],
-      [
-        {
-          "name": "name"
-        },
-        false
       ],
       [
         {
@@ -44,5 +34,27 @@
     ],
     "style": "default",
     "label": "Details"
+  },
+  {
+    "rows": [
+      [
+        {
+          "name": "limitUsage"
+        },
+        {
+          "name": "allowedUsage"
+        }
+      ],
+      [
+        {
+          "name": "expires"
+        },
+        {
+          "name": "validTill"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Access Restrictions"
   }
 ]

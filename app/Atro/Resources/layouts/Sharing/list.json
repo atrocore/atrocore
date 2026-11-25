@@ -11,5 +11,11 @@
   },
   {
     "name": "active"
+  },
+  {
+    "name": "available"
+  },
+  {
+    "name": "used"
   }
 ]
