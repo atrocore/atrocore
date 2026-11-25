@@ -16,6 +16,7 @@ namespace Atro\Core\Services\Traits;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\DTOs\Erasure\ErasureDataDTO;
 
 /**
  * Erasing the personal data of the records according to the erasure mode of each field.
@@ -72,8 +73,7 @@ trait PersonalDataErasableTrait
             throw new NotFound();
         }
 
-        $processed = [];
-        $repository->erasePersonalData($entity, $processed, $automatically);
+        $repository->erasePersonalData(new ErasureDataDTO($entity, $automatically));
 
         return true;
     }

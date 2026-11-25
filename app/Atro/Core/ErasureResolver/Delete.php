@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Atro\DTOs\ErasureDataDTO;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 
 class Delete extends AbstractErasureResolver
 {
-    public function supports(ErasureDataDTO $data): bool
+    public function supports(ErasureFieldDataDTO $data): bool
     {
         $fieldDefs = $this->getFieldDefs($data->entity, $data->field);
         if (!in_array($fieldDefs['type'] ?? null, self::LINK_TYPES)) {
@@ -29,7 +29,7 @@ class Delete extends AbstractErasureResolver
         return empty($foreignEntityType) || $this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) !== 'Subtype';
     }
 
-    public function resolve(ErasureDataDTO $data): bool
+    public function resolve(ErasureFieldDataDTO $data): bool
     {
         $linkedEntities = $this->getLinkedEntities($data->entity, $data->field);
 

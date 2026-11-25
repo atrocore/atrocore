@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Atro\DTOs\ErasureDataDTO;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 
 class Nullify extends AbstractErasureResolver
 {
-    public function supports(ErasureDataDTO $data): bool
+    public function supports(ErasureFieldDataDTO $data): bool
     {
         $fieldDefs = $this->getFieldDefs($data->entity, $data->field);
         $type = $fieldDefs['type'] ?? null;
@@ -37,7 +37,7 @@ class Nullify extends AbstractErasureResolver
         return true;
     }
 
-    public function resolve(ErasureDataDTO $data): bool
+    public function resolve(ErasureFieldDataDTO $data): bool
     {
         $this->nullify($data->entity, $data->field);
 
