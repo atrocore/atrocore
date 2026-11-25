@@ -748,7 +748,7 @@ abstract class AbstractRecordService extends AbstractService
             }
         }
 
-        $selectParams                   = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams                   = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true, true);
         $selectParams['collectionOnly'] = true;
 
         // the records of a sortable relation are shown in their order unless another order is requested
@@ -785,7 +785,7 @@ abstract class AbstractRecordService extends AbstractService
             if (!empty($relationName)) {
                 $relationName = ucfirst($relationName);
                 if (!empty($params['whereRelation'])) {
-                    $relationSelectParams          = $this->getSelectManager($relationName)->getSelectParams(['where' => $params['whereRelation']], true);
+                    $relationSelectParams          = $this->getSelectManager($relationName)->getSelectParams(['where' => $params['whereRelation']], true, true);
                     $selectParams['whereRelation'] = $relationSelectParams['whereClause'];;
                 }
             }
