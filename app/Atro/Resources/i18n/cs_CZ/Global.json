@@ -177,7 +177,8 @@
         "BlockingRuleTypeFieldSimilar": "Blokovací pravidlo: pole je podobné",
         "BlockingRuleTypeFieldContains": "Blokovací pravidlo: pole obsahuje",
         "BlockingRuleTypeSet": "Blokovací pravidlo: množina",
-        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz"
+        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz",
+        "OauthClientClaim": "Claim klienta OAuth"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Softwarové balíčky",
@@ -344,7 +345,8 @@
         "BlockingRuleTypeFieldSimilar": "Blokovací pravidlo: pole je podobné",
         "BlockingRuleTypeFieldContains": "Blokovací pravidlo: pole obsahuje",
         "BlockingRuleTypeSet": "Blokovací pravidlo: sada",
-        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz"
+        "BlockingRuleTypeExpression": "Blokovací pravidlo: výraz",
+        "OauthClientClaim": "Claimy klienta OAuth"
     },
     "labels": {
         "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",
@@ -1779,5 +1781,15 @@
         "BlockingRuleTypeFieldContains": "Vybere kandidáty, jejichž hodnota pole obsahuje hodnotu záznamu.",
         "BlockingRuleTypeSet": "Kombinuje několik pravidel pomocí AND nebo OR.",
         "BlockingRuleTypeExpression": "Vybere kandidáty podle výrazu ExpressionLanguage."
+    },
+    "scopeDescriptions": {
+        "Action": "Provádí operaci se záznamy, např. je vytváří, aktualizuje nebo maže, odesílá e-mail nebo volá webhook. Lze ji spustit ručně, prostřednictvím workflow nebo podle plánu.",
+        "Attribute": "Vlastnost záznamu, která se přidává k jednotlivým záznamům nebo prostřednictvím klasifikace, na rozdíl od pole, které mají všechny záznamy dané Entity.",
+        "BlockingRule": "Vybírá kandidátní záznamy, které se následně porovnávají podle pravidel párování. Kandidáty neboduje.",
+        "Connection": "Ukládá přístupové údaje k externímu systému, např. k databázi, souborovému serveru, poštovnímu serveru nebo API.",
+        "Entity": "Type datových záznamů, např. produktů nebo značek, s vlastními poli, relacemi a rozvrženími.",
+        "EntityField": "Vlastnost, kterou má každý záznam dané Entity. Type určuje, jaká data pole ukládá a jak se zobrazují.",
+        "MatchingRule": "Porovnává záznam s kandidátním záznamem a při shodě kandidáta oboduje. Součet bodů určuje, zda jde o duplicitní záznamy.",
+        "Storage": "Místo, kde jsou soubory uloženy, např. složka na serveru AtroCore nebo externí úložiště souborů."
     }
 }

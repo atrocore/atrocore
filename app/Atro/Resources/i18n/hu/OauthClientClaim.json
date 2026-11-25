@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "name": "Név",
+        "value": "Érték",
+        "oauthClient": "OAuth-kliens"
+    },
+    "links": {
+        "oauthClient": "OAuth-kliens"
+    },
+    "tooltips": {
+        "name": "A hozzáférési tokenben szereplő claim neve, például „role”. A regisztrált JWT-claim-ek és a szerver által beállított claim-ek (aud, sub, exp, iat, nbf, jti, iss, scopes) nem használhatók.",
+        "value": "A claim értéke. Az ügyfélnek kiadott minden hozzáférési token stringként tartalmazza."
+    },
+    "exceptions": {
+        "reservedName": "A „%s” értéket az engedélyezési kiszolgáló állítja be, ezért nem használható egyéni claimként.",
+        "uiClientNoClaims": "Az AtroCore felhasználói felület ezen az ügyfélen keresztül jelentkezik be: a tokenjei soha nem hagyják el a szervert, ezért nincsenek egyéni claimjei."
+    }
+}

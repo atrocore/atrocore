@@ -177,7 +177,8 @@
         "BlockingRuleTypeExpression": "Правило блокування: Вираз",
         "OauthClient": "Клієнт OAuth",
         "AttributeTypeEnum": "Атрибут: список",
-        "AttributeTypeMultiEnum": "Атрибут: список із кількома значеннями"
+        "AttributeTypeMultiEnum": "Атрибут: список із кількома значеннями",
+        "OauthClientClaim": "Твердження клієнта OAuth"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Програмні пакети",
@@ -344,7 +345,8 @@
         "BlockingRuleTypeExpression": "Правило блокування: Вираз",
         "OauthClient": "Клієнти OAuth",
         "AttributeTypeEnum": "Атрибут: список",
-        "AttributeTypeMultiEnum": "Атрибут: список із кількома значеннями"
+        "AttributeTypeMultiEnum": "Атрибут: список із кількома значеннями",
+        "OauthClientClaim": "Твердження клієнта OAuth"
     },
     "descriptions": {
         "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

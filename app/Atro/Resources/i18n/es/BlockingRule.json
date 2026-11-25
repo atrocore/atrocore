@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "Coincidencia",
+        "blockingRuleSet": "Conjunto",
+        "blockingRules": "Reglas de bloqueo",
+        "operator": "Operador",
+        "attribute": "Atributo",
+        "matchedWhereExpression": "Expresión Where de coincidencia"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Campos",
+            "attributes": "Atributos"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "El campo es igual",
+            "fieldSimilar": "El campo es similar",
+            "fieldContains": "El campo contiene",
+            "set": "Conjunto",
+            "expression": "Expresión"
+        },
+        "operator": {
+            "and": "Y",
+            "or": "O"
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "La regla de bloqueo solo se puede cambiar para una coincidencia inactiva.",
+        "notValidMatching": "La coincidencia no es válida",
+        "notValidMatchingRuleSet": "El conjunto de reglas de bloqueo no es válido",
+        "notValidFieldType": "El tipo de campo no es compatible con el tipo de regla seleccionado.",
+        "notValidAttributeType": "El tipo de atributo no es compatible con el tipo de regla seleccionado.",
+        "expressionCannotBeEmpty": "La expresión no puede estar vacía."
+    },
+    "tooltips": {
+        "matchedWhereExpression": "Una expresión de ExpressionLanguage con acceso a `stageEntity` (un registro hidratado). Debe devolver una matriz de cláusulas where que describa qué registros maestros se deben considerar como candidatos: las claves son nombres de campos y los valores son los valores con los que se debe comparar (los operadores se pueden incluir en la clave, por ejemplo, `field>`, `field*`; los grupos `OR`/`AND` se anidan para condiciones más complejas), por ejemplo, {nameFrFr: stageEntity.get('name')} encuentra registros maestros cuyo campo nameFrFr coincide con el nombre del registro de la etapa."
+    }
+}

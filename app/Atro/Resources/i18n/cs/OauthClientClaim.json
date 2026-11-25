@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "name": "Název",
+        "value": "Hodnota",
+        "oauthClient": "Klient OAuth"
+    },
+    "links": {
+        "oauthClient": "Klient OAuth"
+    },
+    "tooltips": {
+        "name": "Název claimu v přístupovém tokenu, např. „role“. Registrované JWT claimy a claimy nastavené serverem (aud, sub, exp, iat, nbf, jti, iss, scopes) nelze použít.",
+        "value": "Hodnota claimu. Každý přístupový token vydaný klientovi ji obsahuje jako řetězec."
+    },
+    "exceptions": {
+        "reservedName": "„%s“ nastavuje autorizační server a nelze jej použít jako vlastní claim.",
+        "uiClientNoClaims": "Uživatelské rozhraní AtroCore se přihlašuje prostřednictvím tohoto klienta: jeho tokeny nikdy neopustí server, takže nemá žádné vlastní claimy."
+    }
+}

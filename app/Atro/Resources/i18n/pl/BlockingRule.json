@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "Dopasowywanie",
+        "blockingRuleSet": "Zestaw",
+        "blockingRules": "Reguły blokujące",
+        "operator": "Operator",
+        "attribute": "Atrybut",
+        "matchedWhereExpression": "Wyrażenie WHERE dopasowania"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Pola",
+            "attributes": "Atrybuty"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "Pole jest równe",
+            "fieldSimilar": "Pole jest podobne",
+            "fieldContains": "Pole zawiera",
+            "set": "Zestaw",
+            "expression": "Wyrażenie"
+        },
+        "operator": {
+            "and": "I",
+            "or": "LUB"
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "Regułę blokującą można zmienić tylko dla nieaktywnego dopasowywania.",
+        "notValidMatching": "Dopasowywanie jest nieprawidłowe",
+        "notValidMatchingRuleSet": "Zestaw reguł blokujących jest nieprawidłowy",
+        "notValidFieldType": "Typ pola nie jest obsługiwany przez wybrany typ reguły.",
+        "notValidAttributeType": "Typ atrybutu nie jest obsługiwany przez wybrany typ reguły.",
+        "expressionCannotBeEmpty": "Wyrażenie nie może być puste."
+    },
+    "tooltips": {
+        "matchedWhereExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (zrehydratowanego rekordu). Musi zwracać tablicę klauzuli where opisującą, które rekordy główne należy uwzględnić jako kandydatów — klucze to nazwy pól, a wartości określają, z czym należy je porównać (operatory można umieszczać w kluczu, np. `field>`, `field*`, a grupy `OR`/`AND` można zagnieżdżać, aby tworzyć bardziej złożone warunki) — np. {nameFrFr: stageEntity.get('name')} wyszukuje rekordy główne, których pole nameFrFr jest równe wartości pola name rekordu etapu."
+    }
+}

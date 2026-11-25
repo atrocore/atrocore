@@ -106,7 +106,8 @@
     },
     "exceptions": {
         "variableKeyInvalid": "La clé doit commencer par une lettre minuscule et ne peut être composée que de lettres et de chiffres.",
-        "variableKeyIsExist": "La clé \"%s\" existe déjà."
+        "variableKeyIsExist": "La clé \"%s\" existe déjà.",
+        "systemConfigKey": "Le paramètre « %s » est un paramètre système et ne peut pas être modifié."
     },
     "messages": {
         "languageMustBeSelected": "Au moins une langue doit être sélectionnée.",

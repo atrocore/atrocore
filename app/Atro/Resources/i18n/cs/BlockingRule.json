@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "matching": "Párování",
+        "blockingRuleSet": "Sada",
+        "blockingRules": "Blokovací pravidla",
+        "operator": "Operátor",
+        "attribute": "Atribut",
+        "matchedWhereExpression": "Výraz podmínky shody"
+    },
+    "groupOptions": {
+        "field": {
+            "fields": "Pole",
+            "attributes": "Atributy"
+        }
+    },
+    "options": {
+        "type": {
+            "fieldEqual": "Pole se rovná",
+            "fieldSimilar": "Pole je podobné",
+            "fieldContains": "Pole obsahuje",
+            "set": "Sada",
+            "expression": "Výraz"
+        },
+        "operator": {
+            "and": "A",
+            "or": "NEBO"
+        }
+    },
+    "exceptions": {
+        "notValidMatchingActivation": "Pravidlo blokování lze změnit pouze u neaktivního párování.",
+        "notValidMatching": "Párování je neplatné",
+        "notValidMatchingRuleSet": "Sada pravidel blokování je neplatná",
+        "notValidFieldType": "Typ pole není podporován vybraným typem pravidla.",
+        "notValidAttributeType": "Typ atributu není podporován vybraným typem pravidla.",
+        "expressionCannotBeEmpty": "Výraz nesmí být prázdný."
+    },
+    "tooltips": {
+        "matchedWhereExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (načtenému záznamu). Musí vrátit pole klauzulí where, které popisuje, které hlavní záznamy se mají posuzovat jako kandidáti – klíče jsou názvy polí, hodnoty jsou údaje, podle kterých se má hledat (operátory lze vložit do klíče, např. `field>`, `field*`, a skupiny `OR`/`AND` se mohou vnořovat pro složitější podmínky) – např. {nameFrFr: stageEntity.get('name')} vyhledá hlavní záznamy, jejichž nameFrFr se rovná názvu záznamu ve fázi."
+    }
+}

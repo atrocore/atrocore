@@ -1,0 +1,63 @@
+{
+    "fields": {
+        "name": "Nom",
+        "description": "Description",
+        "clientCredentialsGrant": "Identifiants du client",
+        "secretHash": "Hachage du secret",
+        "isUiClient": "Client d’interface utilisateur",
+        "authorizationCodeGrant": "Code d’autorisation",
+        "refreshTokenGrant": "Jeton d’actualisation",
+        "redirectUris": "URI de redirection",
+        "isActive": "Actif",
+        "isConfidential": "Confidentiel",
+        "user": "Utilisateur",
+        "isConsentRequired": "Consentement requis",
+        "claims": "Revendications",
+        "refreshTokenLifetime": "Durée de validité du jeton d’actualisation, min",
+        "accessTokenLifetime": "Durée de validité du jeton d’accès, min"
+    },
+    "labels": {
+        "Allow": "Autoriser",
+        "Deny": "Refuser",
+        "signedInAs": "Vous êtes connecté en tant que {userName}.",
+        "Grant Types": "Types d’autorisation",
+        "authorizationRequest": "{clientName} demande l’accès à votre compte. Connectez-vous pour l’y autoriser."
+    },
+    "tooltips": {
+        "clientCredentialsGrant": "Le client obtient un jeton d’accès en son propre nom à l’aide de son ID client et de son secret, sans utilisateur. Il agit au nom de l’utilisateur sélectionné.",
+        "authorizationCodeGrant": "Le client obtient un jeton d’accès au nom d’un utilisateur qui se connecte via le formulaire de connexion AtroCore (avec PKCE).",
+        "user": "L’utilisateur au nom duquel le client agit lorsqu’il obtient un jeton d’accès avec ses propres identifiants (flux des identifiants du client).",
+        "redirectUris": "Les adresses auxquelles l’utilisateur est redirigé après sa connexion. Le redirect_uri d’une requête d’autorisation doit correspondre exactement à l’une d’elles.",
+        "isConsentRequired": "L’utilisateur confirme sur le formulaire de connexion AtroCore que l’application peut accéder à son compte. Désactivez cette option uniquement pour les applications de votre propre organisation, comme l’interface utilisateur AtroCore.",
+        "isUiClient": "L’interface utilisateur AtroCore se connecte via ce client. Celui-ci est défini lors de l’installation. La commande console « restore ui client » le restaure.",
+        "isConfidential": "Un client confidentiel s’authentifie avec son secret client. Un client public, tel qu’un navigateur ou une application mobile, ne peut pas conserver de secret.",
+        "refreshTokenGrant": "Avec le jeton d’accès, le client reçoit un jeton d’actualisation qu’il échange contre un nouveau jeton d’accès sans reconnecter l’utilisateur.",
+        "refreshTokenLifetime": "Durée de validité du jeton d’actualisation du client, en minutes (de 1 à 525600). Chaque actualisation émet un nouveau jeton d’actualisation ; la durée est donc calculée à partir de la dernière actualisation. Pour le client d’interface utilisateur AtroCore, cette durée correspond à la période pendant laquelle une session de l’interface utilisateur peut rester inactive.",
+        "accessTokenLifetime": "Durée de validité du jeton d’accès du client, en minutes (de 1 à 1440). Une application qui vérifie elle-même les jetons, sans interroger AtroCore, ne détecte la révocation qu’à l’expiration du jeton ; il est donc préférable de définir une durée courte pour ces clients."
+    },
+    "exceptions": {
+        "grantRequired": "Sélectionnez au moins une méthode pour obtenir un jeton d’accès : identifiants du client ou code d’autorisation.",
+        "redirectUrisRequired": "Un client utilisant le type d’autorisation par code doit disposer d’au moins une URI de redirection.",
+        "uiClientNotRemovable": "L’interface utilisateur AtroCore se connecte via ce client, qui ne peut pas être supprimé. Désactivez-le pour désactiver la connexion à l’interface utilisateur.",
+        "invalidRedirectUri": "« %s » n’est pas une URI de redirection valide : une URI HTTP ou HTTPS, ou un schéma personnalisé d’application native en notation de domaine inversée (par exemple, com.example.app:/callback), sans fragment, est attendu.",
+        "uiClientProtected": "L’interface utilisateur AtroCore se connecte via ce client : seuls son nom, sa description, son statut d’activation et la durée de validité de ses jetons peuvent être modifiés."
+    },
+    "actionResults": {
+        "generateSecret": "Le secret du client ne s’affiche qu’une seule fois. Copiez-le maintenant :"
+    },
+    "messages": {
+        "uiClientDisabled": "La connexion à l’interface utilisateur a été désactivée par l’administrateur.",
+        "signInFailed": "La connexion a échoué. Veuillez vous reconnecter.",
+        "signInExpired": "La connexion a expiré. Relancez-la dans l’application."
+    },
+    "links": {
+        "claims": "Revendi-cations",
+        "user": "Utilisateur"
+    },
+    "actionConfirms": {
+        "generateSecret": "Un nouveau secret client sera généré. Le secret actuel cessera de fonctionner et les jetons émis pour le client seront révoqués. Continuer ?"
+    },
+    "actions": {
+        "generateSecret": "Générer un secret"
+    }
+}

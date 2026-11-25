@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "name": "Nom",
+        "value": "Valeur",
+        "oauthClient": "Client OAuth"
+    },
+    "links": {
+        "oauthClient": "Client OAuth"
+    },
+    "tooltips": {
+        "name": "Le nom de la revendication dans le jeton d’accès, par ex. « role ». Les revendications JWT enregistrées et celles définies par le serveur (aud, sub, exp, iat, nbf, jti, iss, scopes) ne peuvent pas être utilisées.",
+        "value": "La valeur de la revendication. Chaque jeton d’accès émis pour le client la contient sous forme de chaîne."
+    },
+    "exceptions": {
+        "reservedName": "« %s » est défini par le serveur d’autorisation et ne peut pas être utilisé comme revendication personnalisée.",
+        "uiClientNoClaims": "L’interface utilisateur AtroCore s’authentifie via ce client : ses jetons ne quittent jamais le serveur, il n’a donc aucune revendication personnalisée."
+    }
+}

@@ -110,6 +110,7 @@
     },
     "exceptions": {
         "variableKeyInvalid": "A kulcsnak kisbetűvel kell kezdődnie, és csak betűket és számokat tartalmazhat.",
-        "variableKeyIsExist": "Már létezik a(z) „%s” kulcs."
+        "variableKeyIsExist": "Már létezik a(z) „%s” kulcs.",
+        "systemConfigKey": "A(z) „%s” beállítás rendszerbeállítás, ezért nem módosítható."
     }
 }
