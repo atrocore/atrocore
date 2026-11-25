@@ -173,7 +173,8 @@ class Mapper implements MapperInterface
             }
         }
 
-        if (!empty($params['subQueryCallbacks'])) {
+        // the callbacks add columns to the records, an aggregation returns one value and has no records to add them to
+        if (!empty($params['subQueryCallbacks']) && empty($params['aggregation'])) {
             $oldQb          = $qb;
             $mainTableAlias = $this->getQueryConverter()->getMainTableAlias();
             $oldQb->addSelect("$mainTableAlias.id as id");
