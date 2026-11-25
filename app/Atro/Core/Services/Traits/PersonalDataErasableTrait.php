@@ -16,6 +16,7 @@ namespace Atro\Core\Services\Traits;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\DTOs\Erasure\ErasureDataDTO;
 
 /**
  * Erasing the personal data of the records according to the erasure mode of each field.
@@ -32,10 +33,10 @@ trait PersonalDataErasableTrait
         $params['maxCountWithoutJob'] = $params['maxCountWithoutJob'] ?? $this->getConfig()->get('massErasePersonalDataMaxCountWithoutJob', 200);
         $params['maxChunkSize']       = $this->getConfig()->get('massErasePersonalDataMaxChunkSize', 3000);
         $params['minChunkSize']       = $this->getConfig()->get('massErasePersonalDataMinChunkSize', 400);
-        $params['singleActionMethod'] = 'erasePersonalData';
+        $params['singleActionMethod'] = !empty($params['automatically']) ? 'erasePersonalDataAutomatically' : 'erasePersonalData';
 
-        $result = $this->executeMassAction($params, function ($id) {
-            $this->erasePersonalData($id);
+        $result = $this->executeMassAction($params, function ($id) use ($params) {
+            $this->{$params['singleActionMethod']}($id);
         });
 
         if (empty($result)) {
@@ -49,7 +50,12 @@ trait PersonalDataErasableTrait
             : ['jobId' => $jobEntity->get('id'), 'sync' => false];
     }
 
-    public function erasePersonalData(string $id): bool
+    public function erasePersonalDataAutomatically(string $id): bool
+    {
+        return $this->erasePersonalData($id, true);
+    }
+
+    public function erasePersonalData(string $id, bool $automatically = false): bool
     {
         if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
             throw new Forbidden();
@@ -67,7 +73,7 @@ trait PersonalDataErasableTrait
             throw new NotFound();
         }
 
-        $repository->erasePersonalData($entity);
+        $repository->erasePersonalData(new ErasureDataDTO($entity, $automatically));
 
         return true;
     }

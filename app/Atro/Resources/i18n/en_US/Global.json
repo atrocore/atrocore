@@ -144,6 +144,7 @@
     "ActionTypeUpdate": "Action: Update",
     "ActionTypeCreateOrUpdate": "Action: Create or Update",
     "ActionTypeDelete": "Action: Delete",
+    "ActionTypeErasure": "Action: Erase Personal Data",
     "ActionTypeSet": "Action: Action Set",
     "ActionTypeCustom": "Action: Custom Code",
     "AttributeTypeVarchar": "Attribute: String",
@@ -311,6 +312,7 @@
     "ActionTypeUpdate": "Action: Update",
     "ActionTypeCreateOrUpdate": "Action: Create or Update",
     "ActionTypeDelete": "Action: Delete",
+    "ActionTypeErasure": "Action: Erase Personal Data",
     "ActionTypeSet": "Action: Action Set",
     "ActionTypeCustom": "Action: Custom Code",
     "AttributeTypeVarchar": "Attribute: String",
@@ -859,8 +861,6 @@
     "massRestoreResultSingle": "{count} record now is restored",
     "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
-    "erasePersonalDataRecordConfirmation": "The personal data of this record will be erased permanently according to the erasure mode of each field. Are you sure?",
-    "erasePersonalDataRecordsConfirmation": "The personal data of the selected records will be erased permanently according to the erasure mode of each field. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
     "duplicatedAndLinked": "Records were successfully duplicated and linked.",
@@ -900,7 +900,6 @@
     "all": "All"
   },
   "massActions": {
-    "erasePersonalData": "Erase",
     "dataPipelineTransformSource": "Source Record Transformation",
     "dataPipelineUpdateFromSource": "Update From Source",
     "updateFromSource": "Transform",
@@ -1062,6 +1061,7 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "eraseAutomaticallyThis": "Personal data in this record were erased automatically on {datetime}.",
     "eraseThis": "{user} erased personal data for this record on {datetime}.",
     "erase": "{user} erased personal data for {entityType} {entity} on {datetime}.",
     "createRecordAssociationThis": "{user} associated {relatedRecord} as {association}",
@@ -1712,6 +1712,7 @@
     "ActionTypeUpdate": "Updates the selected or found records of the target entity.",
     "ActionTypeCreateOrUpdate": "Updates the found records of the target entity or creates a new one if nothing is found.",
     "ActionTypeDelete": "Deletes the selected or found records of the target entity, optionally permanently.",
+    "ActionTypeErasure": "Erases the personal data of the selected or found records of the target entity according to the erasure mode of each field.",
     "ActionTypeEmail": "Sends an email based on an email template or a script.",
     "ActionTypeSet": "Runs several actions one after another as a single action.",
     "ActionTypeWebhook": "Calls an external URL to notify another system.",

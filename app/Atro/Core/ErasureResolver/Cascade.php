@@ -13,30 +13,30 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Espo\ORM\Entity;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 
 class Cascade extends AbstractErasureResolver
 {
-    public function supports(Entity $entity, string $field): bool
+    public function supports(ErasureFieldDataDTO $data): bool
     {
-        return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::LINK_TYPES);
+        return in_array($this->getFieldDefs($data->entity, $data->field)['type'] ?? null, self::LINK_TYPES);
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(ErasureFieldDataDTO $data): bool
     {
-        $foreignEntityType = $this->getForeignEntityType($entity, $field);
+        $foreignEntityType = $this->getForeignEntityType($data->entity, $data->field);
         if (empty($foreignEntityType) || empty($this->getMetadata()->get(['scopes', $foreignEntityType, 'containsPersonalData']))) {
             return false;
         }
 
-        if ($this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) === 'ReferenceData') {
+        if (in_array($this->getMetadata()->get(['scopes', $foreignEntityType, 'type']), ['ReferenceData', 'Archive'])) {
             return false;
         }
 
         $repository = $this->getEntityManager()->getRepository($foreignEntityType);
 
-        foreach ($this->getLinkedEntities($entity, $field) as $foreign) {
-            $repository->erasePersonalData($foreign, $processed);
+        foreach ($this->getLinkedEntities($data->entity, $data->field) as $foreign) {
+            $repository->erasePersonalData($data->erasure->forEntity($foreign));
         }
 
         return true;

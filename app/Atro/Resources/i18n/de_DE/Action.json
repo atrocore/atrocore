@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Ausführen",
         "Parameters": "Parameter",
-        "fieldsPanel": "Aktualisieren"
+        "fieldsPanel": "Aktualisieren",
+        "erasureActionName": "Personenbezogene Daten löschen: %s"
     },
     "actions": {
         "allLogs": "Alle Protokolle"
@@ -55,6 +56,7 @@
             "create": "Erstellen",
             "update": "Aktualisierung",
             "delete": "Löschen",
+            "erasure": "Personenbezogene Daten löschen",
             "set": "Aktionsset",
             "email": "E-Mail senden",
             "webhook": "Webhook",
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein.",
         "forEditModeOnly": "Die Aktion '%s' ist nur im Bearbeitungsmodus verfügbar und kann hier nicht verwendet werden.",
-        "actionTypeDisabledForTargetEntity": "Der Aktionstyp \"%1$s\" kann nicht verwendet werden, da diese Aktion für die Entität \"%2$s\" deaktiviert ist."
+        "actionTypeDisabledForTargetEntity": "Der Aktionstyp \"%1$s\" kann nicht verwendet werden, da diese Aktion für die Entität \"%2$s\" deaktiviert ist.",
+        "entityDoesNotContainPersonalData": "Die Entität '%s' enthält keine personenbezogenen Daten"
     }
 }

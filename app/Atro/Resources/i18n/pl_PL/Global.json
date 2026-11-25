@@ -140,6 +140,7 @@
         "ActionTypeUpdate": "Akcja: Aktualizuj",
         "ActionTypeCreateOrUpdate": "Akcja: Tworzenie lub aktualizacja",
         "ActionTypeDelete": "Akcja: Usuń",
+        "ActionTypeErasure": "Akcja: Usuń dane osobowe",
         "ActionTypeSet": "Akcja: Zestaw akcji",
         "ActionTypeCustom": "Akcja: Kod niestandardowy",
         "AttributeTypeVarchar": "Atrybut: Ciąg znaków",
@@ -306,6 +307,7 @@
         "ActionTypeUpdate": "Akcja: Aktualizuj",
         "ActionTypeCreateOrUpdate": "Akcja: Tworzenie lub aktualizacja",
         "ActionTypeDelete": "Akcja: Usuń",
+        "ActionTypeErasure": "Akcja: Usuń dane osobowe",
         "ActionTypeSet": "Akcja: Zestaw akcji",
         "ActionTypeCustom": "Akcja: Kod niestandardowy",
         "AttributeTypeVarchar": "Atrybut: Ciąg znaków",
@@ -836,8 +838,6 @@
         "massRestoreResultSingle": "{count} rekord został przywrócony",
         "massRestoreZeroResult": "Nic nie zostało przywrócone",
         "erasePersonalDataConfirmation": "Zaznaczone pola zostaną trwale usunięte. Czy na pewno?",
-        "erasePersonalDataRecordConfirmation": "Dane osobowe tego rekordu zostaną trwale usunięte zgodnie z trybem usuwania każdego pola. Czy na pewno?",
-        "erasePersonalDataRecordsConfirmation": "Dane osobowe wybranych rekordów zostaną trwale usunięte zgodnie z trybem usuwania każdego pola. Czy na pewno?",
         "clearAclCacheError": "Pamięć podręczna ACL nie mogła zostać wyczyszczona.",
         "emptyMultilangOptions": "Lista opcji nie może być pusta przy aktywowanej opcji wielojęzycznej.",
         "closePanelConfirmation": "Czy na pewno chcesz zamknąć panel?",
@@ -888,7 +888,6 @@
         "all": "Wszystkie"
     },
     "massActions": {
-        "erasePersonalData": "Usuń",
         "massUpdatePartial": "Masowa aktualizacja (część %s)",
         "removePartial": "Usuń (część %s)",
         "addRelation": "Dodaj relację",
@@ -1046,6 +1045,7 @@
         "entityRemoved": "{user} deleted {entityType} {entity}"
     },
     "streamMessages": {
+        "eraseAutomaticallyThis": "Dane osobowe w tym rekordzie zostały automatycznie usunięte {datetime}.",
         "eraseThis": "{user} usunął dane osobowe tego rekordu {datetime}.",
         "erase": "{user} usunął dane osobowe {entityType} {entity} {datetime}.",
         "composerUpdate": "{user} zmienił zainstalowane pakiety oprogramowania",
@@ -1700,6 +1700,7 @@
         "ActionTypeUpdate": "Aktualizuje wybrane lub znalezione rekordy docelowej encji.",
         "ActionTypeCreateOrUpdate": "Aktualizuje znalezione rekordy docelowej encji lub tworzy nowy, jeśli nie znaleziono żadnego.",
         "ActionTypeDelete": "Usuwa wybrane lub znalezione rekordy docelowej encji, opcjonalnie trwale.",
+        "ActionTypeErasure": "Usuwa dane osobowe wybranych lub znalezionych rekordów docelowej encji zgodnie z trybem usuwania każdego pola.",
         "ActionTypeEmail": "Wysyła wiadomość e-mail na podstawie szablonu wiadomości e-mail lub skryptu.",
         "ActionTypeSet": "Uruchamia kilka działań po kolei jako jedno działanie.",
         "ActionTypeWebhook": "Wywołuje zewnętrzny URL, aby powiadomić inny system.",

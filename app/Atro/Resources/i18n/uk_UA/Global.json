@@ -142,6 +142,7 @@
         "ActionTypeUpdate": "Дія: Оновити",
         "ActionTypeCreateOrUpdate": "Дія: Створити або оновити",
         "ActionTypeDelete": "Дія: Видалити",
+        "ActionTypeErasure": "Дія: Стерти персональні дані",
         "ActionTypeSet": "Дія: Набір дій",
         "ActionTypeCustom": "Дія: Користувацький код",
         "AttributeTypeVarchar": "Атрибут: Рядок",
@@ -308,6 +309,7 @@
         "ActionTypeUpdate": "Дія: Оновити",
         "ActionTypeCreateOrUpdate": "Дія: Створити або оновити",
         "ActionTypeDelete": "Дія: Видалити",
+        "ActionTypeErasure": "Дія: Стерти персональні дані",
         "ActionTypeSet": "Дія: Набір дій",
         "ActionTypeCustom": "Дія: Користувацький код",
         "AttributeTypeVarchar": "Атрибут: Рядок",
@@ -827,8 +829,6 @@
         "fieldShouldBeGreater": "{field} має бути більше ніж {value}",
         "fieldIsUploading": "Завантаження",
         "erasePersonalDataConfirmation": "Позначені поля будуть стерті назавжди. Ви впевнені?",
-        "erasePersonalDataRecordConfirmation": "Персональні дані цього запису будуть остаточно стерті відповідно до режиму стирання кожного поля. Ви впевнені?",
-        "erasePersonalDataRecordsConfirmation": "Персональні дані вибраних записів будуть остаточно стерті відповідно до режиму стирання кожного поля. Ви впевнені?",
         "testEmailSent": "Тестовий електронний лист надіслано",
         "isRequiredAndUnique": "{field} обов'язково і має бути унікальним.",
         "relationsAdded": "Зв'язок успішно доданий.",
@@ -895,7 +895,6 @@
         "all": "Усі"
     },
     "massActions": {
-        "erasePersonalData": "Стерти",
         "dataPipelineTransformSource": "Трансформація записів джерела",
         "dataPipelineUpdateFromSource": "Оновлення з джерела",
         "updateFromSource": "Трансформувати",
@@ -1057,6 +1056,7 @@
         "own": "Вас було призначено власником для {entityType} {entity}."
     },
     "streamMessages": {
+        "eraseAutomaticallyThis": "Персональні дані в цьому записі були автоматично стерті {datetime}.",
         "eraseThis": "{user} стер персональні дані цього запису {datetime}.",
         "erase": "{user} стер персональні дані {entityType} {entity} {datetime}.",
         "composerUpdate": "{user} змінив встановлені програмні пакети",
@@ -1710,6 +1710,7 @@
         "ActionTypeUpdate": "Оновлює вибрані або знайдені записи цільової сутності.",
         "ActionTypeCreateOrUpdate": "Оновлює знайдені записи цільової сутності або створює новий, якщо нічого не знайдено.",
         "ActionTypeDelete": "Видаляє вибрані або знайдені записи цільової сутності, за потреби остаточно.",
+        "ActionTypeErasure": "Стирає персональні дані вибраних або знайдених записів цільової сутності відповідно до режиму стирання кожного поля.",
         "ActionTypeEmail": "Надсилає лист на основі шаблону листа або скрипта.",
         "ActionTypeSet": "Виконує кілька дій послідовно як одну дію.",
         "ActionTypeWebhook": "Викликає зовнішню URL-адресу, щоб сповістити іншу систему.",
