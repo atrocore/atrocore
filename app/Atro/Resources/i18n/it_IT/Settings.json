@@ -110,6 +110,7 @@
     },
     "exceptions": {
         "variableKeyInvalid": "La chiave deve iniziare con una lettera minuscola e può essere composta solo da lettere e numeri.",
-        "variableKeyIsExist": "La chiave '%s' esiste già."
+        "variableKeyIsExist": "La chiave '%s' esiste già.",
+        "systemConfigKey": "L'impostazione '%s' è un'impostazione di sistema e non può essere modificata."
     }
 }
