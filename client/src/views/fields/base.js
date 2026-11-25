@@ -1119,13 +1119,23 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
+        /**
+         * The definition of an attribute of the record by the name of its field, or null. The definitions of a record
+         * without attributes are an empty list, which has the property `length`: a field of that name is not an attribute.
+         */
+        getAttributeDefs(fieldName) {
+            const defs = this.model?.get('attributesDefs');
+
+            return defs && typeof defs === 'object' && !Array.isArray(defs) && Object.prototype.hasOwnProperty.call(defs, fieldName) ? defs[fieldName] : null;
+        },
+
         isRequiredForReadiness() {
             if (!this.model?.name || !this.getMetadata().get(['scopes', this.model.name, 'hasReadiness'])) {
                 return false;
             }
 
             const fieldName = this.getFieldForConditions();
-            const defs = this.model.get('attributesDefs')?.[fieldName] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`);
+            const defs = this.getAttributeDefs(fieldName) ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`);
             if (defs?.requiredForReadiness) {
                 return true;
             }
@@ -1225,13 +1235,13 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const fieldName = this.getFieldForConditions();
 
-            const defs = this.model.get('attributesDefs')?.[fieldName] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`)
+            const defs = this.getAttributeDefs(fieldName) ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`)
 
             return defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
         },
 
         getDisableOptionsRules() {
-            const defs = this.model.get('attributesDefs')?.[this.name] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}`)
+            const defs = this.getAttributeDefs(this.name) ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}`)
 
             return defs?.['conditionalProperties']?.['disableOptions'];
         },
