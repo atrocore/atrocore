@@ -673,11 +673,12 @@ class Hierarchy extends Base
 
         if (!isset($params['ids'])) {
             $params = $this->getParamsForTree($params['link'], $params['scope'], $params);
-            $params['sortBy'] = 'id';
             $repository = $this->getRepository();
             $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
             $selectParams['distinct'] = true;
             $selectParams['select'] = ['id'];
+            // the tree is sorted after building, while ordering of DISTINCT ids by a column outside the select fails on PostgreSQL
+            unset($selectParams['orderBy'], $selectParams['order']);
             $collection = $repository->find($selectParams);
 
             $ids = array_column($collection->toArray(), 'id');
