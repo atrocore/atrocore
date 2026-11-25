@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\ErasureResolver;
 
 use Atro\Core\Exceptions\Error;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 use Espo\ORM\Entity;
 
 class Anonymize extends AbstractErasureResolver
@@ -44,14 +45,14 @@ class Anonymize extends AbstractErasureResolver
         'array',
     ];
 
-    public function supports(Entity $entity, string $field): bool
+    public function supports(ErasureFieldDataDTO $data): bool
     {
-        return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::SUPPORTED_TYPES);
+        return in_array($this->getFieldDefs($data->entity, $data->field)['type'] ?? null, self::SUPPORTED_TYPES);
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(ErasureFieldDataDTO $data): bool
     {
-        $this->anonymizeField($entity, $field);
+        $this->anonymizeField($data->entity, $data->field);
 
         return true;
     }

@@ -144,6 +144,7 @@
         "ActionTypeUpdate": "Aktion: Aktualisierung",
         "ActionTypeCreateOrUpdate": "Aktion: Erstellen oder Aktualisieren",
         "ActionTypeDelete": "Aktion: Löschen",
+        "ActionTypeErasure": "Aktion: Personenbezogene Daten löschen",
         "ActionTypeSet": "Aktion: Aktionsset",
         "ActionTypeCustom": "Aktion: Benutzerdefinierter Code",
         "AttributeTypeVarchar": "Attribut: Einzeiliger Text",
@@ -311,6 +312,7 @@
         "ActionTypeUpdate": "Aktion: Aktualisierung",
         "ActionTypeCreateOrUpdate": "Aktion: Erstellen oder Aktualisieren",
         "ActionTypeDelete": "Aktion: Löschen",
+        "ActionTypeErasure": "Aktion: Personenbezogene Daten löschen",
         "ActionTypeSet": "Aktion: Aktionsset",
         "ActionTypeCustom": "Aktion: Benutzerdefinierter Code",
         "AttributeTypeVarchar": "Attribut: Einzeiliger Text",
@@ -855,8 +857,6 @@
         "fieldShouldBeLess": "{field} muss kleiner als {value} sein",
         "fieldShouldBeGreater": "{field} muss größer als {value} sein",
         "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
-        "erasePersonalDataRecordConfirmation": "Die personenbezogenen Daten dieses Datensatzes werden gemäß dem Löschmodus jedes Feldes endgültig gelöscht. Sind Sie sicher?",
-        "erasePersonalDataRecordsConfirmation": "Die personenbezogenen Daten der ausgewählten Datensätze werden gemäß dem Löschmodus jedes Feldes endgültig gelöscht. Sind Sie sicher?",
         "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden.",
         "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
         "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft.",
@@ -941,7 +941,6 @@
         "all": "Alle"
     },
     "massActions": {
-        "erasePersonalData": "Löschen",
         "dataPipelineTransformSource": "Transformation der Quelldatensätze",
         "dataPipelineUpdateFromSource": "Aus Quelle aktualisieren",
         "updateFromSource": "Transformieren",
@@ -1103,6 +1102,7 @@
         "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
     },
     "streamMessages": {
+        "eraseAutomaticallyThis": "Die personenbezogenen Daten in diesem Datensatz wurden am {datetime} automatisch gelöscht.",
         "eraseThis": "{user} hat am {datetime} personenbezogene Daten dieses Datensatzes gelöscht.",
         "erase": "{user} hat am {datetime} personenbezogene Daten von {entityType} {entity} gelöscht.",
         "composerUpdate": "{user} hat die installierten Softwarepakete geändert",
@@ -1712,6 +1712,7 @@
         "ActionTypeUpdate": "Aktualisiert die ausgewählten oder gefundenen Datensätze der Zielentität.",
         "ActionTypeCreateOrUpdate": "Aktualisiert die gefundenen Datensätze der Zielentität oder erstellt einen neuen, wenn nichts gefunden wird.",
         "ActionTypeDelete": "Löscht die ausgewählten oder gefundenen Datensätze der Zielentität, optional endgültig.",
+        "ActionTypeErasure": "Löscht die personenbezogenen Daten der ausgewählten oder gefundenen Datensätze der Zielentität gemäß dem Löschmodus jedes Feldes.",
         "ActionTypeEmail": "Sendet eine E-Mail auf Basis einer E-Mail-Vorlage oder eines Skripts.",
         "ActionTypeSet": "Führt mehrere Aktionen nacheinander als eine einzige Aktion aus.",
         "ActionTypeWebhook": "Ruft eine externe URL auf, um ein anderes System zu benachrichtigen.",

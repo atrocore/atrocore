@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Végrehajtás",
         "Parameters": "Paraméterek",
-        "fieldsPanel": "Frissítés"
+        "fieldsPanel": "Frissítés",
+        "erasureActionName": "Személyes adatok törlése: %s"
     },
     "actions": {
         "allLogs": "Összes napló"
@@ -64,6 +65,7 @@
             "update": "Frissítés",
             "createOrUpdate": "Létrehozás vagy frissítés",
             "delete": "Törlés",
+            "erasure": "Személyes adatok törlése",
             "set": "Műveletkészlet",
             "webhook": "Webhook",
             "customCode": "Egyéni kód",
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "A kifejezés nem lehet üres.",
         "forEditModeOnly": "A(z) „%s” művelet csak szerkesztési módban érhető el, itt nem használható.",
-        "actionTypeDisabledForTargetEntity": "A(z) „%1$s” művelettípus nem használható, mert ez a művelet le van tiltva a(z) „%2$s” entitás esetén."
+        "actionTypeDisabledForTargetEntity": "A(z) „%1$s” művelettípus nem használható, mert ez a művelet le van tiltva a(z) „%2$s” entitás esetén.",
+        "entityDoesNotContainPersonalData": "A(z) '%s' entitás nem tartalmaz személyes adatokat"
     }
 }

@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Espo\ORM\Entity;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 
 class Nullify extends AbstractErasureResolver
 {
-    public function supports(Entity $entity, string $field): bool
+    public function supports(ErasureFieldDataDTO $data): bool
     {
-        $fieldDefs = $this->getFieldDefs($entity, $field);
+        $fieldDefs = $this->getFieldDefs($data->entity, $data->field);
         $type = $fieldDefs['type'] ?? null;
 
         if (in_array($type, self::LINK_TYPES)) {
@@ -37,9 +37,9 @@ class Nullify extends AbstractErasureResolver
         return true;
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(ErasureFieldDataDTO $data): bool
     {
-        $this->nullify($entity, $field);
+        $this->nullify($data->entity, $data->field);
 
         return true;
     }

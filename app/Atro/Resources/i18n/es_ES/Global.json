@@ -140,6 +140,7 @@
         "ActionTypeUpdate": "Acción: Guardar",
         "ActionTypeCreateOrUpdate": "Acción: Crear o actualizar",
         "ActionTypeDelete": "Acción: Borrar",
+        "ActionTypeErasure": "Acción: Borrar datos personales",
         "ActionTypeSet": "Acción: Conjunto de acciones",
         "ActionTypeCustom": "Acción: Código personalizado",
         "AttributeTypeVarchar": "Atributo: Texto",
@@ -306,6 +307,7 @@
         "ActionTypeUpdate": "Acción: Guardar",
         "ActionTypeCreateOrUpdate": "Acción: Crear o actualizar",
         "ActionTypeDelete": "Acción: Borrar",
+        "ActionTypeErasure": "Acción: Borrar datos personales",
         "ActionTypeSet": "Acción: Conjunto de acciones",
         "ActionTypeCustom": "Acción: Código personalizado",
         "AttributeTypeVarchar": "Atributo: Texto",
@@ -827,8 +829,6 @@
         "fieldIsUploading": "Uploading in progress",
         "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
-        "erasePersonalDataRecordConfirmation": "Los datos personales de este registro se borrarán de forma permanente según el modo de borrado de cada campo. ¿Está seguro?",
-        "erasePersonalDataRecordsConfirmation": "Los datos personales de los registros seleccionados se borrarán de forma permanente según el modo de borrado de cada campo. ¿Está seguro?",
         "clearAclCacheError": "ACL cache could not be cleared.",
         "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
         "closePanelConfirmation": "¿Seguro que quieres cerrar el panel?",
@@ -888,7 +888,6 @@
         "all": "Todos"
     },
     "massActions": {
-        "erasePersonalData": "Borrar",
         "remove": "Eliminar",
         "merge": "Unir",
         "follow": "Seguir",
@@ -1046,6 +1045,7 @@
         "own": "You were set as Owner for {entityType} {entity}."
     },
     "streamMessages": {
+        "eraseAutomaticallyThis": "Los datos personales de este registro se borraron automáticamente el {datetime}.",
         "eraseThis": "{user} borró los datos personales de este registro el {datetime}.",
         "erase": "{user} borró los datos personales de {entityType} {entity} el {datetime}.",
         "composerUpdate": "{user} ha cambiado los paquetes de software instalados",
@@ -1700,6 +1700,7 @@
         "ActionTypeUpdate": "Actualiza los registros seleccionados o encontrados de la entidad de destino.",
         "ActionTypeCreateOrUpdate": "Actualiza los registros encontrados de la entidad de destino o crea uno nuevo si no encuentra ninguno.",
         "ActionTypeDelete": "Elimina los registros seleccionados o encontrados de la entidad de destino, con opción de eliminarlos permanentemente.",
+        "ActionTypeErasure": "Borra los datos personales de los registros seleccionados o encontrados de la entidad de destino según el modo de borrado de cada campo.",
         "ActionTypeEmail": "Envía un correo electrónico a partir de una plantilla de correo electrónico o de un script.",
         "ActionTypeSet": "Ejecuta varias acciones una tras otra como una sola acción.",
         "ActionTypeWebhook": "Llama a una URL externa para notificar a otro sistema.",

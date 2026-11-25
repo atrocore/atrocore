@@ -140,6 +140,7 @@
         "ActionTypeUpdate": "Akce: Aktualizovat",
         "ActionTypeCreateOrUpdate": "Akce: Vytvořit nebo aktualizovat",
         "ActionTypeDelete": "Akce: Odstranit",
+        "ActionTypeErasure": "Akce: Vymazat osobní údaje",
         "ActionTypeSet": "Akce: Akční sada",
         "ActionTypeCustom": "Akce: Vlastní kód",
         "AttributeTypeVarchar": "Atribut: Řetězec",
@@ -306,6 +307,7 @@
         "ActionTypeUpdate": "Akce: Aktualizovat",
         "ActionTypeCreateOrUpdate": "Akce: Vytvořit nebo aktualizovat",
         "ActionTypeDelete": "Akce: Odstranit",
+        "ActionTypeErasure": "Akce: Vymazat osobní údaje",
         "ActionTypeSet": "Akce: Akční sada",
         "ActionTypeCustom": "Akce: Vlastní kód",
         "AttributeTypeVarchar": "Atribut: Řetězec",
@@ -963,8 +965,6 @@
         "massRestoreResultSingle": "{count} záznam je nyní obnoven",
         "massRestoreZeroResult": "Nic nebylo obnoveno",
         "erasePersonalDataConfirmation": "Zaškrtnutá pole budou trvale vymazána. Jste si jisti?",
-        "erasePersonalDataRecordConfirmation": "Osobní údaje tohoto záznamu budou trvale vymazány podle režimu výmazu jednotlivých polí. Jste si jisti?",
-        "erasePersonalDataRecordsConfirmation": "Osobní údaje vybraných záznamů budou trvale vymazány podle režimu výmazu jednotlivých polí. Jste si jisti?",
         "clearAclCacheError": "Vyrovnávací paměť protokolu ACL se nepodařilo vymazat.",
         "emptyMultilangOptions": "Seznam možností nemůže být prázdný, pokud je aktivována možnost více jazyků.",
         "duplicatedAndLinked": "Záznamy byly úspěšně duplikovány a propojeny.",
@@ -1009,7 +1009,6 @@
         "all": "Všechny"
     },
     "massActions": {
-        "erasePersonalData": "Vymazat",
         "massUpdatePartial": "Hromadná aktualizace (část %s)",
         "removePartial": "Odstranit (část %s)",
         "addRelation": "Přidat vztah",
@@ -1049,6 +1048,7 @@
         "own": "Byl jste nastaven jako vlastník pro {entityType} {entity}."
     },
     "streamMessages": {
+        "eraseAutomaticallyThis": "Osobní údaje v tomto záznamu byly automaticky vymazány dne {datetime}.",
         "eraseThis": "{user} vymazal osobní údaje tohoto záznamu dne {datetime}.",
         "erase": "{user} vymazal osobní údaje {entityType} {entity} dne {datetime}.",
         "composerUpdate": "{user} změnil nainstalované softwarové balíčky",
@@ -1700,6 +1700,7 @@
         "ActionTypeUpdate": "Aktualizuje vybrané nebo nalezené záznamy cílové entity.",
         "ActionTypeCreateOrUpdate": "Aktualizuje nalezené záznamy cílové entity, nebo vytvoří nový, pokud žádný nenajde.",
         "ActionTypeDelete": "Odstraní vybrané nebo nalezené záznamy cílové entity, případně trvale.",
+        "ActionTypeErasure": "Vymaže osobní údaje vybraných nebo nalezených záznamů cílové entity podle režimu vymazání každého pole.",
         "ActionTypeEmail": "Odešle e-mail na základě e-mailové šablony nebo skriptu.",
         "ActionTypeSet": "Spustí několik akcí postupně jako jednu akci.",
         "ActionTypeWebhook": "Zavolá externí URL a upozorní tak jiný systém.",

@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace Atro\Core\ErasureResolver;
 
-use Espo\ORM\Entity;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 
 class Unlink extends AbstractErasureResolver
 {
-    public function supports(Entity $entity, string $field): bool
+    public function supports(ErasureFieldDataDTO $data): bool
     {
-        return in_array($this->getFieldDefs($entity, $field)['type'] ?? null, self::LINK_TYPES);
+        return in_array($this->getFieldDefs($data->entity, $data->field)['type'] ?? null, self::LINK_TYPES);
     }
 
-    public function resolve(Entity $entity, string $field, array &$processed = []): bool
+    public function resolve(ErasureFieldDataDTO $data): bool
     {
-        $this->unlink($entity, $field, $this->getLinkedEntities($entity, $field));
+        $this->unlink($data->entity, $data->field, $this->getLinkedEntities($data->entity, $data->field));
 
         return true;
     }

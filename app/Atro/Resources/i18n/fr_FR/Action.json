@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Exécuter",
         "Parameters": "Paramètres",
-        "fieldsPanel": "Mise à jour"
+        "fieldsPanel": "Mise à jour",
+        "erasureActionName": "Effacer les données personnelles: %s"
     },
     "actions": {
         "allLogs": "Tous les journaux"
@@ -55,6 +56,7 @@
             "create": "Création",
             "update": "Mise à jour",
             "delete": "Suppression",
+            "erasure": "Effacer les données personnelles",
             "set": "Ensemble d'actions",
             "webhook": "Webhook",
             "email": "Envoyer un e-mail",
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "L'expression ne peut pas être vide.",
         "forEditModeOnly": "L'action \"%s\" n'est disponible qu'en mode modification et ne peut pas être utilisée ici.",
-        "actionTypeDisabledForTargetEntity": "Le type d'action \"%1$s\" ne peut pas être utilisé, car cette action est désactivée pour l'entité \"%2$s\"."
+        "actionTypeDisabledForTargetEntity": "Le type d'action \"%1$s\" ne peut pas être utilisé, car cette action est désactivée pour l'entité \"%2$s\".",
+        "entityDoesNotContainPersonalData": "L'entité '%s' ne contient pas de données personnelles"
     }
 }

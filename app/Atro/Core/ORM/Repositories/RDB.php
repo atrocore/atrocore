@@ -12,6 +12,8 @@
 namespace Atro\Core\ORM\Repositories;
 
 use Atro\Core\ErasureResolver\AbstractErasureResolver;
+use Atro\DTOs\Erasure\ErasureDataDTO;
+use Atro\DTOs\Erasure\ErasureFieldDataDTO;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
@@ -1354,15 +1356,14 @@ class RDB extends \Espo\ORM\Repositories\RDB
             ->executeStatement();
     }
 
-    /**
-     * @param array $processed records that are already erased, prevents endless loops for cascade erasure
-     */
-    public function erasePersonalData(Entity $entity, array &$processed = []): void
+    public function erasePersonalData(ErasureDataDTO $data): void
     {
-        if (isset($processed[$this->entityType][$entity->id])) {
+        if ($data->isProcessed()) {
             return;
         }
-        $processed[$this->entityType][$entity->id] = true;
+        $data->markProcessed();
+
+        $entity = $data->entity;
 
         $erasedFields = [];
         foreach (($this->getPersonalDataFields($entity->id) ?? []) as $field) {
@@ -1372,12 +1373,14 @@ class RDB extends \Espo\ORM\Repositories\RDB
                 continue;
             }
 
+            $fieldData = new ErasureFieldDataDTO($data, $field);
+
             $resolver = $this->getErasureResolver($fieldDefs['erasureMode']);
-            if (!$resolver->supports($entity, $field)) {
+            if (!$resolver->supports($fieldData)) {
                 throw new Error("No erasure resolver supports field '$field' of entity '$this->entityType' for record '$entity->id'.");
             }
 
-            if ($resolver->resolve($entity, $field, $processed)) {
+            if ($resolver->resolve($fieldData)) {
                 $erasedFields[] = $field;
             }
         }
@@ -1385,7 +1388,11 @@ class RDB extends \Espo\ORM\Repositories\RDB
         if (!empty($erasedFields)) {
             $entity->set('erasedAt', (new \DateTime())->format('Y-m-d H:i:s'));
 
-            $this->getEntityManager()->saveEntity($entity, ['erasePersonalData' => true, 'erasedFields' => $erasedFields]);
+            $this->getEntityManager()->saveEntity($entity, [
+                'erasePersonalData'   => true,
+                'erasedFields'        => $erasedFields,
+                'erasedAutomatically' => $data->automatically,
+            ]);
         }
     }
 

@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Wykonaj",
         "Parameters": "Parametry",
-        "fieldsPanel": "Aktualizuj"
+        "fieldsPanel": "Aktualizuj",
+        "erasureActionName": "Usuń dane osobowe: %s"
     },
     "actions": {
         "allLogs": "Wszystkie dzienniki"
@@ -67,6 +68,7 @@
             "update": "Aktualizuj",
             "create": "Utwórz",
             "delete": "Usuń",
+            "erasure": "Usuń dane osobowe",
             "createOrUpdate": "Tworzenie lub aktualizacja",
             "custom": "Kod niestandardowy"
         },
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "Wyrażenie nie może być puste.",
         "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta.",
-        "actionTypeDisabledForTargetEntity": "Typu akcji \"%1$s\" nie można użyć, ponieważ ta akcja jest wyłączona dla encji \"%2$s\"."
+        "actionTypeDisabledForTargetEntity": "Typu akcji \"%1$s\" nie można użyć, ponieważ ta akcja jest wyłączona dla encji \"%2$s\".",
+        "entityDoesNotContainPersonalData": "Encja '%s' nie zawiera danych osobowych"
     }
 }

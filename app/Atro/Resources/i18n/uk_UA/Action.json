@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Виконати",
         "Parameters": "Параметри",
-        "fieldsPanel": "Оновлення"
+        "fieldsPanel": "Оновлення",
+        "erasureActionName": "Стерти персональні дані: %s"
     },
     "actions": {
         "allLogs": "Всі журнали"
@@ -55,6 +56,7 @@
             "create": "Створити",
             "update": "Оновити",
             "delete": "Видалити",
+            "erasure": "Стерти персональні дані",
             "set": "Набір дій",
             "email": "Відправити лист",
             "webhook": "Веб-гачок",
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "Вираз не може бути порожнім.",
         "forEditModeOnly": "Дія \"%s\" доступна лише в режимі редагування і не може бути використана тут.",
-        "actionTypeDisabledForTargetEntity": "Тип дії \"%1$s\" не можна використати, оскільки ця дія вимкнена для сутності \"%2$s\"."
+        "actionTypeDisabledForTargetEntity": "Тип дії \"%1$s\" не можна використати, оскільки ця дія вимкнена для сутності \"%2$s\".",
+        "entityDoesNotContainPersonalData": "Сутність '%s' не містить персональних даних"
     }
 }

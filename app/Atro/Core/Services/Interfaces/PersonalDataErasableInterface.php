@@ -20,5 +20,5 @@ interface PersonalDataErasableInterface
 {
     public function massErasePersonalData(array $params): array;
 
-    public function erasePersonalData(string $id): bool;
+    public function erasePersonalData(string $id, bool $automatically = false): bool;
 }

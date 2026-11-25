@@ -29,7 +29,7 @@ class Service extends AbstractListener
             return;
         }
 
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) === 'ReferenceData') {
+        if (in_array($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']), ['ReferenceData', 'Archive'], true)) {
             return;
         }
 

@@ -414,7 +414,7 @@ class Metadata extends AbstractMetadataListener
     protected function preparePersonalDataTables(array &$data): void
     {
         foreach (array_keys($data['entityDefs']) as $scope) {
-            if (($data['scopes'][$scope]['type'] ?? null) === 'ReferenceData' || empty($data['scopes'][$scope]['containsPersonalData'])) {
+            if (in_array($data['scopes'][$scope]['type'] ?? null, ['ReferenceData', 'Archive'], true) || empty($data['scopes'][$scope]['containsPersonalData'])) {
                 continue;
             }
 
@@ -439,10 +439,6 @@ class Metadata extends AbstractMetadataListener
                 'type' => 'datetime',
                 'readOnly' => true,
             ];
-
-            if (!in_array('erasePersonalData', $data['clientDefs'][$scope]['massActionList'] ?? [])) {
-                $data['clientDefs'][$scope]['massActionList'][] = 'erasePersonalData';
-            }
 
             $data['entityDefs'][$scope . 'PersonalData'] = [
                 'fields'        => [
