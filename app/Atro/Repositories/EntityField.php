@@ -155,6 +155,11 @@ class EntityField extends ReferenceData
             return null;
         }
 
+        // a scope without a type is not an entity, e.g. a table of the system that is defined only by its entityDefs
+        if (empty($this->getMetadata()->get("scopes.$entityName.type"))) {
+            return null;
+        }
+
         if (!empty($this->getMetadata()->get("scopes.$entityName.emHidden"))) {
             return null;
         }
@@ -327,6 +332,10 @@ class EntityField extends ReferenceData
 
         $items = [];
         foreach ($entities as $entityName) {
+            if (empty($this->getMetadata()->get("scopes.$entityName.type"))) {
+                continue;
+            }
+
             if (!$filterIsMultilang) {
                 $items[] = [
                     'id'          => "{$entityName}_id",

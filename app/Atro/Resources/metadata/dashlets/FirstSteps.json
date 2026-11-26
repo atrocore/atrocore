@@ -7,7 +7,7 @@
         "required": true
       },
       "completedSteps": {
-        "type": "jsonArray"
+        "type": "array"
       }
     },
     "defaults": {
