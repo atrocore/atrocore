@@ -199,6 +199,7 @@
     "personalData": "Personal Data"
   },
   "exceptions": {
+    "customFieldCannotBeReset": "The field \"%s\" is custom and has no default configuration.",
     "defaultEnumValueCannotBeEmpty": "The default value has to be selected for a required list field.",
     "defaultValueIsNotOption": "The default value \"%s\" is not an option of the field.",
     "defaultUnitIsNotOfMeasure": "The default unit \"%s\" is not a unit of the measure of the field.",

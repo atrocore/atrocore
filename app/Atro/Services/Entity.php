@@ -16,7 +16,6 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\DataManager;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Services\ReferenceData;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -29,7 +28,7 @@ class Entity extends ReferenceData
         }
 
         if ($this->getMetadata()->get("scopes.$scope.isCustom")) {
-            throw new Error("Can't reset to defaults custom entity '$scope'.");
+            throw new BadRequest(sprintf($this->container->get('language')->translate('customEntityCannotBeReset', 'exceptions', 'Entity'), $scope));
         }
 
         @unlink("data/metadata/clientDefs/{$scope}.json");

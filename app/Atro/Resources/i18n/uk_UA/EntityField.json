@@ -199,6 +199,7 @@
         "personalData": "Персональні дані"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Поле \"%s\" кастомне й не має конфігурації за замовчуванням.",
         "defaultEnumValueCannotBeEmpty": "Для обов'язкового поля-списку треба вибрати значення за замовчуванням.",
         "defaultValueIsNotOption": "Значення за замовчуванням \"%s\" не є опцією поля.",
         "defaultUnitIsNotOfMeasure": "Одиниця за замовчуванням \"%s\" не належить мірі поля.",

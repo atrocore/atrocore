@@ -199,6 +199,7 @@
         "personalData": "Personenbezogene Daten"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Das Feld \"%s\" ist benutzerdefiniert und hat keine Standardkonfiguration.",
         "defaultEnumValueCannotBeEmpty": "Für ein Pflicht-Listenfeld muss ein Standardwert ausgewählt werden.",
         "defaultValueIsNotOption": "Der Standardwert \"%s\" ist keine Option des Feldes.",
         "defaultUnitIsNotOfMeasure": "Die Standardeinheit \"%s\" ist keine Einheit der Maßeinheit des Feldes.",

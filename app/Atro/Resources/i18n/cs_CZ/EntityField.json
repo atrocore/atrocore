@@ -199,6 +199,7 @@
         "personalData": "Osobní údaje"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Pole „%s“ je vlastní a nemá výchozí konfiguraci.",
         "nullValuesExist": "Některé záznamy mají nulové hodnoty",
         "fieldIsUsedInUniqueIndex": "Pole '%s' je použito v unikátním indexu nebo indexech '%s' a nelze jej smazat.",
         "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty",

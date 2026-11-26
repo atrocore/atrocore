@@ -100,6 +100,7 @@
         "supertypeEntity": "Az entitás, amelyet ez az altípus kiterjeszt. Az altípus csak a saját mezőit tárolja, minden közös adat a szuperentitásban tárolódik. Az altípus kódjának a szuperentitás kódjával kell kezdődnie, amelyet a „Type” követ, például „ExportFeedTypeSimple”."
     },
     "exceptions": {
+        "customEntityCannotBeReset": "A(z) „%s” entitás egyéni, ezért nincs alapértelmezett konfigurációja.",
         "derivativeCannotBeDuplicated": "A származtatott entitás nem duplikálható. Hozzon létre új származtatott entitást az elsődleges entitásból.",
         "derivativeWithSuchRoleExists": "Már létezik ilyen szerepkörű származtatott entitás.",
         "derivativeFromDerivativeNotSupporting": "Másik származtatott entitásból nem hozható létre származtatott entitás.",

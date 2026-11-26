@@ -199,6 +199,7 @@
         "personalData": "Données personnelles"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Le champ « %s » est personnalisé et n’a pas de configuration par défaut.",
         "nullValuesExist": "Certains enregistrements ont des valeurs nulles",
         "fieldIsUsedInUniqueIndex": "Le champ '%s' est utilisé dans le ou les index uniques '%s' et ne peut pas être supprimé.",
         "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut",

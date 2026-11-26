@@ -199,6 +199,7 @@
         "personalData": "Személyes adat"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "A(z) „%s” mező egyéni, ezért nincs alapértelmezett konfigurációja.",
         "defaultEnumValueCannotBeEmpty": "A kötelező listamezőhöz ki kell választani az alapértelmezett értéket.",
         "defaultValueIsNotOption": "A „%s” alapértelmezett érték nem választható a mezőben.",
         "defaultUnitIsNotOfMeasure": "Az alapértelmezett „%s” mértékegység nem tartozik a mező mértékegységéhez.",

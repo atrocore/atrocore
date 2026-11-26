@@ -199,6 +199,7 @@
         "personalData": "Dane osobowe"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Pole „%s” jest niestandardowe i nie ma konfiguracji domyślnej.",
         "nullValuesExist": "Niektóre rekordy mają wartości null",
         "fieldIsUsedInUniqueIndex": "Pole '%s' jest używane w indeksie lub indeksach unikalnych '%s' i nie może zostać usunięte.",
         "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej",

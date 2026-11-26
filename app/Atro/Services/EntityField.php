@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\ReferenceData;
@@ -128,7 +128,7 @@ class EntityField extends ReferenceData
         }
 
         if (!empty($entity->get('isCustom'))) {
-            throw new Error("Can't reset to defaults custom entity field '{$entity->get('code')}'.");
+            throw new BadRequest(sprintf($this->container->get('language')->translate('customFieldCannotBeReset', 'exceptions', 'EntityField'), $entity->get('code')));
         }
 
         $this->getRepository()->resetToDefault($entity);
