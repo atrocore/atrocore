@@ -1,11 +1,26 @@
 {
-  "fields": {
-    "active": "Aktiv",
-    "available": "Nutzbar",
-    "validTill": "Gültig bis",
-    "allowedUsage": "Zulässige Nutzung",
-    "used": "Gebraucht",
-    "link": "Link",
-    "viewLink": "Link zur Ansicht"
-  }
+    "fields": {
+        "active": "Aktiv",
+        "available": "Nutzbar",
+        "validTill": "Gültig bis",
+        "allowedUsage": "Zulässige Nutzung",
+        "used": "Gebraucht",
+        "link": "Link",
+        "viewLink": "Link zur Ansicht",
+        "limitUsage": "Nutzungslimit",
+        "expires": "Läuft ab"
+    },
+    "tooltips": {
+        "available": "Gibt an, ob der Link die Datei aktuell öffnet: Er ist aktiv, nicht abgelaufen und das Nutzungslimit ist nicht erreicht.",
+        "active": "Ein inaktiver Link gibt „Nicht gefunden“ zurück.",
+        "link": "Öffentlicher Link zur Datei. Jeder, der über den Link verfügt, kann die Datei ohne Anmeldung öffnen.",
+        "limitUsage": "Begrenzen Sie, wie oft der Link geöffnet werden kann.",
+        "used": "Wie oft der Link geöffnet wurde. Jede Anfrage zählt, auch das Anzeigen der Datei im Browser.",
+        "expires": "Legen Sie fest, dass der Link nur bis zu einem bestimmten Datum und einer bestimmten Uhrzeit funktioniert.",
+        "allowedUsage": "Wie oft der Link geöffnet werden kann. Wenn die Anzahl der Nutzungen diesen Wert erreicht, gibt der Link „Zugriff verweigert“ zurück.",
+        "validTill": "Nach diesem Datum und dieser Uhrzeit gibt der Link „Zugriff verweigert“ zurück."
+    },
+    "labels": {
+        "Access Restrictions": "Zugriffsbeschränkungen"
+    }
 }
