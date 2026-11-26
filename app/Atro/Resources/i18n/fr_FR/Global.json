@@ -1201,6 +1201,7 @@
     "childsMustBeArchived": "L'élément (parent) ne peut être archivé que si tous les éléments enfants le sont également.",
     "noOptionsDefined": "Les options pour le champ \"%s\" ne sont pas définies.",
     "codeInvalid": "Le code n'est pas valide. Le code doit être unique. Seuls les lettres, les chiffres et le caractère \"_\" sont attendus.",
+    "massUpdateNoFieldsToUpdate": "Cette mise à jour en masse ne contient aucun champ que vous êtes autorisé à modifier.",
     "editedByAnotherUser": "Les données [%s] ont été modifié entre-temps. Vous pouvez <a href=\"javascript:\" onclick=\"location.reload();\">recharger la page</a> pour voir les nouvelles valeurs, revenir à la modification en appuyant sur \"Annuler\" ou écraser les données en appuyant sur \"Appliquer\". Voulez-vous écraser les données ?",
     "suchItemNameCannotBeUsedHere": "Un dossier/fichier portant ce nom existe déjà dans le dossier de destination. Veuillez choisir un autre dossier ou modifier le nom et réessayer.",
     "imageRatioValidationFailed": "L'image doit avoir une proportion de %s.",
