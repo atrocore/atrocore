@@ -1,11 +1,26 @@
 {
-  "fields": {
-    "active": "Aktivní",
-    "available": "Dostupné na",
-    "validTill": "Platnost do",
-    "allowedUsage": "Povolené použití",
-    "used": "Použité",
-    "link": "Odkaz",
-    "viewLink": "Odkaz pro prohlížení"
-  }
+    "fields": {
+        "active": "Aktivní",
+        "available": "Dostupné na",
+        "validTill": "Platnost do",
+        "allowedUsage": "Povolené použití",
+        "used": "Použité",
+        "link": "Odkaz",
+        "viewLink": "Odkaz pro prohlížení",
+        "limitUsage": "Limit použití",
+        "expires": "Vyprší"
+    },
+    "tooltips": {
+        "available": "Zda odkaz právě teď umožňuje otevřít soubor: je aktivní, nevypršel a nebyl dosažen limit použití.",
+        "active": "Neaktivní odkaz vrací „Nenalezeno“.",
+        "link": "Veřejný odkaz na soubor. Každý, kdo má tento odkaz, může soubor otevřít bez přihlášení.",
+        "limitUsage": "Omezte počet otevření odkazu.",
+        "used": "Kolikrát byl odkaz otevřen. Počítá se každý požadavek, včetně zobrazení souboru v prohlížeči.",
+        "expires": "Nastavte, aby odkaz fungoval pouze do určeného data a času.",
+        "allowedUsage": "Kolikrát lze odkaz otevřít. Když hodnota „Použité“ dosáhne tohoto čísla, odkaz vrátí „Zakázáno“.",
+        "validTill": "Po tomto datu a čase odkaz vrátí „Zakázáno“."
+    },
+    "labels": {
+        "Access Restrictions": "Omezení přístupu"
+    }
 }
