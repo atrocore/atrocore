@@ -1,11 +1,26 @@
 {
-  "fields": {
-    "active": "Actif",
-    "available": "Disponible",
-    "validTill": "Valable jusqu'au",
-    "allowedUsage": "Utilisation autorisée",
-    "used": "Utilisé",
-    "link": "Lien",
-    "viewLink": "Lien pour la visualisation"
-  }
+    "fields": {
+        "active": "Actif",
+        "available": "Disponible",
+        "validTill": "Valable jusqu'au",
+        "allowedUsage": "Utilisation autorisée",
+        "used": "Utilisé",
+        "link": "Lien",
+        "viewLink": "Lien pour la visualisation",
+        "limitUsage": "Limite d’utilisation",
+        "expires": "Expire le"
+    },
+    "tooltips": {
+        "available": "Indique si le lien permet d’ouvrir le fichier actuellement : il est actif, n’a pas expiré et sa limite d’utilisation n’est pas atteinte.",
+        "active": "Un lien inactif renvoie « Introuvable ».",
+        "link": "Lien public vers le fichier. Toute personne disposant du lien peut ouvrir le fichier sans se connecter.",
+        "limitUsage": "Limiter le nombre d’ouvertures du lien.",
+        "used": "Nombre de fois où le lien a été ouvert. Chaque requête est comptabilisée, y compris l’affichage du fichier dans un navigateur.",
+        "expires": "Faire en sorte que le lien ne soit valable que jusqu’à une date et une heure précises.",
+        "allowedUsage": "Nombre de fois où le lien peut être ouvert. Lorsque « Utilisé » atteint ce nombre, le lien renvoie « Interdit ».",
+        "validTill": "Après cette date et cette heure, le lien renvoie « Interdit »."
+    },
+    "labels": {
+        "Access Restrictions": "Restrictions d’accès"
+    }
 }
