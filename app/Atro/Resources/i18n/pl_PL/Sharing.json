@@ -1,11 +1,26 @@
 {
-  "fields": {
-    "active": "Aktywny",
-    "available": "Dostępny",
-    "validTill": "Ważne do",
-    "allowedUsage": "Dozwolone użycie",
-    "link": "Link",
-    "viewLink": "Link do podglądu",
-    "used": "Używany"
-  }
+    "fields": {
+        "active": "Aktywny",
+        "available": "Dostępny",
+        "validTill": "Ważne do",
+        "allowedUsage": "Dozwolone użycie",
+        "link": "Link",
+        "viewLink": "Link do podglądu",
+        "used": "Używany",
+        "limitUsage": "Limit użyć",
+        "expires": "Wygasa"
+    },
+    "tooltips": {
+        "available": "Określa, czy link umożliwia obecnie otwarcie pliku: jest aktywny, nie wygasł i nie osiągnięto limitu użyć.",
+        "active": "Nieaktywny link zwraca „Nie znaleziono”.",
+        "link": "Publiczny link do pliku. Każdy, kto ma link, może otworzyć plik bez logowania.",
+        "limitUsage": "Ogranicz liczbę otwarć linku.",
+        "used": "Liczba otwarć linku. Każde żądanie jest zliczane, również wyświetlenie pliku w przeglądarce.",
+        "expires": "Ustaw datę i godzinę, do których link będzie działać.",
+        "allowedUsage": "Określa, ile razy można otworzyć link. Po osiągnięciu tej liczby w polu „Użyto” link zwraca komunikat „Zabronione”.",
+        "validTill": "Po tej dacie i godzinie link zwraca komunikat „Zabronione”."
+    },
+    "labels": {
+        "Access Restrictions": "Ograniczenia dostępu"
+    }
 }
