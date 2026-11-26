@@ -1,11 +1,26 @@
 {
-  "fields": {
-    "active": "Attivo",
-    "available": "Disponibile",
-    "validTill": "Valido fino al",
-    "allowedUsage": "Uso consentito",
-    "used": "Usato",
-    "link": "Link",
-    "viewLink": "Link per la visualizzazione"
-  }
+    "fields": {
+        "active": "Attivo",
+        "available": "Disponibile",
+        "validTill": "Valido fino al",
+        "allowedUsage": "Uso consentito",
+        "used": "Usato",
+        "link": "Link",
+        "viewLink": "Link per la visualizzazione",
+        "limitUsage": "Limite di utilizzo",
+        "expires": "Scade"
+    },
+    "tooltips": {
+        "available": "Indica se il link consente di aprire il file in questo momento: è attivo, non è scaduto e il limite di utilizzo non è stato raggiunto.",
+        "active": "Un link inattivo restituisce \"Non trovato\".",
+        "link": "Link pubblico al file. Chiunque disponga del link può aprire il file senza effettuare l'accesso.",
+        "limitUsage": "Limita il numero di aperture del link.",
+        "used": "Numero di aperture del link. Ogni richiesta viene conteggiata, inclusa la visualizzazione del file in un browser.",
+        "expires": "Imposta una data e un'ora di scadenza per il link.",
+        "allowedUsage": "Numero di aperture consentite per il link. Quando \"Usato\" raggiunge questo numero, il link restituisce \"Vietato\".",
+        "validTill": "Dopo questa data e ora, il link restituisce \"Vietato\"."
+    },
+    "labels": {
+        "Access Restrictions": "Restrizioni di accesso"
+    }
 }
