@@ -16,6 +16,7 @@ namespace Atro\Core\Services\Traits;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Utils\Language;
 
 /**
  * Updating, deleting and restoring the records in bulk.
@@ -32,6 +33,11 @@ trait MassActionsTrait
         $data->__massUpdate = true;
 
         $this->filterInput($data);
+
+        $fields = array_filter(array_keys(get_object_vars($data)), fn($key) => !str_starts_with((string)$key, '_'));
+        if (empty($fields)) {
+            throw new Forbidden($this->getLanguage()->translate('massUpdateNoFieldsToUpdate', 'exceptions'));
+        }
 
         $params['action']             = 'update';
         $params['maxCountWithoutJob'] = $params['maxCountWithoutJob'] ?? $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
@@ -130,5 +136,10 @@ trait MassActionsTrait
         return $this
             ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => $result]))
             ->getArgument('result');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->container->get('language');
     }
 }
