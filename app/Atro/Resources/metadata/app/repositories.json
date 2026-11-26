@@ -4,5 +4,6 @@
   "EntityFieldTypeInt": "\\Atro\\Repositories\\EntityFieldTypeInt",
   "EntityFieldTypeFloat": "\\Atro\\Repositories\\EntityFieldTypeFloat",
   "EntityFieldTypeRangeInt": "\\Atro\\Repositories\\EntityFieldTypeRangeInt",
-  "EntityFieldTypeRangeFloat": "\\Atro\\Repositories\\EntityFieldTypeRangeFloat"
+  "EntityFieldTypeRangeFloat": "\\Atro\\Repositories\\EntityFieldTypeRangeFloat",
+  "EntityFieldTypeLink": "\\Atro\\Repositories\\EntityFieldTypeLink"
 }

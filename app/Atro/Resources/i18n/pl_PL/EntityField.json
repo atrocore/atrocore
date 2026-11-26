@@ -213,6 +213,7 @@
         "defaultValueIsLessThanMin": "Wartość domyślna %s jest mniejsza niż wartość minimalna %s.",
         "defaultValueIsGreaterThanMax": "Wartość domyślna %s jest większa niż wartość maksymalna %s.",
         "defaultFromIsGreaterThanDefaultTo": "Wartość domyślna „Od” %s jest większa niż wartość domyślna „Do” %s.",
+        "defaultRecordIsNotFound": "Domyślny rekord „%s” nie istnieje.",
         "onlyOneSlugFieldAllowed": "Tylko jedno pole w tej encji może być oznaczone jako slug. Pole „%s” jest już oznaczone jako slug.",
         "slugFieldMustBeUnique": "Pole musi być unikatowe, aby można było użyć go jako slug.",
         "invalidSlugFieldType": "Jako slug można oznaczyć tylko pola typu varchar, int lub autoinkrementujące.",

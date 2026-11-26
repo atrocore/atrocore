@@ -206,6 +206,7 @@
         "defaultValueIsLessThanMin": "Der Standardwert %s ist kleiner als der Mindestwert %s.",
         "defaultValueIsGreaterThanMax": "Der Standardwert %s ist größer als der Höchstwert %s.",
         "defaultFromIsGreaterThanDefaultTo": "Der Standardwert \"Von\" %s ist größer als der Standardwert \"Bis\" %s.",
+        "defaultRecordIsNotFound": "Der Standarddatensatz \"%s\" existiert nicht.",
         "nullValuesExist": "Einige Datensätze haben Nullwerte",
         "fieldIsUsedInUniqueIndex": "Das Feld '%s' wird im Unique-Index bzw. in den Unique-Indizes '%s' verwendet und kann nicht gelöscht werden.",
         "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen",

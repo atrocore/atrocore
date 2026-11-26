@@ -213,6 +213,7 @@
         "defaultValueIsLessThanMin": "Il valore predefinito %s è minore del valore minimo %s.",
         "defaultValueIsGreaterThanMax": "Il valore predefinito %s è maggiore del valore massimo %s.",
         "defaultFromIsGreaterThanDefaultTo": "Il valore predefinito \"Da\" %s è maggiore del valore predefinito \"A\" %s.",
+        "defaultRecordIsNotFound": "Il record predefinito \"%s\" non esiste.",
         "onlyOneSlugFieldAllowed": "È possibile contrassegnare come slug un solo campo per questa entità. Il campo '%s' è già contrassegnato come slug.",
         "slugFieldMustBeUnique": "Il campo deve essere univoco per essere utilizzato come slug.",
         "invalidSlugFieldType": "Solo i campi varchar, int o autoincremento possono essere contrassegnati come slug.",

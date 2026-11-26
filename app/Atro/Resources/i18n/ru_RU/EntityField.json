@@ -212,6 +212,7 @@
         "defaultValueIsLessThanMin": "Значение по умолчанию %s меньше минимального значения %s.",
         "defaultValueIsGreaterThanMax": "Значение по умолчанию %s больше максимального значения %s.",
         "defaultFromIsGreaterThanDefaultTo": "Значение по умолчанию «От» %s больше значения по умолчанию «До» %s.",
+        "defaultRecordIsNotFound": "Запись по умолчанию «%s» не существует.",
         "optionCodeShouldBeUnique": "Код опции должен быть уникальным.",
         "onlyOneSlugFieldAllowed": "Для этой Сущности только одно поле может быть помечено как слаг. Поле «%s» уже помечено как слаг.",
         "slugFieldMustBeUnique": "Поле должно быть уникальным, чтобы использоваться как слаг.",

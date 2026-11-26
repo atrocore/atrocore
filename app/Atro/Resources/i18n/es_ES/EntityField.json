@@ -211,6 +211,7 @@
         "defaultValueIsLessThanMin": "El valor predeterminado %s es menor que el valor mínimo %s.",
         "defaultValueIsGreaterThanMax": "El valor predeterminado %s es mayor que el valor máximo %s.",
         "defaultFromIsGreaterThanDefaultTo": "El valor predeterminado \"Desde\" %s es mayor que el valor predeterminado \"Hasta\" %s.",
+        "defaultRecordIsNotFound": "El registro predeterminado \"%s\" no existe.",
         "optionCodeUsedInDisabledOptionsRules": "La opción '%s' se usa en las reglas de opciones deshabilitadas y no se puede cambiar.",
         "optionCodeUsedInDisabledOptionsRulesDelete": "La opción '%s' se usa en las reglas de opciones deshabilitadas y no se puede eliminar.",
         "onlyOneSlugFieldAllowed": "Solo se puede marcar un campo como slug para esta entidad. El campo '%s' ya está marcado como slug.",

@@ -206,6 +206,7 @@
     "defaultValueIsLessThanMin": "The default value %s is less than the min value %s.",
     "defaultValueIsGreaterThanMax": "The default value %s is greater than the max value %s.",
     "defaultFromIsGreaterThanDefaultTo": "The default value \"From\" %s is greater than the default value \"To\" %s.",
+    "defaultRecordIsNotFound": "The default record \"%s\" does not exist.",
     "nullValuesExist": "Some records have null values",
     "fieldIsUsedInUniqueIndex": "The field '%s' is used in the unique index(es) '%s' and cannot be deleted.",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
