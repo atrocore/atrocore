@@ -1570,7 +1570,7 @@ class Metadata extends AbstractMetadataListener
             }
 
             foreach ($scopeData['links'] ?? [] as $linkName => $linkData) {
-                if (empty($linkData['foreignName']) && !empty($linkData['entity'])) {
+                if (empty($data['entityDefs'][$scope]['links'][$linkName]['foreignName']) && !empty($linkData['entity'])) {
                     $nameField = $data['scopes'][$linkData['entity']]['nameField'] ?? null;
                     if (!empty($nameField) && !empty($data['entityDefs'][$linkData['entity']]['fields'][$nameField])) {
                         $data['entityDefs'][$scope]['links'][$linkName]['foreignName'] = $nameField;
