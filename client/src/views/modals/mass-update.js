@@ -228,7 +228,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             }
 
             if ((this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit') || []).includes(name)) {
-                // return;
+                return;
             }
 
             let cellHtml = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
