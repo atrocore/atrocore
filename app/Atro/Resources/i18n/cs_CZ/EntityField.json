@@ -215,6 +215,7 @@
         "defaultValueIsGreaterThanMax": "Výchozí hodnota %s je větší než maximální hodnota %s.",
         "defaultFromIsGreaterThanDefaultTo": "Výchozí hodnota „Od“ %s je větší než výchozí hodnota „Do“ %s.",
         "defaultRecordIsNotFound": "Výchozí záznam „%s“ neexistuje.",
+        "defaultValueIsNotDate": "Výchozí hodnota „%s“ není platné datum.",
         "notCustomFieldCannotBeDeleted": "Pole „%s“ poskytuje systém nebo modul a nelze ho smazat.",
         "onlyOneSlugFieldAllowed": "Jako slug lze pro tuto entitu označit pouze jedno pole. Pole „%s“ je již označeno jako slug.",
         "slugFieldMustBeUnique": "Pole musí mít jedinečnou hodnotu, aby ho bylo možné použít jako slug.",

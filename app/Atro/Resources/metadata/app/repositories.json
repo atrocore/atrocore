@@ -5,5 +5,7 @@
   "EntityFieldTypeFloat": "\\Atro\\Repositories\\EntityFieldTypeFloat",
   "EntityFieldTypeRangeInt": "\\Atro\\Repositories\\EntityFieldTypeRangeInt",
   "EntityFieldTypeRangeFloat": "\\Atro\\Repositories\\EntityFieldTypeRangeFloat",
-  "EntityFieldTypeLink": "\\Atro\\Repositories\\EntityFieldTypeLink"
+  "EntityFieldTypeLink": "\\Atro\\Repositories\\EntityFieldTypeLink",
+  "EntityFieldTypeDate": "\\Atro\\Repositories\\EntityFieldTypeDate",
+  "EntityFieldTypeDatetime": "\\Atro\\Repositories\\EntityFieldTypeDatetime"
 }

@@ -213,6 +213,7 @@
         "defaultValueIsGreaterThanMax": "El valor predeterminado %s es mayor que el valor máximo %s.",
         "defaultFromIsGreaterThanDefaultTo": "El valor predeterminado \"Desde\" %s es mayor que el valor predeterminado \"Hasta\" %s.",
         "defaultRecordIsNotFound": "El registro predeterminado \"%s\" no existe.",
+        "defaultValueIsNotDate": "El valor predeterminado \"%s\" no es una fecha válida.",
         "notCustomFieldCannotBeDeleted": "El campo \"%s\" lo proporciona el sistema o un módulo y no se puede eliminar.",
         "optionCodeUsedInDisabledOptionsRules": "La opción '%s' se usa en las reglas de opciones deshabilitadas y no se puede cambiar.",
         "optionCodeUsedInDisabledOptionsRulesDelete": "La opción '%s' se usa en las reglas de opciones deshabilitadas y no se puede eliminar.",

@@ -64,6 +64,12 @@
       ],
       [
         {
+          "name": "default"
+        },
+        false
+      ],
+      [
+        {
           "name": "tooltip"
         },
         false
