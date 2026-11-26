@@ -608,6 +608,10 @@ class Metadata
         return !file_exists($filePath) || unlink($filePath);
     }
 
+    /**
+     * The entity class: the class set in app.entities, then the class of the module of the entity, then the class of
+     * Atro, then the template of the entity type.
+     */
     public function getEntityPath(string $entityName, string $delim = '\\'): string
     {
         // for derivative entities
@@ -615,28 +619,13 @@ class Metadata
             $entityName = $primaryEntityId;
         }
 
-        $entityName = $this->getReferenceDataSupertype($entityName) ?? $entityName;
-
-        $path = $this->getScopePath($entityName, $delim);
-
-        $path = implode($delim, [$path, 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
-
-        if (!class_exists($path)) {
-            $path = implode($delim, ['Atro', 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
-        }
-
-        if (!class_exists($path)) {
-            $path = implode($delim, ['Espo', 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
-        }
-
-        if (!class_exists($path)) {
-            $type = $this->get("scopes.$entityName.type");
-            $path = "\\Atro\\Core\\Templates\\Entities\\$type";
-        }
-
-        return $path;
+        return $this->getScopeClass($entityName, 'entities', 'Entities', $delim);
     }
 
+    /**
+     * The repository class: the class set in app.repositories, then the class of the module of the entity, then the
+     * class of Atro, then the template of the entity type.
+     */
     public function getRepositoryPath(string $entityName, string $delim = '\\'): string
     {
         // for derivative entities
@@ -649,39 +638,25 @@ class Metadata
             $entityName = $entityId;
         }
 
-        $entityName = $this->getReferenceDataSupertype($entityName) ?? $entityName;
-
-        $path = $this->getScopePath($entityName, $delim);
-
-        $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
-
-        if (!class_exists($path)) {
-            $path = implode($delim, ['Atro', 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
-        }
-
-        if (!class_exists($path)) {
-            $path = implode($delim, ['Espo', 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
-        }
-
-        if (!class_exists($path)) {
-            $type = $this->get("scopes.$entityName.type");
-            $path = "\\Atro\\Core\\Templates\\Repositories\\$type";
-        }
-
-        return $path;
+        return $this->getScopeClass($entityName, 'repositories', 'Repositories', $delim);
     }
 
-    /**
-     * The records of a subtype of a reference data entity are the records of the supertype, they are served by the
-     * classes of the supertype.
-     */
-    public function getReferenceDataSupertype(string $entityName): ?string
+    protected function getScopeClass(string $entityName, string $appKey, string $folder, string $delim): string
     {
-        if ($this->get("scopes.$entityName.type") !== 'ReferenceData') {
-            return null;
+        if (!empty($className = $this->get(['app', $appKey, $entityName]))) {
+            return $delim === '\\' ? $className : str_replace('\\', $delim, ltrim($className, '\\'));
         }
 
-        return $this->get("scopes.$entityName.supertypeId");
+        $className = Util::normilizeClassName(ucfirst($entityName));
+
+        foreach (array_unique(array_filter([$this->getScopeModuleName($entityName), 'Atro'])) as $namespace) {
+            $path = implode($delim, [$namespace, $folder, $className]);
+            if (class_exists($path)) {
+                return $path;
+            }
+        }
+
+        return "\\Atro\\Core\\Templates\\$folder\\" . $this->get("scopes.$entityName.type");
     }
 
     /**
@@ -725,23 +700,6 @@ class Metadata
     public function getConfig(): Config
     {
         return $this->container->get('config');
-    }
-
-    public function getScopePath(string $scopeName, string $delim = '/'): string
-    {
-        $moduleName = $this->getScopeModuleName($scopeName);
-
-        if ($moduleName == 'TreoCore') {
-            $moduleName = 'Treo';
-        }
-
-        $path = ($moduleName !== false) ? $moduleName : 'Treo';
-
-        if ($delim != '/') {
-            $path = str_replace('/', $delim, $path);
-        }
-
-        return $path;
     }
 
     protected function clearMetadata(array &$data): void

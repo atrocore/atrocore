@@ -406,6 +406,81 @@ A repository takes the services it needs from the container when it needs them: 
 $thumbnail = $this->container->get(\Atro\Core\Utils\Thumbnail::class);
 ```
 
+### Repository Class Resolution
+
+The repository class of an entity is the first one found:
+
+1. the class set in `app.repositories`;
+2. `{Module}\Repositories\{EntityName}`, where `{Module}` is `module` of the scope of the entity;
+3. `Atro\Repositories\{EntityName}`;
+4. `Atro\Core\Templates\Repositories\{Type}`.
+
+A derivative entity is served by the repository of its primary entity. A subtype of a `ReferenceData` entity is served by the repository of its supertype.
+
+### Replacing a Repository
+
+Set the class in `app/Resources/metadata/app/repositories.json` of your module:
+
+```json
+{
+  "Product": "\\CustomModule\\Repositories\\Product"
+}
+```
+
+The class extends the repository it replaces:
+
+```php
+<?php
+
+namespace CustomModule\Repositories;
+
+use Espo\ORM\Entity;
+
+class Product extends \Pim\Repositories\Product
+{
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->get('quantity') < 0) {
+            throw new \Atro\Core\Exceptions\BadRequest('The quantity cannot be negative.');
+        }
+    }
+}
+```
+
+The same way a subtype of a `ReferenceData` entity gets its own repository, which extends the repository of the supertype:
+
+```json
+{
+  "EntityFieldTypeInt": "\\Atro\\Repositories\\EntityFieldTypeInt"
+}
+```
+
+```php
+<?php
+
+namespace Atro\Repositories;
+
+use Espo\ORM\Entity;
+
+class EntityFieldTypeInt extends EntityField
+{
+    protected function validateDefaultValue(Entity $entity): void
+    {
+        parent::validateDefaultValue($entity);
+
+        // the validation of the int field
+    }
+}
+```
+
+Clear the cache after changing `repositories.json`:
+
+```bash
+php console.php clear cache
+```
+
 ### Using Custom Repository Methods
 
 ```php

@@ -1,0 +1,8 @@
+{
+  "Note": "\\Espo\\Repositories\\Note",
+  "Notification": "\\Espo\\Repositories\\Notification",
+  "EntityFieldTypeInt": "\\Atro\\Repositories\\EntityFieldTypeInt",
+  "EntityFieldTypeFloat": "\\Atro\\Repositories\\EntityFieldTypeFloat",
+  "EntityFieldTypeRangeInt": "\\Atro\\Repositories\\EntityFieldTypeRangeInt",
+  "EntityFieldTypeRangeFloat": "\\Atro\\Repositories\\EntityFieldTypeRangeFloat"
+}

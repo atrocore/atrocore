@@ -2595,6 +2595,8 @@ class Metadata extends AbstractMetadataListener
             // a subtype of a reference data entity is served by the classes of the supertype
             if (($scopeDefs['type'] ?? null) === 'ReferenceData') {
                 $data['app']['services'][$scope] ??= $this->getServiceClass($data, $supertype);
+                $data['app']['entities'][$scope] ??= $this->getScopeClass($data, $supertype, 'entities', 'Entities');
+                $data['app']['repositories'][$scope] ??= $this->getScopeClass($data, $supertype, 'repositories', 'Repositories');
             }
         }
 
@@ -2659,6 +2661,26 @@ class Metadata extends AbstractMetadataListener
         }
 
         return "\\Atro\\Core\\Templates\\Services\\" . $data['scopes'][$scope]['type'];
+    }
+
+    /**
+     * The entity or the repository class of the scope: the class set in app.entities / app.repositories, then the
+     * class of the module of the scope, then the class of Atro, then the template of the entity type.
+     */
+    protected function getScopeClass(array $data, string $scope, string $appKey, string $folder): string
+    {
+        if (!empty($data['app'][$appKey][$scope])) {
+            return $data['app'][$appKey][$scope];
+        }
+
+        $className = Util::normilizeClassName(ucfirst($scope));
+        foreach (array_unique([$data['scopes'][$scope]['module'] ?? 'Atro', 'Atro']) as $namespace) {
+            if (class_exists("\\$namespace\\$folder\\$className")) {
+                return "\\$namespace\\$folder\\$className";
+            }
+        }
+
+        return "\\Atro\\Core\\Templates\\$folder\\" . $data['scopes'][$scope]['type'];
     }
 
     /**
