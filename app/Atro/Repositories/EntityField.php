@@ -891,7 +891,8 @@ class EntityField extends ReferenceData
                 throw new Conflict("Entity field '{$entity->get('foreignCode')}' is already exists.");
             }
 
-            if ($entity->get('type') === 'linkMultiple') {
+            // only a many-to-many relation has a middle table
+            if ($entity->get('type') === 'linkMultiple' && $entity->get('relationType') === 'manyToMany') {
                 if (
                     empty($entity->get('relationName'))
                     || !preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $entity->get('relationName'))
