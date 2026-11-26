@@ -131,7 +131,7 @@ class EntityField extends ReferenceData
             throw new Error("Can't reset to defaults custom entity field '{$entity->get('code')}'.");
         }
 
-        $this->getEntityManager()->removeEntity($entity);
+        $this->getRepository()->resetToDefault($entity);
 
         return true;
     }

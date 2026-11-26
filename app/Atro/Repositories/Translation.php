@@ -62,6 +62,42 @@ class Translation extends Base
         }
     }
 
+    /**
+     * The translation gets the values of the modules again, a translation that no module has is deleted.
+     */
+    public function resetTranslation(string $scope, string $category, string $name): void
+    {
+        $code = "$scope.$category.$name";
+
+        $translation = $this->findByCode($code);
+        if (empty($translation)) {
+            return;
+        }
+
+        $language = $this->container->get('language');
+        $default  = $language->getSimplifiedTranslates($language->getModulesData())[$code] ?? null;
+        if ($default === null) {
+            $this->deleteTranslation($scope, $category, $name);
+            return;
+        }
+
+        $row = [
+            'id'                  => $translation->get('id'),
+            'code'                => $code,
+            'module'              => $default['module'],
+            'customizedLanguages' => json_encode([]),
+        ];
+        foreach ($translation->entityDefs['fields'] as $field => $defs) {
+            if (!empty($defs['isValue'])) {
+                $row[$field] = $default[$field] ?? null;
+            }
+        }
+
+        $this->bulkUpdate([$row]);
+        unset($this->cachedCodes[$code]);
+        $this->refreshTimestamp([]);
+    }
+
     public function setTranslationOption(string $scope, string $field, string $name, string $value): void
     {
         $code = "$scope.options.$field.$name";

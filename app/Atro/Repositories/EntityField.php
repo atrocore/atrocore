@@ -1408,6 +1408,21 @@ class EntityField extends ReferenceData
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
     }
 
+    /**
+     * A field of the system or of a module gets its default configuration: its parameters, its label and its tooltip.
+     */
+    public function resetToDefault(OrmEntity $entity): void
+    {
+        $this->deleteFromMetadata($entity);
+        $this->getMetadata()->save();
+
+        foreach (['fields', 'tooltips'] as $category) {
+            $this->getTranslationRepository()->resetTranslation($entity->get('entityId'), $category, $entity->get('code'));
+        }
+
+        $this->getDataManager()->rebuild();
+    }
+
     public function containsPersonalData(OrmEntity $entity): bool
     {
         if ($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'containsPersonalData'], false)
