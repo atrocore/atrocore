@@ -6,6 +6,21 @@
         "allowedUsage": "Engedélyezett használat",
         "used": "Felhasználva",
         "link": "Hivatkozás",
-        "viewLink": "Megtekintési hivatkozás"
+        "viewLink": "Megtekintési hivatkozás",
+        "limitUsage": "Használati korlát",
+        "expires": "Lejárat"
+    },
+    "tooltips": {
+        "available": "Megnyitja-e a hivatkozás a fájlt jelenleg: aktív, még nem járt le, és a használati korlátot sem érte el.",
+        "active": "Az inaktív hivatkozás „Nem található” választ ad.",
+        "link": "Nyilvános hivatkozás a fájlhoz. A hivatkozással bárki bejelentkezés nélkül megnyithatja a fájlt.",
+        "limitUsage": "Korlátozza, hogy hányszor nyitható meg a hivatkozás.",
+        "used": "A hivatkozás megnyitásainak száma. Minden kérés beleszámít, a fájl böngészőben történő megtekintése is.",
+        "expires": "A hivatkozás csak a megadott dátumig és időpontig legyen érvényes.",
+        "allowedUsage": "Hányszor nyitható meg a hivatkozás. Amikor a „Használat” eléri ezt a számot, a hivatkozás „Hozzáférés megtagadva” választ ad.",
+        "validTill": "E dátum és idő után a hivatkozás „Hozzáférés megtagadva” választ ad."
+    },
+    "labels": {
+        "Access Restrictions": "Hozzáférési korlátozások"
     }
 }
