@@ -1,11 +1,26 @@
 {
-  "fields": {
-    "active": "Activo",
-    "available": "Disponible",
-    "validTill": "Válido hasta",
-    "allowedUsage": "Uso permitido",
-    "used": "Usado",
-    "link": "Enlace",
-    "viewLink": "Enlace para ver"
-  }
+    "fields": {
+        "active": "Activo",
+        "available": "Disponible",
+        "validTill": "Válido hasta",
+        "allowedUsage": "Uso permitido",
+        "used": "Usado",
+        "link": "Enlace",
+        "viewLink": "Enlace para ver",
+        "limitUsage": "Límite de uso",
+        "expires": "Caducidad"
+    },
+    "tooltips": {
+        "available": "Indica si el enlace permite abrir el archivo en este momento: está activo, no ha caducado y no se ha alcanzado su límite de uso.",
+        "active": "Un enlace inactivo devuelve «No encontrado».",
+        "link": "Enlace público al archivo. Cualquier persona que tenga el enlace puede abrir el archivo sin iniciar sesión.",
+        "limitUsage": "Limite el número de veces que se puede abrir el enlace.",
+        "used": "Número de veces que se ha abierto el enlace. Cada solicitud cuenta, incluida la visualización del archivo en un navegador.",
+        "expires": "Configure el enlace para que funcione solo hasta una fecha y hora determinadas.",
+        "allowedUsage": "Número de veces que se puede abrir el enlace. Cuando «Usado» alcance este número, el enlace devolverá «Prohibido».",
+        "validTill": "Después de esta fecha y hora, el enlace devolverá «Prohibido»."
+    },
+    "labels": {
+        "Access Restrictions": "Restricciones de acceso"
+    }
 }
