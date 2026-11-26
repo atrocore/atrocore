@@ -153,7 +153,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
                         this.addField(name, label);
 
-                        if (model.get('isMultilang')) {
+                        if (this.getMetadata().get(['entityDefs', this.scope, 'fields', name, 'isMultilang'])) {
                             $.each(this.getMetadata().get(`entityDefs.${this.scope}.fields`) || {}, (field, fieldDefs) => {
                                 if (fieldDefs.multilangField === name) {
                                     this.addField(field, this.translate(field, 'fields', this.scope));
@@ -226,6 +226,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             if (this.fieldList.includes(name)) {
                 return;
             }
+
+            if ((this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit') || []).includes(name)) {
+                // return;
+            }
+
             let cellHtml = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
             let $container = this.$el.find('.fields-container');
             let $lastRow = $container.children('.row').last();
