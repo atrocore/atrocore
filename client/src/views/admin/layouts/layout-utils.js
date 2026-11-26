@@ -166,7 +166,7 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                             this.wait(true);
                             this.notify('Loading...');
 
-                            this.ajaxGetRequest('Translation', {where: [{type: 'textFilter', value: key}]}, {async: false}).then(res => {
+                            this.ajaxGetRequest('Translation', {where: [{type: 'equals', field: 'code', value: key}]}, {async: false}).then(res => {
                                 if (res.list[0]) {
                                     data = res.list[0];
                                 }
@@ -175,7 +175,7 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                             if (!data) {
                                 let globalKey = `Global.fields.${field}`;
 
-                                this.ajaxGetRequest('Translation', {where: [{type: 'textFilter', value: globalKey}]}, {async: false}).then(res => {
+                                this.ajaxGetRequest('Translation', {where: [{type: 'equals', field: 'code', value: globalKey}]}, {async: false}).then(res => {
                                     if (res.list[0]) {
                                         data = res.list[0];
                                     } else {
