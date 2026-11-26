@@ -214,6 +214,7 @@
         "defaultValueIsGreaterThanMax": "La valeur par défaut %s est supérieure à la valeur maximale %s.",
         "defaultFromIsGreaterThanDefaultTo": "La valeur par défaut « De » %s est supérieure à la valeur par défaut « À » %s.",
         "defaultRecordIsNotFound": "L’enregistrement par défaut « %s » n’existe pas.",
+        "notCustomFieldCannotBeDeleted": "Le champ « %s » est fourni par le système ou un module et ne peut pas être supprimé.",
         "onlyOneSlugFieldAllowed": "Un seul champ peut être défini comme slug pour cette entité. Le champ « %s » est déjà défini comme slug.",
         "slugFieldMustBeUnique": "Le champ doit être unique pour être utilisé comme slug.",
         "invalidSlugFieldType": "Seuls les champs varchar, int ou autoincrement peuvent être définis comme slug.",

@@ -213,6 +213,7 @@
         "defaultValueIsGreaterThanMax": "Значение по умолчанию %s больше максимального значения %s.",
         "defaultFromIsGreaterThanDefaultTo": "Значение по умолчанию «От» %s больше значения по умолчанию «До» %s.",
         "defaultRecordIsNotFound": "Запись по умолчанию «%s» не существует.",
+        "notCustomFieldCannotBeDeleted": "Поле «%s» предоставляется системой или модулем и не может быть удалено.",
         "optionCodeShouldBeUnique": "Код опции должен быть уникальным.",
         "onlyOneSlugFieldAllowed": "Для этой Сущности только одно поле может быть помечено как слаг. Поле «%s» уже помечено как слаг.",
         "slugFieldMustBeUnique": "Поле должно быть уникальным, чтобы использоваться как слаг.",

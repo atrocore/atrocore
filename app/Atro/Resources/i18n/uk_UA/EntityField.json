@@ -207,6 +207,7 @@
         "defaultValueIsGreaterThanMax": "Значення за замовчуванням %s більше за максимальне значення %s.",
         "defaultFromIsGreaterThanDefaultTo": "Значення за замовчуванням «Від» %s більше за значення за замовчуванням «До» %s.",
         "defaultRecordIsNotFound": "Запис за замовчуванням \"%s\" не існує.",
+        "notCustomFieldCannotBeDeleted": "Поле \"%s\" надається системою або модулем і не може бути видалене.",
         "nullValuesExist": "Деякі записи мають нульові значення",
         "fieldIsUsedInUniqueIndex": "Поле '%s' використовується в унікальному індексі(ах) '%s' і не може бути видалене.",
         "cannotAddRequiredFieldWithExistingRecords": "Ви не можете додати обов'язкове поле до існуючих записів без значення за замовчуванням",

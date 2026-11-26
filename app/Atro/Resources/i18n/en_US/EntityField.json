@@ -207,6 +207,7 @@
     "defaultValueIsGreaterThanMax": "The default value %s is greater than the max value %s.",
     "defaultFromIsGreaterThanDefaultTo": "The default value \"From\" %s is greater than the default value \"To\" %s.",
     "defaultRecordIsNotFound": "The default record \"%s\" does not exist.",
+    "notCustomFieldCannotBeDeleted": "The field \"%s\" is provided by the system or a module and cannot be deleted.",
     "nullValuesExist": "Some records have null values",
     "fieldIsUsedInUniqueIndex": "The field '%s' is used in the unique index(es) '%s' and cannot be deleted.",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",

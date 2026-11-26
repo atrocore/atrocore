@@ -794,6 +794,15 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        // the fields of the system and of the modules, and the fields of a derived entity taken from its primary entity
+        $primaryEntityId = $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId");
+        if (
+            empty($entity->get('isCustom'))
+            || (!empty($primaryEntityId) && !empty($this->getMetadata()->get("entityDefs.$primaryEntityId.fields.{$entity->get('code')}.type")))
+        ) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('notCustomFieldCannotBeDeleted', 'exceptions', 'EntityField'), $entity->get('code')));
+        }
+
         $this->validateFieldIsNotUsedInUniqueIndex((string)$entity->get('entityId'), (string)$entity->get('code'));
 
         // a link field is removed together with its foreign field
