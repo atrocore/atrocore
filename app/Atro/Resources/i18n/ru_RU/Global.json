@@ -177,7 +177,8 @@
         "BlockingRuleTypeFieldContains": "Правило блокировки: поле содержит",
         "BlockingRuleTypeSet": "Правило блокировки: набор",
         "BlockingRuleTypeExpression": "Правило блокировки: выражение",
-        "OauthClientClaim": "Утверждение клиента OAuth"
+        "OauthClientClaim": "Утверждение клиента OAuth",
+        "ActionTypeErasure": "Действие: Удаление персональных данных"
     },
     "scopeNamesPlural": {
         "SoftwarePackage": "Программные пакеты",
@@ -344,7 +345,8 @@
         "BlockingRuleTypeFieldContains": "Правило блокировки: поле содержит",
         "BlockingRuleTypeSet": "Правило блокировки: набор",
         "BlockingRuleTypeExpression": "Правило блокировки: выражение",
-        "OauthClientClaim": "Утверждения клиента OAuth"
+        "OauthClientClaim": "Утверждения клиента OAuth",
+        "ActionTypeErasure": "Действие: Удалить персональные данные"
     },
     "labels": {
         "backgroundProcessingNotWorking": "Фоновая обработка не работает. Скорее всего, crontab настроен неправильно или есть проблема на сервере. Пожалуйста, обратитесь к инструкции по установке.",
@@ -1120,7 +1122,8 @@
         "updateFromToInThis": "{user} в этом {entityType} обновил {relatedEntityType} {relatedEntity}.",
         "changed": "был изменен",
         "eraseThis": "Персональные данные этой записи удалены пользователем {user} {datetime}.",
-        "erase": "Персональные данные сущности {entityType} {entity} удалены пользователем {user} {datetime}."
+        "erase": "Персональные данные сущности {entityType} {entity} удалены пользователем {user} {datetime}.",
+        "eraseAutomaticallyThis": "Персональные данные в этой записи были автоматически удалены {datetime}."
     },
     "streamMessagesMale": {
         "postTargetSelfAndOthers": "{user} оставил сообщение для {target} и для себя"
@@ -1777,7 +1780,8 @@
         "BlockingRuleTypeFieldSimilar": "Выбирает кандидатов, значение поля которых совпадает без учёта регистра и пробелов.",
         "BlockingRuleTypeFieldContains": "Выбирает кандидатов, значение поля которых содержит значение записи.",
         "BlockingRuleTypeSet": "Объединяет несколько правил с помощью AND или OR.",
-        "BlockingRuleTypeExpression": "Выбирает кандидатов с помощью выражения ExpressionLanguage."
+        "BlockingRuleTypeExpression": "Выбирает кандидатов с помощью выражения ExpressionLanguage.",
+        "ActionTypeErasure": "Удаляет персональные данные выбранных или найденных записей целевой сущности в соответствии с режимом удаления каждого поля."
     },
     "scopeDescriptions": {
         "Action": "Выполняет операцию с записями: например, создаёт, обновляет или удаляет их, отправляет электронное письмо или вызывает вебхук. Может запускаться вручную, в рамках рабочего процесса или по расписанию.",
