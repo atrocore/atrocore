@@ -35,7 +35,8 @@
     "labels": {
         "execute": "Выполнить",
         "Parameters": "Параметры",
-        "fieldsPanel": "Обновить"
+        "fieldsPanel": "Обновить",
+        "erasureActionName": "Удаление персональных данных: %s"
     },
     "actions": {
         "allLogs": "Все журналы"
@@ -68,7 +69,8 @@
             "update": "Обновить",
             "delete": "Удалить",
             "createOrUpdate": "Создать или обновить",
-            "custom": "Пользовательский код"
+            "custom": "Пользовательский код",
+            "erasure": "Удаление персональных данных"
         },
         "executeAs": {
             "system": "Система",
@@ -91,6 +93,7 @@
     "exceptions": {
         "expressionCannotBeEmpty": "Выражение не может быть пустым.",
         "forEditModeOnly": "Действие '%s' доступно только в режиме редактирования и не может быть использовано здесь.",
-        "actionTypeDisabledForTargetEntity": "Type действия «%1$s» нельзя использовать, поскольку это действие отключено для сущности «%2$s»."
+        "actionTypeDisabledForTargetEntity": "Type действия «%1$s» нельзя использовать, поскольку это действие отключено для сущности «%2$s».",
+        "entityDoesNotContainPersonalData": "Сущность '%s' не содержит персональных данных"
     }
 }
