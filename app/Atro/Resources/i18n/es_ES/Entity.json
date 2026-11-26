@@ -100,6 +100,7 @@
         "supertypeEntity": "La entidad que amplía este subtipo. El subtipo almacena solo sus propios campos; todos los datos comunes se almacenan en el supertipo. El código del subtipo debe comenzar con el código del supertipo seguido de \"Type\", por ejemplo, \"ExportFeedTypeSimple\"."
     },
     "exceptions": {
+        "customEntityCannotBeReset": "La entidad \"%s\" es personalizada y no tiene una configuración predeterminada.",
         "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} y {children} no deben estar ambos en Relaciones que afectan a la fecha/hora de modificación.",
         "entityAlreadyHasAttributesInUse": "No se puede desactivar el parámetro Atributo. Por favor, elimine primero todos los atributos relacionados.",
         "entityHasDirectlyLinkedAttributes": "Ya existen atributos vinculados directamente. Por favor, elimínelos de los registros.",

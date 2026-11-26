@@ -80,6 +80,10 @@
         }
       }
     },
+    "default": {
+      "type": "date",
+      "tooltip": true
+    },
     "useNumericFormat": {
       "type": "bool"
     },

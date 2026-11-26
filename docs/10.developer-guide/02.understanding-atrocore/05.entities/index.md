@@ -798,6 +798,49 @@ $capitalizedName = $manufacturer->getCapitalizedName();
 echo "Manufacturer: {$capitalizedName}";
 ```
 
+### Entity Class Resolution
+
+The entity class is the first one found:
+
+1. the class set in `app.entities`;
+2. `{Module}\Entities\{EntityName}`, where `{Module}` is `module` of the scope of the entity;
+3. `Atro\Entities\{EntityName}`;
+4. `Atro\Core\Templates\Entities\{Type}`.
+
+A derivative entity uses the class of its primary entity. A subtype of a `ReferenceData` entity uses the class of its supertype.
+
+### Replacing an Entity Class
+
+Set the class in `app/Resources/metadata/app/entities.json` of your module:
+
+```json
+{
+  "Product": "\\CustomModule\\Entities\\Product"
+}
+```
+
+The class extends the class it replaces:
+
+```php
+<?php
+
+namespace CustomModule\Entities;
+
+class Product extends \Pim\Entities\Product
+{
+    public function getFullName(): string
+    {
+        return $this->get('sku') . ' ' . $this->get('name');
+    }
+}
+```
+
+Clear the cache after changing `entities.json`:
+
+```bash
+php console.php clear cache
+```
+
 ### Available Base Entity Methods
 
 | Method                       | Description              | Usage                                 |

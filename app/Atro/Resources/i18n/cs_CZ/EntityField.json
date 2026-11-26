@@ -199,6 +199,7 @@
         "personalData": "Osobní údaje"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Pole „%s“ je vlastní a nemá výchozí konfiguraci.",
         "nullValuesExist": "Některé záznamy mají nulové hodnoty",
         "fieldIsUsedInUniqueIndex": "Pole '%s' je použito v unikátním indexu nebo indexech '%s' a nelze jej smazat.",
         "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty",
@@ -209,6 +210,13 @@
         "defaultEnumValueCannotBeEmpty": "U povinného pole typu seznam je nutné vybrat výchozí hodnotu.",
         "defaultValueIsNotOption": "Výchozí hodnota „%s“ není mezi možnostmi tohoto pole.",
         "defaultUnitIsNotOfMeasure": "Výchozí jednotka „%s“ není jednotkou měřicí veličiny tohoto pole.",
+        "minIsGreaterThanMax": "Minimální hodnota %s je větší než maximální hodnota %s.",
+        "defaultValueIsLessThanMin": "Výchozí hodnota %s je menší než minimální hodnota %s.",
+        "defaultValueIsGreaterThanMax": "Výchozí hodnota %s je větší než maximální hodnota %s.",
+        "defaultFromIsGreaterThanDefaultTo": "Výchozí hodnota „Od“ %s je větší než výchozí hodnota „Do“ %s.",
+        "defaultRecordIsNotFound": "Výchozí záznam „%s“ neexistuje.",
+        "defaultValueIsNotDate": "Výchozí hodnota „%s“ není platné datum.",
+        "notCustomFieldCannotBeDeleted": "Pole „%s“ poskytuje systém nebo modul a nelze ho smazat.",
         "onlyOneSlugFieldAllowed": "Jako slug lze pro tuto entitu označit pouze jedno pole. Pole „%s“ je již označeno jako slug.",
         "slugFieldMustBeUnique": "Pole musí mít jedinečnou hodnotu, aby ho bylo možné použít jako slug.",
         "invalidSlugFieldType": "Jako slug lze označit pouze pole typu varchar, int nebo autoincrement.",

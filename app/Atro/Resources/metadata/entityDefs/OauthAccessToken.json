@@ -13,7 +13,7 @@
       "len": 36
     },
     "scopes": {
-      "type": "jsonArray"
+      "type": "array"
     },
     "expiresAt": {
       "type": "datetime"

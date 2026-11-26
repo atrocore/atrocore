@@ -10,8 +10,9 @@ Entities are created with a default set of system fields, which provide the basi
 
 Field modification restrictions apply based on field origin:
 
--   **Predefined fields** in predefined entities cannot be deleted
--   **Default fields** (like Name, Description) in any entity cannot be deleted
+-   **Custom fields** - the fields you have created - can be deleted. They have no default configuration, so **Reset to default** is not offered for them.
+-   **Fields of AtroCore and its modules** (like Name, Description in predefined entities) cannot be deleted. Their configuration can be changed and returned to the delivered one by the **Reset to default** action: it restores the parameters of the field, its name and its tooltip.
+-   **Fields of a derived entity** that it takes from its primary entity cannot be deleted or edited in the derived entity.
 -   **System fields** (like ID, Created At, Created By, etc.) have restrictions on property modification. Some properties (like tooltip) can be customized, while critical properties cannot be changed
 
 The Fields panel in an Entity record displays all fields contained within the entity, providing a comprehensive view of the entity's data structure.
@@ -28,13 +29,13 @@ The Fields panel in an Entity record displays all fields contained within the en
 
 ### Required Fields
 
-When creating a new field, the following fields must be configured:
+Creating a field starts with choosing its type in the **Entity Field: Select type** dialog, where the types are grouped, e.g. Numeric, Character, Date / Time. The form of the field opens after that with the options of the chosen type. The following fields must be configured:
 
 | **Field Name** | **Description**                                                                                                                          |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | Name           | Field name in the main language. Can be localized — see [Labels](../../13.user-interface/03.labels/index.md#alternative-editing-methods). |
 | Code           | Unique field identifier within the entity. Initially duplicates the field name but can be customized.                                    |
-| Type           | Defines the field's data type and behavior. The available configuration options vary depending on the selected type                      |
+| Type           | Defines the field's data type and behavior, chosen in the dialog. The available configuration options vary depending on the selected type |
 | Entity         | The entity to which the field belongs.                                                                                                   |
 
 > Code, Type, Entity values cannot be changed after field creation.
@@ -53,9 +54,17 @@ Uses a static value as the default. The specified value is automatically assigne
 ![Basic Value Type](./_assets/Basic-Value-Type.png){.small}
 
 -  Script
-Uses a dynamic value generated from a [Twig](../../../10.developer-guide/80.twig-tutorial/index.md) template. The template is evaluated during record creation, allowing the default value to be calculated based on system data, current user information, dates, or other available variables.
+Uses a dynamic value generated from a [Twig](../../../10.developer-guide/80.twig-tutorial/index.md) template. The template is evaluated during record creation, allowing the default value to be calculated based on system data, current user information, dates, or other available variables. Available for the [String](../02.data-types/index.md#string), [Text](../02.data-types/index.md#text), [HTML](../02.data-types/index.md#html) and [Markdown](../02.data-types/index.md#markdown) types; other types have a static default value only.
 
 ![Script Value Type](./_assets/Script-Value-Type.png){.small}
+
+A static default value has to be a valid value of the field, otherwise the field cannot be saved:
+
+- a number is within **Min** and **Max**, and **Min** is not greater than **Max**;
+- **Default From** of a range is not greater than **Default To**;
+- a value of a [List](../02.data-types/index.md#list) is one of its options;
+- a value of a [Link](../02.data-types/index.md#link) is an existing record of the foreign entity;
+- a [Date](../02.data-types/index.md#date) is a calendar date, a [Date-time](../02.data-types/index.md#date-time) a date with time.
 
 #### Behavior
 - Default values are applied only when a new record is created.

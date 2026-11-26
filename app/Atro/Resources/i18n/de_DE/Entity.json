@@ -100,6 +100,7 @@
         "supertypeEntity": "Die Entität, von der dieser Untertyp abgeleitet wird. Der Untertyp speichert nur seine eigenen Felder; alle gemeinsamen Daten werden im Supertyp gespeichert. Der Code des Untertyps muss mit dem Code des Supertyps beginnen, gefolgt von \"Type\", z. B. \"ExportFeedTypeSimple\"."
     },
     "exceptions": {
+        "customEntityCannotBeReset": "Die Entität \"%s\" ist benutzerdefiniert und hat keine Standardkonfiguration.",
         "entityAlreadyHasAttributesInUse": "Has Attribut param kann nicht deaktiviert werden. Bitte entfernen Sie zuerst alle zugehörigen Attribute.",
         "entityHasDirectlyLinkedAttributes": "Es gibt bereits direkt verknüpfte Attribute. Bitte entfernen Sie diese aus den Datensätzen.",
         "entityTypeIsNotSuitableForAssociates": "Dieser Entitätstyp kann den Parameter \"Hat assoziierte Datensätze\" nicht enthalten. Nur \"Basis\" und \"Hierarchie\" dürfen ihn haben.",

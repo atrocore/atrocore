@@ -100,6 +100,7 @@
         "supertypeEntity": "L’entità estesa da questo sottotipo. Il sottotipo memorizza solo i propri campi, mentre tutti i dati comuni sono memorizzati nel supertipo. Il codice del sottotipo deve iniziare con il codice del supertipo seguito da \"Type\", ad esempio \"ExportFeedTypeSimple\"."
     },
     "exceptions": {
+        "customEntityCannotBeReset": "L'entità \"%s\" è personalizzata e non ha una configurazione predefinita.",
         "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} e {children} non dovrebbero essere entrambi nelle relazioni che influenzano la data/ora di modifica.",
         "entityAlreadyHasAttributesInUse": "Il parametro Has Attribute non può essere disattivato. Per favore, rimuova prima tutti gli attributi correlati.",
         "entityHasDirectlyLinkedAttributes": "Ci sono già degli attributi collegati direttamente. La preghiamo di rimuoverli dai record.",

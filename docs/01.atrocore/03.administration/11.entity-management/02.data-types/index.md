@@ -272,6 +272,7 @@ Calendar dates without time information. Date values are selected via a picker i
 - **Database Index**: Adds a database index for faster searching/filtering
 - **Unique**: Field value must be unique within the entity
 - **Use numeric format**: Displays the value using the format defined in your `Locale` settings. The default Locale uses `MM/DD/YYYY` format (e.g., `11/13/2025`).
+- **Default**: A date that is set by default, e.g. `12/01/2026`
 
 ### Date-time
 
@@ -282,10 +283,11 @@ Combined date and time information. The date-time picker allows precise time sel
 - **Database Index**: Adds a database index for faster searching/filtering
 - **Unique**: Field value must be unique within the entity
 - **Use numeric format**: Displays the value using the format defined in your `Locale` settings. The default Locale uses `MM/DD/YYYY HH:mm` format (e.g., `11/13/2025 14:30`).
+- **Default**: A date and time that are set by default, e.g. `12/01/2026 10:00`
 
 > For dates close to the current date, a relative format is used:
 - `Today` / `Today HH:mm` - for the current date
-- `Yesterday` / `Yesterday HH:mm` - for the previous dayTo change the date display or time formats, configure the `Date Format` or `Time Format` fields in your [Locale](../../02.locales/index.md) settings. This allows you to standardize date formatting across your organization or customize it for different regions.
+- `Yesterday` / `Yesterday HH:mm` - for the previous day
 - `Tomorrow` / `Tomorrow HH:mm` - for the next day
 
 ! To change the date display or time formats, configure the `Date Format` or `Time Format` fields in your [Locale](../../02.locales/index.md) settings. This allows you to standardize date formatting across your organization or customize it for different regions.
@@ -335,6 +337,7 @@ Reference to another entity record. Creates relationships between different enti
 - **Dropdown**: Displays the field as a dropdown selection in the UI.
 - **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
 - **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/index.md#filter-results) for the field.
+- **Default**: A record of the foreign entity that is set by default
 
 !! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 

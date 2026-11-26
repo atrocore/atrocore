@@ -100,6 +100,7 @@
         "supertypeEntity": "L’entité dont ce sous-type hérite. Le sous-type ne stocke que ses propres champs ; toutes les données communes sont stockées dans le supertype. Le code du sous-type doit commencer par le code du supertype, suivi de « Type », par exemple « ExportFeedTypeSimple »."
     },
     "exceptions": {
+        "customEntityCannotBeReset": "L’entité « %s » est personnalisée et n’a pas de configuration par défaut.",
         "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {children} ne doivent pas figurer tous les deux dans les relations affectant la date/l'heure de modification.",
         "entityAlreadyHasAttributesInUse": "\"A des attributs\" ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
         "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",

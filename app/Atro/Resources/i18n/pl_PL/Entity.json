@@ -100,6 +100,7 @@
         "supertypeEntity": "Encja, którą rozszerza ten podtyp. Podtyp przechowuje tylko własne pola, a wszystkie wspólne dane są przechowywane w typie nadrzędnym. Kod podtypu musi zaczynać się od kodu typu nadrzędnego, po którym następuje „Type”, np. „ExportFeedTypeSimple”."
     },
     "exceptions": {
+        "customEntityCannotBeReset": "Encja „%s” jest niestandardowa i nie ma konfiguracji domyślnej.",
         "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} i {children} nie powinny znajdować się jednocześnie w relacjach wpływających na datę/czas modyfikacji.",
         "entityAlreadyHasAttributesInUse": "Nie można dezaktywować parametru Has Attribute. Proszę najpierw usunąć wszystkie powiązane atrybuty.",
         "entityHasDirectlyLinkedAttributes": "Istnieją już bezpośrednio powiązane atrybuty. Proszę usunąć je z rekordów.",

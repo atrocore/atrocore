@@ -199,6 +199,7 @@
         "personalData": "Datos personales"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "El campo \"%s\" es personalizado y no tiene una configuración predeterminada.",
         "nullValuesExist": "Algunos registros tienen valores nulos",
         "fieldIsUsedInUniqueIndex": "El campo '%s' se utiliza en el índice o los índices únicos '%s' y no se puede eliminar.",
         "cannotAddRequiredFieldWithExistingRecords": "No se puede añadir un campo obligatorio con registros existentes sin valor por defecto",
@@ -207,6 +208,13 @@
         "defaultEnumValueCannotBeEmpty": "Debe seleccionarse el valor predeterminado para un campo de lista obligatorio.",
         "defaultValueIsNotOption": "El valor predeterminado \"%s\" no es una opción del campo.",
         "defaultUnitIsNotOfMeasure": "La unidad predeterminada \"%s\" no es una unidad de la magnitud del campo.",
+        "minIsGreaterThanMax": "El valor mínimo %s es mayor que el valor máximo %s.",
+        "defaultValueIsLessThanMin": "El valor predeterminado %s es menor que el valor mínimo %s.",
+        "defaultValueIsGreaterThanMax": "El valor predeterminado %s es mayor que el valor máximo %s.",
+        "defaultFromIsGreaterThanDefaultTo": "El valor predeterminado \"Desde\" %s es mayor que el valor predeterminado \"Hasta\" %s.",
+        "defaultRecordIsNotFound": "El registro predeterminado \"%s\" no existe.",
+        "defaultValueIsNotDate": "El valor predeterminado \"%s\" no es una fecha válida.",
+        "notCustomFieldCannotBeDeleted": "El campo \"%s\" lo proporciona el sistema o un módulo y no se puede eliminar.",
         "optionCodeUsedInDisabledOptionsRules": "La opción '%s' se usa en las reglas de opciones deshabilitadas y no se puede cambiar.",
         "optionCodeUsedInDisabledOptionsRulesDelete": "La opción '%s' se usa en las reglas de opciones deshabilitadas y no se puede eliminar.",
         "onlyOneSlugFieldAllowed": "Solo se puede marcar un campo como slug para esta entidad. El campo '%s' ya está marcado como slug.",

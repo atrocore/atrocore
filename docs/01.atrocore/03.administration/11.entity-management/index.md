@@ -12,20 +12,25 @@ To manage entities, go to `Administration / Entities`. Here you can create new e
 
 ![entity-details](./_assets/entity-details.png){.large}
 
-For an entity, the following record actions are available: Delete (available only for custom entities) and Duplicate. When an entity is duplicated, all of its fields are copied as well, except for fields of the [Multiple Link](02.data-types/index.md#multiple-link) type.
+For an entity, the following record actions are available:
+
+- **Delete** - only for custom entities. An entity that has [subtypes](01.entity-types/index.md#subtype) is deleted after its subtypes, a subtype is deleted after its records.
+- **Duplicate** - all fields of the entity are copied as well, except for fields of the [Multiple Link](02.data-types/index.md#multiple-link) type. Not available for derived entities.
+- **Reset to default** - only for the entities of AtroCore and its modules. The configuration of the entity returns to the one delivered by AtroCore or the module. A custom entity has no default configuration, so the action is not offered for it.
 
 ### Required fields
 
-The following fields must be filled when creating an entity:
+Creating an entity starts with choosing its type in the **Entity: Select type** dialog: [Base](01.entity-types/index.md#base), [Hierarchy](01.entity-types/index.md#hierarchy) or [Subtype](01.entity-types/index.md#subtype). The form of the entity opens after that. The following fields must be filled:
 
 | **Field Name** | **Description**                                                                         |
 | -------------- | --------------------------------------------------------------------------------------- |
-| Type           | Type of the entity. Only [Base](01.entity-types/index.md#base) and [Hierarchy](01.entity-types/index.md#hierarchy) entities can be created |
-| Code           | Entity name                                                                             |
+| Type           | Type of the entity, chosen in the dialog                                                |
+| Supertype      | Only for a Subtype: the entity the subtype extends                                      |
+| Code           | Entity name. The code of a subtype starts with the code of its supertype followed by `Type`, e.g. `ProductTypeBundle` |
 | Name Singular  | Singular name of the entity that will be displayed in the interface                     |
 | Name Plural    | The name of the entity in the plural that will be displayed in the interface            |
 
-> Code and Type cannot be changed after entity creation.
+> Type, Supertype and Code cannot be changed after entity creation.
 
 For detailed information about entity types and their capabilities, see [Entity Types](../11.entity-management/01.entity-types/).
 

@@ -199,9 +199,17 @@
         "personalData": "Personenbezogene Daten"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Das Feld \"%s\" ist benutzerdefiniert und hat keine Standardkonfiguration.",
         "defaultEnumValueCannotBeEmpty": "Für ein Pflicht-Listenfeld muss ein Standardwert ausgewählt werden.",
         "defaultValueIsNotOption": "Der Standardwert \"%s\" ist keine Option des Feldes.",
         "defaultUnitIsNotOfMeasure": "Die Standardeinheit \"%s\" ist keine Einheit der Maßeinheit des Feldes.",
+        "minIsGreaterThanMax": "Der Mindestwert %s ist größer als der Höchstwert %s.",
+        "defaultValueIsLessThanMin": "Der Standardwert %s ist kleiner als der Mindestwert %s.",
+        "defaultValueIsGreaterThanMax": "Der Standardwert %s ist größer als der Höchstwert %s.",
+        "defaultFromIsGreaterThanDefaultTo": "Der Standardwert \"Von\" %s ist größer als der Standardwert \"Bis\" %s.",
+        "defaultRecordIsNotFound": "Der Standarddatensatz \"%s\" existiert nicht.",
+        "defaultValueIsNotDate": "Der Standardwert \"%s\" ist kein gültiges Datum.",
+        "notCustomFieldCannotBeDeleted": "Das Feld \"%s\" wird vom System oder einem Modul bereitgestellt und kann nicht gelöscht werden.",
         "nullValuesExist": "Einige Datensätze haben Nullwerte",
         "fieldIsUsedInUniqueIndex": "Das Feld '%s' wird im Unique-Index bzw. in den Unique-Indizes '%s' verwendet und kann nicht gelöscht werden.",
         "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen",

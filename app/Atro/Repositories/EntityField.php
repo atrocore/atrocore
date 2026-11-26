@@ -155,6 +155,11 @@ class EntityField extends ReferenceData
             return null;
         }
 
+        // a scope without a type is not an entity, e.g. a table of the system that is defined only by its entityDefs
+        if (empty($this->getMetadata()->get("scopes.$entityName.type"))) {
+            return null;
+        }
+
         if (!empty($this->getMetadata()->get("scopes.$entityName.emHidden"))) {
             return null;
         }
@@ -327,6 +332,10 @@ class EntityField extends ReferenceData
 
         $items = [];
         foreach ($entities as $entityName) {
+            if (empty($this->getMetadata()->get("scopes.$entityName.type"))) {
+                continue;
+            }
+
             if (!$filterIsMultilang) {
                 $items[] = [
                     'id'          => "{$entityName}_id",
@@ -794,6 +803,15 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        // the fields of the system and of the modules, and the fields of a derived entity taken from its primary entity
+        $primaryEntityId = $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId");
+        if (
+            empty($entity->get('isCustom'))
+            || (!empty($primaryEntityId) && !empty($this->getMetadata()->get("entityDefs.$primaryEntityId.fields.{$entity->get('code')}.type")))
+        ) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('notCustomFieldCannotBeDeleted', 'exceptions', 'EntityField'), $entity->get('code')));
+        }
+
         $this->validateFieldIsNotUsedInUniqueIndex((string)$entity->get('entityId'), (string)$entity->get('code'));
 
         // a link field is removed together with its foreign field
@@ -873,7 +891,8 @@ class EntityField extends ReferenceData
                 throw new Conflict("Entity field '{$entity->get('foreignCode')}' is already exists.");
             }
 
-            if ($entity->get('type') === 'linkMultiple') {
+            // only a many-to-many relation has a middle table
+            if ($entity->get('type') === 'linkMultiple' && $entity->get('relationType') === 'manyToMany') {
                 if (
                     empty($entity->get('relationName'))
                     || !preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $entity->get('relationName'))
@@ -1397,6 +1416,21 @@ class EntityField extends ReferenceData
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
+    }
+
+    /**
+     * A field of the system or of a module gets its default configuration: its parameters, its label and its tooltip.
+     */
+    public function resetToDefault(OrmEntity $entity): void
+    {
+        $this->deleteFromMetadata($entity);
+        $this->getMetadata()->save();
+
+        foreach (['fields', 'tooltips'] as $category) {
+            $this->getTranslationRepository()->resetTranslation($entity->get('entityId'), $category, $entity->get('code'));
+        }
+
+        $this->getDataManager()->rebuild();
     }
 
     public function containsPersonalData(OrmEntity $entity): bool

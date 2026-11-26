@@ -199,6 +199,7 @@
         "personalData": "Dati personali"
     },
     "exceptions": {
+        "customFieldCannotBeReset": "Il campo \"%s\" è personalizzato e non ha una configurazione predefinita.",
         "nullValuesExist": "Alcuni record hanno valori nulli",
         "fieldIsUsedInUniqueIndex": "Il campo '%s' è utilizzato nell'indice o negli indici univoci '%s' e non può essere eliminato.",
         "cannotAddRequiredFieldWithExistingRecords": "Non può aggiungere un campo obbligatorio con record esistenti senza valore predefinito.",
@@ -209,6 +210,13 @@
         "defaultEnumValueCannotBeEmpty": "È necessario selezionare il valore predefinito per un campo elenco obbligatorio.",
         "defaultValueIsNotOption": "Il valore predefinito \"%s\" non è un'opzione del campo.",
         "defaultUnitIsNotOfMeasure": "L'unità predefinita \"%s\" non è un'unità di misura del campo.",
+        "minIsGreaterThanMax": "Il valore minimo %s è maggiore del valore massimo %s.",
+        "defaultValueIsLessThanMin": "Il valore predefinito %s è minore del valore minimo %s.",
+        "defaultValueIsGreaterThanMax": "Il valore predefinito %s è maggiore del valore massimo %s.",
+        "defaultFromIsGreaterThanDefaultTo": "Il valore predefinito \"Da\" %s è maggiore del valore predefinito \"A\" %s.",
+        "defaultRecordIsNotFound": "Il record predefinito \"%s\" non esiste.",
+        "defaultValueIsNotDate": "Il valore predefinito \"%s\" non è una data valida.",
+        "notCustomFieldCannotBeDeleted": "Il campo \"%s\" è fornito dal sistema o da un modulo e non può essere eliminato.",
         "onlyOneSlugFieldAllowed": "È possibile contrassegnare come slug un solo campo per questa entità. Il campo '%s' è già contrassegnato come slug.",
         "slugFieldMustBeUnique": "Il campo deve essere univoco per essere utilizzato come slug.",
         "invalidSlugFieldType": "Solo i campi varchar, int o autoincremento possono essere contrassegnati come slug.",
