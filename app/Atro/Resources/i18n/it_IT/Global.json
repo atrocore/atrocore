@@ -1586,6 +1586,7 @@
         "siteUrlEmpty": "L'URL del sito è vuoto",
         "codeInvalid": "Il codice non è valido. Il codice deve essere unico. Sono previsti solo lettere, numeri e il carattere \"_\".",
         "notDashletService": "Il servizio %s deve implementare l'interfaccia Dashlet",
+        "massUpdateNoFieldsToUpdate": "Questo aggiornamento di massa non contiene campi che ha il permesso di modificare.",
         "editedByAnotherUser": "Il set di dati [%s] è stato modificato nel frattempo. Può <a href=\"javascript:\" onclick=\"location.reload();\">ricaricare la pagina</a> per vedere i nuovi valori, tornare alla modifica premendo \"Annulla\" o sovrascrivere i dati premendo \"Applica\". Vuole sovrascrivere i dati?",
         "dontMatchToPattern": "Il valore del campo \"{field}\" non corrisponde al modello \"{pattern}\".",
         "notUniqueRecordField": "Il record non può essere salvato, il record con tale '%s' esiste già.",

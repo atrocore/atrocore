@@ -1526,6 +1526,7 @@
         "supertypeRecordIsNotFound": "A felettes típus rekordja nem található.",
         "recordWithoutSubtypeCannotBeRestored": "A rekord nem állítható vissza, mert egyetlen altípushoz sem tartozik.",
         "itselfAssociation": "A rekord nem társítható önmagához.",
+        "massUpdateNoFieldsToUpdate": "Ez a tömeges frissítés nem tartalmaz olyan mezőt, amelyet szerkeszthet.",
         "editedByAnotherUser": "Az adatkészlet [%s] időközben megváltozott. Az új értékek megtekintéséhez <a href=\"javascript:\" onclick=\"location.reload();\">az oldal újratöltése</a> válassza ezt a lehetőséget, a szerkesztéshez kattintson a „Mégse” gombra, vagy az adatok felülírásához kattintson az „Alkalmaz” gombra. Felül kívánja írni az adatokat?"
     },
     "firstStepsDashlet": {

@@ -1468,6 +1468,7 @@
         "siteUrlEmpty": "Adres URL witryny jest pusty",
         "codeInvalid": "Kod jest nieprawidłowy. Kod powinien być unikalny. Oczekiwane są tylko litery, cyfry i znak \"_\".",
         "notDashletService": "Usługa %s musi implementować interfejs Dashlet",
+        "massUpdateNoFieldsToUpdate": "Ta masowa aktualizacja nie zawiera pól, które możesz edytować.",
         "editedByAnotherUser": "Zestaw danych [%s] został zmieniony w międzyczasie. Możesz <a href=\"javascript:\" onclick=\"location.reload();\">odświeżyć stronę</a>, aby zobaczyć nowe wartości, wrócić do edycji, naciskając „Anuluj” lub nadpisać dane, naciskając „Zastosuj”. Czy chcesz nadpisać dane?",
         "dontMatchToPattern": "Wartość pola \"{field}\" nie odpowiada wzorowi \"{pattern}\".",
         "notUniqueValue": "Rekord nie może zostać utworzony/zaktualizowany z powodu ograniczeń bazy danych.",
