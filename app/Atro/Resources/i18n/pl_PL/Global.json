@@ -1514,7 +1514,8 @@
         "recordCannotBeDeleted": "Rekordów tej encji nie można usuwać.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Rekord podtypu można usunąć tylko razem z rekordem nadtypu.",
         "supertypeRecordIsNotFound": "Nie znaleziono rekordu nadtypu.",
-        "recordWithoutSubtypeCannotBeRestored": "Nie można przywrócić rekordu, ponieważ nie należy do żadnego podtypu."
+        "recordWithoutSubtypeCannotBeRestored": "Nie można przywrócić rekordu, ponieważ nie należy do żadnego podtypu.",
+        "treeParentCycle": "Rodzicem nie może być sam rekord ani żaden z jego potomków."
     },
     "queryBuilderFilter": {
         "add_rule": "Dodaj regułę",

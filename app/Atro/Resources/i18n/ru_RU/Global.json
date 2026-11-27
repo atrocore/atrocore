@@ -1513,7 +1513,8 @@
         "recordCannotBeDeleted": "Удаление записей этой сущности невозможно.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Запись подтипа можно удалить только вместе с записью супертипа.",
         "supertypeRecordIsNotFound": "Запись супертипа не найдена.",
-        "recordWithoutSubtypeCannotBeRestored": "Не удаётся восстановить запись, поскольку она не относится ни к одному подтипу."
+        "recordWithoutSubtypeCannotBeRestored": "Не удаётся восстановить запись, поскольку она не относится ни к одному подтипу.",
+        "treeParentCycle": "Родительской записью не может быть сама запись или один из её потомков."
     },
     "queryBuilderFilter": {
         "add_rule": "Добавить",

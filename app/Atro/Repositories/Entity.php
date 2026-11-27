@@ -104,6 +104,11 @@ class Entity extends ReferenceData
      */
     public const SUBTYPE_EDITABLE_FIELDS = ['name', 'namePlural', 'iconClass', 'description'];
 
+    /**
+     * Fields and relations generated for an entity with the enabled tree.
+     */
+    public const TREE_RESERVED_FIELDS = ['parent', 'children'];
+
     protected ?array $boolFields = null;
     protected function getEntityById($id)
     {
@@ -598,6 +603,8 @@ class Entity extends ReferenceData
 
         $this->validateSubtype($entity);
 
+        $this->validateTree($entity);
+
         if ($entity->isAttributeChanged('containsPersonalData') && !$entity->get('containsPersonalData')) {
             $entity->set('isPerson', false);
         }
@@ -620,6 +627,35 @@ class Entity extends ReferenceData
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    /**
+     * The tree can be enabled only for an entity of type Base, which has no own fields or relations with the names
+     * of the generated ones.
+     */
+    protected function validateTree(OrmEntity $entity): void
+    {
+        if (empty($entity->get('hasTree')) || !$entity->isAttributeChanged('hasTree')) {
+            return;
+        }
+
+        if ($entity->get('type') !== 'Base') {
+            throw new BadRequest($this->getLanguage()->translate('treeIsAllowedOnlyForBase', 'exceptions', 'Entity'));
+        }
+
+        if ($entity->isNew()) {
+            return;
+        }
+
+        $code = (string)$entity->get('code');
+        foreach (self::TREE_RESERVED_FIELDS as $field) {
+            if (
+                $this->getMetadata()->get(['entityDefs', $code, 'fields', $field]) !== null
+                || $this->getMetadata()->get(['entityDefs', $code, 'links', $field]) !== null
+            ) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('treeFieldIsReserved', 'exceptions', 'Entity'), $code, $field));
+            }
+        }
     }
 
     protected function validateSubtype(OrmEntity $entity): void

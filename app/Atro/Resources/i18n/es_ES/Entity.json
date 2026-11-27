@@ -7,6 +7,7 @@
         "disabled": "Discapacitados",
         "customizable": "Personalizable",
         "hasArchive": "Archivable",
+        "hasTree": "Habilitar árbol",
         "isCustom": "Personalizado",
         "hasActive": "Activable",
         "hideFieldTypeFilters": "Ocultar filtros de tipo de campo",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Habilitar usuario asignado para la gestión de acceso.",
         "hasTeam": "Habilite los equipos para la gestión del acceso.",
         "hasOwner": "Habilitar propietario para la gestión de acceso.",
+        "hasTree": "Añade una relación padre-hijo de la entidad consigo misma y muestra sus registros como árbol en la barra lateral izquierda. Los valores de los campos y las relaciones no se heredan.",
         "streamDisabled": "Si está marcada, no aparecerá ningún panel de Actividades en la página de Detalles del registro. No podrá añadir notas.",
         "disableActionHistory": "Si está marcada, no se registrará ninguna acción del usuario en los registros de esta entidad.",
         "auditedDisabledFields": "Los cambios en estos campos no se muestran como Actividad.",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "No se puede eliminar el subtipo porque tiene registros. Elimínelos primero.",
         "entityHasSubtypes": "No se puede eliminar la entidad porque tiene subtipos. Elimínelos primero.",
         "subtypeParamCannotBeChanged": "No se puede cambiar el parámetro \"%s\" para una entidad de tipo \"Subtipo\". Solo se pueden añadir campos y relaciones a un subtipo.",
-        "derivativeFromSubtypeNotSupporting": "No se puede crear una entidad derivada a partir de un subtipo."
+        "derivativeFromSubtypeNotSupporting": "No se puede crear una entidad derivada a partir de un subtipo.",
+        "treeFieldIsReserved": "No se puede habilitar el árbol porque la entidad \"%s\" ya tiene el campo o la relación \"%s\".",
+        "treeIsAllowedOnlyForBase": "El árbol solo se puede habilitar para entidades de tipo \"Base\"."
     },
     "actions": {
         "resetToDefault": "Restablecer a (por defecto)"

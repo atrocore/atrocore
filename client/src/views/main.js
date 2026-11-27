@@ -338,7 +338,7 @@ Espo.define('views/main', 'view', function (Dep) {
             this.clearView('treeLayoutConfigurator');
 
             this.createView('treeLayoutConfigurator', 'views/record/layout-configurator', {
-                scope: this.scope,
+                scope: this.getPageContext().scope,
                 viewType: 'navigation',
                 layoutData: window.navigationSidebar.getLayoutData(),
                 el: container

@@ -7,6 +7,7 @@
         "disabled": "Letiltva",
         "customizable": "Testreszabható",
         "hasArchive": "Archiválható",
+        "hasTree": "Fa engedélyezése",
         "isCustom": "Egyéni",
         "hasActive": "Aktiválható",
         "hideFieldTypeFilters": "Mezőtípus-szűrők elrejtése",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Hozzárendelt felhasználó engedélyezése a hozzáférés-kezeléshez.",
         "hasTeam": "Csapatok engedélyezése a hozzáférés-kezeléshez.",
         "hasOwner": "Tulajdonos engedélyezése a hozzáférés-kezeléshez.",
+        "hasTree": "Szülő-gyermek kapcsolatot ad az entitáshoz önmagára, és a rekordjait faként jeleníti meg a bal oldalsávban. A mezőértékek és a kapcsolatok nem öröklődnek.",
         "streamDisabled": "Ha be van jelölve, a Rekord részletei oldalon nem jelenik meg az Aktivitások panel. Nem fog tudni jegyzeteket hozzáadni.",
         "disableActionHistory": "Ha be van jelölve, az entitás rekordjain végzett felhasználói műveletek nem kerülnek naplózásra.",
         "auditedDisabledFields": "Az ezekben a mezőkben bekövetkező változások nem jelennek meg tevékenységként.",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "Az altípus nem törölhető, mert rekordokat tartalmaz. Előbb törölje ezeket.",
         "entityHasSubtypes": "Az entitás nem törölhető, mert vannak altípusai. Kérjük, először törölje ezeket.",
         "subtypeParamCannotBeChanged": "A(z) „Altípus” típusú entitás esetén a(z) %s paraméter nem módosítható. Altípushoz csak mezők és kapcsolatok adhatók hozzá.",
-        "derivativeFromSubtypeNotSupporting": "Altípusból nem hozható létre származtatott entitás."
+        "derivativeFromSubtypeNotSupporting": "Altípusból nem hozható létre származtatott entitás.",
+        "treeFieldIsReserved": "A fa nem engedélyezhető, mert a(z) \"%s\" entitás már rendelkezik \"%s\" mezővel vagy kapcsolattal.",
+        "treeIsAllowedOnlyForBase": "A fa csak \"Base\" típusú entitásoknál engedélyezhető."
     },
     "actions": {
         "resetToDefault": "Visszaállítás alapértelmezettre"

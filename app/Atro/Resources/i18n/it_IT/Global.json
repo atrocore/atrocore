@@ -1621,7 +1621,8 @@
         "recordCannotBeDeleted": "Non è possibile eliminare record di questa entità.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Un record di sottotipo può essere eliminato solo insieme al relativo record di supertipo.",
         "supertypeRecordIsNotFound": "Il record del supertipo non è stato trovato.",
-        "recordWithoutSubtypeCannotBeRestored": "Impossibile ripristinare il record perché non appartiene ad alcun sottotipo."
+        "recordWithoutSubtypeCannotBeRestored": "Impossibile ripristinare il record perché non appartiene ad alcun sottotipo.",
+        "treeParentCycle": "Il genitore non può essere il record stesso o uno dei suoi discendenti."
     },
     "firstStepsDashlet": {
         "title": {

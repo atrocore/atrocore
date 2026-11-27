@@ -7,6 +7,7 @@
         "disabled": "Wyłączony",
         "customizable": "Możliwość dostosowania",
         "hasArchive": "Archiwalny",
+        "hasTree": "Włącz drzewo",
         "isCustom": "Niestandardowy",
         "hasActive": "Aktywowalny",
         "hideFieldTypeFilters": "Ukryj filtry typu pola",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Włącz przypisanego użytkownika dla zarządzania dostępem.",
         "hasTeam": "Włącz zespoły do zarządzania dostępem.",
         "hasOwner": "Proszę włączyć właściciela dla zarządzania dostępem.",
+        "hasTree": "Dodaje relację rodzic-dziecko encji do samej siebie i wyświetla jej rekordy jako drzewo na lewym pasku bocznym. Wartości pól i relacje nie są dziedziczone.",
         "streamDisabled": "Jeśli ta opcja jest zaznaczona, na stronie szczegółów rekordu nie będzie wyświetlany panel działań. Nie będzie można dodawać notatek.",
         "disableActionHistory": "Jeśli zaznaczone, żadne działania użytkownika na rekordach tego podmiotu nie będą rejestrowane.",
         "auditedDisabledFields": "Zmiany w tych polach nie są wyświetlane jako Aktywność.",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "Nie można usunąć podtypu, ponieważ ma rekordy. Najpierw je usuń.",
         "entityHasSubtypes": "Nie można usunąć encji, ponieważ ma podtypy. Najpierw je usuń.",
         "subtypeParamCannotBeChanged": "Nie można zmienić parametru „%s” dla encji typu „Podtyp”. Do podtypu można dodawać tylko pola i relacje.",
-        "derivativeFromSubtypeNotSupporting": "Nie można utworzyć encji pochodnej na podstawie podtypu."
+        "derivativeFromSubtypeNotSupporting": "Nie można utworzyć encji pochodnej na podstawie podtypu.",
+        "treeFieldIsReserved": "Nie można włączyć drzewa, ponieważ encja \"%s\" ma już pole lub relację \"%s\".",
+        "treeIsAllowedOnlyForBase": "Drzewo można włączyć tylko dla encji typu \"Base\"."
     },
     "actions": {
         "resetToDefault": "Resetuj do domyślnego"

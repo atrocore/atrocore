@@ -1457,7 +1457,8 @@
         "recordCannotBeDeleted": "Záznamy této entity nelze mazat.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Záznam podtypu lze smazat pouze společně se záznamem jeho nadtypu.",
         "supertypeRecordIsNotFound": "Záznam nadtypu nebyl nalezen.",
-        "recordWithoutSubtypeCannotBeRestored": "Záznam nelze obnovit, protože nepatří k žádnému podtypu."
+        "recordWithoutSubtypeCannotBeRestored": "Záznam nelze obnovit, protože nepatří k žádnému podtypu.",
+        "treeParentCycle": "Rodičem nemůže být samotný záznam ani žádný z jeho potomků."
     },
     "queryBuilderFilter": {
         "operators": {

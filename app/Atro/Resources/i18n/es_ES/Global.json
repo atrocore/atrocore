@@ -1514,7 +1514,8 @@
         "recordCannotBeDeleted": "No se pueden eliminar registros de esta entidad.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Un registro de subtipo solo se puede eliminar junto con su registro de supertipo.",
         "supertypeRecordIsNotFound": "No se encontró el registro del supertipo.",
-        "recordWithoutSubtypeCannotBeRestored": "No se puede restaurar el registro porque no pertenece a ningún subtipo."
+        "recordWithoutSubtypeCannotBeRestored": "No se puede restaurar el registro porque no pertenece a ningún subtipo.",
+        "treeParentCycle": "El padre no puede ser el propio registro ni uno de sus descendientes."
     },
     "queryBuilderFilter": {
         "add_rule": "Añadir regla",

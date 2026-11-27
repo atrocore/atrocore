@@ -7,6 +7,7 @@
         "disabled": "Zakázáno",
         "customizable": "Přizpůsobitelné",
         "hasArchive": "Archivovatelné",
+        "hasTree": "Povolit strom",
         "isCustom": "Vlastní",
         "hasActive": "Aktivovatelné",
         "hideFieldTypeFilters": "Skrytí filtrů typu pole",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Povolit přiřazeného uživatele pro správu přístupu.",
         "hasTeam": "Povolení týmů pro správu přístupu.",
         "hasOwner": "Povolit vlastníka pro správu přístupu.",
+        "hasTree": "Přidá entitě vztah rodič-potomek na sebe samu a zobrazí její záznamy jako strom v levém postranním panelu. Hodnoty polí a vztahy se nedědí.",
         "streamDisabled": "Pokud je zaškrtnuto, nezobrazí se na stránce Podrobnosti o záznamu žádný panel Činnosti. Nebudete moci přidávat poznámky.",
         "disableActionHistory": "Pokud je zaškrtnuto, nebudou zaznamenávány žádné akce uživatele se záznamy této entity.",
         "auditedDisabledFields": "Změny v těchto polích se nezobrazují jako Aktivita.",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "Podtyp nelze odstranit, protože obsahuje záznamy. Nejprve je odstraňte.",
         "entityHasSubtypes": "Entitu nelze odstranit, protože má podtypy. Nejprve je odstraňte.",
         "subtypeParamCannotBeChanged": "Parametr „%s“ nelze změnit u entity typu „Podtyp“. K podtypu lze přidávat pouze pole a relace.",
-        "derivativeFromSubtypeNotSupporting": "Odvozenou entitu nelze vytvořit z podtypu."
+        "derivativeFromSubtypeNotSupporting": "Odvozenou entitu nelze vytvořit z podtypu.",
+        "treeFieldIsReserved": "Strom nelze povolit, protože entita \"%s\" již obsahuje pole nebo vztah \"%s\".",
+        "treeIsAllowedOnlyForBase": "Strom lze povolit pouze pro entity typu \"Base\"."
     },
     "actions": {
         "resetToDefault": "Obnovení výchozího nastavení"

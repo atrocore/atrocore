@@ -328,6 +328,24 @@
         }
       }
     },
+    "hasTree": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
     "role": {
       "type": "enum",
       "default": "base",

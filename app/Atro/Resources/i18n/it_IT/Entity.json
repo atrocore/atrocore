@@ -9,6 +9,7 @@
         "unInheritedRelations": "Relazioni non ereditate",
         "primaryEntity": "Entità primaria",
         "hasArchive": "Archiviabile",
+        "hasTree": "Abilita albero",
         "isCustom": "Personalizzato",
         "hasActive": "Attivabile",
         "hideFieldTypeFilters": "Nascondere i filtri del tipo di campo",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Abilita l'utente assegnato per la gestione degli accessi.",
         "hasTeam": "Abilita i team per la gestione degli accessi.",
         "hasOwner": "Abilita il Proprietario per la gestione degli accessi.",
+        "hasTree": "Aggiunge una relazione padre-figlio dell'entità con se stessa e mostra i suoi record come albero nella barra laterale sinistra. I valori dei campi e le relazioni non vengono ereditati.",
         "streamDisabled": "Se è selezionata, nella pagina Dettagli record non viene visualizzato il pannello Attività. Non sarà possibile aggiungere note.",
         "disableActionHistory": "Se è selezionata, non verranno registrate le azioni dell'utente sui record di questa entità.",
         "auditedDisabledFields": "Le modifiche in questi campi non vengono visualizzate come Attività.",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "Impossibile eliminare il sottotipo perché contiene dei record. Eliminali prima.",
         "entityHasSubtypes": "Impossibile eliminare l’entità perché contiene dei sottotipi. Eliminali prima.",
         "subtypeParamCannotBeChanged": "Il parametro \"%s\" non può essere modificato per un’entità di tipo \"Sottotipo\". È possibile aggiungere a un sottotipo solo campi e relazioni.",
-        "derivativeFromSubtypeNotSupporting": "Un'entità derivata non può essere creata da un sottotipo."
+        "derivativeFromSubtypeNotSupporting": "Un'entità derivata non può essere creata da un sottotipo.",
+        "treeFieldIsReserved": "Impossibile abilitare l'albero perché l'entità \"%s\" ha già il campo o la relazione \"%s\".",
+        "treeIsAllowedOnlyForBase": "L'albero può essere abilitato solo per entità di tipo \"Base\"."
     },
     "actions": {
         "resetToDefault": "Ripristino delle impostazioni predefinite"

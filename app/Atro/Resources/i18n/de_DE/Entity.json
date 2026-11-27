@@ -6,6 +6,7 @@
         "code": "Systemname",
         "disabled": "Deaktiviert",
         "hasArchive": "Archivierbar",
+        "hasTree": "Baumstruktur aktivieren",
         "isCustom": "Benutzerdefiniert",
         "hasActive": "Aktivierbar",
         "hideFieldTypeFilters": "Feldtypfilter ausblenden",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Zugewiesene Benutzer für die Zugriffsverwaltung aktivieren.",
         "hasTeam": "Teams für die Zugriffsverwaltung aktivieren.",
         "hasOwner": "Eigentümer für die Zugriffsverwaltung aktivieren.",
+        "hasTree": "Fügt der Entität eine Eltern-Kind-Beziehung zu sich selbst hinzu und zeigt ihre Datensätze als Baum in der linken Seitenleiste an. Feldwerte und Beziehungen werden nicht vererbt.",
         "streamDisabled": "Wenn diese Option aktiviert ist, wird auf der Seite mit den Datensatzdetails kein Aktivitätenbereich angezeigt. Sie können dann auch keine Notizen hinzufügen.",
         "disableActionHistory": "Wenn diese Option aktiviert ist, werden keine Benutzeraktionen für die Datensätze dieser Entität protokolliert.",
         "auditedDisabledFields": "Änderungen in diesen Feldern werden nicht als Aktivität angezeigt.",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "Der Untertyp kann nicht gelöscht werden, da er Datensätze enthält. Löschen Sie diese zuerst.",
         "entityHasSubtypes": "Die Entität kann nicht gelöscht werden, da sie Untertypen enthält. Löschen Sie diese zuerst.",
         "subtypeParamCannotBeChanged": "Der Parameter \"%s\" kann für eine Entität vom Type \"Untertyp\" nicht geändert werden. Einem Untertyp können nur Felder und Beziehungen hinzugefügt werden.",
-        "derivativeFromSubtypeNotSupporting": "Eine abgeleitete Entität kann nicht aus einem Untertyp erstellt werden."
+        "derivativeFromSubtypeNotSupporting": "Eine abgeleitete Entität kann nicht aus einem Untertyp erstellt werden.",
+        "treeFieldIsReserved": "Der Baum kann nicht aktiviert werden, da die Entität \"%s\" bereits das Feld oder die Beziehung \"%s\" enthält.",
+        "treeIsAllowedOnlyForBase": "Der Baum kann nur für Entitäten vom Typ \"Base\" aktiviert werden."
     },
     "actions": {
         "resetToDefault": "Auf Standardwert zurücksetzen"

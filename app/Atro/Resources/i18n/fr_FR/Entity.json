@@ -7,6 +7,7 @@
         "disabled": "Désactivée",
         "customizable": "Personnalisable",
         "hasArchive": "Archivable",
+        "hasTree": "Activer l'arborescence",
         "isCustom": "Personnalisé",
         "hasActive": "Activable",
         "hideFieldTypeFilters": "Masquer les filtres de type de champ",
@@ -92,6 +93,7 @@
         "hasAssignedUser": "Activer \"utilisateur assigné\" pour la gestion des accès.",
         "hasTeam": "Activez la fonction \"équipes\" pour la gestion des accès.",
         "hasOwner": "Activer la fonction \"propriétaire\" pour la gestion de l'accès.",
+        "hasTree": "Ajoute une relation parent-enfant de l'entité vers elle-même et affiche ses enregistrements sous forme d'arborescence dans la barre latérale gauche. Les valeurs des champs et les relations ne sont pas héritées.",
         "streamDisabled": "Si cette option est cochée, aucun panneau Activités ne s'affiche sur la page Détails de l'enregistrement. Vous ne pourrez pas ajouter de notes.",
         "disableActionHistory": "Si cette case est cochée, aucune action de l'utilisateur sur les enregistrements de cette entité ne sera enregistrée.",
         "auditedDisabledFields": "Les modifications apportées à ces champs ne sont pas affichées dans \"Activités\".",
@@ -121,7 +123,9 @@
         "subtypeHasRecords": "Le sous-type ne peut pas être supprimé, car il contient des enregistrements. Veuillez d’abord les supprimer.",
         "entityHasSubtypes": "L’entité ne peut pas être supprimée, car elle possède des sous-types. Veuillez d’abord les supprimer.",
         "subtypeParamCannotBeChanged": "Le paramètre « %s » ne peut pas être modifié pour une entité de type « Sous-type ». Seuls des champs et des relations peuvent être ajoutés à un sous-type.",
-        "derivativeFromSubtypeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d’un sous-type."
+        "derivativeFromSubtypeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d’un sous-type.",
+        "treeFieldIsReserved": "L'arborescence ne peut pas être activée car l'entité \"%s\" possède déjà le champ ou la relation \"%s\".",
+        "treeIsAllowedOnlyForBase": "L'arborescence ne peut être activée que pour les entités de type \"Base\"."
     },
     "actions": {
         "resetToDefault": "Réinitialiser par défaut"

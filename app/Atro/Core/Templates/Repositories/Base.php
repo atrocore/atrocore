@@ -121,6 +121,94 @@ class Base extends RDB
         return empty($position) ? null : (int) $position;
     }
 
+    /**
+     * Whether the records of the entity are organized in the tree via the generated "parent" relation.
+     */
+    public function isTree(): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $this->entityName, 'hasTree']))
+            && $this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'Base';
+    }
+
+    /**
+     * IDs of the ancestors of the record in the tree, from the root to the direct parent.
+     */
+    public function getTreeAncestorsIds(string $id): array
+    {
+        $dbal   = $this->getDbal();
+        $table  = $dbal->quoteIdentifier($this->getMapper()->toDb($this->entityName));
+        $column = $dbal->quoteIdentifier($this->getMapper()->toDb('parentId'));
+
+        $ancestorsIds = [];
+        $currentId    = $id;
+        while (true) {
+            $parentId = $dbal->createQueryBuilder()
+                ->select($column)
+                ->from($table)
+                ->where('id = :id')
+                ->andWhere('deleted = :false')
+                ->setParameter('id', $currentId)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchOne();
+
+            if (empty($parentId) || $parentId === $id || in_array($parentId, $ancestorsIds, true)) {
+                break;
+            }
+
+            $ancestorsIds[] = $parentId;
+            $currentId      = $parentId;
+        }
+
+        return array_reverse($ancestorsIds);
+    }
+
+    /**
+     * Number of the children in the tree for each of the given records. Records without children are omitted.
+     */
+    public function getTreeChildrenCounts(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $dbal   = $this->getDbal();
+        $column = $dbal->quoteIdentifier($this->getMapper()->toDb('parentId'));
+
+        $rows = $dbal->createQueryBuilder()
+            ->select("$column AS parent_id", 'COUNT(id) AS total')
+            ->from($dbal->quoteIdentifier($this->getMapper()->toDb($this->entityName)))
+            ->where("$column IN (:ids)")
+            ->andWhere('deleted = :false')
+            ->groupBy($column)
+            ->setParameter('ids', array_values($ids), Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_map('intval', array_column($rows, 'total', 'parent_id'));
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        $this->validateTreeParent($entity);
+    }
+
+    /**
+     * The parent of a record in the tree cannot be the record itself or one of its descendants.
+     */
+    protected function validateTreeParent(Entity $entity): void
+    {
+        if (!$this->isTree() || !$entity->isAttributeChanged('parentId') || empty($entity->get('parentId'))) {
+            return;
+        }
+
+        $parentId = (string)$entity->get('parentId');
+        if ($parentId === $entity->get('id') || in_array($entity->get('id'), $this->getTreeAncestorsIds($parentId), true)) {
+            throw new BadRequest($this->translateException('treeParentCycle'));
+        }
+    }
+
     public function prepareAttributesForOutput(EntityCollection $collection, array $params): void
     {
         if (empty($params['attributesIds']) && empty($params['allAttributes'])) {
