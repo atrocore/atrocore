@@ -35,6 +35,7 @@ The merge logic is entity-specific — each entity name may implement its own `m
 
 If `targetId` is provided, the existing record with that ID becomes the merge target and surviving record. If omitted, a new record is created from the merged data.',
     tag: 'Global',
+    operationId: 'mergeRecords',
     requestBody: [
         'required' => true,
         'content'  => [

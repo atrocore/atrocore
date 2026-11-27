@@ -37,6 +37,7 @@ use Atro\Core\Services\AbstractRecordService;
 
 **Note:** The structure of items in the `list` array depends on the linked entity type resolved from the relation definition. There is no single fixed response schema — it varies per `entityName` + `link` combination.',
     tag: 'Global',
+    operationId: 'listRelatedRecords',
     parameters: [
         [
             'name'     => 'entityName',

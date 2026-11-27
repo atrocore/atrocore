@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Bulk upsert entities',
     description: 'Creates or updates multiple records in a single request. For each item the system looks up an existing record by `id`, unique fields, or unique indexes. If found — updates it, otherwise creates a new one.',
     tag: 'Global',
+    operationId: 'upsertRecords',
     requestBody: [
         'required' => true,
         'content'  => [

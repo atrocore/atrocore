@@ -31,6 +31,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Deletes a record',
     description: 'Deletes a record by ID. Pass the permanently header to skip the recycle bin.',
     tag: '{entityName}',
+    operationId: 'delete{entityName}',
     parameters: [
         [
             'name'     => 'entityName',

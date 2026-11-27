@@ -38,6 +38,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'When `id` is provided, the current record is excluded from the result '
         . 'so that the breadcrumb only shows other records the user navigated through.',
     tag: 'Global',
+    operationId: 'getNavigationHistory',
     parameters: [
         [
             'name'        => 'entity',

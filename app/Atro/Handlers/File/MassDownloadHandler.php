@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Mass download files',
     description: 'Enqueues a background job that packages the selected files into a ZIP archive. Returns `true` when the job has been successfully created.',
     tag: 'File',
+    operationId: 'massDownloadFiles',
     requestBody: [
         'required' => true,
         'content'  => [

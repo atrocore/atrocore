@@ -42,6 +42,7 @@ use Atro\Core\Services\Interfaces\LinkableInterface;
 
 For linking many records at once, consider using `POST /entityRelationBulkAsync` instead to avoid timeouts.',
     tag: 'Global',
+    operationId: 'createRelation',
     requestBody: [
         'required' => true,
         'content'  => [

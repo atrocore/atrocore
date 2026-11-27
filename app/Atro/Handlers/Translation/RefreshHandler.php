@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Refresh translation cache',
     description: 'Refreshes the translation cache.',
     tag: 'Translation',
+    operationId: 'refreshTranslations',
     responses: [
         200 => [
             'description' => 'true on success',

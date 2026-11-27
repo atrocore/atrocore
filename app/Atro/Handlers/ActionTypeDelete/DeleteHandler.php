@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Delete action',
     description: 'Executes the specified Delete action synchronously. Deletes one or more entity records according to the action configuration.',
     tag: 'ActionTypeDelete',
+    operationId: 'executeDeleteAction',
     parameters: [
         [
             'name'        => 'id',

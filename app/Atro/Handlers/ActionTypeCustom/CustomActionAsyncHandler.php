@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'and returns immediately with the job ID. The class must exist in data/custom-code/CustomActions/ '
         . 'and extend AbstractAction.',
     tag: 'ActionTypeCustom',
+    operationId: 'executeCustomActionAsync',
     parameters: [
         [
             'name'        => 'id',

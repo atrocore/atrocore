@@ -33,6 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'The `id` field in each list item is a synthetic sequential integer (`offset + index`) '
         . 'used for UI rendering — the actual record ID is `targetId`.',
     tag: 'LastViewed',
+    operationId: 'listLastViewedRecords',
     parameters: [
         [
             'name'        => 'offset',

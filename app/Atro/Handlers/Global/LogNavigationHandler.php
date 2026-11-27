@@ -33,6 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     . 'The Entity-History request header (tab ID) is stored in the record data and used '
     . 'to isolate history per browser tab. ',
     tag: 'Global',
+    operationId: 'logNavigation',
     requestBody: [
         'required' => true,
         'content'  => [

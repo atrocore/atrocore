@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save navigation layout into a layout profile',
     description: 'Saves the navigation layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileNavigationLayout',
     parameters: [
         [
             'name'        => 'id',

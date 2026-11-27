@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Transform a source record into its target record',
     description: 'Finds the data pipeline for the given pair of source and target entities, renders its transformation script for the given source record and creates or updates the linked target record.',
     tag: 'DataPipeline',
+    operationId: 'transformDataPipelineRecord',
     requestBody: [
         'required' => true,
         'content'  => [

@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns records grouped by status for kanban view',
     description: 'Returns records of the specified entity grouped by their status field values, for use in the kanban board view.',
     tag: '{entityName}',
+    operationId: 'listKanban{entityNamePlural}',
     parameters: [
         [
             'name'     => 'entityName',

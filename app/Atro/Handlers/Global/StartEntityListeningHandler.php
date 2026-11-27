@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'Creates a public JSON file that gets updated whenever the record changes. '
         . 'Returns a timestamp and the path to that file so the client can poll it to detect changes.',
     tag: 'Global',
+    operationId: 'startEntityListening',
     requestBody: [
         'required' => true,
         'content'  => [

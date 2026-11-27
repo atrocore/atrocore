@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save summary layout into a layout profile',
     description: 'Saves the summary layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileSummaryLayout',
     parameters: [
         [
             'name'        => 'id',

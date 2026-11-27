@@ -38,6 +38,7 @@ use Atro\Core\Services\Interfaces\LinkableInterface;
 - Pass `id` or `ids` (comma-separated) in query to unlink specific records. Alternatively, pass `id` or `ids` array in the request body.
 - Pass `all=true` in query to unlink all related records at once. For a huge amount of data, it is better to use `DELETE /entityRelationBulkAsync` to avoid timeouts.',
     tag: 'Global',
+    operationId: 'deleteRelation',
     parameters: [
         [
             'name'     => 'entityName',

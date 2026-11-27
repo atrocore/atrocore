@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Deconsolidate a single cluster item',
     description: 'Unlinks the record of the specified cluster item from the golden record of its cluster. The item stays in the cluster. The item may not be the master entity item of its cluster.',
     tag: 'ClusterItem',
+    operationId: 'deconsolidateClusterItem',
     parameters: [
         [
             'name'        => 'id',

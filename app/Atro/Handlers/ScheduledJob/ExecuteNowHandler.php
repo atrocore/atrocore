@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Executes a scheduled job immediately',
     description: 'Triggers the immediate execution of a scheduled job. Requires read access and admin privileges.',
     tag: 'ScheduledJob',
+    operationId: 'executeScheduledJobNow',
     parameters: [
         [
             'name'     => 'id',

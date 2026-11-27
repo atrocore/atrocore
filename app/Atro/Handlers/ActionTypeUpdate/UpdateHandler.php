@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Update action',
     description: 'Executes the specified Update action synchronously. Updates one or more entity records according to the action configuration.',
     tag: 'ActionTypeUpdate',
+    operationId: 'executeUpdateAction',
     parameters: [
         [
             'name'        => 'id',

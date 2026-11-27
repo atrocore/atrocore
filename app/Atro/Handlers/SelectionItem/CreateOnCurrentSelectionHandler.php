@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Add a record to the current selection',
     description: 'Creates a SelectionItem that links the given entity record to the current active Selection of the user.',
     tag: 'SelectionItem',
+    operationId: 'addToCurrentSelection',
     requestBody: [
         'required' => true,
         'content'  => [

@@ -23,6 +23,7 @@ use Atro\Core\Routing\Route;
     summary: 'Consolidate a cluster item (deprecated)',
     description: 'Deprecated, use POST /ClusterItem/{id}/consolidate instead. Consolidates the specified cluster item. If the item is the master entity type, it is set as the cluster\'s golden record. Otherwise the item\'s staging record is linked to the existing golden record; if no golden record exists yet, one is created automatically (or a new master entity record is created if needed). Returns false if automatic master record creation failed.',
     tag: 'ClusterItem',
+    operationId: 'confirmClusterItem',
     parameters: [
         [
             'name'        => 'id',

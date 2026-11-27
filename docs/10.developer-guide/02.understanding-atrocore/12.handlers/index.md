@@ -129,6 +129,7 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
     summary: 'Get MyEntity statistics',
     description: 'Returns statistics for the specified MyEntity record.',
     tag: 'MyEntity',
+    operationId: 'getMyEntityStats',
     parameters: [
         [
             'name'        => 'id',
@@ -207,6 +208,7 @@ This rule applies to **all** arrays inside `#[Route]` without exception: `method
 | `summary` | `string` | Short one-line description shown in API docs. |
 | `description` | `string` | Full description of what the endpoint does. |
 | `tag` | `string` | Groups the endpoint in API docs (usually the entity name). |
+| `operationId` | `string` | Unique name of the operation in API docs, e.g. `getMyEntityStats`. See [Operation IDs](#operation-ids). |
 | `responses` | `array` | Map of HTTP status code → response description. |
 
 ### Optional Fields
@@ -221,6 +223,31 @@ This rule applies to **all** arrays inside `#[Route]` without exception: `method
 | `rateLimit` | `array\|null` | `null` | Enables per-IP rate limiting for this endpoint. `null` (the default) means no limit. An empty array uses the global defaults from the settings; the keys `limit` and `period` override them for this route, `userNameField` limits a sign-in endpoint per user name as well. See [Rate Limiting](#rate-limiting). |
 
 > **Important:** A handler without all required fields **will not be registered as a route**. The endpoint simply will not exist. This is by design — it enforces that every API endpoint is fully documented before it can be used.
+
+### Operation IDs
+
+`operationId` names the endpoint in `/apidocs/`. Client generators (openapi-generator, orval, NSwag) and AI tools use it as the function name, so it is part of the API contract and is set explicitly in every handler. A handler without `operationId` **is not registered as a route**.
+
+An `operationId` reads as a function name: a verb first, then the object, in camelCase.
+
+| Route | `operationId` |
+|---|---|
+| `POST /Storage/{id}/createScanJob` | `createStorageScanJob` |
+| `POST /ClusterItem/massReject` | `massRejectClusterItems` |
+| `GET /Layout/detail` | `getDetailLayout` |
+| `POST /ActionTypeWebhook/{id}/webhookAsync` | `executeWebhookActionAsync` |
+| `POST /entityMassDelete` | `massDeleteRecords` |
+
+The `operationId` of an EntityTypeHandler is a mask. `{entityName}` is replaced with the name of each entity the route is created for, `{entityNamePlural}` with its plural:
+
+| Handler | Mask | `operationId` for `Product` |
+|---|---|---|
+| `ListHandler` | `list{entityNamePlural}` | `listProducts` |
+| `ReadHandler` | `get{entityName}` | `getProduct` |
+| `InheritFieldHandler` | `inherit{entityName}Field` | `inheritProductField` |
+| `FillFromChildrenAsyncHandler` | `fill{entityNamePlural}FromChildrenAsync` | `fillProductsFromChildrenAsync` |
+
+Each operation has its own `operationId`. Two endpoints with the same `operationId` stop the route compilation with an error, e.g. `Duplicate OpenAPI operationId 'getRendition': GET /api/Rendition/{id} (Atro\Core\EntityTypeHandlers\ReadHandler) and GET /api/Rendition/getRendition (Renditions\Handlers\Rendition\GetRenditionHandler)`. Check the masks of the EntityTypeHandlers too: `get{entityName}` of `Rendition` is `getRendition`. A route with several HTTP methods is several operations and cannot have one `operationId`: create a handler for each method. A handler that shadows a route of the core or of another module (same path and method) is the same operation and takes over its `operationId`.
 
 ---
 
@@ -390,6 +417,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get product statistics',
     description: 'Returns sales and inventory statistics for the specified product.',
     tag: 'Product',
+    operationId: 'getProductStats',
     parameters: [
         [
             'name'        => 'id',
@@ -577,11 +605,11 @@ Each built-in handler declares which entity template types it applies to, and op
 ```php
 use Atro\Core\Routing\EntityType;
 
-#[Route(path: '/{entityName}', methods: ['GET'], ...)]
+#[Route(path: '/{entityName}', methods: ['GET'], operationId: 'list{entityNamePlural}', ...)]
 #[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData'])]
 class ListHandler extends AbstractHandler { ... }
 
-#[Route(path: '/{entityName}/action/inheritField', methods: ['POST'], ...)]
+#[Route(path: '/{entityName}/action/inheritField', methods: ['POST'], operationId: 'inherit{entityName}Field', ...)]
 #[EntityType(types: ['Hierarchy'])]
 class InheritFieldHandler extends AbstractHandler { ... }
 ```
@@ -669,6 +697,7 @@ To replace a core EntityType handler for a **specific entity** (e.g. only for `P
     summary: 'List products',
     description: 'Returns a customised product collection.',
     tag: 'Product',
+    operationId: 'listProducts',
     responses: [
         200 => [...],
     ],

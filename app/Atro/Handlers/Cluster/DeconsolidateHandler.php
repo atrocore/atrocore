@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Deconsolidate selected cluster items',
     description: 'Unlinks the specified contributor items of the cluster from its golden record. The items stay in the cluster; items that are not consolidated are skipped. At least one contributor item must stay consolidated. If Update Master Automatically is enabled, the golden record is updated from the remaining contributor records.',
     tag: 'Cluster',
+    operationId: 'deconsolidateCluster',
     parameters: [
         [
             'name'        => 'id',

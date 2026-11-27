@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get application bootstrap data',
     description: 'Returns everything the frontend needs to start.',
     tag: 'Global',
+    operationId: 'getAppBootstrap',
     auth: false,
     responses: [
         200 => [

@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Inherit all fields and links from the corresponding parent record (if one exists) for the record(s) included in the selection. Relevant only if multi-parent parameter is disabled for the entity.',
     description: 'For each entity record(s) that match the filter criteria, retrieves all inherited field values and linked records from the corresponding parent (if one exists) into the record. Only those fields that currently have null values are updated — existing values are not overwritten. Relevant only if multi-parent parameter is disabled for the entity.',
     tag: '{entityName}',
+    operationId: 'inherit{entityNamePlural}FromParentAsync',
     parameters: [
         [
             'name'        => 'entityName',

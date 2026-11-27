@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update variable',
     description: 'Updates a configuration variable by ID. Admin only.',
     tag: 'Variable',
+    operationId: 'updateVariable',
     parameters: [
         [
             'name'     => 'id',

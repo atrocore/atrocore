@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Issue an OAuth access token',
     description: 'The token endpoint of the OAuth 2.0 authorization server (RFC 6749). The client authenticates by HTTP Basic authentication or by client_id and client_secret in the request body.',
     tag: 'Global',
+    operationId: 'issueOauthToken',
     auth: false,
     requestBody: [
         'required' => true,

@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'When id is omitted, actions are returned for the entity as a whole (list/mass-action context). '
         . 'Actions are filtered by the current user\'s ACL and the optional display context.',
     tag: 'Global',
+    operationId: 'getDynamicActions',
     parameters: [
         [
             'name'        => 'entityName',

@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Upload a file chunk',
     description: 'Uploads a single chunk of a multi-part file upload. Call repeatedly with each chunk. While chunks are still pending, returns `{chunks: string[]}`. When the final chunk is received, returns the full File record merged with `{chunks: string[]}`, and optionally `{duplicate: object}` if a file with the same hash already exists.',
     tag: 'File',
+    operationId: 'createFileChunk',
     requestBody: [
         'required' => true,
         'content'  => [

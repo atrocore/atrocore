@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Clear application cache',
     description: 'Clears the application cache. Admin only.',
     tag: 'Global',
+    operationId: 'clearCache',
     responses: [
         200 => [
             'description' => 'true on success',

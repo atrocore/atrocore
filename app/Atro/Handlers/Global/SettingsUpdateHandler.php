@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update system settings',
     description: 'Updates one or more system configuration fields. Requires administrator privileges. ',
     tag: 'Global',
+    operationId: 'updateSettings',
     requestBody: [
         'required' => true,
         'content'  => [

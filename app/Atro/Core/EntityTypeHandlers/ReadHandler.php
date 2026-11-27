@@ -31,6 +31,7 @@ use Atro\Core\Services\AbstractRecordService;
     summary: 'Returns a record',
     description: 'Returns a single record by ID. If the entity has a field marked as slug, its value can be passed instead of the ID.',
     tag: '{entityName}',
+    operationId: 'get{entityName}',
     parameters: [
         [
             'name'        => 'entityName',

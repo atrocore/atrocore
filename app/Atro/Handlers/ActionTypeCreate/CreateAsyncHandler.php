@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Create action asynchronously',
     description: 'Schedules the specified Create action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeCreate',
+    operationId: 'executeCreateActionAsync',
     parameters: [
         [
             'name'        => 'id',

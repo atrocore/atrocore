@@ -32,6 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Revoke an OAuth token',
     description: 'The token revocation endpoint (RFC 7009). Revokes an access token or a refresh token issued to the authenticated client; revoking a token also revokes the related tokens. The client authenticates by HTTP Basic authentication or by client_id and client_secret in the request body.',
     tag: 'Global',
+    operationId: 'revokeOauthToken',
     auth: false,
     requestBody: [
         'required' => true,

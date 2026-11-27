@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update a software package',
     description: 'Queues the specified installed software package for an update to its target version. The other installed packages are kept as they are. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'updatePackage',
     parameters: [
         [
             'name'        => 'id',

@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Uninstall a software package',
     description: 'Queues the specified installed software package for uninstallation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'uninstallPackage',
     parameters: [
         [
             'name'        => 'id',

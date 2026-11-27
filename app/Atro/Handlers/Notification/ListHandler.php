@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns notifications for the current user',
     description: 'Returns a list of notifications for the currently authenticated user.',
     tag: 'Notification',
+    operationId: 'listNotifications',
     parameters: [
         [
             'name'     => 'offset',

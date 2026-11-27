@@ -33,6 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'The class must exist in data/custom-code/CustomActions/ and extend AbstractAction. '
         . 'Use the console command `php console.php create-action <ClassName>` to scaffold the class.',
     tag: 'ActionTypeCustom',
+    operationId: 'executeCustomAction',
     parameters: [
         [
             'name'        => 'id',

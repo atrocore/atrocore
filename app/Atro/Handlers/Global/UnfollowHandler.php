@@ -31,6 +31,7 @@ use Atro\Core\Templates\Services\Base;
     summary: 'Unfollow stream',
     description: 'Unsubscribes the current user from the stream of the specified entity records.',
     tag: 'Global',
+    operationId: 'unfollowRecord',
     requestBody: [
         'required' => true,
         'content'  => [

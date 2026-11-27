@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update target records from their source records asynchronously',
     description: 'Creates a background job that updates each target record matching the filter from its source record the same way as updating a single target record.',
     tag: 'DataPipeline',
+    operationId: 'updateDataPipelineRecordsFromSourceAsync',
     requestBody: [
         'required' => true,
         'content'  => [

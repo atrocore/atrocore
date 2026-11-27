@@ -32,6 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Change own password',
     description: 'Allows the current user to change their own password by providing the current password.',
     tag: 'User',
+    operationId: 'changeOwnPassword',
     requestBody: [
         'required' => true,
         'content'  => [

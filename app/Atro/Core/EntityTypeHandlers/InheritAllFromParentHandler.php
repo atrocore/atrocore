@@ -30,6 +30,7 @@ use Atro\Core\Routing\EntityType;
     summary: 'Inherit all fields and links from parent',
     description: 'Pulls all inheritable field values and linked records from the parent record into the specified record. Only fields that are currently null on the record are updated — already-set values are not overwritten.',
     tag: '{entityName}',
+    operationId: 'inherit{entityName}FromParent',
     parameters: [
         [
             'name'        => 'entityName',

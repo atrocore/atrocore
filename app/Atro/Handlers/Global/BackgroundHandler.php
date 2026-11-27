@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'The result is cached in the session for 2 hours. '
         . 'If custom backgrounds are configured, one is chosen at random; otherwise a built-in image is used.',
     tag: 'Global',
+    operationId: 'getLoginBackground',
     auth: false,
     responses: [
         200 => [

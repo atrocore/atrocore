@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Preview the target record of a data pipeline',
     description: 'Renders the transformation script of the data pipeline for the given source record without storing anything, and returns the target record as it would look after the transformation. Responds with an error whenever the transformation script is missing, invalid or fails to render.',
     tag: 'DataPipeline',
+    operationId: 'previewDataPipelineTransformation',
     parameters: [
         [
             'name'        => 'id',

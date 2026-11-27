@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create variable',
     description: 'Creates a new configuration variable. Admin only.',
     tag: 'Variable',
+    operationId: 'createVariable',
     requestBody: [
         'required' => true,
         'content'  => [

@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get user ids of teams',
     description: 'Returns the ids of users belonging to any of the given teams. Used to resolve team membership for condition checks without requiring read access to the TeamUser relation entity.',
     tag: 'Team',
+    operationId: 'getTeamUserIds',
     parameters: [
         [
             'name'        => 'teamIds',

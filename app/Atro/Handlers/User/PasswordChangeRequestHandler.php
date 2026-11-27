@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Requests a password reset link',
     description: 'Sends a password reset link to the user\'s email address if an active account matches the given userName and emailAddress. The response is the same whether or not such an account exists.',
     tag: 'User',
+    operationId: 'requestPasswordReset',
     auth: false,
     requestBody: [
         'required' => true,

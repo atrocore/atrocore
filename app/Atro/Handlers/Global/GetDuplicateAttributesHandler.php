@@ -39,6 +39,7 @@ use Atro\Core\Services\Interfaces\EditableInterface;
 - `linkMultiple` fields (`fieldIds`, `fieldNames`, `fieldColumns`) are only present when the relation is listed in `duplicatableRelations` entity scope metadata.
 - `_duplicatingEntityId` is always present and contains the `ID` of the source entity record.',
     tag: 'Global',
+    operationId: 'getRecordDuplicateValues',
     parameters: [
         [
             'name'        => 'entityName',

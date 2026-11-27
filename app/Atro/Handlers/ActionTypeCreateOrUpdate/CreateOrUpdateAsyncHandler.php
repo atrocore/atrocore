@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute CreateOrUpdate action asynchronously',
     description: 'Schedules the specified CreateOrUpdate action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeCreateOrUpdate',
+    operationId: 'executeCreateOrUpdateActionAsync',
     parameters: [
         [
             'name'        => 'id',

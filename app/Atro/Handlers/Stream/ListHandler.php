@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns the current user\'s stream',
     description: 'Returns stream entries for the currently authenticated user.',
     tag: 'Stream',
+    operationId: 'getUserStream',
     parameters: [
         [
             'name'     => 'offset',

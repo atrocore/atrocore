@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Upload own avatar',
     description: 'Uploads a base64 data URL image as the current user\'s avatar.',
     tag: 'User',
+    operationId: 'uploadAvatar',
     requestBody: [
         'required' => true,
         'content'  => [

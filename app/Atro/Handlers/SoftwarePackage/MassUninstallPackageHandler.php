@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Uninstall software packages',
     description: 'Queues the selected installed software packages for uninstallation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'massUninstallPackages',
     requestBody: [
         'required' => true,
         'content'  => [

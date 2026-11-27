@@ -31,6 +31,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Propagate staging record to master',
     description: 'Applies all changes from the specified staging record back to its master record.',
     tag: '{entityName}',
+    operationId: 'update{entityName}MasterRecord',
     parameters: [
         [
             'name'        => 'entityName',

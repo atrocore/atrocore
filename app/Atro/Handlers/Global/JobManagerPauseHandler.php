@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Pause or resume the job manager',
     description: 'Pauses or resumes background job processing by creating or removing a pause flag file. When paused, no new jobs will be picked up by the daemon. Admin only.',
     tag: 'Global',
+    operationId: 'pauseJobManager',
     requestBody: [
         'required' => true,
         'content'  => [

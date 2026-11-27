@@ -39,6 +39,7 @@ use Atro\Core\Services\Interfaces\SortableInterface;
 - `ids` — the IDs of the linked records in the new order.
 - `offset` — the position of the first record of `ids` among all linked records, `0` by default. The other linked records keep their order around the sorted ones.',
     tag: 'Global',
+    operationId: 'sortRelatedRecords',
     requestBody: [
         'required' => true,
         'content'  => [

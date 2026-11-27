@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Mark all notifications as read',
     description: 'Marks all notifications as read for the currently authenticated user.',
     tag: 'Notification',
+    operationId: 'markAllNotificationsRead',
     responses: [
         200 => [
             'description' => 'Whether all notifications were successfully marked as read',

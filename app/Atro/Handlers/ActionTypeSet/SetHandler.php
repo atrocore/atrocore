@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Set action',
     description: 'Executes the specified Set action synchronously. Runs the ordered sequence of sub-actions configured in the set, one after another.',
     tag: 'ActionTypeSet',
+    operationId: 'executeSetAction',
     parameters: [
         [
             'name'        => 'id',

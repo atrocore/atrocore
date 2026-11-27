@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save list layout into a layout profile',
     description: 'Saves the list layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileListLayout',
     parameters: [
         [
             'name'        => 'id',

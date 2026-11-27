@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Unmark field as personal data',
     description: 'Removes the personal data mark from the field of the specified entity record.',
     tag: 'Global',
+    operationId: 'unmarkFieldAsPersonalData',
     requestBody: [
         'required' => true,
         'content'  => [

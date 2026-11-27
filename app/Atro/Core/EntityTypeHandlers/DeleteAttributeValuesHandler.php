@@ -30,6 +30,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Delete attribute values',
     description: 'Removes one or more attribute assignments from the specified entity record.',
     tag: '{entityName}',
+    operationId: 'delete{entityName}AttributeValues',
     parameters: [
         [
             'name'        => 'entityName',

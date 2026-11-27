@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update a target record from its source record',
     description: 'Finds the data pipeline whose source record is linked to the given target record and renders the transformation script of that pipeline to update the target record. A target record can be linked to only one source record.',
     tag: 'DataPipeline',
+    operationId: 'updateDataPipelineRecordFromSource',
     requestBody: [
         'required' => true,
         'content'  => [

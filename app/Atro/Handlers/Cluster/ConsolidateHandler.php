@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Consolidate selected cluster items',
     description: 'Consolidates the specified cluster items of the cluster in one run: the consolidation script is rendered once for all of them, the golden record is created or updated, and all selected contributor records are linked to it.',
     tag: 'Cluster',
+    operationId: 'consolidateCluster',
     parameters: [
         [
             'name'        => 'id',

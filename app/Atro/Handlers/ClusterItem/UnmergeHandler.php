@@ -23,6 +23,7 @@ use Atro\Core\Routing\Route;
     summary: 'Split a single cluster item (deprecated)',
     description: 'Deprecated, use POST /ClusterItem/{id}/split instead. Moves the specified cluster item to a new cluster. If the item is consolidated, it is deconsolidated first. The item may not be the master entity item of its cluster.',
     tag: 'ClusterItem',
+    operationId: 'unmergeClusterItem',
     parameters: [
         [
             'name'        => 'id',

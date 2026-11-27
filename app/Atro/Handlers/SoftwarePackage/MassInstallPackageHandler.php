@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Install software packages',
     description: 'Queues the selected not installed software packages for installation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'massInstallPackages',
     requestBody: [
         'required' => true,
         'content'  => [

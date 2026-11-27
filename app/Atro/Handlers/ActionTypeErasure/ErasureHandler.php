@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Erasure action',
     description: 'Executes the specified Erasure action synchronously. Erases the personal data of one or more entity records according to the erasure mode of each field.',
     tag: 'ActionTypeErasure',
+    operationId: 'executeErasureAction',
     parameters: [
         [
             'name'        => 'id',

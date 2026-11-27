@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Delete variable',
     description: 'Deletes a configuration variable by ID. Admin only.',
     tag: 'Variable',
+    operationId: 'deleteVariable',
     parameters: [
         [
             'name'     => 'id',

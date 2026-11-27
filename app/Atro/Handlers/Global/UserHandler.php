@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get authorized user data',
     description: 'Returns the data of the authenticated user: the user record, the access control, the preferences, the settings and the application parameters. The user interface loads it after signing in.',
     tag: 'Global',
+    operationId: 'getUserSession',
     auth: true,
     responses: [
         200 => [

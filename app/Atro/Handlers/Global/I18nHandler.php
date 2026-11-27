@@ -35,6 +35,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'The client caches the result and re-fetches only when the data timestamp changes. '
         . 'If neither `locale` nor `default` is provided, the locale configured for the current user (or the system default) is used.',
     tag: 'Global',
+    operationId: 'getI18n',
     auth: false,
     parameters: [
         [

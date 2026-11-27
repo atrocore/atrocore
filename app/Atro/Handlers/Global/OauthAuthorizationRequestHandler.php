@@ -34,6 +34,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Validate an OAuth authorization request',
     description: 'Returns the client that requests the access by the authorization request kept in its cookie by the authorization page /oauth/authorize. Called by the login form of the authorization request.',
     tag: 'Global',
+    operationId: 'validateOauthAuthorizationRequest',
     auth: false,
     responses: [
         200 => [

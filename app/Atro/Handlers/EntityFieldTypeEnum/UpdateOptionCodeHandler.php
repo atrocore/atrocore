@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update the code of an option of a list',
     description: 'Changes the code of an option of a list field and replaces the value in the existing records and the translation of the option. Accessible by administrators only.',
     tag: 'EntityFieldTypeEnum',
+    operationId: 'updateEnumFieldOptionCode',
     parameters: [
         [
             'name'        => 'id',

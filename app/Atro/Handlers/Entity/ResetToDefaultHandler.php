@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Reset entity to default',
     description: 'Resets the configuration of an entity to its default values. Accessible by administrators only.',
     tag: 'Entity',
+    operationId: 'resetEntityToDefault',
     parameters: [
         [
             'name'        => 'id',

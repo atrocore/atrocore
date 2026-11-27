@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create a File record',
     description: 'Creates a new File entity from uploaded content (`fileContents`), a remote URL (`url`), or a local file path (`localFileName`). Returns the created File record, and optionally `duplicate` if a file with the same content hash already exists, and `sharedUrl` if `share` was requested.',
     tag: 'File',
+    operationId: 'createFile',
     requestBody: [
         'required' => true,
         'content'  => [

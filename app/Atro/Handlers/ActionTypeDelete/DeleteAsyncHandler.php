@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Delete action asynchronously',
     description: 'Schedules the specified Delete action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeDelete',
+    operationId: 'executeDeleteActionAsync',
     parameters: [
         [
             'name'        => 'id',

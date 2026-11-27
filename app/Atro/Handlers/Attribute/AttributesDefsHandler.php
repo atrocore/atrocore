@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get attributes definitions for a set of attributes',
     description: 'Returns field definitions for the specified attributes.',
     tag: 'Attribute',
+    operationId: 'getAttributesDefs',
     parameters: [
         [
             'name'        => 'entityName',

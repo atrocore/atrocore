@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Erasure action asynchronously',
     description: 'Schedules the specified Erasure action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeErasure',
+    operationId: 'executeErasureActionAsync',
     parameters: [
         [
             'name'        => 'id',

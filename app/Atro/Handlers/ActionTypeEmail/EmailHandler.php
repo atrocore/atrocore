@@ -25,6 +25,7 @@ use Atro\Core\Routing\Route;
     description: 'Executes the specified Email action synchronously. Sends an email according to the action configuration. '
         . 'Optional body fields can override template values such as subject, body, and recipient lists.',
     tag: 'ActionTypeEmail',
+    operationId: 'executeEmailAction',
     parameters: [
         [
             'name'        => 'id',

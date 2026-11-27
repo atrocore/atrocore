@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Create action',
     description: 'Executes the specified Create action synchronously. Creates one or more entity records according to the action configuration.',
     tag: 'ActionTypeCreate',
+    operationId: 'executeCreateAction',
     parameters: [
         [
             'name'        => 'id',

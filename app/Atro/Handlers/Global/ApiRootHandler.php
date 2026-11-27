@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'API root',
     description: 'Health-check endpoint used by the frontend after login to confirm the API is reachable.',
     tag: 'Global',
+    operationId: 'getApiRoot',
     responses: [
         200 => [
             'description' => 'API is reachable',

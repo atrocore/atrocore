@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Mark field as personal data',
     description: 'Marks the field of the specified entity record as containing personal data.',
     tag: 'Global',
+    operationId: 'markFieldAsPersonalData',
     requestBody: [
         'required' => true,
         'content'  => [

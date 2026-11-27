@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Merge cluster items into a golden record (deprecated)',
     description: 'Deprecated, use POST /Cluster/{id}/consolidateManually instead. Merges the specified source entity records (identified by their entity IDs within the cluster) into the cluster\'s golden record. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Relationship data from all source records is merged into the golden record. Returns the resulting golden record\'s field values.',
     tag: 'Cluster',
+    operationId: 'mergeCluster',
     requestBody: [
         'required' => true,
         'content'  => [

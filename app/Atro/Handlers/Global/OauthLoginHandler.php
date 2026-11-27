@@ -33,6 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Log in to the user interface',
     description: 'Logs the user in with the username and password and opens the session of the user interface: the server, the OAuth client of the user interface, gets the tokens by the authorization code grant with PKCE and sets the session cookies. Called by the login form of the user interface.',
     tag: 'Global',
+    operationId: 'oauthLogin',
     auth: false,
     requestBody: [
         'required' => true,

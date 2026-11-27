@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get release notes of a software package',
     description: 'Returns the release notes of the specified software package. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'getPackageReleaseNotes',
     parameters: [
         [
             'name'        => 'id',

@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Remove record associations',
     description: 'Removes one or all associations between two records linked via an associates-relation entity (e.g. ProductAssociation). Pass associationId to remove a specific association type; omit it to remove all associations between the two records.',
     tag: 'Global',
+    operationId: 'removeAssociates',
     requestBody: [
         'required' => true,
         'content'  => [

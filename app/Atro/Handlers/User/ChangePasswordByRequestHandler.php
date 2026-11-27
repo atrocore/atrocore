@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Changes password using a reset token',
     description: 'Sets a new password using a password reset token that was previously sent to the user\'s email.',
     tag: 'User',
+    operationId: 'changePasswordByResetToken',
     auth: false,
     requestBody: [
         'required' => true,

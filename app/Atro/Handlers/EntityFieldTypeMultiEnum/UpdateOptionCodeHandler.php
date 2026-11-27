@@ -24,6 +24,7 @@ use Atro\Handlers\EntityFieldTypeEnum\UpdateOptionCodeHandler as EnumUpdateOptio
     summary: 'Update the code of an option of a multi-value list',
     description: 'Changes the code of an option of a multi-value list field and replaces the value in the existing records and the translation of the option. Accessible by administrators only.',
     tag: 'EntityFieldTypeMultiEnum',
+    operationId: 'updateMultiEnumFieldOptionCode',
     parameters: [
         [
             'name'        => 'id',

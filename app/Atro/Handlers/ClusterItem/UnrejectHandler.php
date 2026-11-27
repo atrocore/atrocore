@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Unreject a cluster item',
     description: 'Moves a previously rejected cluster item back into the active cluster. Requires the ID of the RejectedClusterItem relation record in the request body.',
     tag: 'ClusterItem',
+    operationId: 'unrejectClusterItem',
     parameters: [
         [
             'name'        => 'id',

@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get dashlet data',
     description: 'Returns the data of a dashlet. The class providing the data is set as `className` in the metadata of the dashlet (`dashlets.{dashletName}`); the query parameters are passed to it. A dashlet is not bound to an entity: it can combine the data of several entities.',
     tag: 'Dashlet',
+    operationId: 'getDashlet',
     parameters: [
         [
             'name'        => 'dashletName',

@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\MassActionsInterface;
     summary: 'Restore records (asynchronous)',
     description: 'Schedules a restore as a background job and returns immediately with the job ID. The actual restore logic is identical to `POST /entityRestore` but runs asynchronously via the job queue.',
     tag: 'Global',
+    operationId: 'restoreRecordsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

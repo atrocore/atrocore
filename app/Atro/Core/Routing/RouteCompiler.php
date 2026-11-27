@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Routing;
 
 use Atro\Core\DataManager;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\EntityTypeHandlers\CreateHandler;
 use Atro\Core\EntityTypeHandlers\DeleteHandler;
 use Atro\Core\EntityTypeHandlers\ListKanbanHandler;
@@ -70,10 +71,49 @@ class RouteCompiler
             $this->compileDirectHandlerRoutes(),
         );
 
+        $this->validateOperationIds($routes);
+
         // More specific paths (more static segments) must be registered first in FastRoute
         usort($routes, fn($a, $b) => $this->pathSpecificity($b['path']) <=> $this->pathSpecificity($a['path']));
 
         return $routes;
+    }
+
+    /**
+     * Ensures that each operation in the docs has its own operationId. Routes with the same path and method are
+     * one operation: a module handler shadows the route of an earlier module or the core. A route with several
+     * HTTP methods is several operations, so it cannot have a single operationId.
+     */
+    private function validateOperationIds(array $routes): void
+    {
+        $operations = [];
+        $owners     = [];
+
+        foreach ($routes as $route) {
+            if (empty($route['openapi'])) {
+                continue;
+            }
+
+            $operationId = $route['openapi']['operationId'];
+            foreach ($route['methods'] as $method) {
+                $operationKey = $method . ' ' . $route['path'];
+                if (isset($operations[$operationKey])) {
+                    continue;
+                }
+                $operations[$operationKey] = true;
+
+                $owner = "$operationKey ({$route['handlerClass']})";
+                if (isset($owners[$operationId])) {
+                    throw new Error(sprintf(
+                        "Duplicate OpenAPI operationId '%s': %s and %s. Set a unique 'operationId' in #[Route].",
+                        $operationId,
+                        $owners[$operationId],
+                        $owner
+                    ));
+                }
+                $owners[$operationId] = $owner;
+            }
+        }
     }
 
     private function compileEntityTypeHandlerRoutes(): array
@@ -178,7 +218,7 @@ class RouteCompiler
             foreach ($routeAttrs as $attrObj) {
                 $routeAttr = $attrObj->newInstance();
 
-                if (empty($routeAttr->responses)) {
+                if (empty($routeAttr->responses) || $routeAttr->operationId === '') {
                     continue;
                 }
 
@@ -219,7 +259,7 @@ class RouteCompiler
             'description' => $expanded
                 ? str_replace('{entityName}', $entityName, $routeAttr->description)
                 : $routeAttr->description,
-            'operationId' => md5(($expanded ? $entityName : '') . $routeAttr->path . implode(',', (array) $routeAttr->methods)),
+            'operationId' => $routeAttr->getOperationId($entityName),
             'responses'   => $responses,
             'security'    => $routeAttr->auth
                 ? OpenApiGenerator::AUTH_SECURITY
@@ -334,7 +374,7 @@ class RouteCompiler
             foreach ($routeAttrs as $routeAttrObj) {
                 $routeAttr = $routeAttrObj->newInstance();
 
-                if (empty($routeAttr->responses)) {
+                if (empty($routeAttr->responses) || $routeAttr->operationId === '') {
                     continue;
                 }
 

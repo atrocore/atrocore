@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Creates a bookmark',
     description: 'Creates a new bookmark record.',
     tag: 'Bookmark',
+    operationId: 'createBookmark',
     requestBody: [
         'required' => true,
         'content'  => [

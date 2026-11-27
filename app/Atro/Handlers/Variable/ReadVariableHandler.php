@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Read variable',
     description: 'Returns a single variable by ID. Admin only.',
     tag: 'Variable',
+    operationId: 'getVariable',
     parameters: [
         [
             'name'     => 'id',

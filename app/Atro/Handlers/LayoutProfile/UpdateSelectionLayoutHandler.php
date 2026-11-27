@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save selection layout into a layout profile',
     description: 'Saves the selection layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileSelectionLayout',
     parameters: [
         [
             'name'        => 'id',

@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get system settings',
     description: 'Returns the values of the system configuration parameters.',
     tag: 'Global',
+    operationId: 'getSettings',
     responses: [
         200 => [
             'description' => 'Values of the Settings fields.',

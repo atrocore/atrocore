@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Send a test email',
     description: 'Sends a test email using the current outbound email settings. Admin only.',
     tag: 'Global',
+    operationId: 'sendTestEmail',
     responses: [
         200 => [
             'description' => 'true if sent successfully',

@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Webhook action asynchronously',
     description: 'Schedules the specified Webhook action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeWebhook',
+    operationId: 'executeWebhookActionAsync',
     parameters: [
         [
             'name'        => 'id',

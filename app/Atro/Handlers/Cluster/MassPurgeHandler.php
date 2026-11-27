@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Purge cluster(s)',
     description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the selected clusters, then deletes the clusters themselves. Exactly one of all=true (query), idList, or where (request body) must be provided.',
     tag: 'Cluster',
+    operationId: 'massPurgeClusters',
     parameters: [
         [
             'name'        => 'all',

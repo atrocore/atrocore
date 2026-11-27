@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get measure with its active units',
     description: 'Returns a Measure record together with the list of its active Unit records.',
     tag: 'Measure',
+    operationId: 'getMeasureWithUnits',
     parameters: [
         [
             'name'        => 'id',

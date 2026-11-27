@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Mark a notification as read',
     description: 'Marks a single notification as read.',
     tag: 'Notification',
+    operationId: 'markNotificationRead',
     parameters: [
         [
             'name'     => 'id',
