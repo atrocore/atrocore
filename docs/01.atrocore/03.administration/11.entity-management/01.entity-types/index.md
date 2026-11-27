@@ -8,6 +8,17 @@ AtroCore provides several entity types, each offering distinct capabilities for 
 
 The standard entity type that provides basic data management capabilities. This is the most commonly used entity type for most business data.
 
+### Tree
+
+The **Enable Tree** option organizes the records of a Base entity in a tree:
+
+- the "Parent" relation (a link to one record of the same entity) and the "Children" relation are added to the entity;
+- the left sidebar shows the records as a tree: root records first, children are loaded when a node is expanded;
+- neither the record itself nor any of its descendants can be set as its parent;
+- field values and relations are not inherited from the parent. For inheritance, use the [Hierarchy](#hierarchy) type.
+
+The option can be enabled only when the entity has no own fields or relations named `parent` and `children`. When a search or a filter is applied in the left sidebar, the found records are shown as a flat list.
+
 ## Hierarchy
 
 The entity of the Hierarchy type differs from the Basic one in that it allows you to create child records that will inherit the values of fields and attributes from the parent. An additional Hierarchy Management panel with following fields is available for it:  

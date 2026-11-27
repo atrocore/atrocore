@@ -214,13 +214,17 @@ use Psr\Http\Server\RequestHandlerInterface;
                                             'type'        => 'boolean',
                                             'description' => '`true` when the node has children that should be lazy-loaded by requesting this endpoint again with `node` set to this item\'s `id`',
                                         ],
+                                        'is_open'        => [
+                                            'type'        => 'boolean',
+                                            'description' => '`true` for the ancestors of the selected record in the branch returned for `selectedId` of an entity with the enabled tree — the node is shown opened',
+                                        ],
                                         'scope'          => [
                                             'type'        => 'string',
                                             'description' => 'Entity name of this record (e.g. "Category") — may differ from `entityName` for polymorphic trees',
                                         ],
                                         'children'       => [
                                             'type'        => 'array',
-                                            'description' => 'Nested child nodes of the same shape — only present for Hierarchy entities when `selectedId` is used to pre-expand the tree',
+                                            'description' => 'Nested child nodes of the same shape — only present for Hierarchy entities and entities with the enabled tree when `selectedId` is used to pre-expand the tree',
                                             'items'       => [
                                                 'type' => 'object',
                                             ],
@@ -308,6 +312,7 @@ class EntityTreeHandler extends AbstractHandler
         }
 
         $params = [
+            'node'         => (string) ($qp['node'] ?? ''),
             'where'        => $this->prepareWhereQuery($qp['where'] ?? null),
             'foreignWhere' => $this->prepareWhereQuery($qp['foreignWhere'] ?? null),
             'asc'          => ($qp['asc'] ?? 'true') === 'true',

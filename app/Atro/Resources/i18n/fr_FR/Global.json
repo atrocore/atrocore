@@ -1463,7 +1463,8 @@
         "recordCannotBeDeleted": "Les enregistrements de cette entité ne peuvent pas être supprimés.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Un enregistrement de sous-type ne peut être supprimé qu’en même temps que son enregistrement de supertype.",
         "supertypeRecordIsNotFound": "L’enregistrement de supertype est introuvable.",
-        "recordWithoutSubtypeCannotBeRestored": "L’enregistrement ne peut pas être restauré, car il n’appartient à aucun sous-type."
+        "recordWithoutSubtypeCannotBeRestored": "L’enregistrement ne peut pas être restauré, car il n’appartient à aucun sous-type.",
+        "treeParentCycle": "Le parent ne peut être ni l'enregistrement lui-même ni l'un de ses descendants."
     },
     "queryBuilderFilter": {
         "operators": {

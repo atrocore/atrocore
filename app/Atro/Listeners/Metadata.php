@@ -55,6 +55,8 @@ class Metadata extends AbstractMetadataListener
 
         $data = $this->addActive($data);
 
+        $this->addTree($data);
+
         $this->prepareActionSet($data);
 
         $this->prepareSubtypes($data);
@@ -1865,6 +1867,43 @@ class Metadata extends AbstractMetadataListener
         }
 
         return $data;
+    }
+
+    /**
+     * An entity of type Base with the enabled tree gets the one-to-many relation to itself: the "parent" record and
+     * its "children". The values are not inherited.
+     */
+    protected function addTree(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['hasTree']) || ($scopeDefs['type'] ?? null) !== 'Base' || empty($data['entityDefs'][$scope]['fields'])) {
+                continue;
+            }
+
+            $data['entityDefs'][$scope]['fields']['parent'] = [
+                'type'                     => 'link',
+                'layoutNavigationDisabled' => true,
+            ];
+            $data['entityDefs'][$scope]['fields']['children'] = [
+                'type'                     => 'linkMultiple',
+                'noLoad'                   => true,
+                'layoutDetailDisabled'     => true,
+                'layoutNavigationDisabled' => true,
+                'massUpdateDisabled'       => true,
+                'importDisabled'           => true,
+            ];
+
+            $data['entityDefs'][$scope]['links']['parent'] = [
+                'type'    => 'belongsTo',
+                'entity'  => $scope,
+                'foreign' => 'children',
+            ];
+            $data['entityDefs'][$scope]['links']['children'] = [
+                'type'    => 'hasMany',
+                'entity'  => $scope,
+                'foreign' => 'parent',
+            ];
+        }
     }
 
     /**

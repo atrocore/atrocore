@@ -82,6 +82,40 @@ Espo.define('views/subtype/detail', ['views/detail', 'views/subtype/breadcrumbs'
         });
     },
 
+    getSupertype() {
+        return this.getMetadata().get(['scopes', this.scope, 'supertypeId']);
+    },
+
+    /**
+     * The left sidebar belongs to the supertype: its navigation and its tree are shown for the record.
+     */
+    isTreeAllowed() {
+        return !this.getMetadata().get(['scopes', this.getSupertype(), 'leftSidebarDisabled']);
+    },
+
+    getPageContext() {
+        const context = Dep.prototype.getPageContext.call(this);
+
+        const supertypeModel = this.model.supertypeModel;
+        if (!supertypeModel) {
+            return context;
+        }
+
+        return Object.assign(context, {
+            scope: supertypeModel.name,
+            model: supertypeModel,
+            leftSidebar: Object.assign({}, context.leftSidebar, {
+                onNodeSelect: node => this.selectSupertypeNode(node)
+            })
+        });
+    },
+
+    selectSupertypeNode(node) {
+        const supertype = this.getSupertype();
+
+        window.location.href = node.scope === supertype ? `/#${supertype}/view/${node.id}` : `/#${supertype}`;
+    },
+
     getBreadcrumbsItems(isAdmin = false) {
         return Breadcrumbs.prepare(this, Dep.prototype.getBreadcrumbsItems.call(this, isAdmin));
     },

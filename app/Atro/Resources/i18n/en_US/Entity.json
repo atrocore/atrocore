@@ -7,6 +7,7 @@
     "disabled": "Disabled",
     "customizable": "Customizable",
     "hasArchive": "Archivable",
+    "hasTree": "Enable Tree",
     "isCustom": "Custom",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
@@ -92,6 +93,7 @@
     "hasAssignedUser": "Enable Assigned User for Access Management.",
     "hasTeam": "Enable Teams for Access Management.",
     "hasOwner": "Enable Owner for Access Management.",
+    "hasTree": "Adds a parent-child relation of the entity to itself and shows its records as a tree in the left sidebar. Field values and relations are not inherited.",
     "streamDisabled": "If checked, no Activities panel is displayed on the Record Details page. You will not be able to add notes.",
     "disableActionHistory": "If checked, no user actions on the records of this entity will be logged.",
     "auditedDisabledFields": "Changes in these fields are not displayed as Activity.",
@@ -121,7 +123,9 @@
     "subtypeHasRecords": "Subtype cannot be deleted because it has records. Please delete them first.",
     "entityHasSubtypes": "Entity cannot be deleted because it has subtypes. Please delete them first.",
     "subtypeParamCannotBeChanged": "Parameter \"%s\" cannot be changed for an entity of type \"Subtype\". Only fields and relations can be added to a subtype.",
-    "derivativeFromSubtypeNotSupporting": "A derived entity cannot be created from a subtype."
+    "derivativeFromSubtypeNotSupporting": "A derived entity cannot be created from a subtype.",
+    "treeFieldIsReserved": "Tree cannot be enabled because the entity \"%s\" already has the field or relation \"%s\".",
+    "treeIsAllowedOnlyForBase": "Tree can be enabled only for entities of type \"Base\"."
   },
   "actions": {
     "resetToDefault": "Reset to default"

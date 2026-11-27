@@ -37,6 +37,7 @@ use Atro\Core\Services\Traits\MassActionsTrait;
 use Atro\Core\Services\Traits\PersonalDataErasableTrait;
 use Atro\Core\Services\Traits\SoftDeletableTrait;
 use Atro\Core\Services\Traits\SortableTrait;
+use Atro\Core\Templates\Repositories\Base as BaseRepository;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
@@ -677,6 +678,71 @@ class Base extends AbstractRecordService implements
         return $this
             ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'service' => $this, 'result' => (object)['total' => $total, 'collection' => $collection, 'additionalData' => $additionalData]]))
             ->getArgument('result');
+    }
+
+    /**
+     * For an entity with the enabled tree the items are loaded level by level: the root records, or the children of
+     * the "node" record. The selected record is returned together with the opened branch of its ancestors. A filtered
+     * tree is shown as the flat list of the found records.
+     */
+    public function getTreeItems(string $link, string $scope, array $params): array
+    {
+        $parentId = (string)($params['node'] ?? '');
+        unset($params['node']);
+
+        $repository = $this->getRepository();
+        if (!$repository instanceof BaseRepository || !$repository->isTree() || !empty($params['where'])) {
+            return parent::getTreeItems($link, $scope, $params);
+        }
+
+        if ($parentId === '' && !empty($params['selectedId'])) {
+            return $this->getTreeBranchForSelectedRecord($link, $scope, $params, (string)$params['selectedId']);
+        }
+
+        return $this->getTreeLevelItems($link, $scope, $params, $parentId);
+    }
+
+    protected function getTreeLevelItems(string $link, string $scope, array $params, string $parentId): array
+    {
+        $params['where'] = array_merge($params['where'] ?? [], [
+            $parentId === ''
+                ? ['type' => 'isNull', 'attribute' => 'parentId']
+                : ['type' => 'equals', 'attribute' => 'parentId', 'value' => $parentId],
+        ]);
+
+        $result = parent::getTreeItems($link, $scope, $params);
+
+        $childrenCounts = $this->getRepository()->getTreeChildrenCounts(array_column($result['list'], 'id'));
+        foreach ($result['list'] as $key => $item) {
+            $result['list'][$key]['load_on_demand'] = !empty($childrenCounts[$item['id']]);
+        }
+
+        return $result;
+    }
+
+    protected function getTreeBranchForSelectedRecord(string $link, string $scope, array $params, string $selectedId): array
+    {
+        $route = array_merge($this->getRepository()->getTreeAncestorsIds($selectedId), [$selectedId]);
+
+        $levels   = [];
+        $parentId = '';
+        foreach ($route as $id) {
+            $levels[] = $this->getTreeLevelItems($link, $scope, array_merge($params, ['selectedId' => $id]), $parentId);
+            $parentId = $id;
+        }
+
+        // every ancestor gets the loaded level of its children and is opened, starting from the deepest one
+        for ($i = count($levels) - 1; $i > 0; $i--) {
+            foreach ($levels[$i - 1]['list'] as $key => $item) {
+                if ($item['id'] === $route[$i - 1]) {
+                    $levels[$i - 1]['list'][$key]['children']       = $levels[$i]['list'];
+                    $levels[$i - 1]['list'][$key]['load_on_demand'] = false;
+                    $levels[$i - 1]['list'][$key]['is_open']        = true;
+                }
+            }
+        }
+
+        return $levels[0];
     }
 
     /**

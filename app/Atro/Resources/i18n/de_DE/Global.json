@@ -1527,7 +1527,8 @@
         "recordCannotBeDeleted": "Datensätze dieser Entität können nicht gelöscht werden.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Ein Untertyp-Datensatz kann nur zusammen mit seinem Supertyp-Datensatz gelöscht werden.",
         "supertypeRecordIsNotFound": "Der Supertyp-Datensatz wurde nicht gefunden.",
-        "recordWithoutSubtypeCannotBeRestored": "Der Datensatz kann nicht wiederhergestellt werden, da er keinem Untertyp angehört."
+        "recordWithoutSubtypeCannotBeRestored": "Der Datensatz kann nicht wiederhergestellt werden, da er keinem Untertyp angehört.",
+        "treeParentCycle": "Das Elternelement darf weder der Datensatz selbst noch einer seiner Nachkommen sein."
     },
     "firstStepsDashlet": {
         "title": {

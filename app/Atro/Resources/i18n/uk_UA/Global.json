@@ -1521,7 +1521,8 @@
         "recordCannotBeDeleted": "Записи цієї сутності не можна видаляти.",
         "subtypeCanBeDeletedViaSupertypeOnly": "Запис підтипу можна видалити лише разом із записом надтипу.",
         "supertypeRecordIsNotFound": "Запис надтипу не знайдено.",
-        "recordWithoutSubtypeCannotBeRestored": "Запис неможливо відновити, оскільки він не належить до жодного підтипу."
+        "recordWithoutSubtypeCannotBeRestored": "Запис неможливо відновити, оскільки він не належить до жодного підтипу.",
+        "treeParentCycle": "Батьківським записом не може бути сам запис або один із його нащадків."
     },
     "firstStepsDashlet": {
         "title": {
