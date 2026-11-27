@@ -1013,7 +1013,8 @@
         "to": "erre",
         "was": "volt",
         "become": "lett",
-        "updateThis": "A(z) {user} frissítette a(z) {entityType} entitást."
+        "updateThis": "A(z) {user} frissítette a(z) {entityType} entitást.",
+        "eraseAutomaticallyThis": "A rekord személyes adatai automatikusan törlődtek ekkor: {datetime}."
     },
     "descriptions": {
         "previewTemplate": "Automatikus adatelőnézet HTML/CSS-sablonjainak kezelése"
