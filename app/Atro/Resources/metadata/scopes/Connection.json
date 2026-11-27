@@ -1,8 +1,8 @@
 {
   "type": "Base",
   "entity": true,
-  "layouts": false,
-  "tab": false,
+  "layouts": true,
+  "tab": true,
   "acl": false,
   "customizable": false,
   "showInAdminPanel": false,
