@@ -705,7 +705,9 @@ class RDB extends \Espo\ORM\Repositories\RDB
 
     /**
      * Finishes the save that was made with the "skipAfterSave", "keepNew" and "skipUpdateFetchedValues" options, so
-     * that the after-save logic sees the entity as it was changed and runs when the related data is saved too.
+     * that the after-save logic sees the entity as it was changed and runs when the related data is saved too. The
+     * entity is cached with the stored values as the fetched ones, so a later change of it in the same process is
+     * compared with what is stored.
      */
     public function completeDeferredSave(Entity $entity, array $options = []): void
     {
@@ -713,6 +715,7 @@ class RDB extends \Espo\ORM\Repositories\RDB
 
         if ($entity->isNew()) {
             $entity->setIsNew(false);
+            $entity->setAsFetched();
         } elseif ($entity->isFetched()) {
             $entity->updateFetchedValues();
         }
@@ -843,7 +846,8 @@ class RDB extends \Espo\ORM\Repositories\RDB
                             $defs['additionalColumns'] = $columns;
                         }
 
-                        $foreignCollection = $entity->get($name, $defs);
+                        // the related records loaded earlier are outdated when the entity is saved more than once
+                        $foreignCollection = $entity->get($name, array_merge($defs, ['disableCache' => true]));
                         if ($foreignCollection) {
                             foreach ($foreignCollection as $foreignEntity) {
                                 $existingIds[] = $foreignEntity->id;
@@ -918,6 +922,11 @@ class RDB extends \Espo\ORM\Repositories\RDB
                                 $data = $columnData->$id;
                                 $this->updateRelation($entity, $name, $id, $data);
                             }
+                        }
+
+                        // the after-save logic sees the related records as they are stored now
+                        if (!empty($toRemoveIds) || !empty($toUpdateIds) || !empty(array_diff($specifiedIds, $existingIds))) {
+                            $entity->get($name, array_merge($defs, ['disableCache' => true]));
                         }
                     }
                 }
