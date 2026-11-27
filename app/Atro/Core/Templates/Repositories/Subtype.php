@@ -196,6 +196,22 @@ class Subtype extends Base
     }
 
     /**
+     * The attributes of the relations to many records of the supertype: the ids and the relation columns.
+     */
+    protected function getSupertypeLinkMultipleAttributes(): array
+    {
+        $attributes = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
+            if (!empty($defs['supertypeField']) && ($defs['type'] ?? null) === 'linkMultiple') {
+                $attributes[] = $field . 'Ids';
+                $attributes[] = $field . 'Columns';
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Whether the fields of the subtype itself are changed.
      */
     protected function hasOwnChanges(Entity $entity): bool
@@ -237,6 +253,13 @@ class Subtype extends Base
 
         foreach ($this->getSupertypeAttributes($entity) as $attribute) {
             if ($entity->has($attribute) && ($entity->isNew() || $entity->isAttributeChanged($attribute))) {
+                $supertypeRecord->set($attribute, $entity->get($attribute));
+            }
+        }
+
+        // the relations to many records are saved by the after-save logic of the supertype record
+        foreach ($this->getSupertypeLinkMultipleAttributes() as $attribute) {
+            if ($entity->has($attribute)) {
                 $supertypeRecord->set($attribute, $entity->get($attribute));
             }
         }

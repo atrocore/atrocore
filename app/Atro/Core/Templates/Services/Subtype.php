@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Atro\Core\Services\AbstractRecordService;
 use Atro\Core\Services\Interfaces\DeletableInterface;
@@ -21,6 +22,7 @@ use Atro\Core\Services\Interfaces\LinkableInterface;
 use Atro\Core\Services\Interfaces\MassActionsInterface;
 use Atro\Core\Services\Interfaces\SoftDeletableInterface;
 use Atro\Core\Services\Interfaces\SortableInterface;
+use Atro\Core\Services\Traits\AssignmentTrait;
 use Atro\Core\Services\Traits\EditableTrait;
 use Atro\Core\Services\Traits\LinkableTrait;
 use Atro\Core\Services\Traits\MassActionsTrait;
@@ -39,6 +41,7 @@ class Subtype extends AbstractRecordService implements
     SoftDeletableInterface,
     MassActionsInterface
 {
+    use AssignmentTrait;
     use EditableTrait {
         filterInput as protected doFilterInput;
     }
@@ -158,6 +161,35 @@ class Subtype extends AbstractRecordService implements
 
         // the subtype is defined by the entity itself
         unset($data->type);
+    }
+
+    protected function prepareEntityToStore(Entity $entity, \stdClass $data): void
+    {
+        if ($entity->isNew()) {
+            $this->populateAssignmentDefaults($entity);
+        }
+
+        $this->setOwnerAndAssignedUser($entity, $data);
+    }
+
+    protected function validateEntityBeforeStore(Entity $entity, \stdClass $data): void
+    {
+        if (!$this->checkAssignment($entity)) {
+            throw new Forbidden($entity->isNew() ? 'Assignment permission failure' : '');
+        }
+    }
+
+    /**
+     * The teams of the subtype record are the teams of its supertype record.
+     */
+    protected function getStoredTeamIds(Entity $entity): array
+    {
+        $supertypeRecord = $this->getEntityManager()->getRepository($this->getSupertypeName())->get($entity->get('id'));
+        if (empty($supertypeRecord)) {
+            return [];
+        }
+
+        return $supertypeRecord->getLinkMultipleIdList('teams') ?? [];
     }
 
     /**
