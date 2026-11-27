@@ -1007,6 +1007,9 @@ class LayoutManager
                 $this->getMetadata()->get(['entityDefs', $subtype, 'links', $field], [])
             );
             $fieldDefs['requestData'] = ['subtypeFields' => $row['name']];
+            // the header of the column shows the subtype by its icon
+            $fieldDefs['subtype'] = $subtype;
+            $fieldDefs['subtypeField'] = $field;
 
             $data[$key]['fieldDefs'] = $fieldDefs;
             $data[$key]['label'] = $this->getLanguage()->translate($row['name'], 'fields', $scope);

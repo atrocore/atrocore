@@ -15,7 +15,7 @@
                 <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}{{#if this.resizeSpacer}} class="table-spacer"{{/if}}{{#if this.name}} data-name="{{this.name}}"{{/if}}>
                     <div>
                         {{#if this.sortable}}
-                            <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{this.label}}{{/if}}</a>
+                            {{#if this.subtypeIcon}}<img class="icon icon-small subtype-icon" src="{{this.subtypeIcon}}" title="{{this.subtypeLabel}}" alt="{{this.subtypeLabel}}">{{/if}}<a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{this.label}}{{/if}}</a>
                             {{#if this.sorted}}{{#if this.asc}}<span><i class="ph ph-arrow-up"></i></span>{{else}}<span><i class="ph ph-arrow-down"></i></span>{{/if}}{{/if}}
                         {{else}}
                             {{#if this.hasCustomLabel}}
@@ -23,7 +23,7 @@
                             {{else if this.layoutEditor}}
                             <div class="layout-editor-container"></div>
                             {{else}}
-                               {{this.label}}
+                               {{#if this.subtypeIcon}}<img class="icon icon-small subtype-icon" src="{{this.subtypeIcon}}" title="{{this.subtypeLabel}}" alt="{{this.subtypeLabel}}">{{/if}}{{this.label}}
                             {{/if}}
                         {{/if}}
                     </div>

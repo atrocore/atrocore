@@ -2559,6 +2559,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     item.label = this.listLayout[i].label;
                 }
 
+                // a column of a field of a subtype shows the subtype by its icon, the label is the one of the field
+                const subtype = this.listLayout[i].fieldDefs?.subtype;
+                if (subtype) {
+                    item.subtypeIcon = this.getTabIcon(subtype) || this.getDefaultTabIcon(subtype);
+                    const type = this.getMetadata().get(['entityDefs', subtype, 'fields', 'type', 'default']);
+                    item.subtypeLabel = `${this.translate('Subtype')}: ${this.getLanguage().translateOption(type, 'type', this.scope)}`;
+                    item.label = this.translate(this.listLayout[i].fieldDefs.subtypeField, 'fields', subtype);
+                }
+
 
                 if (item.sortable) {
                     item.sorted = this.collection.sortBy === this.listLayout[i].name;

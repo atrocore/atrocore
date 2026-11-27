@@ -9795,6 +9795,10 @@ body > #header .navbar-brand span.home-icon {
     height: 16px;
 }
 
+.table > thead > tr > th .subtype-icon {
+    margin-right: 5px;
+}
+
 .icon-button {
     width: 18px;
     height: 18px;
