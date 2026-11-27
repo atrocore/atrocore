@@ -917,10 +917,10 @@
     "fields": {
         "number": "Numer",
         "status": "Status",
-        "conditionsType": "Typ warunków",
+        "conditionsType": "Tryb warunków",
         "conditions": "Warunki",
         "conditionsScript": "Skrypt warunków",
-        "conditionsExpression": "Wyrażenie warunków",
+        "conditionsExpression": "Warunki",
         "followers": "Obserwujący",
         "connection": "Połączenie",
         "tags": "Tagi",
