@@ -41,7 +41,7 @@ For information about inheritance and hierarchies in records, see the [Hierarchi
 A subtype extends an entity of type [Base](#base) - its **supertype** - with the fields and relations of one type of its records. For example, the entity `Product` gets the subtypes `ProductTypeSimple` and `ProductTypeBundle`: every product has the common product fields, a bundle also has the fields that only bundles need.
 
 - **Every record belongs to one subtype.** The supertype gets the `Type` field with an option for each subtype, e.g. `simple` and `bundle`. Creating a record of the supertype starts with choosing its type, and the record is shown with the fields and layouts of its subtype.
-- **The common data stays in the supertype.** A subtype stores only its own fields. The list view of the supertype shows the records of all subtypes with the common fields.
+- **The common data stays in the supertype.** A subtype stores only its own fields. The list view of the supertype shows the records of all subtypes with the common fields. A field of a subtype is added to the list layout of the supertype via **Add Subtype Field**: choose the subtype, then its fields. The list is sorted and filtered by such a field, a record of another subtype has it empty.
 - **A subtype has only its own fields and relations.** Name, icon and description of a subtype can be changed, all other settings - access control, activities, attributes and so on - belong to the supertype.
 - **Records are managed via the supertype.** A record of a subtype is opened, edited and deleted as a record of the supertype; the subtype has no own navigation item.
 

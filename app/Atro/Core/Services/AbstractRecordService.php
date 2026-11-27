@@ -584,6 +584,10 @@ abstract class AbstractRecordService extends AbstractService
             $selectParams['attributesIds'] = $params['attributesIds'];
         }
 
+        if (!empty($params['subtypeFields'])) {
+            $selectParams['subtypeFields'] = $this->getReadableSubtypeFields($params['subtypeFields']);
+        }
+
         // a module may pass its own list params to the select
         $selectParams = $this
             ->dispatchEvent('afterPrepareSelectParams', new Event(['params' => $params, 'selectParams' => $selectParams, 'service' => $this]))
@@ -656,6 +660,31 @@ abstract class AbstractRecordService extends AbstractService
         return $this
             ->dispatchEvent('afterFindEntities', new Event(['params' => $params, 'service' => $this, 'result' => ['total' => $total, 'collection' => $collection]]))
             ->getArgument('result');
+    }
+
+    /**
+     * The requested fields of the subtypes, named "<Subtype>_<field>", that the user may read.
+     *
+     * @param string[] $names
+     *
+     * @return string[]
+     */
+    protected function getReadableSubtypeFields(array $names): array
+    {
+        $result = [];
+        foreach ($names as $name) {
+            $subtypeField = $this->getMetadata()->getSubtypeField($this->entityType, (string)$name);
+            if ($subtypeField === null || in_array($name, $result, true)) {
+                continue;
+            }
+
+            $forbidden = $this->getAcl()->getScopeForbiddenFieldList($subtypeField['entityName'], 'read');
+            if (!in_array($subtypeField['field'], $forbidden, true)) {
+                $result[] = $name;
+            }
+        }
+
+        return $result;
     }
 
     public function getMaxSelectTextAttributeLength()

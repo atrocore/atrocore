@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
+use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
@@ -948,6 +949,8 @@ class LayoutManager
                         }
                     }
 
+                    $this->prepareSubtypeFieldItems($scope, $data, $fields);
+
                     // a module may keep and complete columns of its own, which are not fields of the entity - a column that
                     // is not a field gets the defs of its field in fieldDefs
                     $event = $this->getEventManager()->dispatch('Layout', 'prepareListItems', new Event([
@@ -972,6 +975,45 @@ class LayoutManager
         }
 
         return $data;
+    }
+
+    /**
+     * A column of a list may be a field of a subtype, named "<Subtype>_<field>": it gets the defs of the field, and
+     * the list asks for the field along with the records. The column of a field that is no longer shown on the
+     * supertype is not kept, so it disappears from the layout.
+     */
+    protected function prepareSubtypeFieldItems(string $scope, array &$data, array &$fields): void
+    {
+        if (empty($this->getMetadata()->get(['scopes', $scope, 'hasSubtypeFields']))) {
+            return;
+        }
+
+        foreach ($data as $key => $row) {
+            if (empty($row['name']) || in_array($row['name'], $fields, true)) {
+                continue;
+            }
+
+            $subtypeField = $this->getMetadata()->getSubtypeField($scope, $row['name']);
+            if ($subtypeField === null || $subtypeField['field'] !== $subtypeField['attribute']) {
+                continue;
+            }
+
+            $subtype = $subtypeField['entityName'];
+            $field = $subtypeField['field'];
+
+            $fieldDefs = Metadata::prepareSubtypeFieldDefs(
+                $row['name'],
+                $this->getMetadata()->get(['entityDefs', $subtype, 'fields', $field], []),
+                $this->getMetadata()->get(['entityDefs', $subtype, 'links', $field], [])
+            );
+            $fieldDefs['requestData'] = ['subtypeFields' => $row['name']];
+
+            $data[$key]['fieldDefs'] = $fieldDefs;
+            $data[$key]['label'] = $this->getLanguage()->translate($row['name'], 'fields', $scope);
+            $data[$key]['notSortable'] = !empty($this->getMetadata()->get(['fields', $subtypeField['type'], 'notSortable']));
+
+            $fields[] = $row['name'];
+        }
     }
 
     protected function sanitizeInput(string $name): string

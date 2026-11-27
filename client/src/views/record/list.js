@@ -2849,6 +2849,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.rowList.push(key);
 
+            // the fields of the subtype of the record come in the meta, the columns of these fields read them from the model
+            const subtypeFields = model.getMeta('subtypeFields');
+            if (subtypeFields) {
+                model.set(subtypeFields, {silent: true});
+            }
+
             this.getInternalLayout(function (internalLayout) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);

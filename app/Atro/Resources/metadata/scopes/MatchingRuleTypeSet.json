@@ -5,6 +5,5 @@
   "module": "Atro",
   "layouts": false,
   "customizable": false,
-  "importable": false,
-  "emHidden": true
+  "importable": false
 }

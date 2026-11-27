@@ -51,6 +51,19 @@ use Atro\Handlers\AbstractHandler;
             ],
         ],
         [
+            'name'        => 'subtypeFields',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Comma-separated fields of the subtypes, each named "<Subtype>_<field>". They are returned in "_meta.subtypeFields" of the records of these subtypes. The same names are taken by "where" and "sortBy".',
+            'x-requires'  => [
+                'hasSubtypeFields',
+            ],
+            'schema'      => [
+                'type'    => 'string',
+                'example' => 'ConnectionTypeSmtp_smtpServer,ConnectionTypeFtp_host',
+            ],
+        ],
+        [
             'name'     => 'where',
             'in'       => 'query',
             'required' => false,

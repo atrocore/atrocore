@@ -4,7 +4,8 @@
     "linkOptions",
     "audit",
     "state",
-    "relationRecord"
+    "relationRecord",
+    "subtypeFields"
   ],
   "detail": [
     "availableActions",

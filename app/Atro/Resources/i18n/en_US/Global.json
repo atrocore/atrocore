@@ -678,6 +678,8 @@
     "sidebarExpand": "Click to expand",
     "sidebarCollapse": "Click to collapse",
     "addAttribute": "Add Attribute",
+    "addSubtypeField": "Add Subtype Field",
+    "Subtype Fields": "Subtype Fields",
     "filterPlaceHolder": "Select",
     "emptySavedSearchPlaceholder": "No saved filters",
     "General Filters": "General Filters",

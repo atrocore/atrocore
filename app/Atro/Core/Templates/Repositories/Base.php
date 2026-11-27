@@ -18,11 +18,15 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\PseudoTransactionManager;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 
 class Base extends RDB
 {
@@ -52,6 +56,12 @@ class Base extends RDB
 
     public function find(array $params = [])
     {
+        $subtypeFields = $this->getSubtypeFieldsToSelect($params);
+        if (!empty($subtypeFields)) {
+            $params['subtypeFieldsToSelect'] = $subtypeFields;
+            $params['callbacks'][] = [$this, 'putSubtypeFieldsToSelect'];
+        }
+
         /** @var EntityCollection $collection */
         $collection = parent::find($params);
 
@@ -64,7 +74,160 @@ class Base extends RDB
             $this->prepareAttributesForOutput($collection, $params);
         }
 
+        if (!empty($subtypeFields)) {
+            $this->putSubtypeFieldsToMeta($collection, $subtypeFields, $params['subtypeFields'] ?? []);
+        }
+
         return $collection;
+    }
+
+    /**
+     * The fields of the subtypes to join to the select of the records, grouped by subtype: the requested ones and the
+     * one the records are sorted by.
+     *
+     * @return array<string, string[]>
+     */
+    protected function getSubtypeFieldsToSelect(array $params): array
+    {
+        if (!empty($params['aggregation'])) {
+            return [];
+        }
+
+        $names = $params['subtypeFields'] ?? [];
+        if (!empty($params['orderBy']) && is_string($params['orderBy'])) {
+            $names[] = $params['orderBy'];
+        }
+
+        $result = [];
+        foreach ($names as $name) {
+            $subtypeField = $this->getMetadata()->getSubtypeField($this->entityType, (string)$name);
+            if ($subtypeField !== null && !in_array($subtypeField['field'], $result[$subtypeField['entityName']] ?? [], true)) {
+                $result[$subtypeField['entityName']][] = $subtypeField['field'];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * A select callback for a list - the same way the attributes join their values: joins the table of every subtype,
+     * whose fields are requested, selecting the attributes of these fields under the names "<Subtype>_<attribute>",
+     * and sorts the list by such a field when asked. The table is joined as the select of the subtype itself, so the
+     * attributes of every type are selected as they are for the subtype.
+     */
+    public function putSubtypeFieldsToSelect(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void
+    {
+        $queryConverter = $mapper->getQueryConverter();
+        $mainAlias = $queryConverter->getMainTableAlias();
+
+        $orderBy = is_string($params['orderBy'] ?? null) ? $this->getMetadata()->getSubtypeField($this->entityType, $params['orderBy']) : null;
+        $order = strtoupper((string)($params['order'] ?? 'ASC')) === 'DESC' ? 'DESC' : 'ASC';
+
+        foreach ($params['subtypeFieldsToSelect'] ?? [] as $subtype => $fields) {
+            $attributes = $this->getSubtypeFieldsAttributes($subtype, $fields);
+
+            $subtypeRepository = $this->getEntityManager()->getRepository($subtype);
+            $subtypeQb = $subtypeRepository->getMapper()->createSelectQueryBuilder($subtypeRepository->get(), [
+                'select'               => array_merge(['id'], array_merge(...array_values($attributes))),
+                'maxTextColumnsLength' => $params['maxTextColumnsLength'] ?? null,
+                // the deleted records are left out by the select of the supertype
+                'withDeleted'          => true,
+            ], true);
+
+            $alias = 'st_' . IdGenerator::unsortableId();
+            $sql = preg_replace('/\b' . preg_quote($mainAlias, '/') . '\b/', 'sti_' . IdGenerator::unsortableId(), $subtypeQb->getSQL());
+
+            $qb->leftJoin($mainAlias, "($sql)", $alias, "$alias.{$queryConverter->fieldToAlias('id')} = $mainAlias.id");
+            foreach ($subtypeQb->getParameters() as $name => $value) {
+                $qb->setParameter($name, $value, $subtypeQb->getParameterType($name));
+            }
+
+            // a record of another subtype has no row in the table
+            $qb->addSelect("$alias.{$queryConverter->fieldToAlias('id')} AS " . $queryConverter->fieldToAlias("{$subtype}_id"));
+
+            foreach ($attributes as $field => $fieldAttributes) {
+                foreach ($fieldAttributes as $attribute) {
+                    $qb->addSelect("$alias.{$queryConverter->fieldToAlias($attribute)} AS " . $queryConverter->fieldToAlias("{$subtype}_{$attribute}"));
+                }
+
+                // the field is not a field the query converter knows, so the list is sorted by it here
+                if ($orderBy !== null && $orderBy['entityName'] === $subtype && $orderBy['field'] === $field) {
+                    $sortAttribute = in_array($orderBy['type'], ['link', 'file', 'image'], true) ? "{$field}Name" : $field;
+                    if (in_array($sortAttribute, $fieldAttributes, true)) {
+                        $qb->add('orderBy', $queryConverter->fieldToAlias("{$subtype}_{$sortAttribute}") . " $order");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * The attributes of the fields of the subtype that are selected from its table, keyed by field.
+     *
+     * @param string[] $fields
+     *
+     * @return array<string, string[]>
+     */
+    protected function getSubtypeFieldsAttributes(string $subtype, array $fields): array
+    {
+        $seed = $this->getEntityManager()->getRepository($subtype)->get();
+
+        $result = [];
+        foreach ($fields as $field) {
+            foreach ($this->container->get('fieldManager')->getAttributeList($subtype, $field) as $attribute) {
+                if ($seed->hasAttribute($attribute) && empty($seed->getAttributeParam($attribute, 'notStorable'))) {
+                    $result[$field][] = $attribute;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Puts the values of the requested fields of the subtypes into the meta of the records of these subtypes, under
+     * the names "<Subtype>_<attribute>". A record of another subtype gets nothing.
+     *
+     * @param array<string, string[]> $subtypeFields
+     * @param string[]                $requested
+     */
+    protected function putSubtypeFieldsToMeta(EntityCollection $collection, array $subtypeFields, array $requested): void
+    {
+        $requestedFields = [];
+        foreach ($requested as $name) {
+            $subtypeField = $this->getMetadata()->getSubtypeField($this->entityType, (string)$name);
+            if ($subtypeField !== null) {
+                $requestedFields[$subtypeField['entityName']][] = $subtypeField['field'];
+            }
+        }
+
+        foreach ($subtypeFields as $subtype => $fields) {
+            $fields = array_values(array_intersect($fields, $requestedFields[$subtype] ?? []));
+            if (empty($fields)) {
+                continue;
+            }
+
+            $attributes = array_merge(...array_values($this->getSubtypeFieldsAttributes($subtype, $fields)));
+            $seed = $this->getEntityManager()->getRepository($subtype)->get();
+
+            foreach ($collection as $entity) {
+                if (empty($entity->rowData["{$subtype}_id"])) {
+                    continue;
+                }
+
+                // the values are typed the same way as for a record of the subtype
+                $seed->reset();
+                $values = [];
+                foreach ($attributes as $attribute) {
+                    $values[$attribute] = $entity->rowData["{$subtype}_{$attribute}"] ?? null;
+                }
+                $seed->set($values);
+
+                foreach ($attributes as $attribute) {
+                    $entity->setMeta('subtypeFields', "{$subtype}_{$attribute}", $seed->get($attribute));
+                }
+            }
+        }
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])

@@ -25,6 +25,7 @@ use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Database\Orm\RelationManager;
+use Atro\Core\Utils\Metadata as MetadataUtil;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
 
@@ -2674,6 +2675,62 @@ class Metadata extends AbstractMetadataListener
                     }
                 }
             }
+
+            // the records of a reference data entity are not stored in tables, so they cannot be joined
+            if (($data['scopes'][$supertype]['type'] ?? null) !== 'ReferenceData') {
+                $this->prepareSubtypeFields($data, $supertype, $scopes);
+            }
+        }
+    }
+
+    /**
+     * The fields of the subtypes may be shown as columns of the list of the supertype and filter it, each named after
+     * its subtype, e.g. "ExportFeedTypeSimple_fileNameMask".
+     */
+    protected function prepareSubtypeFields(array &$data, string $supertype, array $subtypes): void
+    {
+        $data['scopes'][$supertype]['hasSubtypeFields'] = true;
+
+        $data['clientDefs'][$supertype]['layoutAddFieldsActions']['subtypeFields'] = [
+            'label'       => 'addSubtypeField',
+            'view'        => 'views/modals/select-subtype-field',
+            'layoutTypes' => ['list', 'selection'],
+        ];
+
+        $filterGroup = [
+            'label'    => 'Subtype Fields',
+            'addLabel' => 'addSubtypeField',
+            'view'     => 'views/modals/select-subtype-field',
+            'fields'   => [],
+        ];
+
+        foreach ($subtypes as $subtype) {
+            foreach ($data['entityDefs'][$subtype]['fields'] ?? [] as $field => $fieldDefs) {
+                if (
+                    empty($fieldDefs['type'])
+                    || $field === 'id'
+                    || !empty($fieldDefs['supertypeField'])
+                    || !empty($fieldDefs['notStorable'])
+                    || !empty($fieldDefs['filterDisabled'])
+                    || in_array($fieldDefs['type'], MetadataUtil::SUBTYPE_FIELD_UNSUPPORTED_TYPES, true)
+                ) {
+                    continue;
+                }
+
+                $name = "{$subtype}_{$field}";
+                $filterGroup['fields'][$name] = [
+                    'type' => $fieldDefs['type'],
+                    'defs' => MetadataUtil::prepareSubtypeFieldDefs(
+                        $name,
+                        $fieldDefs,
+                        $data['entityDefs'][$subtype]['links'][$field] ?? []
+                    ),
+                ];
+            }
+        }
+
+        if (!empty($filterGroup['fields'])) {
+            $data['clientDefs'][$supertype]['queryBuilderFilterGroups']['subtypeFields'] = $filterGroup;
         }
     }
 
