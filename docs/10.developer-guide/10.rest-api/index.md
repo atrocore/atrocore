@@ -226,6 +226,45 @@ $where = [
 > For more complex queries and a full list of supported operators, consult the [Advanced data querying](../02.understanding-atrocore/10.select-manager/index.md) section in the documentation.
 > The array structures detailed there must be converted into the URL query string array notation for use in API requests.
 
+-----
+
+###  Fields of Subtypes
+
+The list of an entity with [subtypes](../../01.atrocore/03.administration/11.entity-management/01.entity-types/index.md#subtype) returns the fields of its subtypes too. Sibling subtypes may have fields with the same name, so a field of a subtype is named after its subtype: `<Subtype>_<field>`, e.g. `ConnectionTypeSmtp_smtpServer`.
+
+* **`subtypeFields`**: A comma-separated list of the fields of the subtypes. Each record gets the requested fields of its own subtype in `_meta.subtypeFields`, a record of another subtype gets nothing.
+* **`sortBy`** and **`where`** take the same names.
+
+```http
+GET /api/Connection?select=id,name,type&subtypeFields=ConnectionTypeSmtp_smtpServer,ConnectionTypeSmtp_smtpPort,ConnectionTypeFtp_host&sortBy=ConnectionTypeSmtp_smtpServer&asc=true&where[0][attribute]=ConnectionTypeSmtp_smtpPort&where[0][type]=equals&where[0][value]=587 HTTP/1.1
+Host: demo.atropim.com
+Accept: application/json
+Authorization: Bearer ***************
+```
+
+```json
+{
+  "total": 1,
+  "list": [
+    {
+      "id": "019a7e2c-6f1d-7a3b-9c4e-2b8d5f0a1c37",
+      "name": "Mail Server",
+      "type": "smtp",
+      "_meta": {
+        "subtypeFields": {
+          "ConnectionTypeSmtp_smtpServer": "smtp.example.com",
+          "ConnectionTypeSmtp_smtpPort": 587
+        }
+      }
+    }
+  ]
+}
+```
+
+A condition on a field of a subtype matches the records of this subtype only, `isNull` and `notEquals` included. A link field of a subtype is returned as `<Subtype>_<field>Id` and `<Subtype>_<field>Name`.
+
+The fields stored in the table of the subtype are supported. Multiple link fields and passwords are not. The subtypes of the entities of type `ReferenceData`, e.g. `Entity` and `EntityField`, have no fields on their supertypes.
+
 ## Advanced API Features
 
 This section provides details on non-standard API requests for common tasks like bulk operations and file uploads.

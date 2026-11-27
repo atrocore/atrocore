@@ -177,6 +177,9 @@ abstract class AbstractHandler implements MiddlewareInterface
         if (($qp['allAttributes'] ?? null) === 'true' || ($qp['allAttributes'] ?? null) === '1') {
             $params['allAttributes'] = true;
         }
+        if (!empty($qp['subtypeFields']) && is_string($qp['subtypeFields'])) {
+            $params['subtypeFields'] = explode(',', $qp['subtypeFields']);
+        }
         if (($qp['completeAttrDefs'] ?? null) === 'true' || ($qp['completeAttrDefs'] ?? null) === '1') {
             $params['completeAttrDefs'] = true;
         }

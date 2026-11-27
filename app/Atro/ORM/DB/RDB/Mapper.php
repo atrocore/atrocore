@@ -112,7 +112,10 @@ class Mapper implements MapperInterface
         }
 
         $qb->from($conn->quoteIdentifier($queryData['table']['tableName']), $queryData['table']['tableAlias']);
-        $qb->andWhere($queryData['where']);
+        // a select of all records with the deleted ones has no conditions
+        if ($queryData['where'] !== '' && $queryData['where'] !== null) {
+            $qb->andWhere($queryData['where']);
+        }
 
         if (!empty($queryData['joins'])) {
             foreach ($queryData['joins'] as $v) {

@@ -197,6 +197,18 @@ class Base
                     continue;
                 }
 
+                // a field of a subtype becomes a ready condition on the table of the subtype
+                $subtypeField = !empty($item['id']) && !$this->isKnownField((string)$item['id'])
+                    ? $this->getMetadata()->getSubtypeField($this->entityType, (string)$item['id'])
+                    : null;
+                if ($subtypeField !== null) {
+                    $item = [
+                        'type'  => 'innerSql',
+                        'value' => $this->getSubtypeFieldWhereSql($subtypeField['entityName'], [array_merge($item, ['id' => $subtypeField['attribute']])]),
+                    ];
+                    continue;
+                }
+
                 // for attributes
                 $additionForAttribute = [];
                 $attribute            = "";
@@ -439,6 +451,32 @@ class Base
             }
         }
         return false;
+    }
+
+    /**
+     * A condition on fields of a subtype, as a subquery on the select of the subtype itself: only the records of the
+     * subtype may match it.
+     *
+     * @return array{sql: string, parameters: array<string, mixed>}
+     */
+    protected function getSubtypeFieldWhereSql(string $subtype, array $where): array
+    {
+        $repository = $this->getEntityManager()->getRepository($subtype);
+        $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+
+        // the deleted records are left out by the select of the supertype
+        $sp = $this->createSelectManager($subtype)->getSelectParams(['where' => $where, 'withDeleted' => true]);
+        $sp['select'] = ['id'];
+        $sp['additionalSelectColumns'] = [];
+        $sp['orderBy'] = null;
+
+        $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
+        $sql = preg_replace('/\b' . preg_quote($mainTableAlias, '/') . '\b/', 'sbq_' . IdGenerator::unsortableId(), $qb->getSQL());
+
+        return [
+            'sql'        => "$mainTableAlias.id IN ($sql)",
+            'parameters' => $qb->getParameters(),
+        ];
     }
 
     public function qbConditionToType(string $condition): string
@@ -786,6 +824,11 @@ class Base
         $isExists = false;
         if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy])) {
             $isExists = true;
+        } elseif (($subtypeField = $this->getMetadata()->getSubtypeField($this->getEntityType(), $sortBy)) !== null) {
+            $forbiddenFields = $this->getAcl()->getScopeForbiddenFieldList($subtypeField['entityName'], 'read');
+            if (!in_array($subtypeField['field'], $forbiddenFields, true)) {
+                return;
+            }
         } elseif (!empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute']))) {
             if (!isset($this->cachedData['sortByAttributes'][$this->getEntityType()][$sortBy])) {
                 // attribute fields are sorted by "{name}", "{name}Unit", "{name}From" or "{name}To"
@@ -1362,6 +1405,17 @@ class Base
 
         if (!is_null($attribute) && !is_string($attribute)) {
             throw new Error('Bad attribute in where statement');
+        }
+
+        // a field of a subtype becomes a ready condition on the table of the subtype
+        if (!empty($attribute) && !empty($item['type']) && empty($item['isAttribute']) && !$this->isKnownField($attribute)) {
+            $subtypeField = $this->getMetadata()->getSubtypeField($this->entityType, $attribute);
+            if ($subtypeField !== null) {
+                unset($item['field']);
+                $item['attribute'] = $subtypeField['attribute'];
+
+                return ['innerSql' => $this->getSubtypeFieldWhereSql($subtypeField['entityName'], [$item])];
+            }
         }
 
         // for backward compatibility (extensibleEnum)

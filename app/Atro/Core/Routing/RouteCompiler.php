@@ -271,10 +271,21 @@ class RouteCompiler
         }
 
         if (!empty($routeAttr->parameters)) {
-            // Strip the {entityName} path parameter — it is baked into the concrete path
-            $parameters = $expanded
-                ? array_values(array_filter($routeAttr->parameters, fn($p) => ($p['name'] ?? '') !== 'entityName'))
-                : $routeAttr->parameters;
+            $parameters = [];
+            foreach ($routeAttr->parameters as $parameter) {
+                // Strip the {entityName} path parameter — it is baked into the concrete path
+                if ($expanded && ($parameter['name'] ?? '') === 'entityName') {
+                    continue;
+                }
+
+                // A parameter may be taken only by the entities having the scope keys it requires
+                if ($expanded && !$this->hasScopeKeys($entityName, $parameter['x-requires'] ?? [])) {
+                    continue;
+                }
+                unset($parameter['x-requires']);
+
+                $parameters[] = $parameter;
+            }
 
             if (!empty($parameters)) {
                 $entry['parameters'] = $parameters;
@@ -288,6 +299,20 @@ class RouteCompiler
         }
 
         return $entry;
+    }
+
+    /**
+     * @param string[] $keys
+     */
+    private function hasScopeKeys(string $entityName, array $keys): bool
+    {
+        foreach ($keys as $key) {
+            if (empty($this->metadata->get(['scopes', $entityName, $key]))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
