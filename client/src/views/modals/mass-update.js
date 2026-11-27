@@ -159,7 +159,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                                     this.addField(field, this.translate(field, 'fields', this.scope));
                                 }
 
-                                if (fieldDefs.multilangField === name || field === name) {
+                                if ((fieldDefs.multilangField === name || field === name) && !this.isFieldForbidden(field)) {
                                     const statusField = field + 'TranslationStatus';
                                     if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${statusField}`)) {
                                         this.addField(statusField, this.translate(statusField, 'fields', this.scope));
@@ -207,7 +207,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                             if (!defs.layoutDetailDisabled) {
                                 this.model.defs['fields'][name] = defs;
                                 this.addField(name, defs.label);
-                                if (defs.multilangField || defs.isMultilang) {
+                                if ((defs.multilangField || defs.isMultilang) && !this.isFieldForbidden(name)) {
                                     const statusField = name + 'TranslationStatus';
                                     if (res[statusField]) {
                                         this.model.defs['fields'][statusField] = res[statusField];
@@ -222,12 +222,16 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             });
         },
 
+        isFieldForbidden(name) {
+            return (this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit') || []).includes(name);
+        },
+
         addField(name, label) {
             if (this.fieldList.includes(name)) {
                 return;
             }
 
-            if ((this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit') || []).includes(name)) {
+            if (this.isFieldForbidden(name)) {
                 return;
             }
 
