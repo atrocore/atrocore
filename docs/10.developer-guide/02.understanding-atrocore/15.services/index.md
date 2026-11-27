@@ -38,10 +38,11 @@ Every template extends `Atro\Core\Services\AbstractRecordService`, which reads t
 | `DeletableTrait` / `DeletableInterface` | delete | Base, Relation, ReferenceData |
 | `SoftDeletableTrait` / `SoftDeletableInterface` | restore, delete permanently | Base, Relation |
 | `MassActionsTrait` / `MassActionsInterface` | mass update, mass delete, mass restore | Base, Relation |
+| `AssignmentTrait` | owner, assigned user and teams by default, assignment permission | Base, Subtype |
 
-The operations of a single entity type are methods of its template: the stream, the ownership, merging, kanban, the derivatives and the attributes are in `Base` (and `Hierarchy`, which extends it). A trait is created only for an operation used by two or more templates.
+The operations of a single entity type are methods of its template: the stream, merging, kanban, the derivatives and the attributes are in `Base` (and `Hierarchy`, which extends it). A trait is created only for an operation used by two or more templates.
 
-`EditableTrait` calls three hooks that a template overrides: `validateEntityInput()` checks the input before it is applied to the record, `prepareEntityToStore()` prepares the record and `validateEntityBeforeStore()` checks it before it is stored. `Base` uses them for the operations of its own, e.g. it sets the owner and the assigned user in `prepareEntityToStore()` and checks the assignment in `validateEntityBeforeStore()`; the other templates have no such methods.
+`EditableTrait` calls three hooks that a template overrides: `validateEntityInput()` checks the input before it is applied to the record, `prepareEntityToStore()` prepares the record and `validateEntityBeforeStore()` checks it before it is stored. `Base` and `Subtype` set the owner and the assigned user in `prepareEntityToStore()` and check the assignment in `validateEntityBeforeStore()`; `Base` also uses these hooks for the operations of its own.
 
 Code that calls an operation for any entity checks that its service supports it: `$service instanceof LinkableInterface`. A handler uses `$this->getRecordServiceWith($entityName, LinkableInterface::class)`, which returns `BadRequest` for an entity whose type does not support the operation.
 
