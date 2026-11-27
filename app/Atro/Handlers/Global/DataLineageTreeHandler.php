@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get data lineage tree',
     description: 'Returns the records connected with the given record through data pipelines and contributor-master relations. The tree starts from the selected endpoint (the final record downstream) and goes upstream to the data sources.',
     tag: 'Global',
+    operationId: 'getDataLineageTree',
     parameters: [
         [
             'name'        => 'entityName',

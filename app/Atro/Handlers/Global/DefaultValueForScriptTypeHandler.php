@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Evaluate script default value for a field',
     description: 'Renders the Twig script defined in `entityDefs.{entityName}.fields.{field}.default` and returns the result as the computed default value. Only applies to fields where `defaultValueType` is `script`.',
     tag: 'Global',
+    operationId: 'evaluateScriptFieldDefault',
     requestBody: [
         'required' => true,
         'content'  => [

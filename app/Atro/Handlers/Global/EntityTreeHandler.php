@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get hierarchy tree',
     description: 'Returns tree-structured data for a hierarchy entity. Supports node-based lazy loading and selected-node expansion.',
     tag: 'Global',
+    operationId: 'getHierarchyTree',
     parameters: [
         [
             'name'        => 'entityName',

@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save relationships layout into a layout profile',
     description: 'Saves the relationships layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileRelationshipsLayout',
     parameters: [
         [
             'name'        => 'id',

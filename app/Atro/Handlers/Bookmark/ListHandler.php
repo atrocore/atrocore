@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns a list of bookmarks',
     description: 'Returns all bookmarks for the current user.',
     tag: 'Bookmark',
+    operationId: 'listBookmarks',
     responses: [
         200 => [
             'description' => 'Collection of bookmarks',

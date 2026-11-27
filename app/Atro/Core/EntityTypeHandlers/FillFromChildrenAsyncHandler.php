@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Fill the selected records from their children asynchronously',
     description: 'Creates a background job that fills the empty fields, attribute values and relations of each record matching the filter with the values shared by all of its direct children, the same way as filling a single record. Records without children are left unchanged. Not available when multiple parents are enabled for the entity.',
     tag: '{entityName}',
+    operationId: 'fill{entityNamePlural}FromChildrenAsync',
     parameters: [
         [
             'name'        => 'entityName',

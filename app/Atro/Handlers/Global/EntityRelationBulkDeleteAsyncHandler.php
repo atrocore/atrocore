@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Remove relations in bulk (asynchronous)',
     description: 'Schedules bulk relation removal as a background job and returns immediately with the job ID. The actual removal logic is identical to `DELETE /entityRelationBulk` but runs asynchronously via the job queue.',
     tag: 'Global',
+    operationId: 'bulkDeleteRelationsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

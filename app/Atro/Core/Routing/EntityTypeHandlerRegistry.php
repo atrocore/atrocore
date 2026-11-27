@@ -122,6 +122,11 @@ class EntityTypeHandlerRegistry
             foreach ($routeAttrs as $attrObj) {
                 /** @var Route $routeAttr */
                 $routeAttr = $attrObj->newInstance();
+
+                if ($routeAttr->operationId === '') {
+                    continue;
+                }
+
                 $methods   = array_map('strtoupper', (array) $routeAttr->methods);
                 $fullPath  = '/api' . $routeAttr->path;
                 $routeKey  = implode(',', $methods) . ':' . $fullPath;

@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get database schema diff',
     description: 'Returns SQL queries needed to synchronize the database schema with the current metadata. Admin only.',
     tag: 'Global',
+    operationId: 'getSchemaDiff',
     responses: [
         200 => [
             'description' => 'SQL diff queries as plain text',

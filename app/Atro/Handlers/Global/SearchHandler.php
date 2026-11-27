@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'Results are limited to 20 records in total, ordered by entity type as configured. '
         . 'Only entity types accessible to the current user are included.',
     tag: 'Global',
+    operationId: 'globalSearch',
     parameters: [
         [
             'name'        => 'q',

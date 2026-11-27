@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Reset a user password',
     description: 'Generates a new random password and sends it to the user\'s email address.',
     tag: 'User',
+    operationId: 'resetUserPassword',
     parameters: [
         [
             'name'        => 'id',

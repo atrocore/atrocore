@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Rebuild database schema',
     description: 'Rebuilds the database schema to match the current metadata. Admin only.',
     tag: 'Global',
+    operationId: 'rebuildDb',
     responses: [
         200 => [
             'description' => 'true on success',

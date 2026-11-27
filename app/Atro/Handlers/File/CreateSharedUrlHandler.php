@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create a shared URL for a file',
     description: 'Creates a public Sharing record for the given File and returns a `sharedUrl` ready to embed in a rich text editor or share externally.',
     tag: 'File',
+    operationId: 'createFileSharedUrl',
     parameters: [
         [
             'name'        => 'id',

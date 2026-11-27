@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save layout profile preference',
     description: 'Saves the current user\'s preferred layout profile for a specific entity and view type.',
     tag: 'Layout',
+    operationId: 'saveLayoutPreference',
     requestBody: [
         'required' => true,
         'content'  => [

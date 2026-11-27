@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute CreateOrUpdate action',
     description: 'Executes the specified CreateOrUpdate action synchronously. Updates the record if it already exists; otherwise creates it.',
     tag: 'ActionTypeCreateOrUpdate',
+    operationId: 'executeCreateOrUpdateAction',
     parameters: [
         [
             'name'        => 'id',

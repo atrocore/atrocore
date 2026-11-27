@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Webhook action',
     description: 'Executes the specified Webhook action synchronously. Makes an HTTP request to the configured webhook URL. The request body is not forwarded to the webhook URL.',
     tag: 'ActionTypeWebhook',
+    operationId: 'executeWebhookAction',
     parameters: [
         [
             'name'        => 'id',

@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Bulk upsert entities as a background job',
     description: 'Schedules a bulk upsert as a background job and returns immediately with the job ID. The actual create/update logic is identical to `POST /upsert` but runs asynchronously via the job queue.',
     tag: 'Global',
+    operationId: 'upsertRecordsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

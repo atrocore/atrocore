@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Move cluster items to another cluster',
     description: 'Move one or more cluster items to a target cluster identified by targetClusterId. Items are skipped if they already belong to the target cluster, if their entity type is incompatible with the target cluster masterEntity, or if they are rejected in the target cluster.',
     tag: 'ClusterItem',
+    operationId: 'massMoveClusterItems',
     requestBody: [
         'required' => true,
         'content'  => [

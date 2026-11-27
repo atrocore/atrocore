@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\MassActionsInterface;
     summary: 'Mass update (synchronous)',
     description: 'Updates multiple records of the specified entity synchronously and returns the result immediately.',
     tag: 'Global',
+    operationId: 'massUpdateRecords',
     requestBody: [
         'required' => true,
         'content'  => [

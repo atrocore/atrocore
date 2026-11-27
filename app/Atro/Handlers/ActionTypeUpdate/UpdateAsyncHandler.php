@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Update action asynchronously',
     description: 'Schedules the specified Update action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeUpdate',
+    operationId: 'executeUpdateActionAsync',
     parameters: [
         [
             'name'        => 'id',

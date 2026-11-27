@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Replace the entity of a selection item',
     description: 'Swaps the entity record of an existing SelectionItem with another record of the same entity type.',
     tag: 'SelectionItem',
+    operationId: 'replaceSelectionItem',
     parameters: [
         [
             'name'        => 'id',

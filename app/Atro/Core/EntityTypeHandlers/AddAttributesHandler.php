@@ -31,6 +31,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Add attributes to a record',
     description: 'Assigns one or more attributes to the specified entity record. The attributes are linked without setting values — use `upsertAttributeValues` to set values.',
     tag: '{entityName}',
+    operationId: 'add{entityName}Attributes',
     parameters: [
         [
             'name'        => 'entityName',

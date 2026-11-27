@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Preview email action output',
     description: 'Renders the email template configured in the Email action for the given entity record and returns the rendered subject, body, and recipients without sending.',
     tag: 'ActionTypeEmail',
+    operationId: 'previewEmailAction',
     parameters: [
         [
             'name'        => 'id',

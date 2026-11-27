@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create a selection with multiple records',
     description: 'Creates a new Selection and adds the specified entity records to it in one request.',
     tag: 'Selection',
+    operationId: 'createSelectionWithItems',
     requestBody: [
         'required' => true,
         'content'  => [

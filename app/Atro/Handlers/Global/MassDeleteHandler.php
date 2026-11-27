@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\MassActionsInterface;
     summary: 'Mass delete (synchronous)',
     description: 'Deletes multiple records of the specified entity synchronously and returns the result immediately.',
     tag: 'Global',
+    operationId: 'massDeleteRecords',
     requestBody: [
         'required' => true,
         'content'  => [

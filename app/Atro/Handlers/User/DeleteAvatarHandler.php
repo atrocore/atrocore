@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Remove own avatar',
     description: 'Removes the current user\'s avatar.',
     tag: 'User',
+    operationId: 'deleteAvatar',
     responses: [
         200 => [
             'description' => 'User avatar was successfully removed.',

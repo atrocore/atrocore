@@ -35,6 +35,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 - `layoutProfileId` — optional layout profile ID.
 - `isAdminPage` — when `true`, multi-language field injection is skipped.',
     tag: 'Layout',
+    operationId: 'getSelectionLayout',
     parameters: [
         [
             'name'        => 'entityName',

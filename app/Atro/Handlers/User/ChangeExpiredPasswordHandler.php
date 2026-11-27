@@ -32,6 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Change an expired password',
     description: 'Allows the current user to set a new password when their existing password has expired.',
     tag: 'User',
+    operationId: 'changeExpiredPassword',
     requestBody: [
         'required' => true,
         'content'  => [

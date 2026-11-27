@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save detail layout into a layout profile',
     description: 'Saves the detail layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileDetailLayout',
     parameters: [
         [
             'name'        => 'id',

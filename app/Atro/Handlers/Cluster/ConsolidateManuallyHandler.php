@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Consolidate cluster items manually',
     description: 'Builds the cluster\'s golden record from values selected by the user. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Values of the fields listed in suggestedFields are rendered by the consolidation script. Relationship data from all source records is merged into the golden record. The cluster gets the ruleBased consolidation method when all values of `attributes.input` are taken from the consolidation script, manual when no suggested fields are given, otherwise hybrid. Returns the resulting golden record\'s field values.',
     tag: 'Cluster',
+    operationId: 'consolidateClusterManually',
     parameters: [
         [
             'name'        => 'id',

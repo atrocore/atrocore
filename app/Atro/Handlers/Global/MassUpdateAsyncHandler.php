@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\MassActionsInterface;
     summary: 'Mass update (asynchronous)',
     description: 'Schedules a mass update as a background job and returns immediately with the job ID. The actual update logic is identical to `PATCH /entityMassUpdate` but runs asynchronously via the job queue.',
     tag: 'Global',
+    operationId: 'massUpdateRecordsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns a stream for a given entity type',
     description: 'Returns stream entries for the given entity type across all records.',
     tag: 'Stream',
+    operationId: 'getEntityTypeStream',
     parameters: [
         [
             'name'     => 'scope',

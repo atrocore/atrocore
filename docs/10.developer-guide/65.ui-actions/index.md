@@ -199,6 +199,7 @@ The `{{id}}` in the URL is resolved to the record ID before the request is sent.
     methods: ['POST'],
     summary: 'Publish a MyEntity record',
     tag: 'MyEntity',
+    operationId: 'publishMyEntity',
     parameters: [
         [
             'name'        => 'id',
@@ -244,6 +245,7 @@ Each `massActions` entry points at its own bulk endpoint. The request body conta
     methods: ['POST'],
     summary: 'Mass-reject MyEntity records',
     tag: 'MyEntity',
+    operationId: 'massRejectMyEntities',
     requestBody: [
         'required' => true,
         'content'  => [

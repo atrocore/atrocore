@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Reset all layouts to default for a layout profile',
     description: 'Removes all custom layout configurations stored under the given layout profile, restoring every entity and view type to its default layout.',
     tag: 'LayoutProfile',
+    operationId: 'resetAllLayoutProfileLayouts',
     parameters: [
         [
             'name'        => 'id',

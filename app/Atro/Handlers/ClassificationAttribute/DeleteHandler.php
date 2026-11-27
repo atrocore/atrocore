@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Deletes a ClassificationAttribute record',
     description: 'Deletes a ClassificationAttribute record by ID. Optionally also deletes all attribute values linked to this classification attribute.',
     tag: 'ClassificationAttribute',
+    operationId: 'deleteClassificationAttribute',
     parameters: [
         [
             'name'     => 'id',

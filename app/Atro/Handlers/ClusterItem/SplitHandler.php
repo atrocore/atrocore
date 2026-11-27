@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Split a single cluster item',
     description: 'Moves the specified cluster item to a new cluster. If the item is consolidated, it is deconsolidated first. The item may not be the master entity item of its cluster.',
     tag: 'ClusterItem',
+    operationId: 'splitClusterItem',
     parameters: [
         [
             'name'        => 'id',

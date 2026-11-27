@@ -29,6 +29,7 @@ use Atro\Core\Routing\EntityType;
     summary: 'Remove an inherited relation record from a hierarchy child',
     description: 'Unlinks a relation record that was inherited from a parent hierarchy record, breaking the inheritance for this specific child.',
     tag: '{entityName}',
+    operationId: 'uninherit{entityName}Relation',
     parameters: [
         [
             'name'        => 'entityName',

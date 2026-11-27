@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create a storage scan job',
     description: 'Triggers a background job that scans the specified storage and rebuilds its file index.',
     tag: 'Storage',
+    operationId: 'createStorageScanJob',
     parameters: [
         [
             'name'        => 'id',

@@ -41,6 +41,7 @@ use Atro\Core\Routing\EntityType;
         . 'Tree nodes are sorted by `sortBy` (default `id`) in ascending or descending order. '
         . 'Each node has `id`, `name`, `scope`, `disabled` and optionally a `children` array of the same shape.',
     tag: '{entityName}',
+    operationId: 'get{entityName}Tree',
     skipActionHistory: true,
     parameters: [
         [

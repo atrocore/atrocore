@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\LinkableInterface;
     summary: 'Remove relations in bulk (synchronous)',
     description: 'Removes relations between records using explicit IDs. Synchronous — returns immediately with the result. For large batches, prefer DELETE /entityRelationBulkAsync to avoid request timeouts.',
     tag: 'Global',
+    operationId: 'bulkDeleteRelations',
     requestBody: [
         'required' => true,
         'content'  => [

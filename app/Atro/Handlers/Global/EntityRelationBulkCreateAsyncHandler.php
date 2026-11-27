@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Add relations in bulk (asynchronous)',
     description: 'Schedules bulk relation creation as a background job and returns immediately with the job ID. The actual relation logic is identical to `POST /entityRelationBulk` but runs asynchronously via the job queue.',
     tag: 'Global',
+    operationId: 'bulkCreateRelationsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

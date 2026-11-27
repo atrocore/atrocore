@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Generate a new OAuth client secret',
     description: 'Generates a new secret of the OAuth client and returns it. Only the hash of the secret is stored, so it is returned only once; the previous secret stops working and the tokens issued to the client are revoked.',
     tag: 'OauthClient',
+    operationId: 'generateOauthClientSecret',
     parameters: [
         [
             'name'        => 'id',

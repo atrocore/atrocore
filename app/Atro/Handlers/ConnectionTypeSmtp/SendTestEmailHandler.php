@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Send a test email via a connection',
     description: 'Sends a test email to the specified address using the SMTP settings of the given connection record. Returns true on success, or throws an error with details on failure.',
     tag: 'ConnectionTypeSmtp',
+    operationId: 'sendSmtpConnectionTestEmail',
     parameters: [
         [
             'name'        => 'id',

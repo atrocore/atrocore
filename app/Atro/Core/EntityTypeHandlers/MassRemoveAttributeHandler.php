@@ -30,6 +30,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Mass-remove attributes from records (async)',
     description: 'Schedules a background job that removes the specified attributes from multiple records of the given entity. Always returns a job ID — the operation is never executed synchronously.',
     tag: '{entityName}',
+    operationId: 'massRemoveAttributesFrom{entityNamePlural}Async',
     parameters: [
         [
             'name'        => 'entityName',

@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get documentation page',
     description: 'Returns the markdown content of a documentation page for the specified module.',
     tag: 'Global',
+    operationId: 'getDocsPage',
     parameters: [
         [
             'name'        => 'module',

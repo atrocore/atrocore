@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save selection relations layout into a layout profile',
     description: 'Saves the selection relations layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileSelectionRelationsLayout',
     parameters: [
         [
             'name'        => 'id',

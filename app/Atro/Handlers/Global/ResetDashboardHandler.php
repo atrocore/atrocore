@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Resets the dashboard layout and dashlet options for the specified user to the system default. '
         . 'Admins can reset any user; regular users can only reset themselves.',
     tag: 'Global',
+    operationId: 'resetDashboard',
     requestBody: [
         'required' => true,
         'content'  => [

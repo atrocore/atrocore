@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\MassActionsInterface;
     summary: 'Mass delete (asynchronous)',
     description: 'Schedules a mass delete as a background job and returns immediately with the job ID. The actual delete logic is identical to `POST /entityMassDelete` but runs asynchronously via the job queue.',
     tag: 'Global',
+    operationId: 'massDeleteRecordsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

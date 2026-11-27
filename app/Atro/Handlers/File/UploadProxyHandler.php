@@ -32,6 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Proxy file upload from URL',
     description: 'Streams a remote file through the server to the client, so the browser can upload a file it is not allowed to read cross-origin. Only http and https URLs pointing at routable public addresses are accepted, and redirects are not followed.',
     tag: 'File',
+    operationId: 'uploadFileFromUrl',
     requestBody: [
         'required' => true,
         'content'  => [

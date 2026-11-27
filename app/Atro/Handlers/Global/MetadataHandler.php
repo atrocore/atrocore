@@ -33,6 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'Paths listed in `app.frontendHiddenPathList` are stripped before the response is sent. '
         . 'The result is heavily cached by the client — it is only re-fetched when the data timestamp changes.',
     tag: 'Global',
+    operationId: 'getMetadata',
     responses: [
         200 => [
             'description' => 'Full metadata tree. Top-level keys include `entityDefs`, `clientDefs`, `scopes`, and `app`.',

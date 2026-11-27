@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Test a connection',
     description: 'Verifies connectivity for the specified connection record by running a live connection test. Returns true on success, or throws an error with details on failure. Accessible by administrators only.',
     tag: 'Connection',
+    operationId: 'testConnection',
     parameters: [
         [
             'name'        => 'id',

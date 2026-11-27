@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns the stream for a record',
     description: 'Returns stream entries for the specified entity record.',
     tag: 'Global',
+    operationId: 'getRecordStream',
     parameters: [
         [
             'name'     => 'entityName',

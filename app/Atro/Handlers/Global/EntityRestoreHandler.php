@@ -30,6 +30,7 @@ use Atro\Core\Services\Interfaces\MassActionsInterface;
     summary: 'Restore records',
     description: 'Restores one or multiple soft-deleted records from the recycle bin synchronously by their IDs.',
     tag: 'Global',
+    operationId: 'restoreRecords',
     requestBody: [
         'required' => true,
         'content'  => [

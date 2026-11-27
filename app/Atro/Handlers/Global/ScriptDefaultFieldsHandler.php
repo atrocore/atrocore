@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get script default fields',
     description: 'Returns computed Twig default values for all fields of the specified entity that have a script-type default.',
     tag: 'Global',
+    operationId: 'getScriptDefaultFields',
     requestBody: [
         'required' => true,
         'content'  => [

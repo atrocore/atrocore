@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Reject cluster items (mass action)',
     description: 'Rejects one or more cluster items, removing them from the active cluster set. Accepts a list of IDs via idList or a filter via where.',
     tag: 'ClusterItem',
+    operationId: 'massRejectClusterItems',
     requestBody: [
         'required' => true,
         'content'  => [

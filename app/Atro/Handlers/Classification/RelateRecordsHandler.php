@@ -30,6 +30,7 @@ use Atro\Core\Services\AbstractRecordService;
     summary: 'Relate records to classifications',
     description: 'Sets classification relations for a given entity record. Replaces existing classifications with the provided list.',
     tag: 'Classification',
+    operationId: 'relateClassificationRecords',
     requestBody: [
         'required' => true,
         'content'  => [

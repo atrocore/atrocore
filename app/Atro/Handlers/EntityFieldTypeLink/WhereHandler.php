@@ -47,6 +47,7 @@ rendered is returned as it is.
 
 **When neither `entityId` nor `uiRecord` is supplied** the `where` array is returned as-is, without Twig rendering.',
     tag: 'EntityFieldTypeLink',
+    operationId: 'getLinkFieldWhere',
     parameters: [
         [
             'name'        => 'id',

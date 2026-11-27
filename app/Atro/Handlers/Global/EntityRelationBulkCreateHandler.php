@@ -31,6 +31,7 @@ use Atro\Core\Services\Interfaces\LinkableInterface;
     summary: 'Add relations in bulk (synchronous)',
     description: 'Creates relations between records using explicit IDs. Synchronous — returns immediately with the result. For large batches, prefer POST /entityRelationBulkAsync to avoid request timeouts.',
     tag: 'Global',
+    operationId: 'bulkCreateRelations',
     requestBody: [
         'required' => true,
         'content'  => [

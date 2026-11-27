@@ -23,6 +23,7 @@ use Atro\Core\Routing\Route;
     summary: 'Split cluster items (mass action) (deprecated)',
     description: 'Deprecated, use POST /ClusterItem/massSplit instead. Moves one or more cluster items together to a new cluster. Consolidated items are deconsolidated first. All selected items must belong to the same cluster and none may be the master entity item. Accepts a list of IDs via idList or a filter via where.',
     tag: 'ClusterItem',
+    operationId: 'massUnmergeClusterItems',
     requestBody: [
         'required' => true,
         'content'  => [

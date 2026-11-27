@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'List variables',
     description: 'Returns all configured variables.',
     tag: 'Variable',
+    operationId: 'listVariables',
     responses: [
         200 => [
             'description' => 'List of variables',

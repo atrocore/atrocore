@@ -35,14 +35,6 @@ class OpenApiGenerator
         $this->container = $container;
     }
 
-    public function getSchemaForRoute(array $route): array
-    {
-        $result = $this->getBase();
-        $this->pushRoute($result, $route);
-
-        return $result;
-    }
-
     public function getSchemaForHandler(RouteAttribute $routeAttr, string $entityName = ''): array
     {
         $result = $this->getBase();
@@ -120,50 +112,6 @@ class OpenApiGenerator
                 unset($result['components']['schemas'][$name]);
             }
         }
-    }
-
-    public static function prepareResponses(array $success): array
-    {
-        return [
-            "200" => [
-                "description" => "OK",
-                "content"     => [
-                    "application/json" => [
-                        "schema" => $success
-                    ]
-                ]
-            ],
-            "304" => [
-                "description" => "Not Modified"
-            ],
-            "400" => [
-                "description" => "Bad Request"
-            ],
-            "401" => [
-                "description" => "Unauthorized"
-            ],
-            "403" => [
-                "description" => "Forbidden"
-            ],
-            "404" => [
-                "description" => "Not Found"
-            ],
-            "500" => [
-                "description" => "Internal Server Error"
-            ],
-        ];
-    }
-
-    public static function prepareRouteResponses(array $responseSchema): array
-    {
-        $responses = self::prepareResponses($responseSchema);
-        // Plain-text responses are sent with Content-Type: application/json by the framework,
-        // but the body is not JSON-encoded. Remove the content schema so the validator
-        // does not attempt JSON parsing on the body.
-        if (($responseSchema['type'] ?? '') === 'string') {
-            unset($responses['200']['content']);
-        }
-        return $responses;
     }
 
     protected function buildEntitySchema(array &$result, string $entityName): void
@@ -552,37 +500,6 @@ class OpenApiGenerator
         ];
     }
 
-    protected function pushRoute(array &$result, array $route): void
-    {
-        if (!empty($route['description'])) {
-            $routePath = preg_replace('/:(\w+)/', '{$1}', $route['route']);
-            $row       = [
-                'tags'        => [$route['params']['controller']],
-                'summary'     => $route['summary'] ?? $route['description'],
-                'description' => $route['description'],
-                'operationId' => md5("{$routePath}_{$route['method']}"),
-                "responses"   => self::prepareRouteResponses($route['response'])
-            ];
-
-            if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
-                $row['security'] = self::AUTH_SECURITY;
-            } else {
-                $row['security'] = [];
-            }
-            if (!empty($route['security'])) {
-                $row['security'] = $route['security'];
-            }
-            if (!empty($route['requestParameters'])) {
-                $row['parameters'] = $route['requestParameters'];
-            }
-            if (!empty($route['requestBody'])) {
-                $row['requestBody'] = $route['requestBody'];
-            }
-
-            $result['paths'][$routePath][$route['method']] = $row;
-        }
-    }
-
     private function pushHandlerRoute(array &$result, RouteAttribute $routeAttr, string $entityName = ''): void
     {
         if (empty($routeAttr->responses)) {
@@ -609,7 +526,7 @@ class OpenApiGenerator
                 'tags'        => [$tag],
                 'summary'     => $routeAttr->summary,
                 'description' => $routeAttr->description,
-                'operationId' => md5($routeAttr->path . '_' . $method),
+                'operationId' => $routeAttr->getOperationId($entityName),
                 'responses'   => $responses,
                 'security'    => $routeAttr->auth ? self::AUTH_SECURITY : [],
             ];

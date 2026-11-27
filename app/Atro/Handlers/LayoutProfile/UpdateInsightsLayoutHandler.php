@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save insights layout into a layout profile',
     description: 'Saves the insights layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileInsightsLayout',
     parameters: [
         [
             'name'        => 'id',

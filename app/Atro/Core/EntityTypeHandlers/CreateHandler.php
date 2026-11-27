@@ -31,6 +31,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Creates a record',
     description: 'Creates a new record for the specified entity.',
     tag: '{entityName}',
+    operationId: 'create{entityName}',
     parameters: [
         [
             'name'     => 'entityName',

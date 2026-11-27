@@ -31,6 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Move a single cluster item to another cluster',
     description: 'Move the specified cluster item to a target cluster identified by targetClusterId. Returns false if the item is already in the target cluster, its entity type is incompatible with the target cluster masterEntity, or it is rejected in the target cluster.',
     tag: 'ClusterItem',
+    operationId: 'moveClusterItem',
     parameters: [
         [
             'name'        => 'id',

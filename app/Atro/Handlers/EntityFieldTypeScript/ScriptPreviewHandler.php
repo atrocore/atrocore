@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Preview the script of a script field',
     description: 'Renders the script of a script field on the first record of its entity. The script and the output type can be passed to preview changes that are not saved yet. Accessible by administrators only.',
     tag: 'EntityFieldTypeScript',
+    operationId: 'previewFieldScript',
     parameters: [
         [
             'name'        => 'id',

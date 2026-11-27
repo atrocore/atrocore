@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Reject a single cluster item',
     description: 'Rejects the specified cluster item. If the item was consolidated, its staging records are unlinked from the golden record (and the golden record is cleared if it was the master entity item). A RejectedClusterItem relation is persisted. The item is then moved to a matching existing cluster or to a newly created one.',
     tag: 'ClusterItem',
+    operationId: 'rejectClusterItem',
     parameters: [
         [
             'name'        => 'id',

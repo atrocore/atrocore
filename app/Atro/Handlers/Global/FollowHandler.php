@@ -31,6 +31,7 @@ use Atro\Core\Templates\Services\Base;
     summary: 'Follow stream',
     description: 'Subscribes the current user to the stream of the specified entity records.',
     tag: 'Global',
+    operationId: 'followRecord',
     requestBody: [
         'required' => true,
         'content'  => [

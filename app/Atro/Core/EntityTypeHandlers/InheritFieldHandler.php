@@ -30,6 +30,7 @@ use Atro\Core\Routing\EntityType;
     summary: 'Inherit a single field from parent',
     description: 'Pulls the value of a specific field from the parent record into the specified record.',
     tag: '{entityName}',
+    operationId: 'inherit{entityName}Field',
     parameters: [
         [
             'name'        => 'entityName',

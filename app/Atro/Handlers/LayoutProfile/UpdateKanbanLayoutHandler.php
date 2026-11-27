@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Save kanban layout into a layout profile',
     description: 'Saves the kanban layout configuration for a given entity into the specified layout profile.',
     tag: 'LayoutProfile',
+    operationId: 'updateLayoutProfileKanbanLayout',
     parameters: [
         [
             'name'        => 'id',

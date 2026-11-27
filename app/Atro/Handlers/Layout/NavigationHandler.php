@@ -34,6 +34,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 - `entityName` — the entity whose navigation layout is requested.
 - `layoutProfileId` — optional layout profile ID.',
     tag: 'Layout',
+    operationId: 'getNavigationLayout',
     parameters: [
         [
             'name'        => 'entityName',

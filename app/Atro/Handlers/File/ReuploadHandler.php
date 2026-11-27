@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Reupload file content',
     description: 'Replaces the content of an existing File record. Supply either `fileContents` (base64 data URI) or a remote `url`.',
     tag: 'File',
+    operationId: 'reuploadFile',
     parameters: [
         [
             'name'        => 'id',

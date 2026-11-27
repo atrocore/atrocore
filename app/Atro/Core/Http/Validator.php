@@ -30,29 +30,6 @@ class Validator
     {
     }
 
-    public function validateRequest(array $routeConfig, ServerRequestInterface $request): void
-    {
-        if (!empty($validatorBuilder = $this->getValidatorBuilderForRoute($routeConfig))) {
-            try {
-                $validatorBuilder->getRequestValidator()->validate($request);
-            } catch (\Throwable $e) {
-                throw new BadRequest($e->getMessage());
-            }
-        }
-    }
-
-    public function validateResponse(array $routeConfig, ResponseInterface $response): void
-    {
-        if (!empty($validatorBuilder = $this->getValidatorBuilderForRoute($routeConfig))) {
-            try {
-                $operation = new OperationAddress(preg_replace('/:(\w+)/', '{$1}', $routeConfig['route']), $routeConfig['method']);
-                $validatorBuilder->getResponseValidator()->validate($operation, $response);
-            } catch (\Throwable $e) {
-                throw new BadRequest($e->getMessage());
-            }
-        }
-    }
-
     public function validateHandlerRequest(RouteAttribute $routeAttr, ServerRequestInterface $request): void
     {
         $builder = $this->getValidatorBuilderForHandler($routeAttr, $this->extractEntityName($request));
@@ -84,17 +61,6 @@ class Validator
         }
 
         return $message;
-    }
-
-    private function getValidatorBuilderForRoute(array $routeConfig): ?ValidatorBuilder
-    {
-        if (empty($routeConfig['description'])) {
-            return null;
-        }
-
-        $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForRoute($routeConfig);
-
-        return (new ValidatorBuilder())->fromJson(json_encode($this->injectCookieAuth($schema)));
     }
 
     private function getValidatorBuilderForHandler(RouteAttribute $routeAttr, string $entityName = ''): ValidatorBuilder

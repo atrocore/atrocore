@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get status of mass action job',
     description: 'Returns the current status of a mass action job.',
     tag: 'Job',
+    operationId: 'getMassActionJobStatus',
     parameters: [
         [
             'name'     => 'id',

@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Fill a record from its children',
     description: 'Fills the empty fields, attribute values and relations of the record with the values shared by all of its direct children. A field or relation is filled only if every direct child has exactly the same value for it and the record itself has no value; existing values are never replaced. Attributes present on every child are added to the record if the user may add attributes. Fields and relations excluded from inheritance are skipped. Not available when multiple parents are enabled for the entity.',
     tag: '{entityName}',
+    operationId: 'fill{entityName}FromChildren',
     parameters: [
         [
             'name'        => 'entityName',

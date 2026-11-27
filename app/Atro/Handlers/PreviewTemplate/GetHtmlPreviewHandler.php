@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get HTML preview of a template',
     description: 'Renders and returns the HTML preview of the specified preview template applied to the given entity record.',
     tag: 'PreviewTemplate',
+    operationId: 'getPreviewTemplateHtml',
     parameters: [
         [
             'name'        => 'id',

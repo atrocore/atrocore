@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Sets a unit as default',
     description: 'Marks the specified unit as the default unit for its measure. Accessible by administrators only.',
     tag: 'Unit',
+    operationId: 'setDefaultUnit',
     parameters: [
         [
             'name'        => 'id',

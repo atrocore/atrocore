@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get the status of the last system update',
     description: 'Returns the status of the last system update ready to be displayed in the list view. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'getLastSystemUpdate',
     responses: [
         200 => [
             'description' => 'Status of the last system update.',

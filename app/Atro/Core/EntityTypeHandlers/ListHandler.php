@@ -30,6 +30,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Returns a collection of records',
     description: 'Returns a collection of records for the specified entity.',
     tag: '{entityName}',
+    operationId: 'list{entityNamePlural}',
     parameters: [
         [
             'name'     => 'entityName',

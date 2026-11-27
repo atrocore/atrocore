@@ -34,6 +34,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'Only storable fields are included; virtual/computed fields (notStorable) are skipped. '
         . 'Link-multiple ID list fields are also included despite being notStorable.',
     tag: 'Global',
+    operationId: 'generateScriptFieldsSnippet',
     requestBody: [
         'required' => true,
         'content'  => [

@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Purge a single cluster',
     description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the specified cluster, then deletes the cluster itself.',
     tag: 'Cluster',
+    operationId: 'purgeCluster',
     parameters: [
         [
             'name'        => 'id',

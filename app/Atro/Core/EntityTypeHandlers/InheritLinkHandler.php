@@ -30,6 +30,7 @@ use Atro\Core\Routing\EntityType;
     summary: 'Inherit all linked records from parent for a relation',
     description: 'Copies all linked records for a specific relation link from the parent record into the specified record.',
     tag: '{entityName}',
+    operationId: 'inherit{entityName}Link',
     parameters: [
         [
             'name'        => 'entityName',

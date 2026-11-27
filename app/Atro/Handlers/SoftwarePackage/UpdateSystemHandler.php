@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Update the system',
     description: 'Updates the installed software packages to their target versions. All users are logged out of the system when the update is applied. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'updateSystem',
     responses: [
         200 => [
             'description' => 'true if the system update was started.',

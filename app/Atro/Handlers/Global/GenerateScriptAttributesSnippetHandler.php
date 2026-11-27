@@ -33,6 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'Intended for use in the script field editor: the returned text is inserted directly into the Monaco editor '
         . 'as a ready-to-use JSON object template for working with entity attributes.',
     tag: 'Global',
+    operationId: 'generateScriptAttributesSnippet',
     requestBody: [
         'required' => true,
         'content'  => [

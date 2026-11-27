@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Split cluster items (mass action)',
     description: 'Moves one or more cluster items together to a new cluster. Consolidated items are deconsolidated first. All selected items must belong to the same cluster and none may be the master entity item. Accepts a list of IDs via idList or a filter via where.',
     tag: 'ClusterItem',
+    operationId: 'massSplitClusterItems',
     requestBody: [
         'required' => true,
         'content'  => [

@@ -32,6 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         . 'Requires edit permission on the entity record and the field. '
         . 'Only applies to fields of type `script` that have a `script` expression defined.',
     tag: 'Global',
+    operationId: 'computeEntityScriptField',
     requestBody: [
         'required' => true,
         'content'  => [

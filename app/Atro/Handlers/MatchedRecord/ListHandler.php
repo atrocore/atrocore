@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns a list of matched records',
     description: 'Returns a list of matched records with filtering and pagination.',
     tag: 'MatchedRecord',
+    operationId: 'listMatchedRecords',
     parameters: [
         [
             'name'     => 'offset',

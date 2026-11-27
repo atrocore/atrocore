@@ -37,6 +37,7 @@ use Atro\Core\Services\Interfaces\SortableInterface;
 - `ids` — the IDs of the records in the new order.
 - `offset` — the position of the first record of `ids` among all records, `0` by default. The other records keep their order around the sorted ones.',
     tag: 'Global',
+    operationId: 'sortRecords',
     requestBody: [
         'required' => true,
         'content'  => [

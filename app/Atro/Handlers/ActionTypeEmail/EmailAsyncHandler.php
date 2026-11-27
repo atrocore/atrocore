@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Email action asynchronously',
     description: 'Schedules the specified Email action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeEmail',
+    operationId: 'executeEmailActionAsync',
     parameters: [
         [
             'name'        => 'id',

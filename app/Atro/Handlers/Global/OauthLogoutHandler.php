@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Sign out of the user interface',
     description: 'Ends the session of the user interface: revokes its OAuth tokens and clears the session cookies. Called by the user interface on logout.',
     tag: 'Global',
+    operationId: 'oauthLogout',
     auth: false,
     responses: [
         200 => [

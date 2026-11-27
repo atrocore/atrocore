@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Add multiple records to an existing selection',
     description: 'Adds the specified entity records as items to the given existing Selection.',
     tag: 'Selection',
+    operationId: 'updateSelectionWithItems',
     parameters: [
         [
             'name'        => 'id',

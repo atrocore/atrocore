@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Transform source records into their target records asynchronously',
     description: 'Creates a background job that transforms each source record matching the filter the same way as transforming a single source record.',
     tag: 'DataPipeline',
+    operationId: 'transformDataPipelineRecordsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

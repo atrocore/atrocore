@@ -24,6 +24,7 @@ use Atro\Core\Routing\Route;
     summary: 'Execute Set action asynchronously',
     description: 'Schedules the specified Set action as a background job and returns immediately with the job ID. The ordered sequence of sub-actions runs in the background.',
     tag: 'ActionTypeSet',
+    operationId: 'executeSetActionAsync',
     parameters: [
         [
             'name'        => 'id',

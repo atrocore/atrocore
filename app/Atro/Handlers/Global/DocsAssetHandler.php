@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get documentation asset',
     description: 'Returns a binary asset file (image) from the documentation of the specified module.',
     tag: 'Global',
+    operationId: 'getDocsAsset',
     parameters: [
         [
             'name'        => 'module',

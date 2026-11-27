@@ -32,6 +32,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Get attribute values for a record',
     description: 'Returns all attribute values assigned to the specified entity record.',
     tag: '{entityName}',
+    operationId: 'get{entityName}AttributeValues',
     parameters: [
         [
             'name'     => 'entityName',

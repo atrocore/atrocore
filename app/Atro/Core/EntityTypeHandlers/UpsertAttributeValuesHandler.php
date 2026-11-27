@@ -31,6 +31,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Upsert attribute values for a record',
     description: 'Creates or updates one or more attribute values for the specified entity record. Each item must contain an `attributeId`. Existing attribute values are updated; missing ones are created.',
     tag: '{entityName}',
+    operationId: 'upsert{entityName}AttributeValues',
     parameters: [
         [
             'name'        => 'entityName',

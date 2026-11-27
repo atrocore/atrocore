@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Write to public data store',
     description: 'Used internally by the AtroCore UI. External integrations should ignore this endpoint.',
     tag: 'Global',
+    operationId: 'updatePublicDataKey',
     requestBody: [
         'required' => true,
         'content'  => [

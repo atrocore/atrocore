@@ -31,6 +31,7 @@ use Atro\Handlers\AbstractHandler;
     summary: 'Updates a record',
     description: 'Updates an existing record by ID.',
     tag: '{entityName}',
+    operationId: 'update{entityName}',
     parameters: [
         [
             'name'     => 'entityName',

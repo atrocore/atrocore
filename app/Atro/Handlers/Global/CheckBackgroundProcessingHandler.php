@@ -32,6 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     . 'A negative result usually means that the crontab is not configured correctly '
     . 'or that there is a problem on the server. Accessible by administrators only.',
     tag: 'Global',
+    operationId: 'checkBackgroundProcessing',
     responses: [
         200 => [
             'description' => 'true if background processing works, false if the daemons are not running.',

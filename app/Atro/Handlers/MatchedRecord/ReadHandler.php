@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns a matched record',
     description: 'Returns a single matched record by ID.',
     tag: 'MatchedRecord',
+    operationId: 'getMatchedRecord',
     parameters: [
         [
             'name'     => 'id',

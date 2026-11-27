@@ -29,6 +29,7 @@ use Atro\Core\Routing\EntityType;
     summary: 'Inherit a relation record from parent',
     description: 'Copies additional field values for a specific relation record from the parent hierarchy record into the same relation record on the current record.',
     tag: '{entityName}',
+    operationId: 'inherit{entityName}Relation',
     parameters: [
         [
             'name'        => 'entityName',

@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Install a software package',
     description: 'Queues the specified not installed software package for installation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    operationId: 'installPackage',
     parameters: [
         [
             'name'        => 'id',
