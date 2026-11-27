@@ -1516,7 +1516,8 @@
         "subtypeCanBeDeletedViaSupertypeOnly": "Запись подтипа можно удалить только вместе с записью супертипа.",
         "supertypeRecordIsNotFound": "Запись супертипа не найдена.",
         "recordWithoutSubtypeCannotBeRestored": "Не удаётся восстановить запись, поскольку она не относится ни к одному подтипу.",
-        "treeParentCycle": "Родительской записью не может быть сама запись или один из её потомков."
+        "treeParentCycle": "Родительской записью не может быть сама запись или один из её потомков.",
+        "massUpdateNoFieldsToUpdate": "В массовом обновлении нет полей, которые вам разрешено редактировать."
     },
     "queryBuilderFilter": {
         "add_rule": "Добавить",
