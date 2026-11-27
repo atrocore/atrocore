@@ -53,7 +53,7 @@ Attributes are automatically validated according to their type. For a complete l
 
 ![Attribute types](./_assets/attribute-types-list.png){.small}
 
-> Some data types available for entity fields are not supported for attributes (e.g., Email, Language Code, Color, etc).
+> Some data types available for entity fields are not supported for attributes (e.g., Email, Color).
 
 > Attribute type Script is provided by an additional module [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113).
 

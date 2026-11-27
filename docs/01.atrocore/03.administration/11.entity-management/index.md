@@ -110,7 +110,7 @@ A unique index enforces the uniqueness of a **combination** of values: no two re
 | Fields         | The fields the index consists of. At least two fields are required                                                                                                                                                                                              |
 | Entity         | The entity the index belongs to                                                                                                                                                                                                                                 |
 
-The following field types can be part of a unique index: Boolean, String, Integer, Float, List, Link, File, Date, Date-time, Email, URL and Language Code. The record ID is not offered, because it is unique on its own.
+The following field types can be part of a unique index: Boolean, String, Integer, Float, List, Link, File, Date, Date-time, Email and URL. The record ID is not offered, because it is unique on its own.
 
 > The index name is what the database reports when the index is violated, so give it a name that identifies the rule.
 

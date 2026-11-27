@@ -305,27 +305,6 @@ References to uploaded files (images, documents, etc).
 - **Preview size**: Options: Small, Medium, Large. Sets the preview size for files
 - **Default**: Sets a default value for the field
 
-### Language Code
-
-> **Field only** - Not available for attributes
-
-Single language selection from predefined options.
-
-**Configuration options:**
-
-- **Disable Empty Value**: Prevents the field from being set to an empty value
-- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
-
-### Language Codes
-
-> **Field only** - Not available for attributes
-
-Multiple language selection.
-
-**Configuration options:**
-
-- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
-
 ### Link
 
 Reference to another entity record. Creates relationships between different entities. See [Fields and Relations](../07.fields-and-relations/index.md) for more details.
@@ -374,7 +353,7 @@ Common configuration options **Create no record activity** and **No recording as
 
 ## Other Data Types
 
-> The **Script** data type, which allows calculating field and attribute values dynamically via scripts, is available with the ["Advanced Data Management"](https://store.atrocore.com/en/advanced-data-management/20113) module.
+> The **Script** data type calculates the value dynamically via a script. Script fields are available in AtroCore, script attributes require the module ["Advanced Data Management"](https://store.atrocore.com/en/advanced-data-management/20113).
 
 ### Array
 
@@ -409,18 +388,6 @@ Color values with picker interface.
 - **Unique**: Field value must be unique within the entity
 - **Disable Empty Value**: Prevents the field from being set to an empty value
 - **Default**: Sets a default value for the field
-
-### Currency List
-
-> **Field only** - Not available for attributes
-
-!! **Legacy**: for new fields consider using List or Measure types instead
-
-Single currency selection from predefined options.
-
-**Configuration options:**
-
-- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
 ### List
 
