@@ -705,7 +705,10 @@
         "Required": "Requis",
         "purgeAll": "Purger tous les clusters",
         "fillFromChildren": "Compléter à partir des enfants",
-        "selectType": "Sélectionner le type"
+        "selectType": "Sélectionner le type",
+        "addSubtypeField": "Ajouter un champ de sous-type",
+        "Subtype": "Sous-type",
+        "Subtype Fields": "Champs de sous-type"
     },
     "insightsPanels": {
         "summary": "Sommaire",
