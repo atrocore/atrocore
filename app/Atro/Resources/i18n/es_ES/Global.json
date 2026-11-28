@@ -755,7 +755,10 @@
         "toggleContextSidebar": "Mostrar u ocultar el panel contextual",
         "setDefaultValue": "Establecer valor predeterminado",
         "Relation": "Relación",
-        "selectType": "Seleccionar Type"
+        "selectType": "Seleccionar Type",
+        "addSubtypeField": "Añadir campo de subtipo",
+        "Subtype": "Subtipo",
+        "Subtype Fields": "Campos de subtipo"
     },
     "messages": {
         "pleaseWait": "Por favor espere...",
