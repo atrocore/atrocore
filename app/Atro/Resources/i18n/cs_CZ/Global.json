@@ -755,7 +755,10 @@
         "toggleContextSidebar": "Přepnout kontextový panel",
         "setDefaultValue": "Nastavit výchozí hodnotu",
         "Relation": "Relace",
-        "selectType": "Vybrat Type"
+        "selectType": "Vybrat Type",
+        "addSubtypeField": "Přidat pole podtypu",
+        "Subtype": "Podtyp",
+        "Subtype Fields": "Pole podtypu"
     },
     "fields": {
         "number": "Číslo",
