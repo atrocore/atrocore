@@ -574,7 +574,10 @@
         "Refresh": "Frissítés",
         "unsetSearch": "Keresés törlése",
         "associatedTitle": "Az aktuális elem :name néven kapcsolódik ehhez:",
-        "label": "Címke"
+        "label": "Címke",
+        "addSubtypeField": "Altípusmező hozzáadása",
+        "Subtype": "Altípus",
+        "Subtype Fields": "Altípusmezők"
     },
     "scopeNames": {
         "SoftwarePackage": "Szoftvercsomag",
