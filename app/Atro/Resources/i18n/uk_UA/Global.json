@@ -758,7 +758,10 @@
         "Required": "Обов'язковий",
         "purgeAll": "Очистити всі кластери",
         "fillFromChildren": "Заповнити з дочірніх записів",
-        "selectType": "Виберіть тип"
+        "selectType": "Виберіть тип",
+        "addSubtypeField": "Додати поле підтипу",
+        "Subtype": "Підтип",
+        "Subtype Fields": "Поля підтипу"
     },
     "insightsPanels": {
         "summary": "Підсумок",
