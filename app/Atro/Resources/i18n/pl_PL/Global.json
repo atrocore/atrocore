@@ -755,7 +755,10 @@
         "toggleContextSidebar": "Przełącz panel kontekstowy",
         "setDefaultValue": "Ustaw wartość domyślną",
         "Relation": "Relacja",
-        "selectType": "Wybierz Type"
+        "selectType": "Wybierz Type",
+        "addSubtypeField": "Dodaj pole podtypu",
+        "Subtype": "Podtyp",
+        "Subtype Fields": "Pola podtypu"
     },
     "messages": {
         "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
