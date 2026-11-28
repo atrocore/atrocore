@@ -587,7 +587,10 @@
         "toggleContextSidebar": "Attiva/disattiva il pannello contestuale",
         "setDefaultValue": "Imposta il valore predefinito",
         "Relation": "Relazione",
-        "selectType": "Seleziona tipo"
+        "selectType": "Seleziona tipo",
+        "addSubtypeField": "Aggiungi campo del sottotipo",
+        "Subtype": "Sottotipo",
+        "Subtype Fields": "Campi del sottotipo"
     },
     "messages": {
         "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
