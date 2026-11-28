@@ -758,7 +758,10 @@
         "rejectItem": "Ablehnen",
         "Required": "Erforderlich",
         "purgeAll": "Alle Cluster bereinigen",
-        "selectType": "Type auswählen"
+        "selectType": "Type auswählen",
+        "addSubtypeField": "Untertypfeld hinzufügen",
+        "Subtype": "Untertyp",
+        "Subtype Fields": "Untertypfelder"
     },
     "insightsPanels": {
         "summary": "Zusammenfassung",
